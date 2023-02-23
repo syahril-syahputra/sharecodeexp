@@ -1,9 +1,10 @@
 import React from "react";
+import Image from "next/image";
 
 export default function Footer() {
   return (
     <>
-      <footer className="relative bg-blueGray-200 pt-8 pb-6">
+      <footer className="relative bg-blueGray-400 pt-8 pb-6 mb-0">
         <div
           className="bottom-auto top-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden -mt-20 h-20"
           style={{ transform: "translateZ(0)" }}
@@ -18,7 +19,7 @@ export default function Footer() {
             y="0"
           >
             <polygon
-              className="text-blueGray-200 fill-current"
+              className="text-blueGray-400 fill-current"
               points="2560 0 2560 100 0 100"
             ></polygon>
           </svg>
@@ -26,7 +27,15 @@ export default function Footer() {
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap text-center lg:text-left">
             <div className="w-full lg:w-6/12 px-4">
-              <h4 className="text-3xl font-semibold">Let's keep in touch!</h4>
+              <div className="relative">
+                <Image
+                  src="/img/exepart-black.png"
+                  alt="Picture of the author"
+                  height={300}
+                  width={300}
+                  className="mx-auto lg:mx-0"
+                />
+              </div>
               <h5 className="text-lg mt-0 mb-2 text-blueGray-600">
                 Find us on any of these platforms, we respond 1-2 business days.
               </h5>
@@ -144,12 +153,12 @@ export default function Footer() {
           <div className="flex flex-wrap items-center md:justify-between justify-center">
             <div className="w-full md:w-4/12 px-4 mx-auto text-center">
               <div className="text-sm text-blueGray-500 font-semibold py-1">
-                Copyright © {new Date().getFullYear()} Notus NextJS by{" "}
+                Copyright © {new Date().getFullYear()} EXEpart powered by {" "}
                 <a
-                  href="https://www.creative-tim.com?ref=nnjs-footer"
+                  href="https://bluespacesystems.com/"
                   className="text-blueGray-500 hover:text-blueGray-800"
                 >
-                  Creative Tim
+                  BlueSpace Systems
                 </a>
                 .
               </div>
