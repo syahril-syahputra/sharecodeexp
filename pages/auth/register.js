@@ -40,9 +40,23 @@ export default function Index() {
         // setCountry(value);
         setRegistrationInfo({...registrationInfo, companyCountry:value})
     };
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log(registrationInfo)
+        const JSONdata = JSON.stringify(registrationInfo)
+        // const endpoint = 'http://127.0.0.1:8000/v1/register'
+        // const options = {
+        //     // The method is POST because we are sending data.
+        //     method: 'POST',
+        //     // Tell the server we're sending JSON.
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSONdata,
+        // }
+
+        const posts = await getAllPosts(JSONdata)
+        
+        
     }
 
     return (
@@ -145,7 +159,6 @@ export default function Index() {
                                                     onChange={({target}) => 
                                                         setRegistrationInfo({...registrationInfo, companyImage:target.value})
                                                     }
-                                                    required
                                                 />
                                             </div>
                                         </div>
@@ -261,7 +274,6 @@ export default function Index() {
                                                     onChange={({target}) => 
                                                         setRegistrationInfo({...registrationInfo, companyRequiredDocuments:target.value})
                                                     }
-                                                    required
                                                 />
                                             </div>
                                         </div>
@@ -281,7 +293,6 @@ export default function Index() {
                                                     onChange={({target}) => 
                                                         setRegistrationInfo({...registrationInfo, companyPaymentDocuments:target.value})
                                                     }
-                                                    required
                                                 />
                                             </div>
                                         </div>

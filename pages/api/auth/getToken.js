@@ -1,8 +1,34 @@
-import { getToken } from "next-auth/jwt"
+import { getSession } from 'next-auth/react'
 
-export default async function handler(req, res) {
-  // if using `NEXTAUTH_SECRET` env variable, we detect it, and you won't actually need to `secret`
-  const token = await getToken({ req })
-  console.log("JSON Web Token", token)
-  res.end()
+let accessToken;
+
+export default async (req, res) => {
+  const session = await getSession({ req });
+  if (!session) {
+    return res.status(401).end();
+  }
+  accessToken = session.accessToken;
+  const data = await getYTData();
+
+  res.status(200).json(data);
 }
+
+const getYTData = async () => {
+  const response = await fetch("http://127.0.0.1:8000/v1/test", {
+        method: 'GET',
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`
+         }
+    })
+
+    if(!response.ok){
+        console.log(response)
+        res.status(response.status).json({message: response.statusText})
+    }
+
+    const res = await response.json()
+    // res.status(200).json(user)
+
+  return res;
+};

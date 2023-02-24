@@ -1,6 +1,5 @@
 import NextAuth from "next-auth/next";
 import Credentials from "next-auth/providers/credentials";
-import { getToken } from "next-auth/jwt"
 
 const authOptions = {
     session: {
@@ -11,15 +10,20 @@ const authOptions = {
             type: 'credentials',
             credentials: {},
             async authorize(credentials, req){
-                const res = await fetch("http://127.0.0.1:8000/api/auth/login", {
+                const res = await fetch("http://127.0.0.1:8000/v1/login", {
                     method: 'POST',
                     body: JSON.stringify(credentials),
-                    headers: { "Content-Type": "application/json" }
+                    headers: { 
+                        "Accept" : "application/json",
+                        "Content-Type": "application/json" 
+                    }
                 })
                 const user = await res.json()
                 if (res.ok && user) {
-                    console.log(user.access_token)
-                    return user
+                    return {
+                        name: user.data.name, 
+                        accessToken: user.data.token
+                    }
                 }                
                 // Return null if user data could not be retrieved
                 return null
@@ -28,7 +32,21 @@ const authOptions = {
     ],
     pages: {
         signIn: '/auth/login'
+    },
+    callbacks: {
+        async jwt({token, user}) {
+            if (user) {
+                const { accessToken, ...rest } = user;
+                token.accessToken = accessToken;
+                token.user = rest;
+              }
+            return token;
+        },
+        async session({token}) {
+            return token
+        }
     }
+
 }
 
 export default NextAuth(authOptions);

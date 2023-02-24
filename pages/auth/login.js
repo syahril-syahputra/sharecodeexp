@@ -1,25 +1,35 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState } from "react";
 import Link from "next/link";
-
 import { signIn } from "next-auth/react";
 
 //components
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
+import { useRouter } from "next/router";
 
 export default function Index() {
-    const [userInfo, setUserInfo] = useState({username: '', password: ''})
+    const router = useRouter();
+    const [userInfo, setUserInfo] = useState({email: 'hintz.lonie@example.com', password: 'ThisisPassword123'})
+    const [isLoading, setIsLoading] = useState(false)
+
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setIsLoading(true)
         const res = await signIn('credentials', {
-            username: userInfo.username,
+            email: userInfo.email,
             password: userInfo.password,
             redirect: false
-        })
-
-        console.log(res)
+        }).then((res) => {
+            if (res?.error) {
+                console.log(res)
+            } else {
+                router.push("/");
+            }
+        }).catch((res) => {
+            console.log(res)
+        }).finally(() => setIsLoading(false))
     }
 
     return (
@@ -42,9 +52,9 @@ export default function Index() {
                                             <i className="fas fa-user mt-2"></i>
                                         </span>
                                         <input 
-                                            value={userInfo.username} 
+                                            value={userInfo.email} 
                                             onChange={({target}) => 
-                                                setUserInfo({...userInfo, username:target.value})
+                                                setUserInfo({...userInfo, email:target.value})
                                             }
                                             type="text" 
                                             placeholder="email" 
@@ -68,6 +78,7 @@ export default function Index() {
                                     </div>
                                     <div className="text-center mb-6">
                                         <button
+                                            disabled={isLoading}
                                             type="submit"
                                             className="w-full md:w-8/12 mt-4 text-white font-bold px-6 py-4 outline-none focus:outline-none mr-1 mb-1 bg-blueGray-700 active:bg-blueGray-600 uppercase text-sm shadow hover:shadow-lg"
                                         >
