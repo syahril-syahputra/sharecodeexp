@@ -7,30 +7,28 @@ import Footer from "components/Footers/Footer.js";
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
 
 import Select from 'react-tailwindcss-select';
-// import Select from 'react-select';
 import countryList from 'react-select-country-list';
-
 
 export default function Index() {
     const [registrationInfo, setRegistrationInfo] = useState(
         {
             //Account Information
-            name: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
 
             //Company Information
-            companyName: '', 
-            companySector: '',
-            companyPhone: '',
-            companyCountry: '',
-            companyAddress: '',
+            companyName: "", 
+            companySector: "",
+            companyPhone: "",
+            companyCountry: "",
+            companyAddress: "",
 
             //Documents
-            companyImage: '',
-            companyRequiredDocuments: '',
-            companyPaymentDocuments: ''
+            companyImage: "",
+            companyRequiredDocuments: "",
+            companyPaymentDocuments: ""
             
         }
     )
@@ -40,23 +38,21 @@ export default function Index() {
         // setCountry(value);
         setRegistrationInfo({...registrationInfo, companyCountry:value})
     };
+
+    const [errorInfo, setErrorInfo] = useState({})
+    const [errorMessage, setErrorMessage] = useState(null)
     const handleSubmit = async (e) => {
         e.preventDefault()
         const JSONdata = JSON.stringify(registrationInfo)
-        // const endpoint = 'http://127.0.0.1:8000/v1/register'
-        // const options = {
-        //     // The method is POST because we are sending data.
-        //     method: 'POST',
-        //     // Tell the server we're sending JSON.
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSONdata,
-        // }
-
-        const posts = await getAllPosts(JSONdata)
-        
-        
+        const reg = await fetch("/api/registration/registration", {
+            method: 'POST',
+            body: JSONdata
+        })
+        const result = await reg.json()
+        if(result.errors){
+            setErrorMessage(result.message)
+        }
+        console.log(result)
     }
 
     return (
@@ -72,6 +68,7 @@ export default function Index() {
                         </div>
                         <form className="md:shadow-md md:px-24 px-10 py-8" onSubmit={handleSubmit}>
                             <h2 className="font-semibold text-4xl text-center">Registration</h2>
+                            <p className="mt-2 text-red-500 text-xs italic">{errorMessage}</p>
                             <div className="mt-8">
                                 <div className="relative flex py-5 items-center w-full mx-auto">
                                     <div className="flex-shrink mr-4"><h2 className="font-semibold text-xl text-blueGray-500">Account Information</h2></div>
