@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState, useMemo } from 'react';
 import Image from "next/image"
+import axios from 'axios';
 
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
@@ -8,6 +9,8 @@ import ImageLogo from "@/components/ImageLogo/ImageLogo";
 
 import Select from 'react-tailwindcss-select';
 import countryList from 'react-select-country-list';
+
+import {register} from 'pages/api/registration/new_reg'
 
 export default function Index() {
     const [registrationInfo, setRegistrationInfo] = useState(
@@ -44,15 +47,43 @@ export default function Index() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         const JSONdata = JSON.stringify(registrationInfo)
-        const reg = await fetch("/api/registration/registration", {
+        const formData = new FormData();
+        formData.append('name', registrationInfo.name)
+        formData.append('company_RequiredDocuments', registrationInfo.companyRequiredDocuments)
+        
+        const response = await fetch("/api/registration/registration", {
             method: 'POST',
-            body: JSONdata
+            // mode: 'no-cors',
+            body: formData,
+
+            headers: { 
+                // "Content-Type": "application/json",
+                // "Accept": 'application/json, text/plain, */*',
+                // 'User-Agent': '*',
+            },  
         })
-        const result = await reg.json()
+        const result = await response.json()
         if(result.errors){
             setErrorMessage(result.message)
         }
         console.log(result)
+
+    }
+
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault()
+    //     const response = await register(registrationInfo)
+    //     const result = await response.ok()
+    //     console.log(result)
+    // }
+
+    const [reqDocs, setReqDocs] = useState(null)
+    const reqDocHandle = event => {
+        let reader = new FileReader() 
+        reader.readAsDataURL(event.target.files[0])
+        reader.onload = () => {       
+            setRegistrationInfo({...registrationInfo, companyRequiredDocuments:reader.result})
+        }
     }
 
     return (
@@ -152,13 +183,20 @@ export default function Index() {
                                                 <p>PNG, JPG, JPEG file size no more than 10MB</p>
                                                 <input 
                                                     className="mt-3" 
-                                                    type="file" 
+                                                    type="file"
+                                                    name="companyImage"
                                                     onChange={({target}) => 
-                                                        setRegistrationInfo({...registrationInfo, companyImage:target.value})
+                                                        setRegistrationInfo({...registrationInfo, companyImage:target.files[0]})
                                                     }
                                                 />
                                             </div>
                                         </div>
+
+                                        {/* <img
+                                            alt="not found"
+                                            width={"250px"}
+                                            src={URL.createObjectURL(registrationInfo.companyImage)}
+                                        /> */}
                                     </div>
                                 </div>
                                 <div className="flex flex-wrap mb-6">
@@ -268,9 +306,7 @@ export default function Index() {
                                                 <input 
                                                     className="mt-3" 
                                                     type="file"
-                                                    onChange={({target}) => 
-                                                        setRegistrationInfo({...registrationInfo, companyRequiredDocuments:target.value})
-                                                    }
+                                                    onChange={reqDocHandle}
                                                 />
                                             </div>
                                         </div>
