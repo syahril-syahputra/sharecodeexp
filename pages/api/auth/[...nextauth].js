@@ -24,8 +24,12 @@ const authOptions = {
                         name: user.data.name, 
                         accessToken: user.data.token
                     }
-                }                
-                // Return null if user data could not be retrieved
+                } 
+
+                if(user.data) {
+                    throw new Error(user.data)
+                }
+
                 return null
             }
         })

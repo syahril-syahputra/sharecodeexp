@@ -13,9 +13,13 @@ export default function Index() {
     const router = useRouter();
     const [userInfo, setUserInfo] = useState({email: 'hintz.lonie@example.com', password: 'ThisisPassword123'})
     const [isLoading, setIsLoading] = useState(false)
-
+    const [errMessage, setErrMessage] = useState({
+        error: ' ',
+        status: ''
+    })
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setErrMessage({error: ' ', status: ''})
         setIsLoading(true)
         const res = await signIn('credentials', {
             email: userInfo.email,
@@ -24,12 +28,14 @@ export default function Index() {
         }).then((res) => {
             if (res?.error) {
                 console.log(res)
+                setErrMessage(res)
+                setIsLoading(false)
             } else {
                 router.push("/");
             }
         }).catch((res) => {
             console.log(res)
-        }).finally(() => setIsLoading(false))
+        })
     }
 
     return (
@@ -47,7 +53,10 @@ export default function Index() {
                             <div className="w-full md:w-6/12 px-12 md:px-4 shadow-md p-5">
                                 <form onSubmit={handleSubmit}>
                                     <h2 className="font-semibold text-4xl">Sign In</h2>
-                                    <div className="text-center items-stretch mb-3 mt-14">
+                                    <div className="mt-5 p-1 h-10">
+                                        <p className="text-red-500 text-lg italic">{errMessage.error}</p>
+                                    </div>
+                                    <div className="text-center items-stretch mb-3 mt-6">
                                         <span className="z-10 h-full leading-snug font-normal absolute text-center text-slate-300 absolute bg-transparent text-lg items-center justify-center w-8 pl-3 py-3">
                                             <i className="fas fa-user mt-2"></i>
                                         </span>
@@ -77,13 +86,24 @@ export default function Index() {
                                         <p className="text-blueGray-400 hover:text-blueGray-700"><Link href="/forgot_password">Forgot Password</Link></p>
                                     </div>
                                     <div className="text-center mb-6">
-                                        <button
-                                            disabled={isLoading}
-                                            type="submit"
-                                            className="w-full md:w-8/12 mt-4 text-white font-bold px-6 py-4 outline-none focus:outline-none mr-1 mb-1 bg-blueGray-700 active:bg-blueGray-600 uppercase text-sm shadow hover:shadow-lg"
-                                        >
-                                        Login
-                                        </button>
+                                        {!isLoading && 
+                                            <button
+                                                type="submit"
+                                                className="w-full md:w-8/12 mt-4 text-white font-bold px-6 py-4 outline-none focus:outline-none mr-1 mb-1 bg-blueGray-700 active:bg-blueGray-600 uppercase text-sm shadow hover:shadow-lg"
+                                            >
+                                            Login
+                                            </button>
+                                        }
+                                        {isLoading && 
+                                            <button
+                                                disabled
+                                                type="submit"
+                                                className="w-full md:w-8/12 mt-4 text-white font-bold px-6 py-4 outline-none mr-1 mb-1 bg-blueGray-400 uppercase text-sm"
+                                            >
+                                                <i className="fas fa-circle-notch fa-spin"></i>
+                                            </button>
+                                        }
+                                        
                                     </div>
                                 </form>
                                 <div className="relative flex py-5 items-center w-full md:w-8/12 mx-auto">

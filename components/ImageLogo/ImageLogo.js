@@ -1,6 +1,6 @@
 import Image from "next/image"
 
-export default function ImageLogo({size, color="black"}){
+export default function ImageLogo({size=100, color="black"}){
     return (
         <Image
             src={`/img/exepart-${color}.png`}

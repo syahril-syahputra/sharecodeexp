@@ -1,6 +1,6 @@
-export default function ComponentTable(){
+export default function ComponentTable(props){
     return (
-        <table className="w-full text-sm text-left text-gray-500 shadow-md">
+        <table className={`w-full text-sm text-left text-gray-500 shadow-md ${props.customClass}`}>
             <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                 <tr>
                     <th scope="col" className="px-6 py-3 text-center">

@@ -1,59 +1,60 @@
 import { baseApiUrl } from '../baseApi';
 import FormData from 'form-data';
 import axios from 'axios';
+const fs = require('fs');
 
 export default async (req, res) => {
-    const formData = new FormData();
-    formData.append('name', 'kadek')
-    // formData.append('email', 'kadek@cahya.com')
-    
+    const data = req.body
+    // const formData = {
+    //     name: data.name,
+    //     email: data.email,
+    //     password: data.password,
+    //     confirm_password: data.password,
+
+    //     company_name: data.companyName,
+    //     company_sector: data.companySector,
+    //     company_phone: data.companyPhone,
+    //     company_country: data.companyCountry.label,
+    //     company_address: data.companyAddress,
+
+    //     company_img: fs.createReadStream('C:/Users/Kadek Cahya/OneDrive/Pictures/apex.png'),
+    //     company_RequiredDocuments: fs.createReadStream('C:/Users/Kadek Cahya/Downloads/dummy.pdf'),
+    //     company_PaymentDocuments: fs.createReadStream('C:/Users/Kadek Cahya/Downloads/dummy.pdf'),
+    // }
+
+    var formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('email', data.email);
+    formData.append('password', data.password);
+    formData.append('confirm_password', data.password);
+
+    formData.append('company_name', data.companyName);
+    formData.append('company_sector', data.companySector);
+    formData.append('company_phone', data.companyPhone);
+    formData.append('company_country', data.companyCountry ? data.companyCountry.label : '');
+    formData.append('company_address', data.companyAddress);
+
+    formData.append('company_img', image);
+    formData.append('company_RequiredDocuments', data.companyRequiredDocuments);
+    formData.append('company_PaymentDocuments', data.companyPaymentDocuments);
+
     axios({
         url: baseApiUrl + "/register",
         method: "POST",
-        data: req.body
+        data: formData
     }).then((response) => {
-        console.log(response)
-    //handle success
+        res.status(200).json(response);
     }).catch((error) => {
-    //handle error
-        console.log(error)
-    });
+        //handle error
+        res.status(400).json(error.response.data);
+    }).finally(() => { return null});
 
+}
 
-    // console.log(req.body)
-    // const data = JSON.parse(req.body)
-    // console.log(typeof data.companyRequiredDocuments)
-    // const response = await fetch(baseApiUrl + "/register", {
-    //     mode: 'no-cors',
-    //     method: 'POST',
-    //     headers: { 
-    //         "Content-Type": "application/json",
-    //         "Accept": 'application/json, text/plain, */*',
-    //         'User-Agent': '*',
-    //     },
-    //     body: JSON.stringify({
-    //         name: data.name,
-    //         email: data.email,
-    //         password: data.password,
-    //         confirm_password: data.password,
-
-    //         company_name: data.companyName,
-    //         company_sector: data.companySector,
-    //         company_phone: data.companyPhone,
-    //         company_country: data.companyCountry.label,
-    //         company_address: data.companyAddress,
-
-    //         company_img: data.companyImage,
-    //         company_RequiredDocuments: data.companyRequiredDocuments,
-    //         company_PaymentDocuments: data.companyPaymentDocuments,
-    //     })
-    //     // body: req.body
-    // })
-    // const result = await response.json()
-    // console.log(result)
-    // if (result.ok && result) {
-    //     res.status(200).json(result);
-    // } 
-    // res.status(400).json(result);
-
+export function convertImage(base64img, callback){
+    var img = new Image();
+    img.onload = function() {
+        callback(img);
+    };
+    img.src = base64img;
 }
