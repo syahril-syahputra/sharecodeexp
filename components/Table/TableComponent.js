@@ -1,27 +1,70 @@
 import React, {useEffect, useState} from "react";
 import { useSession } from "next-auth/react"
+import { useRouter } from "next/router";
+
+//comp
+import NeedLoginModal from "../Modal/NeedLogin";
 
 export default function TableComponent(props){
     const {status} = useSession();
+    const router = useRouter()
     const data = props.data
     const links = props.links
     const metaData = props.metaData
 
-    // const [isLoading, setIsLoading] = useState(true)
-    // useEffect(() => setIsLoading(props.isLoading), [])
-
-    // const setPageChild = (page) =>{
-    //     props.setPage(page)
-    // }
-
+    const [showModal, setShowModal] = useState(false);
     const inquiryItem = (item) => {
         if(status === 'unauthenticated'){
-            console.log('show modal, login bos!', item)
-            return 
+            console.log(item)
+            setShowModal(true)
+        } else {
+            router.push('/admin/product/mycart')
+        }
+    }
+
+    const setPaginationLabel = (item, index) => {
+        if(item.label === "&laquo; Previous") {
+            return (
+                <button 
+                    disabled={!metaData.prevPage}
+                    onClick={() => props.setPage(metaData.currentPage - 1)}
+                    key={index} 
+                    className={`
+                        ${!metaData.prevPage ? 'border border-solid border-blueGray-400' : 'border border-solid border-blueGray-500 text-blueGray-700'}
+                        text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative`}
+                >
+                    <i className={`${!metaData.prevPage ? 'text-blueGray-400' : 'text-blueGray-700'} fas fa-angle-left my-auto mx-10 fa-xl`}></i>
+                </button>
+            )
         }
 
-        console.log('redirect bos', item)
+        if(item.label === "Next &raquo;") {
+                return (
+                    <button 
+                        disabled={!metaData.nextPage}
+                        onClick={() => props.setPage(metaData.currentPage + 1)}
+                        key={index} 
+                        className={`
+                            ${!metaData.nextPage ? 'border border-solid border-blueGray-400' : 'border border-solid border-blueGray-500 text-blueGray-700'}
+                            text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative`}
+                    >
+                        <i className={`${!metaData.nextPage ? 'text-blueGray-400' : 'text-blueGray-700'} fas fa-angle-right my-auto mx-10 fa-xl`}></i>
+                    </button>
+                )
+            }
+
+        return(
+            <button 
+                onClick={() => props.setPage(item.label)}
+                key={index} 
+                className={`${item.active ? 'bg-blueGray-700 text-white' : 'border border-solid border-blueGray-500 text-blueGray-700'} text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative`}
+            >
+                {item.label}
+            </button>
+        )
     }
+
+
     return (
         <>
             <div className="relative overflow-x-auto mt-14">
@@ -86,13 +129,16 @@ export default function TableComponent(props){
                                         ${item.UnitPrice}
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                        <button onClick={() => inquiryItem(item.UnitPrice)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Inquiry</button>
+                                        <button onClick={() => inquiryItem(item.UnitPrice)} className="font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry</button>
                                     </td>
                                 </tr>
                             )
                         })}
                     </tbody>
                 </table>
+                <div className="mt-2">
+                    <h2>Showing {metaData.perPage} data from {metaData.total} data</h2>
+                </div>
             </div>
             {props.isLoading &&<div>
                 <div className='text-center my-auto mt-10'>
@@ -102,18 +148,16 @@ export default function TableComponent(props){
 
             <div className="flex justify-center mt-10 mx-auto justify-center">
                 {links.map((item, index) => {
-                    return(
-                        <button 
-                            onClick={() => props.setPage(item.label)}
-                            key={index} 
-                            className={`${item.active ? 'bg-blueGray-700 text-white' : 'border border-solid border-blueGray-500 text-blueGray-700'} text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative`}
-                        >
-                            {item.label}
-                        </button>
-
-                    )
+                    return setPaginationLabel(item, index)
                 })}
             </div>
+
+            {showModal ? (
+                <NeedLoginModal
+                    setShowModal={setShowModal}
+                />
+            ) : null}
+            
         </>
 
         

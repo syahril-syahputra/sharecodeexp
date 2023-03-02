@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 
 export default function Index() {
     const router = useRouter();
-    const [userInfo, setUserInfo] = useState({email: 'hintz.lonie@example.com', password: 'ThisisPassword123'})
+    const [userInfo, setUserInfo] = useState({email: 'stephanie67@example.org', password: 'ThisisPassword123'})
     const [isLoading, setIsLoading] = useState(false)
     const [errMessage, setErrMessage] = useState({
         error: ' ',

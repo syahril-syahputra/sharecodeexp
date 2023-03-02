@@ -6,7 +6,6 @@ import CardLineChart from "components/Cards/CardLineChart.js";
 import CardBarChart from "components/Cards/CardBarChart.js";
 import CardPageVisits from "components/Cards/CardPageVisits.js";
 import CardSocialTraffic from "components/Cards/CardSocialTraffic.js";
-import IndexDropdown from "components/Dropdowns/IndexDropdown"
 
 // layout for page
 import Admin from "layouts/Admin.js";

@@ -8,11 +8,12 @@ import siteMetadata from '@/data/siteMetadata'
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import TableComponent from "@/components/Table/TableComponent";
-import axios from "axios";
+import axios from "lib/axios";
+// import axios from "axios";
 
 export default function Index() {
   const router = useRouter()
-  const [search, setSearch] = useState(router.query.q)
+  const [search, setSearch] = useState(router.query.q ? router.query.q : '')
   
   function searchComponent(event){
     if (event.key === 'Enter' && !!search) {
@@ -21,10 +22,8 @@ export default function Index() {
     }
   }
 
-  
-
+  //data search
   const [isLoading, setIsLoading] = useState(true)
-  // const [page, setPage] = useState(1)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
   const [metaData, setMetaData] = useState({
@@ -34,15 +33,19 @@ export default function Index() {
   })
   const searchData = async (srch, page=1) =>{
     setIsLoading(true)
-    const response = await axios.get(`http://127.0.0.1:8000/v1/search?q=${srch}&page=${page}`)
+    const response = await axios.get(`/search?page=${page}`)
       .then((response) => {
         let result = response.data.data
+        console.log(result)
         setData(result.data)
         setLinks(result.links)
         setMetaData({
           total: result.total,
           perPage: result.per_page,
-          lastPage: result.last_page
+          lastPage: result.last_page,
+          currentPage: result.current_page,
+          nextPage: result.next_page_url ? true : false,
+          prevPage: result.prev_page_url ? true : false
         })
       }).catch((error) => {
         console.log(error.response)
@@ -53,11 +56,30 @@ export default function Index() {
   const setPage = (item) => {
     searchData(search, item)
   }
-
-  // 
   useEffect(() => {
     searchData(search)
   }, [])
+
+  //search suggestion
+  const [suggestion, setSuggestion] = useState([])
+  const [isSuggestionLoading, setSuggestionLoading] = useState(false)
+  useEffect(() => {
+    if(search){
+      setSuggestionLoading(true)
+      const getData = setTimeout(() => {
+        axios
+        .get(`/search/suggest/${search}`)
+        .then((response) => {
+          console.log(response);
+          setSuggestion(response.data.data)
+        })
+        .finally(() => setSuggestionLoading(false));
+      }, 2000)
+
+      return () => clearTimeout(getData)
+    }
+  }, [search])
+
 
   return (
     <>
@@ -84,6 +106,28 @@ export default function Index() {
               >
                 Search
               </Link>
+          </div>
+          <div>
+            {suggestion && suggestion.length > 0 &&
+              <div>
+                {isSuggestionLoading && 
+                  <div className="text-blueGray-700">
+                    Suggestion : 
+                    <i className="ml-2 fas fa-circle-notch fa-spin"></i>
+                  </div>
+                }
+                {!isSuggestionLoading && 
+                  <div className="flex text-blueGray-700">Suggestion : {suggestion.map(name => (  
+                    <p className="mx-1 underline">  
+                      {name}  
+                    </p>  
+                  ))}</div>
+                }
+              </div>
+            }
+            {isSuggestionLoading && suggestion.length === 0 && 
+              <i className="ml-2 fas fa-circle-notch fa-spin"></i>
+            }
           </div>
           <div className="">
             <TableComponent
