@@ -36,9 +36,16 @@ const UserDropdown = () => {
         }}
       >
         <div className="items-center flex">
-          <div className="md:text-white">
-            {user?.name}
-          </div>
+          {/* <div className="text-black"> */}
+            
+            <button
+                className="bg-blueGray-700 text-white active:bg-blueGray-600 text-xs font-bold px-4 py-2 shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 mb-3 ease-linear transition-all duration-150"
+                type="button"
+                >
+                <i className="fas fa-user mr-2"></i> 
+                Hi, {user?.name}
+            </button>
+          {/* </div> */}
         </div>
       </a>
       <div
@@ -48,15 +55,6 @@ const UserDropdown = () => {
           "bg-white text-base z-50 float-left py-2 list-none text-left shadow-lg min-w-48"
         }
       >
-        <a
-          href="#pablo"
-          className={
-            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-          }
-          onClick={(e) => e.preventDefault()}
-        >
-          Landing
-        </a>
         <a
           href="#pablo"
           className={

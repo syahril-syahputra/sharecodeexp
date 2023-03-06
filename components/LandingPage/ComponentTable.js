@@ -1,24 +1,22 @@
 import React, {useEffect, useState} from "react";
 import { useSession } from "next-auth/react"
+import { useRouter } from "next/router";
+
+//comp
+import NeedLoginModal from "../Modal/NeedLogin";
 
 export default function ComponentTable(props){
     const {status} = useSession();
+    const router = useRouter()
     const data = props.data
 
-    // const [isLoading, setIsLoading] = useState(true)
-    // useEffect(() => setIsLoading(props.isLoading), [])
-
-    // const setPageChild = (page) =>{
-    //     props.setPage(page)
-    // }
-
+    const [showModal, setShowModal] = useState(false);
     const inquiryItem = (item) => {
         if(status === 'unauthenticated'){
-            console.log('show modal, login bos!', item)
-            return 
+            setShowModal(true)
+        } else {
+            router.push(`/admin/product/mycart/${item}`)
         }
-
-        console.log('redirect bos', item)
     }
     return (
         <div>
@@ -30,22 +28,16 @@ export default function ComponentTable(props){
                                 Country
                             </th>
                             <th scope="col" className="px-6 py-3 text-center">
-                                Company Sector
+                                Available Quantity
                             </th>
                             <th scope="col" className="px-6 py-3 text-center">
-                                Manufacture Part Number
+                                MOQ
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-center">
+                                Manufacturer Number
                             </th>
                             <th scope="col" className="px-6 py-3 text-center">
                                 Description
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-center">
-                                Package
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-center">
-                                Packaging
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-center">
-                                Avaliable Quantity
                             </th>
                             <th scope="col" className="px-6 py-3 text-center">
                                 Date Code
@@ -60,31 +52,25 @@ export default function ComponentTable(props){
                             return(
                                 <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                        {item.AvailableQuantity}
+                                        {item.country}
                                     </th>
                                     <td className="px-6 py-4">
                                         {item.AvailableQuantity}
                                     </td>
                                     <td className="px-6 py-4">
-                                        {item.AvailableQuantity}
+                                        {item.moq}
                                     </td>
                                     <td className="px-6 py-4">
-                                        {item.AvailableQuantity}
+                                        {item.ManufacturerNumber}
                                     </td>
                                     <td className="px-6 py-4">
-                                            {item.AvailableQuantity}
+                                        {item.Description}
                                     </td>
                                     <td className="px-6 py-4">
-                                            {item.AvailableQuantity}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {item.AvailableQuantity}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        ${item.UnitPrice}
+                                        {item.dateCode}
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                        <button onClick={() => inquiryItem(item.UnitPrice)} className="font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry</button>
+                                        <button onClick={() => inquiryItem(item)} className="font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry</button>
                                     </td>
                                 </tr>
                             )
@@ -97,6 +83,12 @@ export default function ComponentTable(props){
                     <i className="fas fa-circle-notch fa-spin text-blueGray-700 my-auto mx-10 fa-2xl"></i>
                 </div>
             </div>}
+
+            {showModal ? (
+                <NeedLoginModal
+                    setShowModal={setShowModal}
+                />
+            ) : null}
         </div>
     )
 }

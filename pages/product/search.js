@@ -33,10 +33,9 @@ export default function Index() {
   })
   const searchData = async (srch, page=1) =>{
     setIsLoading(true)
-    const response = await axios.get(`/search?page=${page}`)
+    const response = await axios.get(`/search?query=${srch}&&page=${page}`)
       .then((response) => {
         let result = response.data.data
-        console.log(result)
         setData(result.data)
         setLinks(result.links)
         setMetaData({
@@ -53,8 +52,8 @@ export default function Index() {
         setIsLoading(false)
       })
   }
-  const setPage = (item) => {
-    searchData(search, item)
+  const setPage = (page) => {
+    searchData(search, page)
   }
   useEffect(() => {
     searchData(search)
@@ -70,7 +69,6 @@ export default function Index() {
         axios
         .get(`/search/suggest/${search}`)
         .then((response) => {
-          console.log(response);
           setSuggestion(response.data.data)
         })
         .finally(() => setSuggestionLoading(false));
@@ -92,21 +90,22 @@ export default function Index() {
               <h2 className="font-semibold text-4xl">Search Components</h2>
             </div>
           </div>
-          <div className="items-stretch mb-3 mt-3">
-            <input 
-              type="text" 
+          <div className="relative mb-4 flex md:w-1/2 w-full flex-wrap items-stretch mt-4">
+            <input
+              type="text"
               value={search} 
               onChange={({target}) => setSearch(target.value)}
               onKeyDown={searchComponent}
-              placeholder="Search for the components" className="border-0 md:w-8/12 px-3 py-4 placeholder-slate-300 text-slate-600 relative bg-white bg-white text-base shadow outline-grey focus:outline-none focus:ring w-full"/>
-              <Link
-                // onClick={searchData}
-                href={`/product/search?q=${search}`}
-                className="text-white font-bold px-6 py-4 outline-none focus:outline-none ml-5 mb-1 bg-blueGray-700 active:bg-blueGray-600 uppercase text-sm shadow hover:shadow-lg"
+              className="shadow relative m-0 block w-[1px] min-w-0 placeholder-slate-300 flex-auto border-0 bg-transparent px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out focus:z-[3] focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none"
+              placeholder="Search for the components"/>
+            <Link
+              href={`/product/search?q=${search}`}
+              className="font-bold relative z-[2] bg-blueGray-700 active:bg-blueGray-600 px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:z-[3] focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
               >
-                Search
-              </Link>
+              Search
+            </Link>
           </div>
+
           <div>
             {suggestion && suggestion.length > 0 &&
               <div>
@@ -117,8 +116,8 @@ export default function Index() {
                   </div>
                 }
                 {!isSuggestionLoading && 
-                  <div className="flex text-blueGray-700">Suggestion : {suggestion.map(name => (  
-                    <p className="mx-1 underline">  
+                  <div className="flex text-blueGray-700">Suggestion : {suggestion.map((name, index) => (  
+                    <p className="mx-1 underline" key={index}>  
                       {name}  
                     </p>  
                   ))}</div>

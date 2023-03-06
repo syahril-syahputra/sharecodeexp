@@ -21,7 +21,8 @@ const authOptions = {
                 const user = await res.json()
                 if (res.ok && user) {
                     return {
-                        name: user.data.name, 
+                        name: user.data.name.name,
+                        userDetail: user.data.name,
                         accessToken: user.data.token
                     }
                 } 

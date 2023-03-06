@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState, useMemo, useRef } from 'react';
-import axios from 'axios';
+import axios from "lib/axios";
 import Image from 'next/image';
 
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
@@ -42,7 +42,7 @@ export default function Index() {
     const options = useMemo(() => countryList().getData(), [])
     const countryHandleChange = value => {
         // setCountry(value);
-        setRegistrationInfo({...registrationInfo, company_country:value.label})
+        setRegistrationInfo({...registrationInfo, company_country:value})
     };
 
     const [errorInfo, setErrorInfo] = useState({})
@@ -58,20 +58,20 @@ export default function Index() {
             datasend.company_RequiredDocuments = refdata?.current?.elements?.company_RequiredDocuments?.files[0]
             datasend.company_PaymentDocuments = refdata?.current?.elements?.company_PaymentDocuments?.files[0]
             datasend.company_img = refdata?.current?.elements?.company_img?.files[0]
-            datasend.company_country = registrationInfo.company_country
+            datasend.company_country = registrationInfo.company_country?.label
 
         let formData = new FormData();
         for (const key in datasend) {
             formData.append(key, datasend[key]);
         }
 
-        const response = await axios.post("http://127.0.0.1:8000/v1/registration", formData, {
+        const response = await axios.post("/registration", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         }).then((response) => {
             setSuccesMessage(response.data.message)
-            router.push("/auth/login")
+            router.push("/auth/registrationsuccessfull")
         }).catch((error) => {
             setErrorInfo(error.response.data.errors)
             setErrorMessage(error.response.data.message)

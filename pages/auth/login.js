@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState } from "react";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 //components
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
@@ -11,7 +11,12 @@ import { useRouter } from "next/router";
 
 export default function Index() {
     const router = useRouter();
-    const [userInfo, setUserInfo] = useState({email: 'stephanie67@example.org', password: 'ThisisPassword123'})
+    const {status} = useSession()
+    if(status == 'authenticated'){
+        router.replace("/")
+    }
+    
+    const [userInfo, setUserInfo] = useState({email: 'zack65@example.org', password: 'ThisisPassword123'})
     const [isLoading, setIsLoading] = useState(false)
     const [errMessage, setErrMessage] = useState({
         error: ' ',
@@ -27,10 +32,10 @@ export default function Index() {
             redirect: false
         }).then((res) => {
             if (res?.error) {
-                console.log(res)
                 setErrMessage(res)
                 setIsLoading(false)
             } else {
+                // console.log(res)
                 router.push("/");
             }
         }).catch((res) => {

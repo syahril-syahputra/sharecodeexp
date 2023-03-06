@@ -7,6 +7,8 @@ import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import HeaderStats from "components/Headers/HeaderStats.js";
 import FooterAdmin from "components/Footers/FooterAdmin.js";
+import { PageSEO } from "@/components/Utils/SEO";
+import siteMetadata from '@/data/siteMetadata'
 
 export default function Admin({ children }) {
   const {data, status} = useSession();
@@ -18,6 +20,7 @@ export default function Admin({ children }) {
 
   return (
     <>
+      <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
       <Sidebar />
       <div className="relative md:ml-64 bg-blueGray-100">
       <AdminNavbar />

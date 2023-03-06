@@ -15,10 +15,9 @@ export default function TableComponent(props){
     const [showModal, setShowModal] = useState(false);
     const inquiryItem = (item) => {
         if(status === 'unauthenticated'){
-            console.log(item)
             setShowModal(true)
         } else {
-            router.push('/admin/product/mycart')
+            router.push(`/admin/product/mycart/${item}`)
         }
     }
 
@@ -39,19 +38,19 @@ export default function TableComponent(props){
         }
 
         if(item.label === "Next &raquo;") {
-                return (
-                    <button 
-                        disabled={!metaData.nextPage}
-                        onClick={() => props.setPage(metaData.currentPage + 1)}
-                        key={index} 
-                        className={`
-                            ${!metaData.nextPage ? 'border border-solid border-blueGray-400' : 'border border-solid border-blueGray-500 text-blueGray-700'}
-                            text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative`}
-                    >
-                        <i className={`${!metaData.nextPage ? 'text-blueGray-400' : 'text-blueGray-700'} fas fa-angle-right my-auto mx-10 fa-xl`}></i>
-                    </button>
-                )
-            }
+            return (
+                <button 
+                    disabled={!metaData.nextPage}
+                    onClick={() => props.setPage(metaData.currentPage + 1)}
+                    key={index} 
+                    className={`
+                        ${!metaData.nextPage ? 'border border-solid border-blueGray-400' : 'border border-solid border-blueGray-500 text-blueGray-700'}
+                        text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative`}
+                >
+                    <i className={`${!metaData.nextPage ? 'text-blueGray-400' : 'text-blueGray-700'} fas fa-angle-right my-auto mx-10 fa-xl`}></i>
+                </button>
+            )
+        }
 
         return(
             <button 
@@ -75,22 +74,16 @@ export default function TableComponent(props){
                                 Country
                             </th>
                             <th scope="col" className="px-6 py-3 text-center">
-                                Company Sector
+                                Available Quantity
                             </th>
                             <th scope="col" className="px-6 py-3 text-center">
-                                Manufacture Part Number
+                                MOQ
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-center">
+                                Manufacturer Number
                             </th>
                             <th scope="col" className="px-6 py-3 text-center">
                                 Description
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-center">
-                                Package
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-center">
-                                Packaging
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-center">
-                                Avaliable Quantity
                             </th>
                             <th scope="col" className="px-6 py-3 text-center">
                                 Date Code
@@ -105,31 +98,25 @@ export default function TableComponent(props){
                             return(
                                 <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                        {item.AvailableQuantity}
+                                        {item.country}
                                     </th>
                                     <td className="px-6 py-4">
                                         {item.AvailableQuantity}
                                     </td>
                                     <td className="px-6 py-4">
-                                        {item.AvailableQuantity}
+                                        {item.moq}
                                     </td>
                                     <td className="px-6 py-4">
-                                        {item.AvailableQuantity}
+                                        {item.ManufacturerNumber}
                                     </td>
                                     <td className="px-6 py-4">
-                                         {item.AvailableQuantity}
+                                        {item.Description}
                                     </td>
                                     <td className="px-6 py-4">
-                                         {item.AvailableQuantity}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {item.AvailableQuantity}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        ${item.UnitPrice}
+                                        {item.dateCode}
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                        <button onClick={() => inquiryItem(item.UnitPrice)} className="font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry</button>
+                                        <button onClick={() => inquiryItem(item.ManufacturerNumber)} className="font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry</button>
                                     </td>
                                 </tr>
                             )

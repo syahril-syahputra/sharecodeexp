@@ -120,7 +120,7 @@ export default function Index() {
           </div>
         </div>
       </section>
-
+{/* 
       <section className="pb-40 relative bg-blueGray-100">
         <div className="container mx-auto">
           <div className="justify-center text-center flex flex-wrap">
@@ -137,6 +137,21 @@ export default function Index() {
               data={data}
             />
           </div>
+          <div className="mb-4 text-center mt-10">
+            <Link href="/product/search" className="font-medium text-blueGray-700 underline">View all Components</Link>
+          </div>
+        </div>
+      </section> */}
+
+      <section className="pb-40 relative bg-blueGray-100">
+        <div className="container mx-auto">
+          <div className="justify-center text-center flex flex-wrap">
+            <div className="w-full md:w-6/12 px-12 md:px-4 mt-16">
+              <h2 className="font-semibold text-4xl">How Does EXEPART Works</h2>
+            </div>
+          </div>
+
+
         </div>
       </section>
 

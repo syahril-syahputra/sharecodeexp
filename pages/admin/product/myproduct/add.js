@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import axios from "lib/axios";
+import { useSession } from "next-auth/react";
 
 // components
 import InputForm from "@/components/Shared/InputForm";
@@ -8,6 +10,7 @@ import InputForm from "@/components/Shared/InputForm";
 import Admin from "layouts/Admin.js";
 
 export default function MyProduct() {
+  const sessionData = useSession()
   const [productData, setProductData] = useState({
     AvailableQuantity: '',
     moq: '',
@@ -19,13 +22,27 @@ export default function MyProduct() {
 
   const [errorInfo, setErrorInfo] = useState({})
   const [errorMessage, setErrorMessage] = useState(null)
+  const [succesMessage, setSuccesMessage] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const setDataHandler = (item, inputName) => {
     setProductData({...productData, [inputName]:item.value})
   }
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(productData)
+    setIsLoading(true)
+    const response = await axios.post(`/companyproduct/create`, productData, {
+      headers: {
+        "Authorization" : `Bearer ${sessionData.data.accessToken}`
+      }
+    })
+      .then((response) => {
+        let result = response.data.data
+        console.log(result)
+      }).catch((error) => {
+        console.log(error.response)
+      }).finally(() => {
+        setIsLoading(false)
+      })
   }
 
   return (
@@ -51,8 +68,34 @@ export default function MyProduct() {
         </div>
 
         <div className="mb-0 px-4 py-3 border-0 bg-white">
-          <form>
-              <div className="w-full md:w-1/2 px-3 mb-6">
+          <div className="px-3 w-full lg:w-1/2">
+            {errorMessage &&
+              <div  className="w-50">
+                  <div className="text-white px-6 py-4 border-0 relative mb-4 mt-5 bg-red-500">
+                      <span className="text-xl inline-block mr-5 align-middle">
+                          <i className="fas fa-bell"></i>
+                      </span>
+                      <span className="inline-block align-middle mr-8">
+                          <b className="capitalize">{errorMessage}</b>
+                      </span>
+                  </div>
+              </div>
+            }
+            {succesMessage &&
+              <div  className="w-50">
+                  <div className="text-white px-6 py-4 border-0 relative mb-4 mt-5 bg-emerald-500">
+                      <span className="text-xl inline-block mr-5 align-middle">
+                          <i className="fas fa-bell"></i>
+                      </span>
+                      <span className="inline-block align-middle mr-8">
+                          <b className="capitalize">{succesMessage}</b>
+                      </span>
+                  </div>
+              </div>
+            }
+          </div>
+          <form onSubmit={handleSubmit}>
+              <div className="w-full lg:w-1/2 px-3 mb-6">
                 <InputForm
                   label="Available Quantity"
                   inputDataName="AvailableQuantity"
@@ -60,7 +103,7 @@ export default function MyProduct() {
                   errorMsg=""
                 />
               </div>
-              <div className="w-full md:w-1/2 px-3 mb-6">
+              <div className="w-full lg:w-1/2 px-3 mb-6">
                 <InputForm
                   label="MOQ"
                   inputDataName="moq"
@@ -68,35 +111,35 @@ export default function MyProduct() {
                   errorMsg=""
                 />
               </div>
-              <div className="w-full md:w-1/2 px-3 mb-6">
+              <div className="w-full lg:w-1/2 px-3 mb-6">
                 <InputForm
                   label="Unit Price"
                   inputDataName="UnitPrice"
                   setData={setDataHandler}
                 />
               </div>
-              <div className="w-full md:w-1/2 px-3 mb-6">
+              <div className="w-full lg:w-1/2 px-3 mb-6">
                 <InputForm
                   label="Product ID"
                   inputDataName="product_id"
                   setData={setDataHandler}
                 />
               </div>
-              <div className="w-full md:w-1/2 px-3 mb-6">
+              <div className="w-full lg:w-1/2 px-3 mb-6">
                 <InputForm
                   label="Package"
                   inputDataName="package"
                   setData={setDataHandler}
                 />
               </div>
-              <div className="w-full md:w-1/2 px-3 mb-6">
+              <div className="w-full lg:w-1/2 px-3 mb-6">
                 <InputForm
                   label="Packaging"
                   inputDataName="packaging"
                   setData={setDataHandler}
                 />
               </div>
-              <div className="w-full md:w-1/2 px-3 mb-6 mt-20">
+              <div className="w-full lg:w-1/2 px-3 mb-6 mt-20">
                 <div className="mb-6">
                     {!isLoading && 
                         <button

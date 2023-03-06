@@ -71,7 +71,7 @@ export default function TableProduct(props) {
                         </div>
                     </div>
                 </div>
-                <div className="relative overflow-x-auto ">
+                <div className="relative overflow-x-auto shadow">
                     <table className={`w-full text-sm text-left text-gray-500 shadow-md ${props.customClass}`}>
                         <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                             <tr>
@@ -94,6 +94,9 @@ export default function TableProduct(props) {
                                     Date Code
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-center">
+                                    Status
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-center">
                                     *
                                 </th>
                             </tr>
@@ -103,50 +106,38 @@ export default function TableProduct(props) {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                            {item.country}
+                                            {item.companies_products[0].country}
                                         </th>
                                         <td className="px-6 py-4">
-                                            {item.AvailableQuantity}
+                                            {item.companies_products[0].AvailableQuantity}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item.moq}
+                                            {item.companies_products[0].moq}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item.ManufacturerNumber}
+                                            {item.companies_products[0].ManufacturerNumber}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item.Description}
+                                            {item.companies_products[0].Description}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item.dateCode}
+                                            {item.companies_products[0].dateCode}
+                                        </td>
+                                        <td className="px-6 py-4 uppercase">
+                                            {item.companies_products[0].status}
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="inline-flex">
                                                 <button className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Edit</button>
                                                 {/* <button className="font-medium text-blue-600 text-white bg-red-400 p-2">Delete</button> */}
                                             </div>
-                                            {/* <button onClick={() => inquiryItem(item)} className="font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry</button> */}
                                         </td>
                                     </tr>
                                 )
                             })}
                         </tbody>
                     </table>
-                    <div className="mt-2">
-                        <h2>Showing {metaData.perPage} data from {metaData.total} data</h2>
-                    </div>
                 </div>
-            </div>
-            {props.isLoading &&<div>
-                <div className='text-center my-auto mt-10'>
-                    <i className="fas fa-circle-notch fa-spin text-blueGray-700 my-auto mx-10 fa-2xl"></i>
-                </div>
-            </div>}
-
-            <div className="flex justify-center mt-10 mx-auto justify-center">
-                {links.map((item, index) => {
-                    return setPaginationLabel(item, index)
-                })}
             </div>
         </>
     );

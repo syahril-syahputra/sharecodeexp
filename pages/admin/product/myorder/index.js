@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
-import axios from "lib/axios"
+import React, {useState, useEffect} from "react";
 import { useSession } from "next-auth/react";
-
+import axios from "@/lib/axios";
 // components
-import TableProduct from "components/Table/TableProduct"
+import TableOrder from "components/Table/TableOrder"
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
-export default function MyProduct() {
+export default function MyOrder() {
   const session = useSession()
   const [user, setUser] = useState({
     accessToken: ''
@@ -28,7 +27,7 @@ export default function MyProduct() {
   const searchData = async (srch, page=1) =>{
     if(!!user.accessToken){
       setIsLoading(true)
-      const response = await axios.get(`/companyproduct?page=${page}`,
+      const response = await axios.get(`/myorders?page=${page}`,
           {
             headers: {
               "Authorization" : `Bearer ${user.accessToken}`
@@ -36,7 +35,7 @@ export default function MyProduct() {
           }
         )
         .then((response) => {
-          let result = response.data.data
+          let result = response.data
           setData(result.data)
           setLinks(result.links)
           setMetaData({
@@ -64,20 +63,19 @@ export default function MyProduct() {
   return (
     <>
       <div className="">
-
         {/* <div className="w-full xl:w-8/12 mb-12 xl:mb-0 px-4"> */}
           {/* <CardLineChart /> */}
-            <TableProduct
+            <TableOrder
               setPage={setPage}
               isLoading={isLoading}
               data={data}
               links={links}
               metaData={metaData}
-            ></TableProduct>
+            ></TableOrder>
         {/* </div> */}
       </div>
     </>
   );
 }
 
-MyProduct.layout = Admin;
+MyOrder.layout = Admin;

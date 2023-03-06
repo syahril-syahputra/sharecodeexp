@@ -1,19 +1,20 @@
 import { useSession, signIn, signOut } from "next-auth/react"
 import Link from "next/link";
+import IndexUserDropdown from "components/Dropdowns/IndexUserDropdown.js";
 
 export default function Component() {
     const {data, status} = useSession();
     if (status === 'authenticated') {
         return (
         <>
-            <li className="flex items-center">
+            <li className="flex items-center mr-5">
                 <Link href="/admin/dashboard">
                     <i className="text-blueGray-400 fas fa-home text-lg leading-lg " />
                     <span className="lg:hidden inline-block ml-2">Dashboard</span>
                 </Link>
             </li>
 
-            <li>
+            {/* <li>
                 <button
                     onClick={() => {
                         signOut({
@@ -26,6 +27,9 @@ export default function Component() {
                     <i className="fas fa-arrow-right-from-bracket mr-2"></i> 
                     Sign Out
                 </button>
+            </li> */}
+            <li>
+                <IndexUserDropdown />
             </li>
             
         </>

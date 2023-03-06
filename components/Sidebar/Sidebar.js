@@ -1,13 +1,28 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useSession, signIn, signOut } from "next-auth/react"
 
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
 
+//
+import CompanyControl from "./CompanyControl";
+import ProductBar from "./Product";
+import SettingsBar from "./Settings";
+
 export default function Sidebar() {
   const [collapseShow, setCollapseShow] = React.useState("hidden");
-  const router = useRouter();
+  const router = useRouter()
+
+
+  const session = useSession()
+  const [userDetail, setUserDetail] = useState()
+  console.log(userDetail)
+  useEffect(() => { 
+    setUserDetail(session.data?.user.userDetail) 
+  }, [session])
+
   return (
     <>
       <nav className="md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6">
@@ -97,65 +112,16 @@ export default function Sidebar() {
               </li>
             </ul>
 
-            {/* Divider */}
-            <hr className="my-4 md:min-w-full" />
-            {/* Heading */}
-            <h6 className="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
-              Product
-            </h6>
-            {/* Navigation */}
+            {userDetail?.role_id === 2 ? 
+              <ProductBar/>
+            : null }
 
-            <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
-              <li className="items-center">
-                <Link href="/admin/product/myproduct"
-                  className={
-                    "text-xs uppercase py-3 font-bold block " +
-                    (router.pathname.indexOf("/admin/product/myproduct") !== -1
-                      ? "text-lightBlue-500 hover:text-lightBlue-600"
-                      : "text-blueGray-700 hover:text-blueGray-500")
-                  }>
-                    <i className="fas fa-shop text-blueGray-400 mr-2 text-sm"></i>{" "}
-                    My Product 
-                </Link>
-              </li>
-            </ul>
-            <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
-              <li className="items-center">
-                <Link href="/admin/product/mycart"
-                  className={
-                    "text-xs uppercase py-3 font-bold block " +
-                    (router.pathname.indexOf("/admin/product/mycart") !== -1
-                      ? "text-lightBlue-500 hover:text-lightBlue-600"
-                      : "text-blueGray-700 hover:text-blueGray-500")
-                  }>
-                    <i className="fas fa-cart-shopping text-blueGray-400 mr-2 text-sm"></i>{" "}
-                    My Chart
-                </Link>
-              </li>
-            </ul>
+            <SettingsBar/>
 
-            {/* Divider */}
-            <hr className="my-4 md:min-w-full" />
-            {/* Heading */}
-            <h6 className="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
-              Settings
-            </h6>
-            {/* Navigation */}
+            {userDetail?.role_id === 1 ? 
+              <CompanyControl/>
+            : null }
 
-            <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
-              <li className="items-center">
-                <Link href="/admin/settings/account"
-                  className={
-                    "text-xs uppercase py-3 font-bold block " +
-                    (router.pathname.indexOf("/admin/settings/account") !== -1
-                      ? "text-lightBlue-500 hover:text-lightBlue-600"
-                      : "text-blueGray-700 hover:text-blueGray-500")
-                  }>
-                    <i className="fas fa-user text-blueGray-400 mr-2 text-sm"></i>{" "}
-                    Account
-                </Link>
-              </li>
-            </ul>
           </div>
         </div>
       </nav>

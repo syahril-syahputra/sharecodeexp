@@ -1,7 +1,6 @@
 import { baseApiUrl } from '../baseApi';
 import FormData from 'form-data';
 import axios from 'axios';
-const fs = require('fs');
 
 export default async (req, res) => {
     const data = req.body
