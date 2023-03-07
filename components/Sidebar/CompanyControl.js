@@ -16,14 +16,14 @@ export default function CompanyControl(){
             {/* Navigation */}
             <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
                 <li className="items-center">
-                    <Link href="/admin/settings/masteraccount"
+                    <Link href="/admin/companycontrol/company"
                     className={
                         "text-xs uppercase py-3 font-bold block " +
-                        (router.pathname.indexOf("/admin/settings/masteraccount") !== -1
+                        (router.pathname.indexOf("/admin/companycontrol/company") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
-                        <i className="fas fa-user text-blueGray-400 mr-2 text-sm"></i>{" "}
+                        <i className="fas fa-building text-blueGray-400 mr-2 text-sm"></i>{" "}
                         Company List
                     </Link>
                 </li>
@@ -31,14 +31,14 @@ export default function CompanyControl(){
 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
                 <li className="items-center">
-                    <Link href="/admin/settings/mycompany"
+                    <Link href="/admin/companycontrol/product"
                     className={
                         "text-xs uppercase py-3 font-bold block " +
-                        (router.pathname.indexOf("/admin/settings/mycompany") !== -1
+                        (router.pathname.indexOf("/admin/companycontrol/product") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
-                        <i className="fas fa-user text-blueGray-400 mr-2 text-sm"></i>{" "}
+                        <i className="fas fa-shop text-blueGray-400 mr-2 text-sm"></i>{" "}
                         Product List
                     </Link>
                 </li>
@@ -46,14 +46,14 @@ export default function CompanyControl(){
 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
                 <li className="items-center">
-                    <Link href="/admin/settings/account"
+                    <Link href="/admin/companycontrol/order"
                     className={
                         "text-xs uppercase py-3 font-bold block " +
-                        (router.pathname.indexOf("/admin/settings/account") !== -1
+                        (router.pathname.indexOf("/admin/companycontrol/order") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
-                        <i className="fas fa-user text-blueGray-400 mr-2 text-sm"></i>{" "}
+                        <i className="fas fa-truck text-blueGray-400 mr-2 text-sm"></i>{" "}
                         Order List
                     </Link>
                 </li>

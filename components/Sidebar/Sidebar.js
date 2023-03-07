@@ -114,9 +114,11 @@ export default function Sidebar() {
               <ProductBar/>
             : null }
 
-            <SettingsBar
-              statusId={userDetail?.status_id}
-            />
+            {userDetail?.role_id === 2 ? 
+              <SettingsBar
+                statusId={userDetail?.status_id}
+              />
+            : null }
 
             {userDetail?.role_id === 1 ? 
               <CompanyControl/>
