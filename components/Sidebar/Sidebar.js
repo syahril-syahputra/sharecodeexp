@@ -15,10 +15,8 @@ export default function Sidebar() {
   const [collapseShow, setCollapseShow] = React.useState("hidden");
   const router = useRouter()
 
-
   const session = useSession()
   const [userDetail, setUserDetail] = useState()
-  console.log(userDetail)
   useEffect(() => { 
     setUserDetail(session.data?.user.userDetail) 
   }, [session])
@@ -116,7 +114,9 @@ export default function Sidebar() {
               <ProductBar/>
             : null }
 
-            <SettingsBar/>
+            <SettingsBar
+              statusId={userDetail?.status_id}
+            />
 
             {userDetail?.role_id === 1 ? 
               <CompanyControl/>

@@ -12,13 +12,10 @@ import Admin from "layouts/Admin.js";
 export default function MyProduct() {
   const sessionData = useSession()
   const [inputData, setInputData] = useState({
-    AvailableQuantity: '',
-    moq: '',
-    package: '',
-    packaging: '',
-    country: '',
-    ManufacturerNumber: '',
-    Manufacture: ''
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: ''
   });
 
   const [errorInfo, setErrorInfo] = useState({})
@@ -33,23 +30,20 @@ export default function MyProduct() {
     setIsLoading(true)
     setErrorInfo({})
     setErrorMessage(null)
-    const response = await axios.post(`/companyproduct/create`, inputData, {
+    const response = await axios.post(`/master/users/create`, inputData, {
       headers: {
         "Authorization" : `Bearer ${sessionData.data.accessToken}`
       }
     })
       .then((response) => {
         let result = response.data.data
-        setSuccesMessage("Create Product Success")
+        setSuccesMessage("Create Account Success")
         setInputData({
-          AvailableQuantity: '',
-          moq: '',
-          package: '',
-          packaging: '',
-          country: '',
-          ManufacturerNumber: '',
-          Manufacture: ''
-        }); 
+            name: '',
+            email: '',
+            password: '',
+            password_confirmation: ''
+          });    
       }).catch((error) => {
         console.log(error.response)
         setErrorMessage(error.response.data.message)
@@ -70,14 +64,9 @@ export default function MyProduct() {
                       "font-semibold text-lg text-blueGray-700"
                   }
                   >
-                  Add New Product
+                  Add New Account
                   </h3>
               </div>
-              {/* <div className="px-4 mt-2">
-                  <Link href="/admin/product/myproduct/add" className="relative bg-blueGray-700 p-2 text-white">
-                      <i className="mr-2 ml-1 fas fa-plus text-white"></i>
-                      Add Product</Link>
-              </div> */}
           </div>
         </div>
 
@@ -111,65 +100,40 @@ export default function MyProduct() {
           <form onSubmit={handleSubmit}>
               <div className="w-full lg:w-1/2 px-3 mb-6">
                 <InputForm
-                  label="Available Quantity"
-                  inputDataName="AvailableQuantity"
-                  value={inputData.AvailableQuantity}
-                  setData={setDataHandler}
-                  errorMsg={errorInfo.AvailableQuantity}
+                    label="Name"
+                    inputDataName="name"
+                    value={inputData.name}
+                    setData={setDataHandler}
+                    errorMsg={errorInfo.name}
                 />
               </div>
               <div className="w-full lg:w-1/2 px-3 mb-6">
                 <InputForm
-                  label="MOQ"
-                  inputDataName="moq"
-                  value={inputData.moq}
+                  label="Email"
+                  inputDataName="email"
+                  value={inputData.email}
                   setData={setDataHandler}
-                  errorMsg={errorInfo.moq}
+                  errorMsg={errorInfo.email}
                 />
               </div>
               <div className="w-full lg:w-1/2 px-3 mb-6">
                 <InputForm
-                  label="Country"
-                  inputDataName="country"
-                  value={inputData.country}
+                  label="Password"
+                  inputDataName="password"
+                  value={inputData.password}
                   setData={setDataHandler}
-                  errorMsg={errorInfo.country}
+                  errorMsg={errorInfo.password}
+                  inputType="password"
                 />
               </div>
               <div className="w-full lg:w-1/2 px-3 mb-6">
                 <InputForm
-                  label="Manufacturer Number"
-                  inputDataName="ManufacturerNumber"
-                  value={inputData.ManufacturerNumber}
+                  label="Password Confirmation"
+                  inputDataName="password_confirmation"
+                  value={inputData.password_confirmation}
                   setData={setDataHandler}
-                  errorMsg={errorInfo.ManufacturerNumber}
-                />
-              </div>
-              <div className="w-full lg:w-1/2 px-3 mb-6">
-                <InputForm
-                  label="Manufacture"
-                  inputDataName="Manufacture"
-                  value={inputData.Manufacture}
-                  setData={setDataHandler}
-                  errorMsg={errorInfo.Manufacture}
-                />
-              </div>
-              <div className="w-full lg:w-1/2 px-3 mb-6">
-                <InputForm
-                  label="Package"
-                  inputDataName="package"
-                  value={inputData.package}
-                  setData={setDataHandler}
-                  errorMsg={errorInfo.package}
-                />
-              </div>
-              <div className="w-full lg:w-1/2 px-3 mb-6">
-                <InputForm
-                  label="Packaging"
-                  inputDataName="packaging"
-                  value={inputData.packaging}
-                  setData={setDataHandler}
-                  errorMsg={errorInfo.packaging}
+                  errorMsg={errorInfo.password_confirmation}
+                  inputType="password"
                 />
               </div>
               <div className="w-full lg:w-1/2 px-3 mb-6 mt-20">

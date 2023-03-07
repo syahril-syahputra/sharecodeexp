@@ -28,7 +28,7 @@ export default function MyProduct() {
   const searchData = async (srch, page=1) =>{
     if(!!user.accessToken){
       setIsLoading(true)
-      const response = await axios.get(`/companyproduct?page=${page}`,
+      const response = await axios.get(`/companyproduct/pendding?page=${page}`,
           {
             headers: {
               "Authorization" : `Bearer ${user.accessToken}`
@@ -66,13 +66,12 @@ export default function MyProduct() {
       <div className="">
           <div className="mb-10">
             <TableProduct
-              title="Company Product"
+              title="Pending Product"
               setPage={setPage}
               isLoading={isLoading}
               data={data}
               links={links}
               metaData={metaData}
-              addProduct
             ></TableProduct>
           </div>
       </div>

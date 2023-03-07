@@ -1,17 +1,21 @@
 import { useRouter } from "next/router"
 import Link from "next/link";
+import { useState } from "react";
 
-export default function SettingsBar(){
+export default function SettingsBar(props){
     const router = useRouter()
+    const statusId = props.statusId
     return (
         <>
             {/* Divider */}
             <hr className="my-4 md:min-w-full" />
             {/* Heading */}
             <h6 className="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
-              Settings
+            Settings
             </h6>
             {/* Navigation */}
+
+            {statusId === 1 ? 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
               <li className="items-center">
                 <Link href="/admin/settings/masteraccount"
@@ -23,10 +27,12 @@ export default function SettingsBar(){
                   }>
                     <i className="fas fa-user text-blueGray-400 mr-2 text-sm"></i>{" "}
                     Master Account
-                </Link>
+                </Link> 
               </li>
             </ul>
+            : null}
 
+            {statusId === 1 ? 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
               <li className="items-center">
                 <Link href="/admin/settings/mycompany"
@@ -41,6 +47,7 @@ export default function SettingsBar(){
                 </Link>
               </li>
             </ul>
+            : null}
 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
               <li className="items-center">

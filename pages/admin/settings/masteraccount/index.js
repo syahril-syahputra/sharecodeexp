@@ -1,14 +1,16 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
+import axios from "lib/axios"
 import { useSession } from "next-auth/react";
-import axios from "@/lib/axios";
 
 // components
-import TableCart from "components/Table/TableCart"
+import TableAccount from "components/Table/Settings/TableAccount"
+
+// components
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
-export default function MyCart() {
+export default function Account() {
   const session = useSession()
   const [user, setUser] = useState({
     accessToken: ''
@@ -16,19 +18,12 @@ export default function MyCart() {
   useEffect(() => { setUser({accessToken: session.data?.accessToken}) }, [session])
 
   //data search
-  const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
-  const [links, setLinks] = useState([])
-  const [metaData, setMetaData] = useState({
-    total: 0,
-    perPage: 0,
-    lastPage: 0
-  })
-  const searchData = async (srch, page=1) =>{
+  const getData = async () =>{
     if(!!user.accessToken){
       setIsLoading(true)
-      const response = await axios.get(`/cartlist?page=${page}`,
+      const response = await axios.get(`/master/users`,
           {
             headers: {
               "Authorization" : `Bearer ${user.accessToken}`
@@ -38,15 +33,6 @@ export default function MyCart() {
         .then((response) => {
           let result = response.data
           setData(result.data)
-          setLinks(result.links)
-          setMetaData({
-            total: result.total,
-            perPage: result.per_page,
-            lastPage: result.last_page,
-            currentPage: result.current_page,
-            nextPage: result.next_page_url ? true : false,
-            prevPage: result.prev_page_url ? true : false
-          })
         }).catch((error) => {
           console.log(error.response)
         }).finally(() => {
@@ -54,28 +40,24 @@ export default function MyCart() {
         })
     }
   }
-  const setPage = (item) => {
-    searchData(search, item)
-  }
   useEffect(() => {
-    searchData(search)
+    getData()
   }, [user])
+
   return (
     <>
       <div className="">
+
         {/* <div className="w-full xl:w-8/12 mb-12 xl:mb-0 px-4"> */}
           {/* <CardLineChart /> */}
-            <TableCart
-              setPage={setPage}
+            <TableAccount
               isLoading={isLoading}
               data={data}
-              links={links}
-              metaData={metaData}
-            ></TableCart>
+            ></TableAccount>
         {/* </div> */}
       </div>
     </>
   );
 }
 
-MyCart.layout = Admin;
+Account.layout = Admin;

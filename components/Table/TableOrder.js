@@ -61,13 +61,13 @@ export default function TableProduct(props) {
                                 "font-semibold text-lg text-blueGray-700"
                             }
                             >
-                            My Product
+                            My Order
                             </h3>
                         </div>
                         <div className="px-4 my-2">
-                            <Link href="/admin/product/myproduct/add" className="relative bg-blueGray-700 p-2 text-white">
+                            {/* <Link href="/admin/product/myproduct/add" className="relative bg-blueGray-700 p-2 text-white">
                                 <i className="mr-2 ml-1 fas fa-plus text-white"></i>
-                                Add Product</Link>
+                                Add Product</Link> */}
                         </div>
                     </div>
                 </div>

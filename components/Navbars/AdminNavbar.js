@@ -1,8 +1,15 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
+import { useSession } from "next-auth/react"
 
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
 
 export default function Navbar() {
+  const session = useSession()
+  const [userDetail, setUserDetail] = useState()
+  useEffect(() => { 
+    setUserDetail(session.data?.user.userDetail) 
+  }, [session])
+
   return (
     <>
       {/* Navbar */}
@@ -14,7 +21,9 @@ export default function Navbar() {
             href="#pablo"
             onClick={(e) => e.preventDefault()}
           >
-            Member Area
+            {userDetail?.role_id === 1 ? 
+              'STAFF ONLY'
+            : 'MEMBER AREA' }
           </a>
           {/* User */}
           <ul className="flex-col md:flex-row list-none items-center hidden md:flex">

@@ -53,7 +53,7 @@ export default function TableProduct(props) {
     return (
         <>  
             <div className="relative">
-                <div className="mb-0 px-4 py-3 border-0 bg-white">
+                <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-between">
                         <div className="px-4">
                             <h3
@@ -61,11 +61,18 @@ export default function TableProduct(props) {
                                 "font-semibold text-lg text-blueGray-700"
                             }
                             >
-                            My Product
+                            {props.title}
                             </h3>
                         </div>
+                        
                         <div className="px-4 my-2">
-                            <Link href="/admin/product/myproduct/add" className="relative bg-blueGray-700 p-2 text-white">
+                            <Link href="/admin/product/myproduct/pending" className="m-1 relative bg-orange-500 p-2 text-white">
+                                <i className="mr-2 ml-1 fas fa-clock text-white"></i>
+                                Pending Product</Link>
+                            <Link href="/admin/product/myproduct/rejected" className="m-1 relative bg-red-500 p-2 text-white">
+                                <i className="mr-2 ml-1 fas fa-times text-white"></i>
+                                Rejected Product</Link>
+                            <Link href="/admin/product/myproduct/add" className="m-1 relative bg-blueGray-700 p-2 text-white">
                                 <i className="mr-2 ml-1 fas fa-plus text-white"></i>
                                 Add Product</Link>
                         </div>
@@ -122,7 +129,9 @@ export default function TableProduct(props) {
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="inline-flex">
-                                                <button className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Edit</button>
+                                                <Link 
+                                                    href={`/admin/product/myproduct/view?manufacturerNumber=${item.ManufacturerNumber}`}
+                                                    className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">View</Link>
                                                 {/* <button className="font-medium text-blue-600 text-white bg-red-400 p-2">Delete</button> */}
                                             </div>
                                             {/* <button onClick={() => inquiryItem(item)} className="font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry</button> */}
