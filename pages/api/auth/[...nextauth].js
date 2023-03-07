@@ -10,7 +10,7 @@ const authOptions = {
             type: 'credentials',
             credentials: {},
             async authorize(credentials, req){
-                const res = await fetch("http://127.0.0.1:8000/v1/login", {
+                const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/login", {
                     method: 'POST',
                     body: JSON.stringify(credentials),
                     headers: { 
