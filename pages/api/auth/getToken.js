@@ -14,7 +14,7 @@ export default async (req, res) => {
 }
 
 const getYTData = async () => {
-  const response = await fetch("http://127.0.0.1:8000/v1/test", {
+  const response = await fetch("https://rest.exepart.com/v1/test", {
         method: 'GET',
         headers: { 
             "Content-Type": "application/json",
