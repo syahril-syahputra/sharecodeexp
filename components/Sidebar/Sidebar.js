@@ -110,15 +110,15 @@ export default function Sidebar() {
               </li>
             </ul>
 
-            {userDetail?.role_id === 2 ? 
+            {/* {userDetail?.role_id === 2 ?  */}
               <ProductBar/>
-            : null }
+            {/* // : null } */}
 
-            {userDetail?.role_id === 2 ? 
+            {/* {userDetail?.role_id === 2 ?  */}
               <SettingsBar
                 statusId={userDetail?.status_id}
               />
-            : null }
+            {/* : null } */}
 
             {userDetail?.role_id === 1 ? 
               <CompanyControl/>
