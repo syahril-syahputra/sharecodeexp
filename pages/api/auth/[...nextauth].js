@@ -20,6 +20,7 @@ const authOptions = {
                 })
                 const user = await res.json()
                 if (res.ok && user) {
+                    console.log(user)
                     return {
                         name: user.data.user.name,
                         userDetail: user.data.user,
