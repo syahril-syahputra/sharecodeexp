@@ -35,13 +35,13 @@ export default function Account() {
                     </h3>
                 </div>
                 <div className="px-4 my-2">
-                {userDetail?.status_id === 1 ? 
+                {userDetail?.status_id == 1 ? 
                     <Link href="/admin/settings/masteraccount/add" className="relative bg-orange-500 p-2 text-white">
                       <i className="mr-2 ml-1 fas fa-pen text-white"></i>
                     Update Master</Link>
                 : null }
 
-                {userDetail?.status_id === 2 ? 
+                {userDetail?.status_id == 2 ? 
                     <Link href="/admin/settings/masteraccount/add" className="relative bg-orange-500 p-2 text-white">
                       <i className="mr-2 ml-1 fas fa-pen text-white"></i>
                     Update User</Link>
@@ -49,7 +49,7 @@ export default function Account() {
                 </div>
             </div>
             <div className="p-10">
-            {userDetail?.status_id === 1 ? 
+            {userDetail?.status_id == 1 ? 
               <h2 className="text-md text-blueGray-700 font-bold">Master Account</h2>
             : <h2 className="text-md text-blueGray-700 font-bold">User Account</h2> }
 

@@ -120,7 +120,7 @@ export default function Sidebar() {
               />
             {/* : null } */}
 
-            {userDetail?.role_id === 1 ? 
+            {userDetail?.role_id == 1 ? 
               <CompanyControl/>
             : null }
 

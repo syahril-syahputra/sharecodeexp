@@ -15,7 +15,7 @@ export default function SettingsBar(props){
             </h6>
             {/* Navigation */}
 
-            {statusId === 1 ? 
+            {statusId == 1 ? 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
               <li className="items-center">
                 <Link href="/admin/settings/masteraccount"
@@ -32,7 +32,7 @@ export default function SettingsBar(props){
             </ul>
             : null}
 
-            {statusId === 1 ? 
+            {statusId == 1 ? 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
               <li className="items-center">
                 <Link href="/admin/settings/mycompany"

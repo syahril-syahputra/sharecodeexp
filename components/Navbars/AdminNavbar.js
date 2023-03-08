@@ -21,7 +21,7 @@ export default function Navbar() {
             href="#pablo"
             onClick={(e) => e.preventDefault()}
           >
-            {userDetail?.role_id === 1 ? 
+            {userDetail?.role_id == 1 ? 
               'STAFF ONLY'
             : 'MEMBER AREA' }
           </a>
