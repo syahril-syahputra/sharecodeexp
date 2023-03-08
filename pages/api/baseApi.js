@@ -1,1 +1,0 @@
-export const baseApiUrl = "https://rest.exepart.com/v1"

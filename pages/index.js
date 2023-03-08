@@ -10,6 +10,7 @@ import axios from "lib/axios";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import MemberCard from "@/components/LandingPage/MemberCard";
+import ManufacturerCard from "@/components/LandingPage/ManufacturerCard";
 import ComponentTable from "@/components/LandingPage/ComponentTable";
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
 
@@ -155,10 +156,41 @@ export default function Index() {
         </div>
       </section>
 
-      <section className="mt-20 md:mt-20 pb-40 relative bg-white">
+      <section className="mt-20 md:mt-20 pb-20 relative bg-white">
         <div className="container mx-auto">
           <div className="justify-center text-center flex flex-wrap mb-20">
             <div className="w-full md:w-6/12 px-12 md:px-4">
+              <h2 className="font-semibold text-4xl">Our Manufacturer</h2>
+            </div>
+          </div>
+
+          <div className="w-full px-12 md:px-4">
+            <div className="grid gap-4 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 place-content-center">
+              <ManufacturerCard
+                imageSrc='/img/manufacturer/bluespacelogo_blue.png'
+                label='BlueSpace'
+              />
+              <ManufacturerCard
+                imageSrc='/img/manufacturer/HESA_LOGO.png'
+                label='HESA'
+              />
+              <ManufacturerCard
+                imageSrc='/img/manufacturer/Hitit_Defense.png'
+                label='Hitit Defense'
+              />
+              <ManufacturerCard
+                imageSrc='/img/manufacturer/RFLOGY-Logo.png'
+                label='RFLOGY'
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-20 md:mt-20 pb-40 relative bg-blueGray-100">
+        <div className="container mx-auto">
+          <div className="justify-center text-center flex flex-wrap mb-20">
+            <div className="w-full md:w-6/12 px-12 md:px-4 mt-16">
               <h2 className="font-semibold text-4xl">Our Members</h2>
             </div>
           </div>
@@ -167,13 +199,31 @@ export default function Index() {
             <div className="mb-4 text-end">
               <Link href="/" className="font-medium text-blueGray-700 underline">View all Members</Link>
             </div>
-            <div className="grid gap-4 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2">
-              <MemberCard/>
-              <MemberCard/>
-              <MemberCard/>
-              <MemberCard/>
-              <MemberCard/>
-              <MemberCard/>
+            <div className="grid gap-4 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 place-content-center">
+              <MemberCard
+                imageSrc='/img/exepart-black.png'
+                label='EXEPART'
+              />
+              <MemberCard
+                imageSrc='/img/manufacturer/RFLOGY-Logo.png'
+                label='RFLOGY'
+              />
+              <MemberCard
+                imageSrc='/img/manufacturer/Hitit_Defense.png'
+                label='Hitit Defense'
+              />
+              <MemberCard
+                imageSrc='/img/exepart-black.png'
+                label='EXEPART'
+              />
+              <MemberCard
+                imageSrc='/img/manufacturer/RFLOGY-Logo.png'
+                label='RFLOGY'
+              />
+              <MemberCard
+                imageSrc='/img/manufacturer/Hitit_Defense.png'
+                label='Hitit Defense'
+              />
             </div>
           </div>
         </div>
