@@ -2,7 +2,7 @@ const siteMetadata = {
   title: 'EXEpart',
   author: 'Venatronics Developer',
   headerTitle: 'EXEpart',
-  description: 'EXEpart',
+  description: 'EXEpart is a closed sales platform that only allows verified industrial manufacturers to list their excess stocks and buy stocks from fellow manufacturers. It is a great tool to overcome the shortage crisis while enabling the manufacturers to capitalize their unused stocks. No brokers are allowed to register at EXEpart.com',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'exepart.com',

@@ -47,7 +47,7 @@ export default function Index() {
           prevPage: result.prev_page_url ? true : false
         })
       }).catch((error) => {
-        console.log(error.response)
+        // console.log(error.response)
       }).finally(() => {
         setIsLoading(false)
       })
@@ -116,10 +116,10 @@ export default function Index() {
                   </div>
                 }
                 {!isSuggestionLoading && 
-                  <div className="flex text-blueGray-700">Suggestion : {suggestion.map((name, index) => (  
-                    <p className="mx-1 underline" key={index}>  
+                  <div className="flex justify-center bg-indigo-900">Suggestion : {suggestion.map(name => (  
+                    <Link key={name} href={`/product/search?q=${name}`} className="mx-1 underline">  
                       {name}  
-                    </p>  
+                    </Link>  
                   ))}</div>
                 }
               </div>

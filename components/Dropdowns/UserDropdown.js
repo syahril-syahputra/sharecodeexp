@@ -3,6 +3,8 @@ import { createPopper } from "@popperjs/core";
 import { useSession, signIn, signOut } from "next-auth/react"
 import { useRouter } from "next/router";
 
+import { usePopper } from 'react-popper';
+
 const UserDropdown = () => {
   // dropdown props
   const router = useRouter()
@@ -24,11 +26,11 @@ const UserDropdown = () => {
   const closeDropdownPopover = () => {
     setDropdownPopoverShow(false);
   };
+
   return (
     <>
       <a
         className="text-blueGray-500 block"
-        href="#pablo"
         ref={btnDropdownRef}
         onClick={(e) => {
           e.preventDefault();
@@ -41,7 +43,8 @@ const UserDropdown = () => {
           </div>
         </div>
       </a>
-      <div
+
+      {/* <div
         ref={popoverDropdownRef}
         className={
           (dropdownPopoverShow ? "block " : "hidden ") +
@@ -80,7 +83,7 @@ const UserDropdown = () => {
         >
           Logout
         </a>
-      </div>
+      </div> */}
     </>
   );
 };

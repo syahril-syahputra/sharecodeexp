@@ -3,12 +3,12 @@ import Link from "next/link";
 // components
 
 import CardLineChart from "components/Cards/CardLineChart.js";
-import ProductList from "@/components/Table/CompanyControl/ProductList";
+import CompanyList from "@/components/Table/CompanyControl/CompanyList";
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
-export default function Product() {
+export default function PendingCompany() {
   return (
     <>
     <div className="relative">
@@ -35,24 +35,24 @@ export default function Product() {
                       "font-semibold text-lg text-blueGray-700"
                   }
                   >
-                  Company Product
+                  Pending Member
                   </h3>
               </div>
               <div className="px-4 my-2">
-                  <Link href="/admin/companycontrol/product/pending" className="m-1 relative bg-orange-500 p-2 text-white">
+                  <Link href="/admin/companycontrol/company/pending" className="m-1 relative bg-orange-500 p-2 text-white">
                       <i className="mr-2 ml-1 fas fa-clock text-white"></i>
-                      Pending Product</Link>
-                  <Link href="/admin/companycontrol/product/rejected" className="m-1 relative bg-red-500 p-2 text-white">
+                      Pending</Link>
+                  <Link href="/admin/companycontrol/company/rejected" className="m-1 relative bg-red-500 p-2 text-white">
                       <i className="mr-2 ml-1 fas fa-times text-white"></i>
-                      Rejected Product</Link>
+                      Rejected</Link>
               </div>
           </div>
       </div>
 
-      <ProductList />
+      <CompanyList />
     </div>
     </>
   );
 }
 
-Product.layout = Admin;
+PendingCompany.layout = Admin;

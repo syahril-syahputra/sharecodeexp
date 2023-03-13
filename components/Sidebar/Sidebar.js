@@ -17,8 +17,10 @@ export default function Sidebar() {
 
   const session = useSession()
   const [userDetail, setUserDetail] = useState()
+  const [companyStatus, setCompanyStatus] = useState()
   useEffect(() => { 
     setUserDetail(session.data?.user.userDetail) 
+    setCompanyStatus(session.data?.user.isCompanyConfirmed) 
   }, [session])
 
   return (
@@ -110,15 +112,13 @@ export default function Sidebar() {
               </li>
             </ul>
 
-            {/* {userDetail?.role_id === 2 ?  */}
-              <ProductBar/>
-            {/* // : null } */}
+            {companyStatus == "true" ? 
+                <ProductBar/>
+              : null }
 
-            {/* {userDetail?.role_id === 2 ?  */}
               <SettingsBar
                 statusId={userDetail?.status_id}
               />
-            {/* : null } */}
 
             {userDetail?.role_id == 1 ? 
               <CompanyControl/>

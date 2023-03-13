@@ -1,6 +1,7 @@
 import { useSession, signIn, signOut } from "next-auth/react"
 import Link from "next/link";
 import IndexUserDropdown from "components/Dropdowns/IndexUserDropdown.js";
+import UserPopover from "components/Shared/Popover/UserPopover"
 
 export default function Component() {
     const {data, status} = useSession();
@@ -13,23 +14,17 @@ export default function Component() {
                     <span className="lg:hidden inline-block ml-2">Dashboard</span>
                 </Link>
             </li>
-
-            {/* <li>
-                <button
-                    onClick={() => {
-                        signOut({
-                            callbackUrl: `${window.location.origin}`
-                          });
-                    }}
-                    className="bg-blueGray-700 text-white active:bg-blueGray-600 text-xs font-bold uppercase px-4 py-2 shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150"
-                    type="button"
-                    >
-                    <i className="fas fa-arrow-right-from-bracket mr-2"></i> 
-                    Sign Out
-                </button>
-            </li> */}
             <li>
                 <IndexUserDropdown />
+            </li>
+            <li>
+            <button title="Logout"
+                className="bg-indigo-900 text-white active:bg-blueGray-600 text-xs font-bold px-4 py-2 shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 mb-3 ease-linear transition-all duration-150"
+            type="button"
+            >
+            <i className="fas fa-right-from-bracket"></i> 
+                
+            </button>
             </li>
             
         </>
@@ -42,7 +37,7 @@ export default function Component() {
                     onClick={() => {
                         signIn();
                     }}
-                    className="bg-blueGray-700 text-white active:bg-blueGray-600 text-xs font-bold uppercase px-4 py-2 shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150"
+                    className="bg-blue-900 text-white active:bg-blueGray-600 text-xs font-bold uppercase px-4 py-2 shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150"
                     type="button"
                     >
                     <i className="fas fa-user mr-2"></i> 

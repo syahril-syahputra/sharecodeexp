@@ -1,10 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
 
 // components
+import ChangeStatus from "@/components/Modal/CompanyControl/ChangeStatus"
 
-export default function TableProduct(props) {
+export default function OrderCompany(props) {
     const data = props.data
     const links = props.links
     const metaData = props.metaData
@@ -50,40 +51,20 @@ export default function TableProduct(props) {
             </button>
         )
     }
+
+    const [showModal, setShowModal] = useState(false);
     return (
         <>  
             <div className="relative">
-                <div className="px-4 py-3 border-0 bg-white">
-                    <div className="flex justify-between">
-                        <div className="px-4">
-                            <h3
-                            className={
-                                "font-semibold text-lg text-blueGray-700"
-                            }
-                            >
-                            {props.title}
-                            </h3>
-                        </div>
-                        
-                        <div className="px-4 my-2">
-                            <Link href="/admin/product/myproduct/pending" className="m-1 relative bg-orange-500 p-2 text-white">
-                                <i className="mr-2 ml-1 fas fa-clock text-white"></i>
-                                Pending Product</Link>
-                            <Link href="/admin/product/myproduct/rejected" className="m-1 relative bg-red-500 p-2 text-white">
-                                <i className="mr-2 ml-1 fas fa-times text-white"></i>
-                                Rejected Product</Link>
-                            <Link href="/admin/product/myproduct/add" className="m-1 relative bg-blueGray-700 p-2 text-white">
-                                <i className="mr-2 ml-1 fas fa-plus text-white"></i>
-                                Add Product</Link>
-                        </div>
-                    </div>
-                </div>
-                <div className="relative overflow-x-auto ">
+                <div className="relative overflow-x-auto shadow">
                     <table className={`w-full text-sm text-left text-gray-500 shadow-md ${props.customClass}`}>
                         <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                             <tr>
                                 <th scope="col" className="px-6 py-3 text-center">
                                     Country
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-center">
+                                    Company
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-center">
                                     Available Quantity
@@ -101,72 +82,91 @@ export default function TableProduct(props) {
                                     Date Code
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-center">
+                                    Status
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-center">
                                     *
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="text-xs text-gray-700 bg-white">
+                        {/* <tbody className="text-xs text-gray-700 bg-white">
                             {data.map((item, index) => {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                                        <td scope="row" className="text-sm px-6 py-4">
-                                            {item.country}
+                                        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                            {item.companies_products[0].country}
                                         </td>
-                                        <td className="text-sm px-6 py-4">
-                                            {item.AvailableQuantity}
+                                        <td className="px-6 py-4">
+                                            {item.companies_products[0].AvailableQuantity}
                                         </td>
-                                        <td className="text-sm px-6 py-4">
-                                            {item.moq}
+                                        <td className="px-6 py-4">
+                                            {item.companies_products[0].moq}
                                         </td>
-                                        <td className="text-sm px-6 py-4">
-                                            {item.ManufacturerNumber}
+                                        <td className="px-6 py-4">
+                                            {item.companies_products[0].ManufacturerNumber}
                                         </td>
-                                        <td className="text-sm px-6 py-4">
-                                            {item.Description}
+                                        <td className="px-6 py-4">
+                                            {item.companies_products[0].Description}
                                         </td>
-                                        <td className="text-sm px-6 py-4">
-                                            {item.dateCode}
+                                        <td className="px-6 py-4">
+                                            {item.companies_products[0].dateCode}
                                         </td>
-                                        <td className="text-sm px-6 py-4 text-right">
+                                        <td className="px-6 py-4 uppercase">
+                                            {item.companies_products[0].status}
+                                        </td>
+                                        <td className="px-6 py-4 text-right">
                                             <div className="inline-flex">
-                                                <Link 
-                                                    href={`/admin/product/myproduct/view/${item.ManufacturerNumber}`}
-                                                    className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">View</Link>
-                                                {/* <button className="font-medium text-blue-600 text-white bg-red-400 p-2">Delete</button> */}
+                                                <button className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Edit</button>
+                                                <button className="font-medium text-blue-600 text-white bg-red-400 p-2">Delete</button>
                                             </div>
-                                            {/* <button onClick={() => inquiryItem(item)} className="font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry</button> */}
                                         </td>
                                     </tr>
                                 )
                             })}
-                            {!props.isLoading && metaData.total === 0 && <>
-                                <tr className='text-center my-auto mt-10 text-lg p-5'>
-                                    <td colSpan={7} className="p-5 italic ">
-                                        You have no data to show
-                                    </td>
-                                </tr>
-                            </>}
+                        </tbody> */}
+                        <tbody className="text-xs text-gray-700 bg-white">
+                            <tr className="bg-white border-b hover:bg-gray-50">
+                                <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    A
+                                </td>
+                                <td className="px-6 py-4">
+                                    A
+                                </td>
+                                <td className="px-6 py-4">
+                                    A
+                                </td>
+                                <td className="px-6 py-4">
+                                    A
+                                </td>
+                                <td className="px-6 py-4">
+                                   A
+                                </td>
+                                <td className="px-6 py-4">
+                                   A
+                                </td>
+                                <td className="px-6 py-4">
+                                    A
+                                </td>
+                                <td className="px-6 py-4 uppercase">
+                                    A
+                                </td>
+                                <td className="px-6 py-4 text-right">
+                                    <div className="inline-flex">
+                                        <button onClick={() => setShowModal(true)} className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Change Status</button>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
-                    {metaData.total > 0 ? 
-                        <div className="mt-2">
-                            <h2>Showing {metaData.perPage <= 20 ? metaData.total : metaData.perPage } data from {metaData.total} data</h2>
-                        </div>
-                    : null}
                 </div>
             </div>
-            {props.isLoading &&<div>
-                <div className='text-center my-auto mt-10'>
-                    <i className="fas fa-circle-notch fa-spin text-blueGray-700 my-auto mx-10 fa-2xl"></i>
-                </div>
-            </div>}
-            
 
-            <div className="flex justify-center mt-10 mx-auto justify-center">
-                {links.map((item, index) => {
-                    return setPaginationLabel(item, index)
-                })}
-            </div>
+
+            {showModal ? (
+                <ChangeStatus
+                    setShowModal={setShowModal}
+                />
+            ) : null}
         </>
     );
 }

@@ -8,7 +8,7 @@ import ProductList from "@/components/Table/CompanyControl/ProductList";
 // layout for page
 import Admin from "layouts/Admin.js";
 
-export default function Product() {
+export default function PendingProduct() {
   return (
     <>
     <div className="relative">
@@ -35,7 +35,7 @@ export default function Product() {
                       "font-semibold text-lg text-blueGray-700"
                   }
                   >
-                  Company Product
+                  Rejected Product
                   </h3>
               </div>
               <div className="px-4 my-2">
@@ -55,4 +55,4 @@ export default function Product() {
   );
 }
 
-Product.layout = Admin;
+PendingProduct.layout = Admin;

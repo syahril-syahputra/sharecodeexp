@@ -47,7 +47,7 @@ export default function MyOrder() {
             prevPage: result.prev_page_url ? true : false
           })
         }).catch((error) => {
-          console.log(error.response)
+          // console.log(error.response)
         }).finally(() => {
           setIsLoading(false)
         })

@@ -39,7 +39,7 @@ const UserDropdown = () => {
           {/* <div className="text-black"> */}
             
             <button
-                className="bg-blueGray-700 text-white active:bg-blueGray-600 text-xs font-bold px-4 py-2 shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 mb-3 ease-linear transition-all duration-150"
+                className="bg-indigo-900 text-white active:bg-blueGray-600 text-xs font-bold px-4 py-2 shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 mb-3 ease-linear transition-all duration-150"
                 type="button"
                 >
                 <i className="fas fa-user mr-2"></i> 

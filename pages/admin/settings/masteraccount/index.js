@@ -34,7 +34,7 @@ export default function Account() {
           let result = response.data
           setData(result.data)
         }).catch((error) => {
-          console.log(error.response)
+          // console.log(error.response)
         }).finally(() => {
           setIsLoading(false)
         })

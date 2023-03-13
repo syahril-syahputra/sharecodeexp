@@ -2,6 +2,8 @@
 import React, { useState, useMemo, useRef } from 'react';
 import axios from "lib/axios";
 import Image from 'next/image';
+import { PageSEO } from '@/components/Utils/SEO'
+import siteMetadata from '@/data/siteMetadata'
 
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
@@ -39,11 +41,16 @@ export default function Index() {
         }
     )
 
-    const options = useMemo(() => countryList().getData(), [])
+    const countries = useMemo(() => countryList().getData(), [])
+    const [country, setCountry] = useState(null);
     const countryHandleChange = value => {
-        // setCountry(value);
-        setRegistrationInfo({...registrationInfo, company_country:value})
+        setCountry(value);
+        setRegistrationInfo({...registrationInfo, company_country:value.label})
     };
+    // const countryHandleChange = value => {
+    //     // setCountry(value);
+    //     setRegistrationInfo({...registrationInfo, company_country:value})
+    // };
 
     const [errorInfo, setErrorInfo] = useState({})
     const [errorMessage, setErrorMessage] = useState(null)
@@ -53,12 +60,11 @@ export default function Index() {
         e.preventDefault()
         setErrorMessage(null)
         setIsLoading(true)
-        console.log(registrationInfo)
         let datasend = registrationInfo
             datasend.company_RequiredDocuments = refdata?.current?.elements?.company_RequiredDocuments?.files[0]
             datasend.company_PaymentDocuments = refdata?.current?.elements?.company_PaymentDocuments?.files[0]
             datasend.company_img = refdata?.current?.elements?.company_img?.files[0]
-            datasend.company_country = registrationInfo.company_country?.label
+            // datasend.company_country = registrationInfo.company_country?.label
 
         let formData = new FormData();
         for (const key in datasend) {
@@ -73,8 +79,9 @@ export default function Index() {
             setSuccesMessage(response.data.message)
             router.push("/auth/registrationsuccessfull")
         }).catch((error) => {
-            setErrorInfo(error.response.data.errors)
-            setErrorMessage(error.response.data.message)
+            // console.log(error.response.data.data)
+            setErrorInfo(error.response.data.data)
+            setErrorMessage("Please fill your form")
         }).finally(() => {
             setIsLoading(false)
         })
@@ -92,8 +99,28 @@ export default function Index() {
         fileReader.readAsDataURL(file)
     }
 
+
+    //option
+    //sector option
+    const [sectors, setSectors] = useState([
+        {value: 1, label: 'Aerospace'},
+        {value: 2, label: 'Defence'},
+    ])
+
+    const [sector, setSector] = useState(null);
+    const handleSectorChange = value => {
+        setSector(value);
+        setRegistrationInfo({...registrationInfo, company_sector:value.value})
+    };
+
+    // const tempOptions = regionOptions.map(option => ({
+    //     value: option.id,
+    //     label: option.label
+    //   }));
+
     return (
         <>
+            <PageSEO title="Exepart - Register Page" description={siteMetadata.description} />
             <IndexNavbar fixed />
             <section className="mt-20 md:mt-20 pb-40 relative bg-white">
                 <div className="container mx-auto">
@@ -212,7 +239,7 @@ export default function Index() {
                                 <div className="flex flex-wrap mb-6">
                                     <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                            Company Image
+                                            Company Logo
                                         </label>
                                         <div className="p-10 border-dashed border-2 border-indigo-200">
                                             <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>
@@ -220,11 +247,12 @@ export default function Index() {
                                                     <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
                                                 </div>
                                                 <div className="text-xs ">
-                                                    <p>PNG, JPG, JPEG file size no more than 10MB</p>
+                                                    <p>PNG file size no more than 10MB</p>
                                                     <input 
                                                         className="mt-3" 
                                                         type="file"
                                                         name="company_img"
+                                                        accept='.png'
                                                         // onChange={({target}) => 
                                                         //     setRegistrationInfo({...registrationInfo, company_img:target.files[0]})
                                                         // }
@@ -273,17 +301,31 @@ export default function Index() {
                                         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
                                             Sector
                                         </label>
-                                        <input 
-                                            value={registrationInfo.company_sector}
-                                            onChange={({target}) => 
-                                                setRegistrationInfo({...registrationInfo, company_sector:target.value})
-                                            }
-                                            autoComplete="off" 
-                                            type="text"
-                                            className="shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+                                        <Select 
+                                            name="sector"
+                                            value={sector}
+                                            onChange={handleSectorChange}
+                                            options={sectors}
+                                            classNames={{
+                                                menuButton: () => (
+                                                    `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
+                                                ),
+                                                menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
+                                                listItem: ({ isSelected }) => (
+                                                    `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
+                                                        isSelected
+                                                            ? `text-white bg-blue-500`
+                                                            : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
+                                                    }`
+                                                ),
+                                                searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
+                                            }}
+                                            />
                                         {errorInfo.company_sector &&
                                             <ErrorInput error={errorInfo.company_sector}/>
                                         }
+
+
                                     </div>
                                 </div>
                                 <div className="flex flex-wrap mb-6">
@@ -310,9 +352,9 @@ export default function Index() {
                                         <Select 
                                             isSearchable
                                             name="country"
-                                            value={registrationInfo.company_country}
+                                            value={country}
                                             onChange={countryHandleChange}
-                                            options={options}
+                                            options={countries}
                                             classNames={{
                                                 menuButton: () => (
                                                     `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
@@ -361,7 +403,7 @@ export default function Index() {
                                 <div className="flex flex-wrap mb-6">
                                     <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                            Required Documents
+                                            Company Registration Document 
                                         </label>
                                         <div className="p-5 border-dashed border-2 border-indigo-200">
                                             <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>
@@ -390,7 +432,7 @@ export default function Index() {
                                     </div>
                                     <div className="w-full md:w-1/2 px-3">
                                         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                            Payment Documents
+                                            Certification of Activity
                                         </label>
                                         <div className="p-5 border-dashed border-2 border-indigo-200">
                                             <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>

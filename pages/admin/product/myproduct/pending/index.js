@@ -28,7 +28,7 @@ export default function MyProduct() {
   const searchData = async (srch, page=1) =>{
     if(!!user.accessToken){
       setIsLoading(true)
-      const response = await axios.get(`/companyproduct/pendding?page=${page}`,
+      const response = await axios.get(`/companyproduct/pending?page=${page}`,
           {
             headers: {
               "Authorization" : `Bearer ${user.accessToken}`
@@ -48,7 +48,7 @@ export default function MyProduct() {
             prevPage: result.prev_page_url ? true : false
           })
         }).catch((error) => {
-          console.log(error.response)
+          // console.log(error.response)
         }).finally(() => {
           setIsLoading(false)
         })

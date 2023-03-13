@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
+import { PageSEO } from '@/components/Utils/SEO'
+import siteMetadata from '@/data/siteMetadata'
 
 //components
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
@@ -16,7 +18,7 @@ export default function Index() {
         router.replace("/")
     }
     
-    const [userInfo, setUserInfo] = useState({email: 'super@admin.com', password: 'ThisIsPassword123@'})
+    const [userInfo, setUserInfo] = useState({email: 'super@admin.com', password: 'ThisisPassword123'})
     const [isLoading, setIsLoading] = useState(false)
     const [errMessage, setErrMessage] = useState({
         error: ' ',
@@ -35,7 +37,6 @@ export default function Index() {
                 setErrMessage(res)
                 setIsLoading(false)
             } else {
-                // console.log(res)
                 router.push("/");
             }
         }).catch((res) => {
@@ -45,6 +46,7 @@ export default function Index() {
 
     return (
         <>
+            <PageSEO title="Exepart - Login Page" description={siteMetadata.description} />
             <IndexNavbar fixed />
             <section className="mt-20 md:mt-20 pb-40 relative bg-white">
                 <div className="container mx-auto">
@@ -88,7 +90,7 @@ export default function Index() {
                                             className="md:w-8/12 shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-4 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 pl-10"/>
                                     </div>
                                     <div className="text-center mt-10">
-                                        <p className="text-blueGray-400 hover:text-blueGray-700"><Link href="/forgot_password">Forgot Password</Link></p>
+                                        {/* <p className="text-blueGray-400 hover:text-blueGray-700"><Link href="/forgot_password">Forgot Password</Link></p> */}
                                     </div>
                                     <div className="text-center mb-6">
                                         {!isLoading && 

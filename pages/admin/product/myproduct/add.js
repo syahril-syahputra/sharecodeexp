@@ -5,6 +5,8 @@ import { useSession } from "next-auth/react";
 
 // components
 import InputForm from "@/components/Shared/InputForm";
+import CountrySelector from "@/components/Shared/CountrySelector";
+import Select from 'react-tailwindcss-select';
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -18,7 +20,9 @@ export default function MyProduct() {
     packaging: '',
     country: '',
     ManufacturerNumber: '',
-    Manufacture: ''
+    Manufacture: '',
+    Description: '',
+    dateCode: ''
   });
 
   const [errorInfo, setErrorInfo] = useState({})
@@ -27,6 +31,13 @@ export default function MyProduct() {
   const [isLoading, setIsLoading] = useState(false)
   const setDataHandler = (item, inputName) => {
     setInputData({...inputData, [inputName]:item.value})
+  }
+
+  //country handle
+  const [country, setCountry] = useState()
+  const countryHandleChange = (value) => {
+    setInputData({...inputData, country:value.label})
+    setCountry(value)
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -48,16 +59,30 @@ export default function MyProduct() {
           packaging: '',
           country: '',
           ManufacturerNumber: '',
-          Manufacture: ''
+          Manufacture: '',
+          Description: '',
+          dateCode: ''
         }); 
       }).catch((error) => {
-        console.log(error.response)
         setErrorMessage(error.response.data.message)
         setErrorInfo(error.response.data.data)
       }).finally(() => {
         setIsLoading(false)
       })
   }
+
+  //option
+  //packaging option
+  const [packagings, setPackagings] = useState([
+    {value: 1, label: 'Packaging A'},
+    {value: 2, label: 'Packaging B'},
+  ])
+
+  const [packaging, setPackaging] = useState(null);
+  const handlePackagingChange = value => {
+      setPackaging(value);
+      setInputData({...inputData, packaging:value.label})
+  };
 
   return (
     <>
@@ -73,11 +98,14 @@ export default function MyProduct() {
                   Add New Product
                   </h3>
               </div>
-              {/* <div className="px-4 mt-2">
-                  <Link href="/admin/product/myproduct/add" className="relative bg-blueGray-700 p-2 text-white">
-                      <i className="mr-2 ml-1 fas fa-plus text-white"></i>
-                      Add Product</Link>
-              </div> */}
+              <div className="px-4 mt-2">
+                  <Link href="/admin/product/myproduct/bulkinsert" className="relative bg-blueGray-700 p-2 text-white mr-2">
+                      <i className="mr-2 ml-1 fas fa-file text-white"></i>
+                      Download Bulk Template</Link>
+                  <Link href="/admin/product/myproduct/bulkinsert" className="relative bg-blueGray-700 p-2 text-white">
+                      <i className="mr-2 ml-1 fas fa-file text-white"></i>
+                      Bulk Insert</Link>
+              </div>
           </div>
         </div>
 
@@ -111,6 +139,25 @@ export default function MyProduct() {
           <form onSubmit={handleSubmit}>
               <div className="w-full lg:w-1/2 px-3 mb-6">
                 <InputForm
+                  label="Manufacturer Part Number"
+                  inputDataName="ManufacturerNumber"
+                  value={inputData.ManufacturerNumber}
+                  setData={setDataHandler}
+                  errorMsg={errorInfo.ManufacturerNumber}
+                />
+              </div>
+              <div className="w-full lg:w-1/2 px-3 mb-6">
+                <InputForm
+                  label="Manufacturer"
+                  inputDataName="Manufacture"
+                  value={inputData.Manufacture}
+                  setData={setDataHandler}
+                  errorMsg={errorInfo.Manufacture}
+                />
+              </div>
+              <div className="w-full lg:w-1/2 px-3 mb-6">
+                <InputForm
+                  isDisabled={isLoading}
                   label="Available Quantity"
                   inputDataName="AvailableQuantity"
                   value={inputData.AvailableQuantity}
@@ -128,30 +175,30 @@ export default function MyProduct() {
                 />
               </div>
               <div className="w-full lg:w-1/2 px-3 mb-6">
-                <InputForm
+                <CountrySelector
                   label="Country"
                   inputDataName="country"
-                  value={inputData.country}
-                  setData={setDataHandler}
+                  value={country}
+                  countryHandleChange={countryHandleChange}
                   errorMsg={errorInfo.country}
                 />
               </div>
               <div className="w-full lg:w-1/2 px-3 mb-6">
                 <InputForm
-                  label="Manufacturer Number"
-                  inputDataName="ManufacturerNumber"
-                  value={inputData.ManufacturerNumber}
+                  label="Description"
+                  inputDataName="Description"
+                  value={inputData.Description}
                   setData={setDataHandler}
-                  errorMsg={errorInfo.ManufacturerNumber}
+                  errorMsg={errorInfo.Description}
                 />
               </div>
               <div className="w-full lg:w-1/2 px-3 mb-6">
                 <InputForm
-                  label="Manufacture"
-                  inputDataName="Manufacture"
-                  value={inputData.Manufacture}
+                  label="Date Code"
+                  inputDataName="dateCode"
+                  value={inputData.dateCode}
                   setData={setDataHandler}
-                  errorMsg={errorInfo.Manufacture}
+                  errorMsg={errorInfo.dateCode}
                 />
               </div>
               <div className="w-full lg:w-1/2 px-3 mb-6">
@@ -164,13 +211,39 @@ export default function MyProduct() {
                 />
               </div>
               <div className="w-full lg:w-1/2 px-3 mb-6">
-                <InputForm
+                {/* <InputForm
                   label="Packaging"
                   inputDataName="packaging"
                   value={inputData.packaging}
                   setData={setDataHandler}
                   errorMsg={errorInfo.packaging}
-                />
+                /> */}
+                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                    Packaging
+                </label>
+                <Select 
+                    name="packaging"
+                    value={packaging}
+                    onChange={handlePackagingChange}
+                    options={packagings}
+                    classNames={{
+                        menuButton: () => (
+                            `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
+                        ),
+                        menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
+                        listItem: ({ isSelected }) => (
+                            `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
+                                isSelected
+                                    ? `text-white bg-blue-500`
+                                    : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
+                            }`
+                        ),
+                        searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
+                    }}
+                    />
+                {errorInfo.packaging &&
+                    <ErrorInput error={errorInfo.packaging}/>
+                }
               </div>
               <div className="w-full lg:w-1/2 px-3 mb-6 mt-20">
                 <div className="mb-6">
@@ -198,6 +271,7 @@ export default function MyProduct() {
               
           </form>
         </div>
+        
       </div>
     </>
   );

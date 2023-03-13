@@ -23,7 +23,7 @@ export default function Index() {
                     </div>
                     <div className="text-center mt-10 mb-36">
                         <h1 className="text-2xl">Your Registration is Successfull!</h1>
-                        <h2 className="text-blueGray-500">your account need a confirmation from EXEPART admin, please <Link href="/auth/login" className="text-blueGray-700 underline">login</Link> to check your account</h2>
+                        <h2 className="text-blueGray-500">your account need a confirmation from EXEpart Registration Expert, please <Link href="/auth/login" className="text-blueGray-700 underline">login</Link> to check your account</h2>
                     </div>
                 </div>
             </section>

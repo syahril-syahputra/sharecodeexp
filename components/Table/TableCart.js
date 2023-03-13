@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Link from "next/link";
 
 // components
 
@@ -67,9 +68,11 @@ export default function TableCart(props) {
                         </h3>
                     </div>
                     <div className="px-4">
-                        <button className="relative bg-blueGray-700 p-2 text-white">
-                            <i className="mr-2 ml-1 fas fa-plus text-white"></i>
-                            Add Product</button>
+                        <Link href="/product/search">
+                            <button className="relative bg-blueGray-700 p-2 text-white">
+                                <i className="mr-2 ml-1 fas fa-cart-shopping text-white"></i>
+                                Add Product to Cart</button>
+                        </Link>
                     </div>
                 </div>
             </div>
