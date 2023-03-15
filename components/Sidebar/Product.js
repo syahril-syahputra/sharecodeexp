@@ -66,14 +66,14 @@ export default function ProductBar(){
         </ul>
         <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
           <li className="items-center">
-            <Link href="/admin/product/myproduct"
+            <Link href="/admin/product/incominginquiry"
               className={
                 "text-xs uppercase py-3 font-bold block " +
-                (router.pathname.indexOf("/admin/product/myproduct") !== -1
+                (router.pathname.indexOf("/admin/product/incominginquiry") !== -1
                   ? "text-lightBlue-500 hover:text-lightBlue-600"
                   : "text-blueGray-700 hover:text-blueGray-500")
               }>
-                <i className="fas fa-shop text-blueGray-400 mr-2 text-sm"></i>{" "}
+                <i className="fas fa-box text-blueGray-400 mr-2 text-sm"></i>{" "}
                 Incoming Inquiry 
             </Link>
           </li>

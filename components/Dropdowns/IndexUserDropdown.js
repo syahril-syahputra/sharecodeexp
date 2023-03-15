@@ -28,12 +28,11 @@ const UserDropdown = () => {
     <>
       <a
         className="text-blueGray-500 block"
-        href="#pablo"
         ref={btnDropdownRef}
-        onClick={(e) => {
-          e.preventDefault();
-          dropdownPopoverShow ? closeDropdownPopover() : openDropdownPopover();
-        }}
+        // onClick={(e) => {
+        //   e.preventDefault();
+        //   dropdownPopoverShow ? closeDropdownPopover() : openDropdownPopover();
+        // }}
       >
         <div className="items-center flex">
           {/* <div className="text-black"> */}
@@ -42,7 +41,7 @@ const UserDropdown = () => {
                 className="bg-indigo-900 text-white active:bg-blueGray-600 text-xs font-bold px-4 py-2 shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 mb-3 ease-linear transition-all duration-150"
                 type="button"
                 >
-                <i className="fas fa-user mr-2"></i> 
+                {/* <i className="fas fa-user mr-2"></i>  */}
                 Hi, {user?.name}
             </button>
           {/* </div> */}

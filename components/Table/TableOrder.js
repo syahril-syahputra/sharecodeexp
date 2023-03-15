@@ -106,25 +106,25 @@ export default function TableProduct(props) {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                            {item.companies_products[0].country}
+                                            {item.companies_products.country}
                                         </th>
                                         <td className="px-6 py-4">
-                                            {item.companies_products[0].AvailableQuantity}
+                                            {item.companies_products.AvailableQuantity}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item.companies_products[0].moq}
+                                            {item.companies_products.moq}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item.companies_products[0].ManufacturerNumber}
+                                            {item.companies_products.ManufacturerNumber}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item.companies_products[0].Description}
+                                            {item.companies_products.Description}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item.companies_products[0].dateCode}
+                                            {item.companies_products.dateCode}
                                         </td>
                                         <td className="px-6 py-4 uppercase">
-                                            {item.companies_products[0].status}
+                                            {item.companies_products.status}
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="inline-flex">

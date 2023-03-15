@@ -116,7 +116,7 @@ export default function Index() {
                   </div>
                 }
                 {!isSuggestionLoading && 
-                  <div className="flex justify-center bg-indigo-900">Suggestion : {suggestion.map(name => (  
+                  <div className="">Suggestion : {suggestion.map(name => (  
                     <Link key={name} href={`/product/search?q=${name}`} className="mx-1 underline">  
                       {name}  
                     </Link>  

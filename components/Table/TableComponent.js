@@ -70,25 +70,25 @@ export default function TableComponent(props){
                 <table className={`w-full text-sm text-left text-gray-500 shadow-md ${props.customClass}`}>
                     <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                         <tr>
-                            <th scope="col" className="px-6 py-3 text-center">
+                            <th scope="col" className="px-6 py-3">
                                 Country
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
+                            <th scope="col" className="px-6 py-3">
                                 Available Quantity
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
+                            <th scope="col" className="px-6 py-3">
                                 MOQ
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
+                            <th scope="col" className="px-6 py-3">
                                 Manufacturer Number
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
+                            <th scope="col" className="px-6 py-3">
                                 Description
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
+                            <th scope="col" className="px-6 py-3">
                                 Date Code
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
+                            <th scope="col" className="px-6 py-3">
                                 *
                             </th>
                         </tr>
@@ -124,7 +124,7 @@ export default function TableComponent(props){
                     </tbody>
                 </table>
                 <div className="mt-2">
-                    <h2>Showing {metaData.perPage} data from {metaData.total} data</h2>
+                    <h2>Showing {metaData.total <= 20 ? metaData.total : metaData.perPage } data from {metaData.total} data</h2>
                 </div>
             </div>
             {props.isLoading &&<div>

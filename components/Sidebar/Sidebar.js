@@ -111,14 +111,15 @@ export default function Sidebar() {
                 </Link>
               </li>
             </ul>
-
-            {companyStatus == "true" ? 
+            
+            
+            {companyStatus == "true" && userDetail.role_id == 2? 
                 <ProductBar/>
               : null }
 
-              <SettingsBar
-                statusId={userDetail?.status_id}
-              />
+            <SettingsBar
+              statusId={userDetail?.status_id}
+            />
 
             {userDetail?.role_id == 1 ? 
               <CompanyControl/>

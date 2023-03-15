@@ -30,7 +30,7 @@ export default function SettingsBar(props){
                 </Link>
               </li>
             </ul>
-            : null}
+             : null} 
 
             {statusId == 1 ? 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">

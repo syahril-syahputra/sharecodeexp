@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 
 // components
-import InputForm from "@/components/Shared/InputForm";
+import ItemStatuses from "@/components/Shared/ItemStatuses";
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -82,69 +82,69 @@ export default function MyProduct() {
                         <table className="w-full text-sm text-left text-gray-500 bg-white">
                             <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                                 <tr>
-                                    <th scope="col" className="px-6 py-3 text-center">
-                                        Country
+                                    <th scope="col" className="px-6 py-3">
+                                        Manufacturer Part Number
                                     </th>
-                                    <th scope="col" className="px-6 py-3 text-center">
+                                    <th scope="col" className="px-6 py-3">
+                                        Manufacturer
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
                                         Available Quantity
                                     </th>
-                                    <th scope="col" className="px-6 py-3 text-center">
+                                    <th scope="col" className="px-6 py-3">
                                         MOQ
                                     </th>
-                                    <th scope="col" className="px-6 py-3 text-center">
-                                        Manufacturer Number
+                                    <th scope="col" className="px-6 py-3">
+                                        Country
                                     </th>
-                                    <th scope="col" className="px-6 py-3 text-center">
-                                        Manufacture
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 text-center">
-                                        Package
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 text-center">
-                                        Packaging
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 text-center">
+                                    <th scope="col" className="px-6 py-3">
                                         Description
                                     </th>
-                                    <th scope="col" className="px-6 py-3 text-center">
+                                    <th scope="col" className="px-6 py-3">
                                         Date Code
                                     </th>
-                                    <th scope="col" className="px-6 py-3 text-center">
+                                    <th scope="col" className="px-6 py-3">
+                                        Package
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Packaging
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
                                         Status
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr className="bg-white border-b hover:bg-gray-50">
-                                    <td className="px-6 py-4">
-                                        {data.country}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {data.AvailableQuantity}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {data.moq}
-                                    </td>
-                                    <td className="px-6 py-4">
+                                    <td scope="row" className="text-sm px-6 py-4">
                                         {data.ManufacturerNumber}
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="text-sm px-6 py-4">
                                         {data.Manufacture}
                                     </td>
-                                    <td className="px-6 py-4">
-                                        {data.package}
+                                    <td className="text-sm px-6 py-4">
+                                        {data.AvailableQuantity}
                                     </td>
-                                    <td className="px-6 py-4">
-                                        {data.packaging}
+                                    <td className="text-sm px-6 py-4">
+                                        {data.moq}
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="text-sm px-6 py-4">
+                                        {data.country}
+                                    </td>
+                                    <td className="text-sm px-6 py-4">
                                         {data.Description}
                                     </td>
-                                    <td className="px-6 py-4">
+                                    <td className="text-sm px-6 py-4">
                                         {data.dateCode}
                                     </td>
-                                    <td className="px-6 py-4">
-                                        {data.status}
+                                    <td className="text-sm px-6 py-4">
+                                        {data.package}
+                                    </td>
+                                    <td className="text-sm px-6 py-4">
+                                        {data.packaging}
+                                    </td>
+                                    <td className="text-sm px-6 py-4 text-center">
+                                        <ItemStatuses status={data.status_id} title={`stock status ${data.status_id}`} label={data.status_id}/>
                                     </td>
                                 </tr>
                             </tbody>

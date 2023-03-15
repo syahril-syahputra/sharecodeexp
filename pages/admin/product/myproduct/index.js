@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 // components
 import TableProduct from "components/Table/TableProduct"
+import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -48,7 +50,7 @@ export default function MyProduct() {
             prevPage: result.prev_page_url ? true : false
           })
         }).catch((error) => {
-          // console.log(error.response)
+            console.log(error.response)
         }).finally(() => {
           setIsLoading(false)
         })
@@ -64,17 +66,19 @@ export default function MyProduct() {
   return (
     <>
       <div className="">
-          <div className="mb-10">
-            <TableProduct
-              title="Company Product"
-              setPage={setPage}
-              isLoading={isLoading}
-              data={data}
-              links={links}
-              metaData={metaData}
-              addProduct
-            ></TableProduct>
-          </div>
+
+        <div className="mb-10">
+          <MiniSearchBar/>
+          <TableProduct
+            title="Company Product"
+            setPage={setPage}
+            isLoading={isLoading}
+            data={data}
+            links={links}
+            metaData={metaData}
+            addProduct
+          ></TableProduct>
+        </div>
       </div>
     </>
   );

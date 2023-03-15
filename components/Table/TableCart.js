@@ -4,7 +4,6 @@ import Link from "next/link";
 
 // components
 
-import TableDropdown from "components/Dropdowns/TableDropdown.js";
 
 export default function TableCart(props) {
     const data = props.data
@@ -73,6 +72,12 @@ export default function TableCart(props) {
                                 <i className="mr-2 ml-1 fas fa-cart-shopping text-white"></i>
                                 Add Product to Cart</button>
                         </Link>
+
+                        <Link href="/product/search">
+                            <button className="relative bg-blueGray-700 p-2 text-white ml-2">
+                                <i className="mr-2 ml-1 fas fa-cart-shopping text-white"></i>
+                                Order All Product</button>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -80,28 +85,34 @@ export default function TableCart(props) {
                 <table className={`w-full text-sm text-left text-gray-500 shadow-md ${props.customClass}`}>
                     <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                         <tr>
-                            <th scope="col" className="px-6 py-3 text-center">
-                                Country
+                            <th scope="col" className="px-6 py-3">
+                                Manufacturer Part Number
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
+                            <th scope="col" className="px-6 py-3">
+                                Manufacturer
+                            </th>
+                            <th scope="col" className="px-6 py-3">
                                 Available Quantity
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
+                            <th scope="col" className="px-6 py-3">
                                 MOQ
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
-                                Manufacturer Number
+                            <th scope="col" className="px-6 py-3">
+                                Country
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
+                            <th scope="col" className="px-6 py-3">
                                 Description
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
+                            <th scope="col" className="px-6 py-3">
                                 Date Code
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
-                                Status
+                            <th scope="col" className="px-6 py-3">
+                                Package
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
+                            <th scope="col" className="px-6 py-3">
+                                Packaging
+                            </th>
+                            <th scope="col" className="px-6 py-3">
                                 *
                             </th>
                         </tr>
@@ -110,26 +121,32 @@ export default function TableCart(props) {
                         {data.map((item, index) => {
                             return(
                                 <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                        {item.companies_products[0].country}
-                                    </th>
-                                    <td className="px-6 py-4">
-                                        {item.companies_products[0].AvailableQuantity}
+                                    <td scope="row" className="text-sm px-6 py-4">
+                                        {item.companies_products.ManufacturerNumber}
                                     </td>
-                                    <td className="px-6 py-4">
-                                        {item.companies_products[0].moq}
+                                    <td className="text-sm px-6 py-4">
+                                        {item.companies_products.Manufacture}
                                     </td>
-                                    <td className="px-6 py-4">
-                                        {item.companies_products[0].ManufacturerNumber}
+                                    <td className="text-sm px-6 py-4">
+                                        {item.companies_products.AvailableQuantity}
                                     </td>
-                                    <td className="px-6 py-4">
-                                        {item.companies_products[0].Description}
+                                    <td className="text-sm px-6 py-4">
+                                        {item.companies_products.moq}
                                     </td>
-                                    <td className="px-6 py-4">
-                                        {item.companies_products[0].dateCode}
+                                    <td className="text-sm px-6 py-4">
+                                        {item.companies_products.country}
                                     </td>
-                                    <td className="px-6 py-4 uppercase">
-                                        {item.companies_products[0].status}
+                                    <td className="text-sm px-6 py-4">
+                                        {item.companies_products.Description}
+                                    </td>
+                                    <td className="text-sm px-6 py-4">
+                                        {item.companies_products.dateCode}
+                                    </td>
+                                    <td className="text-sm px-6 py-4">
+                                        {item.companies_products.package}
+                                    </td>
+                                    <td className="text-sm px-6 py-4">
+                                        {item.companies_products.packaging}
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="inline-flex">
@@ -143,7 +160,21 @@ export default function TableCart(props) {
                     </tbody>
                 </table>
             </div>
+            <div className="mt-2">
+                <h2>Showing {metaData.total <= 20 ? metaData.total : metaData.perPage } data from {metaData.total} data</h2>
+            </div>
         </div>
+        {props.isLoading &&<div>
+            <div className='text-center my-auto mt-10'>
+                <i className="fas fa-circle-notch fa-spin text-blueGray-700 my-auto mx-10 fa-2xl"></i>
+            </div>
+        </div>}
+
+        {/* <div className="flex justify-center mt-10 mx-auto justify-center">
+            {links.map((item, index) => {
+                return setPaginationLabel(item, index)
+            })}
+        </div> */}
     </>
   );
 }

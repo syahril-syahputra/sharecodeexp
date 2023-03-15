@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { useSession } from "next-auth/react"
+import { useSession, signOut } from "next-auth/react"
 
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
 import UserPopover from "components/Shared/Popover/UserPopover"
@@ -29,7 +29,13 @@ export default function Navbar() {
           {/* User */}
           <ul className="flex-col md:flex-row list-none items-center hidden md:flex">
             <UserDropdown />
-            <button className="ml-4" title="Logout">
+            <button
+              onClick={() => {
+                signOut({
+                  callbackUrl: `${window.location.origin}`
+                });
+              }}
+            className="ml-4" title="Logout">
               <i className="fas fa-right-from-bracket text-white mr-2"></i>
             </button>
           </ul>

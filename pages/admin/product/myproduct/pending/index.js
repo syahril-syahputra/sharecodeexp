@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 // components
 import TableProduct from "components/Table/TableProduct"
+import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -64,16 +66,17 @@ export default function MyProduct() {
   return (
     <>
       <div className="">
-          <div className="mb-10">
-            <TableProduct
-              title="Pending Product"
-              setPage={setPage}
-              isLoading={isLoading}
-              data={data}
-              links={links}
-              metaData={metaData}
-            ></TableProduct>
-          </div>
+        <MiniSearchBar/>
+        <div className="mb-10">
+          <TableProduct
+            title="Pending Product"
+            setPage={setPage}
+            isLoading={isLoading}
+            data={data}
+            links={links}
+            metaData={metaData}
+          ></TableProduct>
+        </div>
       </div>
     </>
   );

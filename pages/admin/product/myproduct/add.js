@@ -7,9 +7,13 @@ import { useSession } from "next-auth/react";
 import InputForm from "@/components/Shared/InputForm";
 import CountrySelector from "@/components/Shared/CountrySelector";
 import Select from 'react-tailwindcss-select';
+import ErrorInput from '@/components/Shared/ErrorInput';
 
 // layout for page
 import Admin from "layouts/Admin.js";
+
+//data
+import {packageOptions, packagingOptions} from "data/optionData"
 
 export default function MyProduct() {
   const sessionData = useSession()
@@ -51,7 +55,7 @@ export default function MyProduct() {
     })
       .then((response) => {
         let result = response.data.data
-        setSuccesMessage("Create Product Success")
+        setSuccesMessage("Your product has been added succefully")
         setInputData({
           AvailableQuantity: '',
           moq: '',
@@ -64,24 +68,37 @@ export default function MyProduct() {
           dateCode: ''
         }); 
       }).catch((error) => {
-        setErrorMessage(error.response.data.message)
-        setErrorInfo(error.response.data.data)
+        setErrorMessage("Please fill the form correctly")
+        setErrorInfo(error.data.data)
       }).finally(() => {
         setIsLoading(false)
       })
   }
 
   //option
+  //package option
+  const [packages, setPackages] = useState([...packageOptions, {value: 'other', label: 'Other'}])
+
+  const [pckage, setPackage] = useState(null);
+  const handlePackageChange = value => {
+      setInputData({...inputData, package:''})
+      setPackage(value);
+      if(value.value != 'other') {
+        setInputData({...inputData, package:value.value})
+      }
+  };
+
+  //option
   //packaging option
-  const [packagings, setPackagings] = useState([
-    {value: 1, label: 'Packaging A'},
-    {value: 2, label: 'Packaging B'},
-  ])
+  const [packagings, setPackagings] = useState([...packagingOptions, {value: 'other', label: 'Other'}])
 
   const [packaging, setPackaging] = useState(null);
   const handlePackagingChange = value => {
+      setInputData({...inputData, packaging:''})
       setPackaging(value);
-      setInputData({...inputData, packaging:value.label})
+      if(value.value != 'other') {
+        setInputData({...inputData, packaging:value.value})
+      }
   };
 
   return (
@@ -202,22 +219,42 @@ export default function MyProduct() {
                 />
               </div>
               <div className="w-full lg:w-1/2 px-3 mb-6">
-                <InputForm
-                  label="Package"
-                  inputDataName="package"
-                  value={inputData.package}
-                  setData={setDataHandler}
-                  errorMsg={errorInfo.package}
-                />
+                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                    Package
+                </label>
+                <Select 
+                    name="pckage"
+                    value={pckage}
+                    onChange={handlePackageChange}
+                    options={packages}
+                    classNames={{
+                        menuButton: () => (
+                            `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
+                        ),
+                        menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
+                        listItem: ({ isSelected }) => (
+                            `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
+                                isSelected
+                                    ? `text-white bg-blue-500`
+                                    : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
+                            }`
+                        ),
+                        searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
+                    }}
+                    />
+                {errorInfo.package &&
+                    <ErrorInput error={errorInfo.package}/>
+                }
+                { pckage?.value == "other" && 
+                  <InputForm
+                    inputDataName="package"
+                    value={inputData.package}
+                    setData={setDataHandler}
+                    errorMsg={errorInfo.package}
+                  />
+                }
               </div>
               <div className="w-full lg:w-1/2 px-3 mb-6">
-                {/* <InputForm
-                  label="Packaging"
-                  inputDataName="packaging"
-                  value={inputData.packaging}
-                  setData={setDataHandler}
-                  errorMsg={errorInfo.packaging}
-                /> */}
                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
                     Packaging
                 </label>
@@ -243,6 +280,14 @@ export default function MyProduct() {
                     />
                 {errorInfo.packaging &&
                     <ErrorInput error={errorInfo.packaging}/>
+                }
+                { packaging?.value == "other" && 
+                  <InputForm
+                    inputDataName="packaging"
+                    value={inputData.packaging}
+                    setData={setDataHandler}
+                    errorMsg={errorInfo.packaging}
+                  />
                 }
               </div>
               <div className="w-full lg:w-1/2 px-3 mb-6 mt-20">

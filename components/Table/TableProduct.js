@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Link from "next/link";
 
 // components
+import ItemStatuses from "@/components/Shared/ItemStatuses";
 
 export default function TableProduct(props) {
     const data = props.data
@@ -82,25 +83,37 @@ export default function TableProduct(props) {
                     <table className={`w-full text-sm text-left text-gray-500 shadow-md ${props.customClass}`}>
                         <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                             <tr>
-                                <th scope="col" className="px-6 py-3 text-center">
-                                    Country
+                                <th scope="col" className="px-6 py-3">
+                                    Manufacturer Part Number
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-center">
+                                <th scope="col" className="px-6 py-3">
+                                    Manufacturer
+                                </th>
+                                <th scope="col" className="px-6 py-3">
                                     Available Quantity
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-center">
+                                <th scope="col" className="px-6 py-3">
                                     MOQ
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-center">
-                                    Manufacturer Number
+                                <th scope="col" className="px-6 py-3">
+                                    Country
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-center">
+                                <th scope="col" className="px-6 py-3">
                                     Description
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-center">
+                                <th scope="col" className="px-6 py-3">
                                     Date Code
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-center">
+                                <th scope="col" className="px-6 py-3">
+                                    Package
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Packaging
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Status
+                                </th>
+                                <th scope="col" className="px-6 py-3">
                                     *
                                 </th>
                             </tr>
@@ -110,7 +123,10 @@ export default function TableProduct(props) {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td scope="row" className="text-sm px-6 py-4">
-                                            {item.country}
+                                            {item.ManufacturerNumber}
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
+                                            {item.Manufacture}
                                         </td>
                                         <td className="text-sm px-6 py-4">
                                             {item.AvailableQuantity}
@@ -119,13 +135,22 @@ export default function TableProduct(props) {
                                             {item.moq}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.ManufacturerNumber}
+                                            {item.country}
                                         </td>
                                         <td className="text-sm px-6 py-4">
                                             {item.Description}
                                         </td>
                                         <td className="text-sm px-6 py-4">
                                             {item.dateCode}
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
+                                            {item.package}
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
+                                            {item.packaging}
+                                        </td>
+                                        <td className="text-sm px-6 py-4 text-center">
+                                            <ItemStatuses status={item.status_id} title={`stock status ${item.status_id}`} label={item.status_id}/>
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
@@ -141,7 +166,7 @@ export default function TableProduct(props) {
                             })}
                             {!props.isLoading && metaData.total === 0 && <>
                                 <tr className='text-center my-auto mt-10 text-lg p-5'>
-                                    <td colSpan={7} className="p-5 italic ">
+                                    <td colSpan={11} className="p-5 italic ">
                                         You have no data to show
                                     </td>
                                 </tr>
@@ -150,7 +175,7 @@ export default function TableProduct(props) {
                     </table>
                     {metaData.total > 0 ? 
                         <div className="mt-2">
-                            <h2>Showing {metaData.perPage <= 20 ? metaData.total : metaData.perPage } data from {metaData.total} data</h2>
+                            <h2>Showing {metaData.total <= 20 ? metaData.total : metaData.perPage } data from {metaData.total} data</h2>
                         </div>
                     : null}
                 </div>

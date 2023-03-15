@@ -14,6 +14,8 @@ import Select from 'react-tailwindcss-select';
 import countryList from 'react-select-country-list';
 import { useRouter } from 'next/router';
 
+//data
+import {sectorOptions} from "data/optionData"
 
 export default function Index() {
     const refdata = useRef()
@@ -35,8 +37,8 @@ export default function Index() {
 
             //Documents
             company_img: "",
-            company_RequiredDocuments: "",
-            company_PaymentDocuments: ""
+            company_RegistrationDocument: "",
+            company_CertificationofActivity: ""
             
         }
     )
@@ -47,10 +49,6 @@ export default function Index() {
         setCountry(value);
         setRegistrationInfo({...registrationInfo, company_country:value.label})
     };
-    // const countryHandleChange = value => {
-    //     // setCountry(value);
-    //     setRegistrationInfo({...registrationInfo, company_country:value})
-    // };
 
     const [errorInfo, setErrorInfo] = useState({})
     const [errorMessage, setErrorMessage] = useState(null)
@@ -61,8 +59,8 @@ export default function Index() {
         setErrorMessage(null)
         setIsLoading(true)
         let datasend = registrationInfo
-            datasend.company_RequiredDocuments = refdata?.current?.elements?.company_RequiredDocuments?.files[0]
-            datasend.company_PaymentDocuments = refdata?.current?.elements?.company_PaymentDocuments?.files[0]
+            datasend.company_RegistrationDocument = refdata?.current?.elements?.company_RegistrationDocument?.files[0]
+            datasend.company_CertificationofActivity = refdata?.current?.elements?.company_CertificationofActivity?.files[0]
             datasend.company_img = refdata?.current?.elements?.company_img?.files[0]
             // datasend.company_country = registrationInfo.company_country?.label
 
@@ -80,8 +78,8 @@ export default function Index() {
             router.push("/auth/registrationsuccessfull")
         }).catch((error) => {
             // console.log(error.response.data.data)
-            setErrorInfo(error.response.data.data)
-            setErrorMessage("Please fill your form")
+            setErrorInfo(error.data.data)
+            setErrorMessage("Please fill your form correctly")
         }).finally(() => {
             setIsLoading(false)
         })
@@ -102,21 +100,35 @@ export default function Index() {
 
     //option
     //sector option
-    const [sectors, setSectors] = useState([
-        {value: 1, label: 'Aerospace'},
-        {value: 2, label: 'Defence'},
-    ])
+    const [sectors, setSectors] = useState([...sectorOptions, {value: 'other', label: 'Other'}])
 
     const [sector, setSector] = useState(null);
     const handleSectorChange = value => {
+        setRegistrationInfo({...registrationInfo, company_sector:''})
         setSector(value);
-        setRegistrationInfo({...registrationInfo, company_sector:value.value})
+        if(value.value != 'other') {
+            setRegistrationInfo({...registrationInfo, company_sector:value.value})
+        }
     };
 
     // const tempOptions = regionOptions.map(option => ({
     //     value: option.id,
     //     label: option.label
     //   }));
+
+
+    //option
+    //packaging option
+    const [packagings, setPackagings] = useState(sectorOptions)
+
+    const [packaging, setPackaging] = useState(null);
+    const handlePackagingChange = value => {
+        setInputData({...inputData, packaging:''})
+        setPackaging(value);
+        if(value.value != 'other') {
+            setInputData({...inputData, packaging:value.value})
+        }
+    };
 
     return (
         <>
@@ -247,12 +259,12 @@ export default function Index() {
                                                     <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
                                                 </div>
                                                 <div className="text-xs ">
-                                                    <p>PNG file size no more than 10MB</p>
+                                                    <p>JPG, JPEG, PNG file size no more than 10MB</p>
                                                     <input 
                                                         className="mt-3" 
                                                         type="file"
                                                         name="company_img"
-                                                        accept='.png'
+                                                        accept='.png, .jpeg, .jpg'
                                                         // onChange={({target}) => 
                                                         //     setRegistrationInfo({...registrationInfo, company_img:target.files[0]})
                                                         // }
@@ -323,6 +335,21 @@ export default function Index() {
                                             />
                                         {errorInfo.company_sector &&
                                             <ErrorInput error={errorInfo.company_sector}/>
+                                        }
+                                        { sector?.value == "other" && 
+                                            <div className='mt-2'>
+                                                <input 
+                                                    value={registrationInfo.company_sector}
+                                                    onChange={({target}) => 
+                                                        setRegistrationInfo({...registrationInfo, company_sector:target.value})
+                                                    }
+                                                    autoComplete="off" 
+                                                    type="text"
+                                                    className="shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 border border-gray-200"/>
+                                                {errorInfo.company_sector &&
+                                                    <ErrorInput error={errorInfo.company_sector}/>
+                                                }
+                                            </div>
                                         }
 
 
@@ -415,19 +442,19 @@ export default function Index() {
                                                     <input 
                                                         className="mt-3" 
                                                         type="file"
-                                                        name='company_RequiredDocuments'
+                                                        name='company_RegistrationDocument'
                                                         // onChange={({target}) => 
                                                         //     setRegistrationInfo({...registrationInfo, companyRequiredDocuments:target.files[0]})
                                                         // }
                                                         onChange={({target}) => 
-                                                            setRegistrationInfo({...registrationInfo,company_RequiredDocuments:target.files[0]})
+                                                            setRegistrationInfo({...registrationInfo,company_RegistrationDocument:target.files[0]})
                                                         }
                                                     />
                                                 </div>
                                             </div>
                                         </div>
-                                        {errorInfo.company_RequiredDocuments &&
-                                            <ErrorInput error={errorInfo.company_RequiredDocuments}/>
+                                        {errorInfo.company_RegistrationDocument &&
+                                            <ErrorInput error={errorInfo.company_RegistrationDocument}/>
                                         }
                                     </div>
                                     <div className="w-full md:w-1/2 px-3">
@@ -444,9 +471,9 @@ export default function Index() {
                                                     <input 
                                                         className="mt-3" 
                                                         type="file"
-                                                        name="company_PaymentDocuments"
+                                                        name="company_CertificationofActivity"
                                                         onChange={({target}) => 
-                                                            setRegistrationInfo({...registrationInfo, company_PaymentDocuments:target.files[0]})
+                                                            setRegistrationInfo({...registrationInfo, company_CertificationofActivity:target.files[0]})
                                                         }
                                                         // onChange={companyReqDocsHandler}
 
@@ -454,8 +481,8 @@ export default function Index() {
                                                 </div>
                                             </div>
                                         </div>
-                                        {errorInfo.company_PaymentDocuments &&
-                                            <ErrorInput error={errorInfo.company_PaymentDocuments}/>
+                                        {errorInfo.company_CertificationofActivity &&
+                                            <ErrorInput error={errorInfo.company_CertificationofActivity}/>
                                         }
                                     </div>
                                 </div>
@@ -465,7 +492,7 @@ export default function Index() {
                                 {!isLoading && 
                                     <button
                                         type="submit"
-                                        className="w-full md:w-8/12 mt-4 text-white font-bold px-6 py-4 outline-none focus:outline-none mr-1 mb-1 bg-blueGray-700 active:bg-blueGray-600 uppercase text-sm shadow hover:shadow-lg"
+                                        className="w-full md:w-8/12 mt-4 text-white font-bold px-6 py-4 outline-none focus:outline-none mr-1 mb-1 bg-indigo-900 active:bg-indigo-800 uppercase text-sm shadow hover:shadow-lg"
                                     >
                                     {succesMessage ? 'Success' : 'Register'}
                                     </button>

@@ -1,11 +1,10 @@
-import React, {useState} from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
 
 // components
-import ChangeStatus from "@/components/Modal/CompanyControl/ChangeStatus"
 
-export default function TableCompany(props) {
+export default function TableProduct(props) {
     const data = props.data
     const links = props.links
     const metaData = props.metaData
@@ -51,45 +50,69 @@ export default function TableCompany(props) {
             </button>
         )
     }
-    
-    const [showModal, setShowModal] = useState(false);
-
-    const [companyName, setCompanyName] = useState("")
-    const [companyId, setCompanyId] = useState("")
-    const setModalData = (modalStatus, companyId, companyName) => {
-        setShowModal(modalStatus)
-        setCompanyName(companyName)
-        setCompanyId(companyId)
-    }
-    const handleCompanyAcceptance = () => {
-        props.companyAcceptance(companyId)
-    }
     return (
         <>  
             <div className="relative">
-                <div className="relative overflow-x-auto shadow">
+                <div className="px-4 py-3 border-0 bg-white">
+                    <div className="flex justify-between">
+                        <div className="px-4">
+                            <h3
+                            className={
+                                "font-semibold text-lg text-blueGray-700"
+                            }
+                            >
+                            {props.title}
+                            </h3>
+                        </div>
+                        
+                        <div className="px-4 my-2">
+                            {/* <Link href="/admin/product/myproduct/pending" className="m-1 relative bg-orange-500 p-2 text-white">
+                                <i className="mr-2 ml-1 fas fa-clock text-white"></i>
+                                Pending Product</Link>
+                            <Link href="/admin/product/myproduct/rejected" className="m-1 relative bg-red-500 p-2 text-white">
+                                <i className="mr-2 ml-1 fas fa-times text-white"></i>
+                                Rejected Product</Link>
+                            <Link href="/admin/product/myproduct/add" className="m-1 relative bg-blueGray-700 p-2 text-white">
+                                <i className="mr-2 ml-1 fas fa-plus text-white"></i>
+                                Add Product</Link> */}
+                        </div>
+                    </div>
+                </div>
+                <div className="relative overflow-x-auto ">
                     <table className={`w-full text-sm text-left text-gray-500 shadow-md ${props.customClass}`}>
                         <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                             <tr>
                                 <th scope="col" className="px-6 py-3">
-                                    Company Name
+                                    Manufacturer Part Number
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Manufacturer
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Available Quantity
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    MOQ
                                 </th>
                                 <th scope="col" className="px-6 py-3">
                                     Country
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Address
+                                    Description
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Sector
+                                    Date Code
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Phone
+                                    Package
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Packaging
                                 </th>
                                 <th scope="col" className="px-6 py-3">
                                     Status
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-center">
+                                <th scope="col" className="px-6 py-3">
                                     *
                                 </th>
                             </tr>
@@ -98,33 +121,44 @@ export default function TableCompany(props) {
                             {data.map((item, index) => {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                                        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                            {item.name}
+                                        <td scope="row" className="text-sm px-6 py-4">
+                                            {item.ManufacturerNumber}
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="text-sm px-6 py-4">
+                                            {item.Manufacture}
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
+                                            {item.AvailableQuantity}
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
+                                            {item.moq}
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
                                             {item.country}
                                         </td>
-                                        <td className="px-6 py-4">
-                                            {item.address}
+                                        <td className="text-sm px-6 py-4">
+                                            {item.Description}
                                         </td>
-                                        <td className="px-6 py-4">
-                                            {item.sector}
+                                        <td className="text-sm px-6 py-4">
+                                            {item.dateCode}
                                         </td>
-                                        <td className="px-6 py-4">
-                                            {item.phone}
+                                        <td className="text-sm px-6 py-4">
+                                            {item.package}
                                         </td>
-                                        <td className="px-6 py-4">
-                                            {item.is_confirmed}
+                                        <td className="text-sm px-6 py-4">
+                                            {item.packaging}
                                         </td>
-                                        <td className="px-6 py-4 text-right">
+                                        <td className="text-sm px-6 py-4">
+                                            {item.status}
+                                        </td>
+                                        <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
-                                                {item.is_confirmed == "false" ? 
-                                                    <button onClick={() => setModalData(true, item.id, item.name)} className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Accept Company</button>
-                                                : <button className="mr-2 font-medium text-blue-600 text-white bg-blueGray-400 p-2">Accepted</button> }
-                                                <Link href="/admin/companycontrol/company/view">
-                                                    <button className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">View</button>
-                                                </Link>
+                                                <Link 
+                                                    href={`/admin/product/myproduct/view/${item.ManufacturerNumber}`}
+                                                    className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">View</Link>
+                                                {/* <button className="font-medium text-blue-600 text-white bg-red-400 p-2">Delete</button> */}
                                             </div>
+                                            {/* <button onClick={() => inquiryItem(item)} className="font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry</button> */}
                                         </td>
                                     </tr>
                                 )
@@ -138,20 +172,13 @@ export default function TableCompany(props) {
                             </>}
                         </tbody>
                     </table>
+                    {metaData.total > 0 ? 
+                        <div className="mt-2">
+                            <h2>Showing {metaData.total <= 20 ? metaData.total : metaData.perPage } data from {metaData.total} data</h2>
+                        </div>
+                    : null}
                 </div>
-                {metaData.total > 0 ? 
-                    <div className="mt-2">
-                        <h2>Showing {metaData.total <= 20 ? metaData.total : metaData.perPage } data from {metaData.total} data</h2>
-                    </div>
-                : null}
             </div>
-            {showModal ? (
-                <ChangeStatus
-                    setShowModal={setShowModal}
-                    companyName={companyName}
-                    acceptModal={handleCompanyAcceptance}
-                />
-            ) : null}
             {props.isLoading &&<div>
                 <div className='text-center my-auto mt-10'>
                     <i className="fas fa-circle-notch fa-spin text-blueGray-700 my-auto mx-10 fa-2xl"></i>

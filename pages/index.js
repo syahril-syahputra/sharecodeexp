@@ -65,7 +65,7 @@ export default function Index() {
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
       <IndexNavbar fixed />
-      <section className="bg-white pb-36 overflow-hidden h-3/6">
+      <section className="bg-white pb-36 overflow-hidden h-3/6 bg-gradient-to-b from-indigo-50 via-white">
         <div className="container mx-auto mt-48">
           <div className="">
             <div className="relative object-center px-12 md:px-4 ml-auto mr-auto">
@@ -74,7 +74,18 @@ export default function Index() {
                 color="gradient"
               />
             </div>
-            <h1 className="hidden">The electronic part search engine</h1>
+            <h1 className="hidden">Search and find your components from top industry manufacturer's excess stocks.</h1>
+
+            <div className="w-3/4 ml-auto mr-auto">
+              <div className="text-center">
+                <p className="text-xl font-light leading-relaxed mt-4 mb-4 text-blueGray-600">
+                  EXEpart is a closed sales platform that only allows verified industrial manufacturers to list their excess stocks and buy stocks from fellow manufacturers. 
+                  It is a great tool to overcome the shortage crisis while enabling the manufacturers to capitalize their unused stocks. 
+                  No brokers are allowed to register at EXEpart.
+                </p>
+              </div>
+            </div>
+
             <div className="w-full px-12 md:px-4 ml-auto mr-auto">
               <div className="text-center items-stretch mb-3 mt-3">
                 <span className="z-10 h-full leading-snug font-normal absolute text-center text-slate-300 absolute bg-transparent text-lg items-center justify-center w-8 pl-3 py-3">
@@ -123,7 +134,7 @@ export default function Index() {
         </div>
       </section>
 
-      <section className="pb-28 relative bg-blueGray-100">
+      {/* <section className="pb-28 relative bg-blueGray-100">
         <div className="container mx-auto">
           <div className="justify-center text-center flex flex-wrap">
             <div className="w-full md:w-6/12 px-12 md:px-4 mt-16 mb-16">
@@ -149,10 +160,10 @@ export default function Index() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
 
-      <section className="pb-28 relative bg-white">
+      {/* <section className="pb-28 relative bg-white">
         <div className="container mx-auto">
           <div className="justify-center text-center flex flex-wrap">
             <div className="w-full md:w-6/12 px-12 md:px-4 mt-16 mb-16">
@@ -198,14 +209,14 @@ export default function Index() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
 
       <section className="pb-28 relative bg-white">
         <div className="container mx-auto">
           <div className="justify-center text-center flex flex-wrap">
             <div className="w-full md:w-6/12 px-12 md:px-4 mt-16 mb-16">
-              <h2 className="font-semibold text-4xl">How Exepart System Operates</h2>
+              <h2 className="font-semibold text-4xl text-indigo-900">How Exepart System Operates</h2>
             </div>
           </div>
 
@@ -213,12 +224,12 @@ export default function Index() {
               <Image
                 src='/img/how-exepart-system-operates.png'
                 alt="how-exepart-system-operates"
-                height={900}
-                width={900}
-                className="mx-auto shadow"
+                height={1500}
+                width={1500}
+                className="mx-auto shadow-lg"
               />
             </div>
-            <div className="w-1/2 ml-auto mr-auto">
+            {/* <div className="w-1/2 ml-auto mr-auto">
               <div className="text-center">
                 <p className="text-xl font-light leading-relaxed mt-4 mb-4 text-blueGray-600">
                   EXEpart is a closed sales platform that only allows verified industrial manufacturers to list their excess stocks and buy stocks from fellow manufacturers. 
@@ -226,16 +237,16 @@ export default function Index() {
                   No brokers are allowed to register at EXEpart
                 </p>
               </div>
-            </div>
+            </div> */}
             
         </div>
       </section>
 
-      <section className="mt-20 md:mt-20 pb-20 relative bg-white">
+      <section className="mt-20 md:mt-20 pb-20 relative bg-indigo-50 pt-20">
         <div className="container mx-auto">
           <div className="justify-center text-center flex flex-wrap mb-20">
             <div className="w-full md:w-6/12 px-12 md:px-4">
-              <h2 className="font-semibold text-4xl">Our Manufacturer</h2>
+              <h2 className="font-semibold text-4xl text-indigo-900">Our Manufacturer</h2>
             </div>
           </div>
 
@@ -262,11 +273,11 @@ export default function Index() {
         </div>
       </section>
 
-      <section className="mt-20 md:mt-20 pb-40 relative bg-blueGray-100">
+      <section className="mt-20 md:mt-20 pb-40 relative bg-white">
         <div className="container mx-auto">
           <div className="justify-center text-center flex flex-wrap mb-20">
             <div className="w-full md:w-6/12 px-12 md:px-4 mt-16">
-              <h2 className="font-semibold text-4xl">Our Members</h2>
+              <h2 className="font-semibold text-4xl text-indigo-900">Our Members</h2>
             </div>
           </div>
 

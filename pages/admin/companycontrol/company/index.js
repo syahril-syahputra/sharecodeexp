@@ -29,7 +29,6 @@ export default function Company() {
     })
     const searchData = async (srch, page=1) =>{
         if(!!user.accessToken){
-        console.log(1)
         setIsLoading(true)
         const response = await axios.get(`/admin/companies?page=${page}`,
             {
@@ -64,6 +63,27 @@ export default function Company() {
     useEffect(() => {
         searchData(search)
     }, [user])
+
+    const [screenIsLoading, setScreenIsLoading] = useState(true)
+    const handleCompanyAcceptance = async (companyId) => {
+        if(!!user.accessToken){
+        setScreenIsLoading(true)
+        const response = await axios.post(`/admin/companies/${companyId}/update`, {},
+            {
+                headers: {
+                "Authorization" : `Bearer ${user.accessToken}`
+                }
+            })
+            .then((response) => {
+                console.log(response.data)
+                searchData(search)
+            }).catch((error) => {
+                console.log(error)
+            }).finally(() => {
+                setIsLoading(false)
+            })
+        }
+    }
 
     return (
         <>
@@ -111,6 +131,7 @@ export default function Company() {
             data={data}
             links={links}
             metaData={metaData}
+            companyAcceptance={handleCompanyAcceptance}
         />
         </div>
         </>

@@ -18,7 +18,7 @@ export default function Index() {
         router.replace("/")
     }
     
-    const [userInfo, setUserInfo] = useState({email: 'super@admin.com', password: 'ThisisPassword123'})
+    const [userInfo, setUserInfo] = useState({email: 'kdkchy@gmail.com', password: 'ThisisPassword123@'})
     const [isLoading, setIsLoading] = useState(false)
     const [errMessage, setErrMessage] = useState({
         error: ' ',
@@ -96,7 +96,7 @@ export default function Index() {
                                         {!isLoading && 
                                             <button
                                                 type="submit"
-                                                className="w-full md:w-8/12 mt-4 text-white font-bold px-6 py-4 outline-none focus:outline-none mr-1 mb-1 bg-blueGray-700 active:bg-blueGray-600 uppercase text-sm shadow hover:shadow-lg"
+                                                className="w-full md:w-8/12 mt-4 text-white font-bold px-6 py-4 outline-none focus:outline-none mr-1 mb-1 bg-indigo-900 active:bg-indigo-800 uppercase text-sm shadow hover:shadow-lg"
                                             >
                                             Login
                                             </button>
@@ -105,7 +105,7 @@ export default function Index() {
                                             <button
                                                 disabled
                                                 type="submit"
-                                                className="w-full md:w-8/12 mt-4 text-white font-bold px-6 py-4 outline-none mr-1 mb-1 bg-blueGray-400 uppercase text-sm"
+                                                className="w-full md:w-8/12 mt-4 text-white font-bold px-6 py-4 outline-none mr-1 mb-1 bg-indigo-400 uppercase text-sm"
                                             >
                                                 <i className="fas fa-circle-notch fa-spin"></i>
                                             </button>
