@@ -48,7 +48,7 @@ export default function RejectedCompany() {
           </div>
       </div>
 
-      <CompanyList />
+      {/* <CompanyList /> */}
     </div>
     </>
   );

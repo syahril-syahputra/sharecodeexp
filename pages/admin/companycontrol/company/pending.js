@@ -49,7 +49,7 @@ export default function PendingCompany() {
           </div>
       </div>
 
-      <CompanyList />
+      {/* <CompanyList /> */}
     </div>
     </>
   );
