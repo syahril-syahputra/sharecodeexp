@@ -15,5 +15,8 @@ export const packagingOptions = [
 
 export const sectorOptions = [
     {value: 'Defense Manufacturers', label: 'Defense Manufacturers'},
-    {value: 'Consumer Goods Manufacturers', label: 'Consumer Goods Manufacturers'}
+    {value: 'Consumer Goods Manufacturers', label: 'Consumer Goods Manufacturers'},
+    {value: 'Automotive Manufacturers', label: 'Automotive Manufacturers'},
+    {value: 'Electronics Equipment Manufacturers', label: 'Electronics Equipment Manufacturers'},
+    {value: 'Industrial Manufacturers', label: 'Industrial Manufacturers'},
 ]

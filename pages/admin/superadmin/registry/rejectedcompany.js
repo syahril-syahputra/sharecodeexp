@@ -4,7 +4,7 @@ import { useSession, getSession } from "next-auth/react";
 import axios from "@/lib/axios";
 
 // components
-import CompanyList from "@/components/Table/CompanyControl/CompanyList";
+import CompanyList from "@/components/Table/Superadmin/Registry/CompanyList";
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -12,10 +12,6 @@ import Admin from "layouts/Admin.js";
 
 export default function Company() {
     const session = useSession()
-    if(session.status === "authenticated"){
-        console.log('load api')
-    }
-
     const [user, setUser] = useState({
         accessToken: ''
     })
@@ -120,16 +116,11 @@ export default function Company() {
                         "font-semibold text-lg text-blueGray-700"
                     }
                     >
-                    List of Member
+                    Pending Company
                     </h3>
                 </div>
                 <div className="px-4 my-2">
-                    <Link href="/admin/companycontrol/company/pending" className="m-1 relative bg-orange-500 p-2 text-white">
-                        <i className="mr-2 ml-1 fas fa-clock text-white"></i>
-                        Pending</Link>
-                    <Link href="/admin/companycontrol/company/rejected" className="m-1 relative bg-red-500 p-2 text-white">
-                        <i className="mr-2 ml-1 fas fa-times text-white"></i>
-                        Rejected</Link>
+
                 </div>
             </div>
         </div>

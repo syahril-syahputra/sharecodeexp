@@ -16,7 +16,7 @@ export default function SettingsBar(props){
             {/* Navigation */}
 
             {statusId == 1 ? 
-            <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
+            <ul className="md:flex-col md:min-w-full flex flex-col list-none">
               <li className="items-center">
                 <Link href="/admin/settings/mycompany"
                   className={
@@ -33,7 +33,7 @@ export default function SettingsBar(props){
              : null} 
 
             {statusId == 1 ? 
-            <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
+            <ul className="md:flex-col md:min-w-full flex flex-col list-none">
               <li className="items-center">
                 <Link href="/admin/settings/masteraccount"
                   className={
@@ -49,7 +49,7 @@ export default function SettingsBar(props){
             </ul>
             : null}
 
-            <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
+            <ul className="md:flex-col md:min-w-full flex flex-col list-none">
               <li className="items-center">
                 <Link href="/admin/settings/account"
                   className={

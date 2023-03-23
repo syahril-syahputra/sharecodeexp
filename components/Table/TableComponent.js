@@ -71,22 +71,22 @@ export default function TableComponent(props){
                     <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                         <tr>
                             <th scope="col" className="px-6 py-3">
-                                Country
+                                Part Number
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Available Quantity
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                MOQ
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Manufacturer Number
+                                Manufacturer
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 Description
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Date Code
+                                Available Stocks
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                MOQ
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Country
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 *
@@ -98,8 +98,14 @@ export default function TableComponent(props){
                             return(
                                 <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                        {item.country}
+                                        {item.ManufacturerNumber}
                                     </th>
+                                    <td className="px-6 py-4">
+                                        {item.Manufacture}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {item.Description}
+                                    </td>
                                     <td className="px-6 py-4">
                                         {item.AvailableQuantity}
                                     </td>
@@ -107,13 +113,7 @@ export default function TableComponent(props){
                                         {item.moq}
                                     </td>
                                     <td className="px-6 py-4">
-                                        {item.ManufacturerNumber}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {item.Description}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {item.dateCode}
+                                        {item.country}
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <button onClick={() => inquiryItem(item.id)} className="font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry</button>

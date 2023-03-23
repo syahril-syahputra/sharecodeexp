@@ -110,23 +110,23 @@ export default function EditProduct() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        setIsLoading(true)
-        setErrorInfo({})
-        setErrorMessage(null)
-        const response = await axios.post(`/companyproduct/${inputData.id}/update`, inputData, {
-        headers: {
-            "Authorization" : `Bearer ${sessionData.data.accessToken}`
-        }
-        })
-        .then((response) => {
-            let result = response.data.data
-            setSuccesMessage("Your product has been updated succefully")
-        }).catch((error) => {
-            setErrorMessage(error.response.data.message)
-            setErrorInfo(error.response.data.data)
-        }).finally(() => {
-            setIsLoading(false)
-        })
+            setIsLoading(true)
+            setErrorInfo({})
+            setErrorMessage(null)
+            const response = await axios.post(`/companyproduct/${inputData.id}/update`, inputData, {
+            headers: {
+                "Authorization" : `Bearer ${sessionData.data.accessToken}`
+            }
+            })
+            .then((response) => {
+                let result = response.data.data
+                setSuccesMessage("Your product has been updated succefully")
+            }).catch((error) => {
+                setErrorMessage(error.response.data.message)
+                setErrorInfo(error.response.data.data)
+            }).finally(() => {
+                setIsLoading(false)
+            })
     }
 
     //option

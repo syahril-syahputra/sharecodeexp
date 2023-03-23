@@ -1,32 +1,49 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import Link from "next/link";
 import { useSession, getSession } from "next-auth/react";
 import axios from "@/lib/axios";
 
 // components
-import CompanyList from "@/components/Table/CompanyControl/CompanyList";
+import CompanyList from "@/components/Table/Superadmin/Registry/CompanyList";
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
+const usePrevious = (value) => {
+    console.log(1)
+    const ref = useRef();
+    useEffect(() => {
+        ref.current = value;
+    });
+    return ref.current;
+};
 
 export default function Company() {
-    const session = useSession()
-    if(session.status === "authenticated"){
-        console.log('load api')
-    }
+    // const session = useSession()
+    // const [user, setUser] = useState({
+    //     accessToken: ''
+    // })
 
-    const [user, setUser] = useState({
-        accessToken: ''
-    })
-    useEffect(() => { 
-        setUser({accessToken: session.data?.accessToken}) 
-    }, [session])
+    // const accessToken = useRef('')
+    // useEffect(() => { 
+    //     if(session.status == 'authenticated') {
+    //         accessToken.current = session.data?.accessToken
+    //     }
+    // }, [session])
 
+    // useEffect(() => {
+    //     searchData(search)
+    // }, [accessToken, session])
+
+    // if(session?.status == 'authenticated') {
+    //     useEffect(() => {
+    //         console.log('load data')
+    //     }, [])
+    // }
 
     //data search
     const [search, setSearch] = useState('')
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
     const [data, setData] = useState([])
     const [links, setLinks] = useState([])
     const [metaData, setMetaData] = useState({
@@ -36,42 +53,46 @@ export default function Company() {
     })
 
     // const [activePage, setActivePage] = 
+    useEffect(() => {
+        searchData(search)
+    }, [])
     const searchData = async (srch, page=1) =>{
-        if(!!user.accessToken){
-        setIsLoading(true)
-        const response = await axios.get(`/admin/companies?page=${page}`,
-            {
-                headers: {
-                "Authorization" : `Bearer ${user.accessToken}`
-                }
-            }
-            )
-            .then((response) => {
-            let result = response.data.data
-            // console.log(result)
-            setData(result.data)
-            setLinks(result.links)
-            setMetaData({
-                total: result.total,
-                perPage: result.per_page,
-                lastPage: result.last_page,
-                currentPage: result.current_page,
-                nextPage: result.next_page_url ? true : false,
-                prevPage: result.prev_page_url ? true : false
-            })
-            }).catch((error) => {
-            // console.log(error.response)
-            }).finally(() => {
-            setIsLoading(false)
-            })
-        }
+        // if(!!accessToken.current){
+        //     console.log('loaddata')
+            setIsLoading(true)
+            const response = await axios.get(`/admin/companies?page=${page}`,
+                // {
+                //     headers: {
+                //     "Authorization" : `Bearer ${accessToken.current}`
+                //     }
+                // }
+                )
+                .then((response) => {
+                let result = response.data.data
+                // console.log(result)
+                setData(result.data)
+                setLinks(result.links)
+                setMetaData({
+                    total: result.total,
+                    perPage: result.per_page,
+                    lastPage: result.last_page,
+                    currentPage: result.current_page,
+                    nextPage: result.next_page_url ? true : false,
+                    prevPage: result.prev_page_url ? true : false
+                })
+                }).catch((error) => {
+                // console.log(error.response)
+                }).finally(() => {
+                setIsLoading(false)
+                })
+        // }
     }
     const setPage = (item) => {
         searchData(search, item)
     }
-    useEffect(() => {
-        searchData(search)
-    }, [user])
+    
+
+
 
     const [screenIsLoading, setScreenIsLoading] = useState(true)
     const handleCompanyAcceptance = async (companyId) => {
@@ -120,16 +141,10 @@ export default function Company() {
                         "font-semibold text-lg text-blueGray-700"
                     }
                     >
-                    List of Member
+                    Pending Company
                     </h3>
                 </div>
                 <div className="px-4 my-2">
-                    <Link href="/admin/companycontrol/company/pending" className="m-1 relative bg-orange-500 p-2 text-white">
-                        <i className="mr-2 ml-1 fas fa-clock text-white"></i>
-                        Pending</Link>
-                    <Link href="/admin/companycontrol/company/rejected" className="m-1 relative bg-red-500 p-2 text-white">
-                        <i className="mr-2 ml-1 fas fa-times text-white"></i>
-                        Rejected</Link>
                 </div>
             </div>
         </div>

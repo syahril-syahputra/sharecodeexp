@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 // components
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
@@ -17,7 +18,10 @@ export default function Admin({ children }) {
   if(status == 'unauthenticated'){
     router.replace("/auth/login")
   }
-
+  useEffect(() => {
+    Cookies.set('accessToken', data?.accessToken)
+  })
+  
   return (
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />

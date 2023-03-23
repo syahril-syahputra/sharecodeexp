@@ -4,8 +4,10 @@ import Link from "next/link";
 
 // components
 import ChangeStatus from "@/components/Modal/CompanyControl/ChangeStatus"
+import ItemStatuses from "@/components/Shared/ItemStatuses";
 
 export default function TableCompany(props) {
+    const tableType = props.tableType
     const data = props.data
     const links = props.links
     const metaData = props.metaData
@@ -114,17 +116,48 @@ export default function TableCompany(props) {
                                             {item.phone}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item.is_confirmed}
+                                            <ItemStatuses status={item.is_confirmed} title={`stock status ${item.is_confirmed}`} label={item.is_confirmed}/>
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <div className="inline-flex">
+                                            {/* <div className="inline-flex">
                                                 {item.is_confirmed == "false" ? 
                                                     <button onClick={() => setModalData(true, item.id, item.name)} className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Accept Company</button>
                                                 : <button className="mr-2 font-medium text-blue-600 text-white bg-blueGray-400 p-2">Accepted</button> }
                                                 <Link href="/admin/companycontrol/company/view">
                                                     <button className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">View</button>
                                                 </Link>
-                                            </div>
+                                            </div> */}
+
+                                            {!props.isLoading && 
+                                                <div className="inline-flex">
+                                                    <button onClick={()=> props.viewHandler(item.id)} className="font-medium text-blue-600 text-white bg-indigo-500 hover:bg-indigo-600 p-2">View</button>
+
+                                                    {/* {tableType == "accepted" && 
+                                                        <>
+                                                            <button className="font-medium text-blue-600 text-white bg-indigo-500 p-2">View</button>
+                                                        </>
+                                                    } */}
+
+                                                    {tableType == "pending" && 
+                                                        <>
+                                                            <button onClick={()=> props.acceptHandler(item.id)} className="font-medium text-blue-600 text-white bg-indigo-500 hover:bg-indigo-600 p-2">Accept</button>
+                                                            <button onClick={()=> props.rejectHandler(item.id)} className="font-medium text-blue-600 text-white bg-indigo-500 hover:bg-indigo-600 p-2">Reject</button>
+                                                        </>
+                                                    }
+
+                                                    {tableType == "rejected" && 
+                                                        <>
+                                                            <button onClick={()=> props.acceptHandler(item.id)} className="font-medium text-blue-600 text-white bg-indigo-500 hover:bg-indigo-600 p-2">Accept</button>
+                                                            <button onClick={()=> props.pendingHandler(item.id)} className="font-medium text-blue-600 text-white bg-indigo-500 hover:bg-indigo-600 p-2">Pending</button>
+                                                        </>
+                                                    }
+                                                </div>
+                                            }
+                                            {props.isLoading &&<div>
+                                                <div className='text-center my-auto'>
+                                                    <i className="fas fa-circle-notch fa-spin text-blue-600 my-auto mx-10 fa-2xl"></i>
+                                                </div>
+                                            </div>}
                                         </td>
                                     </tr>
                                 )

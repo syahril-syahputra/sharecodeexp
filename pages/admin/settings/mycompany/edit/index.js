@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "lib/axios"
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import Image from 'next/image';
+import Select from 'react-tailwindcss-select';
+import ErrorInput from '@/components/Shared/ErrorInput';
 
 // components
 import InputForm from "@/components/Shared/InputForm";
 import CountrySelector from "@/components/Shared/CountrySelector";
 
+//data
+import {sectorOptions} from "data/optionData"
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -26,7 +31,7 @@ export default function MyCompany() {
     const [isLoading, setIsLoading] = useState(true)
     const [companyStatus, setCompanyStatus] = useState()
     const getData = async () =>{
-        if(!!user.accessToken){
+        if(!!user.accessToken && inputData.name == ''){
         setIsLoading(true)
         const response = await axios.get(`/company`,
             {
@@ -37,8 +42,24 @@ export default function MyCompany() {
             )
             .then((response) => {
                 let result = response.data.data
-                setInputData(result)
-                console.log(1)
+                setInputData({
+                    name: result.name,
+                    address: result.address,
+                    img: result.img,
+                    RegistrationDocument: result.RegistrationDocument,
+                    CertificationofActivity: result.CertificationofActivity,
+                    country: result.country,
+                    sector: result.sector,
+                    phone: result.phone
+                })
+
+                //set sector
+                let oldSector = sectorOptions.find(item => item.value == result.sector)
+                if(oldSector) {
+                    setSector({value: result.sector, label: result.sector})
+                } else {
+                    setSector({value: 'other', label: 'Other'})
+                }
             }).catch((error) => {
                 console.log(1)
             }).finally(() => {
@@ -53,16 +74,14 @@ export default function MyCompany() {
 
   // update data
     const [inputData, setInputData] = useState({
-        AvailableQuantity: '',
-        moq: '',
-        package: '',
-        packaging: '',
+        name: '',
+        address: '',
+        img: '',
+        RegistrationDocument: '',
+        CertificationofActivity: '',
         country: '',
-        ManufacturerNumber: '',
-        Manufacture: '',
-        Description: '',
-        dateCode: '',
-        status: ''
+        sector: '',
+        phone: ''
     });
     const [errorInfo, setErrorInfo] = useState({})
     const [errorMessage, setErrorMessage] = useState(null)
@@ -78,38 +97,76 @@ export default function MyCompany() {
         setCountry(value)
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        console.log("submited")
-        // if(!!user.accessToken){
-        // setIsLoading(true)
-        // const response = await axios.get(`/company`,
-        //     {
-        //         headers: {
-        //         "Authorization" : `Bearer ${user.accessToken}`
-        //         }
-        //     }
-        //     )
-        //     .then((response) => {
-        //         let result = response.data.data
-        //         setInputData(result)
-        //     }).catch((error) => {
-        //         // console.log(error.response)
-        //     }).finally(() => {
-        //         setIsLoading(false)
-        //     })
-        // }
-    }
-
     const [image, setImage] = useState(null)
     const companyImageHandler = (e) =>{
         let file = e.target.files[0]
         const fileReader = new FileReader();
         fileReader.onload = function(e){
             setImage(e.target.result) 
-            setInputData({...inputData, company_img:e.target.result})
+            setInputData({...inputData, img:e.target.result})
         }
         fileReader.readAsDataURL(file)
+    }
+
+    //option
+    //packaging option
+    const [sectors, setSectors] = useState([...sectorOptions, {value: 'other', label: 'Other'}])
+
+    const [sector, setSector] = useState(null);
+    const handleSectorChange = value => {
+        setInputData({...inputData, sector:''})
+        setSector(value);
+        if(value.value != 'other') {
+            setInputData({...inputData, sector:value.value})
+        }
+    };
+
+    //update handler
+    const refdata = useRef()
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        if(!!user.accessToken){
+            setIsLoading(true)
+            setErrorInfo({})
+            setErrorMessage(null)
+            setSuccesMessage(null)
+
+            let datasend = inputData
+                datasend.RegistrationDocument = refdata?.current?.elements?.RegistrationDocument?.files[0]
+                datasend.CertificationofActivity = refdata?.current?.elements?.CertificationofActivity?.files[0]
+                datasend.img = refdata?.current?.elements?.img?.files[0]
+
+            let formData = new FormData();
+            for (const key in datasend) {
+                formData.append(key, datasend[key]);
+            }
+
+            const response = await axios.post(`/master/company/update`, formData, {
+                headers: {
+                    "Authorization" : `Bearer ${user.accessToken}`
+                }
+                })
+                .then((response) => {
+                    let result = response.data.data
+                    setSuccesMessage("Your company has been updated succefully")
+                }).catch((error) => {
+                    setErrorMessage("Please fill your form correctly")
+                    setErrorInfo(error.data.data)
+                }).finally(() => {
+                    setIsLoading(false)
+                    setInputData({
+                        name: '',
+                        address: '',
+                        img: '',
+                        RegistrationDocument: '',
+                        CertificationofActivity: '',
+                        country: '',
+                        sector: '',
+                        phone: ''
+                    })
+                    setImage(null)
+                })
+        }
     }
 
     return (
@@ -127,7 +184,7 @@ export default function MyCompany() {
                         </h3>
                     </div>
                     <div className="px-4 mt-2">
-                        <Link href="/admin/settings/mycompany/edit" className="relative bg-blueGray-700 p-2 text-white">
+                        <Link href="/admin/settings/mycompany" className="relative bg-blueGray-700 p-2 text-white">
                             {/* <i className="mr-2 ml-1 fas fa-pen text-white"></i> */}
                             Back</Link>
                     </div>
@@ -161,7 +218,7 @@ export default function MyCompany() {
                     </div>
                     }
                 </div>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} ref={refdata}>
                     <div className="flex flex-wrap mb-6">
                         <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
@@ -175,9 +232,10 @@ export default function MyCompany() {
                                     <div className="text-xs ">
                                         <p>JPG, JPEG, PNG file size no more than 10MB</p>
                                         <input 
+                                            required
                                             className="mt-3" 
                                             type="file"
-                                            name="company_img"
+                                            name="img"
                                             accept='.png, .jpeg, .jpg'
                                             // onChange={({target}) => 
                                             //     setRegistrationInfo({...registrationInfo, company_img:target.files[0]})
@@ -187,8 +245,8 @@ export default function MyCompany() {
                                     </div>
                                 </div>
                             </div>
-                            {errorInfo.company_img &&
-                                <ErrorInput error={errorInfo.company_img}/>
+                            {errorInfo.img &&
+                                <ErrorInput error={errorInfo.img}/>
                             }
                         </div>
                         {image &&<div className="w-full md:w-1/2 px-3">
@@ -198,6 +256,7 @@ export default function MyCompany() {
                             <div className="p-2 border-dashed border-2 border-indigo-200">
                                 <div className='text-center grid gap-4 lg:grid-cols-1 md:grid-cols-1'>
                                     <Image src={image}
+                                        alt="company_logo"
                                         className="mx-auto"
                                         height={180}
                                         width={180}>
@@ -218,14 +277,40 @@ export default function MyCompany() {
                             />
                         </div>
                         <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                                Sector
+                            </label>
+                            <Select 
+                                name="sector"
+                                value={sector}
+                                onChange={handleSectorChange}
+                                options={sectors}
+                                classNames={{
+                                    menuButton: () => (
+                                        `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
+                                    ),
+                                    menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
+                                    listItem: ({ isSelected }) => (
+                                        `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
+                                            isSelected
+                                                ? `text-white bg-blue-500`
+                                                : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
+                                        }`
+                                    ),
+                                    searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
+                                }}
+                                />
+                            {errorInfo.sector &&
+                                <ErrorInput error={errorInfo.sector}/>
+                            }
+                            { sector?.value == "other" && 
                             <InputForm
-                                isDisabled={isLoading}
-                                label="Sector"
-                                inputDataName="company_name"
-                                value={inputData.company_name}
+                                inputDataName="sector"
+                                value={inputData.sector}
                                 setData={setDataHandler}
-                                errorMsg={errorInfo.company_name}
+                                errorMsg={errorInfo.sector}
                             />
+                            }
                         </div>
                     </div>
                     <div className="flex flex-wrap mb-6">
@@ -233,10 +318,10 @@ export default function MyCompany() {
                             <InputForm
                                 isDisabled={isLoading}
                                 label="Phone"
-                                inputDataName="name"
-                                value={inputData.name}
+                                inputDataName="phone"
+                                value={inputData.phone}
                                 setData={setDataHandler}
-                                errorMsg={errorInfo.name}
+                                errorMsg={errorInfo.phone}
                             />
                         </div>
                         <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -258,7 +343,7 @@ export default function MyCompany() {
                             <textarea 
                                 value={inputData.address}
                                 onChange={({target}) => 
-                                    setRegistrationInfo({...inputData, address:target.value})
+                                    setInputData({...inputData, address:target.value})
                                 }
                                 autoComplete="off" 
                                 type="text"
@@ -287,21 +372,23 @@ export default function MyCompany() {
                                         <div className="text-xs ">
                                             <p>PDF file size no more than 10MB</p>
                                             <input 
+                                                required
                                                 className="mt-3" 
                                                 type="file"
-                                                name='company_RequiredDocuments'
+                                                accept='.pdf'
+                                                name='RegistrationDocument'
                                                 // onChange={({target}) => 
                                                 //     setRegistrationInfo({...registrationInfo, companyRequiredDocuments:target.files[0]})
                                                 // }
                                                 onChange={({target}) => 
-                                                    setRegistrationInfo({...registrationInfo,company_RequiredDocuments:target.files[0]})
+                                                    setInputData({...inputData, RegistrationDocument:target.files[0]})
                                                 }
                                             />
                                         </div>
                                     </div>
                                 </div>
-                                {errorInfo.company_RequiredDocuments &&
-                                    <ErrorInput error={errorInfo.company_RequiredDocuments}/>
+                                {errorInfo.RegistrationDocument &&
+                                    <ErrorInput error={errorInfo.RegistrationDocument}/>
                                 }
                             </div>
                             <div className="w-full md:w-1/2 px-3">
@@ -316,11 +403,13 @@ export default function MyCompany() {
                                         <div className="text-xs ">
                                             <p>PDF file size no more than 10MB</p>
                                             <input 
+                                                required
                                                 className="mt-3" 
                                                 type="file"
-                                                name="company_PaymentDocuments"
+                                                accept='.pdf'
+                                                name="CertificationofActivity"
                                                 onChange={({target}) => 
-                                                    setRegistrationInfo({...registrationInfo, company_PaymentDocuments:target.files[0]})
+                                                    setInputData({...inputData, CertificationofActivity:target.files[0]})
                                                 }
                                                 // onChange={companyReqDocsHandler}
 
@@ -328,8 +417,8 @@ export default function MyCompany() {
                                         </div>
                                     </div>
                                 </div>
-                                {errorInfo.company_PaymentDocuments &&
-                                    <ErrorInput error={errorInfo.company_PaymentDocuments}/>
+                                {errorInfo.CertificationofActivity &&
+                                    <ErrorInput error={errorInfo.CertificationofActivity}/>
                                 }
                             </div>
                         </div>

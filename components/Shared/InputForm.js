@@ -4,7 +4,7 @@ export default function InputForm(props){
     return (
         <>
             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                {props.label} {props.isDisabled}
+                {props.label}
             </label>
             <input 
                 disabled={props.isDisabled}

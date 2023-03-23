@@ -29,7 +29,6 @@ export default function PendingProduct() {
     })
     const searchData = async (srch, page=1) =>{
         if(!!user.accessToken){
-        console.log(1)
         setIsLoading(true)
         const response = await axios.get(`/admin/product/pending?page=${page}`,
             {
@@ -64,6 +63,50 @@ export default function PendingProduct() {
     useEffect(() => {
         searchData(search)
     }, [user])
+
+    const viewHandler = (productId) => {
+        console.log(productId)
+    }
+
+    const acceptHandler = async (productId) => {
+        if(!!user.accessToken){
+            setIsLoading(true)
+            const response = await axios.post(`/admin/product/update`, {id: productId}, {
+                headers: {
+                  "Authorization" : `Bearer ${user.accessToken}`
+                }
+              })
+                .then((response) => {
+                  console.log(response)
+                }).catch((error) => {
+                //   setErrorMessage("Please fill the form correctly")
+                  console.log(error)
+                }).finally(() => {
+                  setIsLoading(false)
+                  searchData()
+                })
+        }
+    }
+
+    const rejectHandler = async (productId) => {
+        if(!!user.accessToken){
+            setIsLoading(true)
+            const response = await axios.post(`/admin/product/updateRejected`, {id: productId}, {
+                headers: {
+                  "Authorization" : `Bearer ${user.accessToken}`
+                }
+              })
+                .then((response) => {
+                  console.log(response)
+                }).catch((error) => {
+                //   setErrorMessage("Please fill the form correctly")
+                  console.log(error)
+                }).finally(() => {
+                  setIsLoading(false)
+                  searchData()
+                })
+        }
+    }
 
   return (
     <>
@@ -112,6 +155,9 @@ export default function PendingProduct() {
         data={data}
         links={links}
         metaData={metaData}
+        viewHandler={viewHandler}
+        acceptHandler={acceptHandler}
+        rejectHandler={rejectHandler}
       />
     </div>
     </>

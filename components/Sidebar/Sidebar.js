@@ -7,9 +7,14 @@ import UserDropdown from "components/Dropdowns/UserDropdown.js";
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
 
 //
-import CompanyControl from "./CompanyControl";
+import Components from "./Superadmin/Components";
 import ProductBar from "./Product";
 import SettingsBar from "./Settings";
+
+//
+import Registry from "./Superadmin/Registry";
+import Orders from "./Superadmin/Orders";
+import Statistics from "./Superadmin/Statistics";
 
 export default function Sidebar() {
   const [collapseShow, setCollapseShow] = React.useState("hidden");
@@ -112,18 +117,22 @@ export default function Sidebar() {
               </li>
             </ul>
             
-            
             {companyStatus == "true" && userDetail.role_id == 2? 
                 <ProductBar/>
               : null }
 
+            {userDetail?.role_id == 1 ? 
+              <>
+                <Registry/>
+                <Components/>
+                <Orders/>
+                <Statistics/>
+              </>
+            : null }
+
             <SettingsBar
               statusId={userDetail?.status_id}
             />
-
-            {userDetail?.role_id == 1 ? 
-              <CompanyControl/>
-            : null }
 
           </div>
         </div>

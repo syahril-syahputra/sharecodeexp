@@ -65,6 +65,10 @@ export default function RejectedProduct() {
         searchData(search)
     }, [user])
 
+    const viewHandler = (productId) => {
+        console.log(productId)
+    }
+
   return (
     <>
     <div className="relative">
@@ -112,6 +116,7 @@ export default function RejectedProduct() {
         data={data}
         links={links}
         metaData={metaData}
+        viewHandler={viewHandler}
       />
     </div>
     </>

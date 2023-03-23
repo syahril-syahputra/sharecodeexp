@@ -21,7 +21,7 @@ export default function MyCompany() {
 
   //data search
   const [isLoading, setIsLoading] = useState(true)
-  const [companyData, setCompanyData] = useState({})
+  const [companyData, setCompanyData] = useState()
   const [companyStatus, setCompanyStatus] = useState()
   const getData = async () =>{
       if(!!user.accessToken){
@@ -69,7 +69,8 @@ export default function MyCompany() {
                   Update Company</Link>
               </div>
           </div>
-          {!isLoading ? 
+          
+          {!!companyData ? 
             <> 
               <div className="text-center pb-10">
                 <img className="object-contain mb-3 h-40 mx-auto" 
