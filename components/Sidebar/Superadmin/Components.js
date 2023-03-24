@@ -17,10 +17,10 @@ export default function CompanyControl(){
 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
                 <li className="items-center">
-                    <Link href="/admin/companycontrol/product"
+                    <Link href="/admin/superadmin/components/pending"
                     className={
                         "text-xs uppercase py-3 font-bold block " +
-                        (router.pathname.indexOf("/admin/companycontrol/product") !== -1
+                        (router.pathname.indexOf("/admin/superadmin/components/pending") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
@@ -31,10 +31,10 @@ export default function CompanyControl(){
             </ul>
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
                 <li className="items-center">
-                    <Link href="/admin/companycontrol/product"
+                    <Link href="/admin/superadmin/components/accepted"
                     className={
                         "text-xs uppercase py-3 font-bold block " +
-                        (router.pathname.indexOf("/admin/companycontrol/product") !== -1
+                        (router.pathname.indexOf("/admin/superadmin/components/accepted") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
@@ -45,10 +45,10 @@ export default function CompanyControl(){
             </ul>
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
                 <li className="items-center">
-                    <Link href="/admin/companycontrol/product"
+                    <Link href="/admin/superadmin/components/rejected"
                     className={
                         "text-xs uppercase py-3 font-bold block " +
-                        (router.pathname.indexOf("/admin/companycontrol/product") !== -1
+                        (router.pathname.indexOf("/admin/superadmin/components/rejected") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>

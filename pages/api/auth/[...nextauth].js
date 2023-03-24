@@ -1,6 +1,5 @@
 import NextAuth from "next-auth/next";
 import Credentials from "next-auth/providers/credentials";
-import Cookies from "js-cookie";
 
 const authOptions = {
     session: {
@@ -20,7 +19,6 @@ const authOptions = {
                     }
                 })
                 const user = await res.json()
-                Cookies.set('tokentoken', 'test')
                 if (res.ok && user) {
                     return {
                         name: user.data.user.name,
@@ -53,7 +51,7 @@ const authOptions = {
         async session({token}) {
             return token
         }
-    }
+    },
 
 }
 

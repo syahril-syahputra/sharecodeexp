@@ -4,55 +4,14 @@ import Link from "next/link";
 
 // components
 import ChangeStatus from "@/components/Modal/CompanyControl/ChangeStatus"
-import ItemStatuses from "@/components/Shared/ItemStatuses";
+import CompanyStatus from "./CompanyStatus";
+import Pagination from "@/components/Shared/Component/Pagination";
 
-export default function TableCompany(props) {
+export default function CompanyList(props) {
     const tableType = props.tableType
     const data = props.data
     const links = props.links
     const metaData = props.metaData
-
-    const setPaginationLabel = (item, index) => {
-        if(item.label === "&laquo; Previous") {
-            return (
-                <button 
-                    disabled={!metaData.prevPage}
-                    onClick={() => props.setPage(metaData.currentPage - 1)}
-                    key={index} 
-                    className={`
-                        ${!metaData.prevPage ? 'border border-solid border-blueGray-400' : 'border border-solid border-blueGray-500 text-blueGray-700'}
-                        text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative`}
-                >
-                    <i className={`${!metaData.prevPage ? 'text-blueGray-400' : 'text-blueGray-700'} fas fa-angle-left my-auto mx-10 fa-xl`}></i>
-                </button>
-            )
-        }
-
-        if(item.label === "Next &raquo;") {
-                return (
-                    <button 
-                        disabled={!metaData.nextPage}
-                        onClick={() => props.setPage(metaData.currentPage + 1)}
-                        key={index} 
-                        className={`
-                            ${!metaData.nextPage ? 'border border-solid border-blueGray-400' : 'border border-solid border-blueGray-500 text-blueGray-700'}
-                            text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative`}
-                    >
-                        <i className={`${!metaData.nextPage ? 'text-blueGray-400' : 'text-blueGray-700'} fas fa-angle-right my-auto mx-10 fa-xl`}></i>
-                    </button>
-                )
-            }
-
-        return(
-            <button 
-                onClick={() => props.setPage(item.label)}
-                key={index} 
-                className={`${item.active ? 'bg-blueGray-700 text-white' : 'border border-solid border-blueGray-500 text-blueGray-700'} text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative`}
-            >
-                {item.label}
-            </button>
-        )
-    }
     
     const [showModal, setShowModal] = useState(false);
 
@@ -66,6 +25,7 @@ export default function TableCompany(props) {
     const handleCompanyAcceptance = () => {
         props.companyAcceptance(companyId)
     }
+
     return (
         <>  
             <div className="relative">
@@ -116,7 +76,7 @@ export default function TableCompany(props) {
                                             {item.phone}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <ItemStatuses status={item.is_confirmed} title={`stock status ${item.is_confirmed}`} label={item.is_confirmed}/>
+                                            <CompanyStatus status={item.is_confirmed} title={`stock status ${item.is_confirmed}`} label={item.is_confirmed}/>
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             {/* <div className="inline-flex">
@@ -191,12 +151,11 @@ export default function TableCompany(props) {
                 </div>
             </div>}
             
-
-            <div className="flex justify-center mt-10 mx-auto justify-center">
-                {links.map((item, index) => {
-                    return setPaginationLabel(item, index)
-                })}
-            </div>
+            <Pagination 
+                links={links}
+                metaData={metaData}
+                setPage={props.setPage}
+            />
         </>
     );
 }

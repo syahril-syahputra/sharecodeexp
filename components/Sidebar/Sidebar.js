@@ -1,25 +1,25 @@
 import React, {useState, useEffect} from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession, getSession } from "next-auth/react";
 
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
 
-//
-import Components from "./Superadmin/Components";
-import ProductBar from "./Product";
 import SettingsBar from "./Settings";
 
-//
+//superadmin
 import Registry from "./Superadmin/Registry";
 import Orders from "./Superadmin/Orders";
 import Statistics from "./Superadmin/Statistics";
+import Components from "./Superadmin/Components";
+import MasterControl from "./Superadmin/MasterControl"
+
+//member
+import MemberSellComponents from "./Member/SellComponents";
+import MemberBuyComponents from "./Member/BuyComponents";
 
 export default function Sidebar() {
-  const [collapseShow, setCollapseShow] = React.useState("hidden");
-  const router = useRouter()
-
   const session = useSession()
   const [userDetail, setUserDetail] = useState()
   const [companyStatus, setCompanyStatus] = useState()
@@ -27,6 +27,9 @@ export default function Sidebar() {
     setUserDetail(session.data?.user.userDetail) 
     setCompanyStatus(session.data?.user.isCompanyConfirmed) 
   }, [session])
+
+  const [collapseShow, setCollapseShow] = React.useState("hidden");
+  const router = useRouter()
 
   return (
     <>
@@ -117,8 +120,11 @@ export default function Sidebar() {
               </li>
             </ul>
             
-            {companyStatus == "true" && userDetail.role_id == 2? 
-                <ProductBar/>
+            {companyStatus == "accepted" && userDetail.role_id == 2? 
+              <>
+                <MemberSellComponents/>
+                <MemberBuyComponents/>
+              </>
               : null }
 
             {userDetail?.role_id == 1 ? 
@@ -127,16 +133,26 @@ export default function Sidebar() {
                 <Components/>
                 <Orders/>
                 <Statistics/>
+                <MasterControl/>
               </>
             : null }
 
-            <SettingsBar
+            {/* <SettingsBar
               statusId={userDetail?.status_id}
-            />
+            /> */}
 
           </div>
         </div>
       </nav>
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+  return {
+      props: {
+          session: session
+      }
+  }
 }

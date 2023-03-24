@@ -20,3 +20,9 @@ export const sectorOptions = [
     {value: 'Electronics Equipment Manufacturers', label: 'Electronics Equipment Manufacturers'},
     {value: 'Industrial Manufacturers', label: 'Industrial Manufacturers'},
 ]
+
+export const orderStatusesOptions = [
+    {value: 'Order Inquiry', label: 'Order Inquiry'},
+    {value: 'Verified', label: 'Verified'},
+    {value: 'Rejected', label: 'Rejected'},
+]

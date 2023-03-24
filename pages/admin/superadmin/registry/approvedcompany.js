@@ -8,39 +8,9 @@ import CompanyList from "@/components/Table/Superadmin/Registry/CompanyList";
 
 // layout for page
 import Admin from "layouts/Admin.js";
+import { useRouter } from "next/router";
 
-const usePrevious = (value) => {
-    console.log(1)
-    const ref = useRef();
-    useEffect(() => {
-        ref.current = value;
-    });
-    return ref.current;
-};
-
-export default function Company() {
-    // const session = useSession()
-    // const [user, setUser] = useState({
-    //     accessToken: ''
-    // })
-
-    // const accessToken = useRef('')
-    // useEffect(() => { 
-    //     if(session.status == 'authenticated') {
-    //         accessToken.current = session.data?.accessToken
-    //     }
-    // }, [session])
-
-    // useEffect(() => {
-    //     searchData(search)
-    // }, [accessToken, session])
-
-    // if(session?.status == 'authenticated') {
-    //     useEffect(() => {
-    //         console.log('load data')
-    //     }, [])
-    // }
-
+export default function Company({session}) {
     //data search
     const [search, setSearch] = useState('')
     const [isLoading, setIsLoading] = useState(false)
@@ -52,67 +22,44 @@ export default function Company() {
         lastPage: 0
     })
 
-    // const [activePage, setActivePage] = 
     useEffect(() => {
         searchData(search)
     }, [])
     const searchData = async (srch, page=1) =>{
-        // if(!!accessToken.current){
-        //     console.log('loaddata')
-            setIsLoading(true)
-            const response = await axios.get(`/admin/companies?page=${page}`,
-                // {
-                //     headers: {
-                //     "Authorization" : `Bearer ${accessToken.current}`
-                //     }
-                // }
-                )
-                .then((response) => {
-                let result = response.data.data
-                // console.log(result)
-                setData(result.data)
-                setLinks(result.links)
-                setMetaData({
-                    total: result.total,
-                    perPage: result.per_page,
-                    lastPage: result.last_page,
-                    currentPage: result.current_page,
-                    nextPage: result.next_page_url ? true : false,
-                    prevPage: result.prev_page_url ? true : false
-                })
-                }).catch((error) => {
-                // console.log(error.response)
-                }).finally(() => {
-                setIsLoading(false)
-                })
-        // }
+        setIsLoading(true)
+        const response = await axios.get(`/admin/companies?page=${page}`,
+            {
+                headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+                }
+            })
+            .then((response) => {
+            let result = response.data.data
+            // console.log(result)
+            setData(result.data)
+            setLinks(result.links)
+            setMetaData({
+                total: result.total,
+                perPage: result.per_page,
+                lastPage: result.last_page,
+                currentPage: result.current_page,
+                nextPage: result.next_page_url ? true : false,
+                prevPage: result.prev_page_url ? true : false
+            })
+            }).catch((error) => {
+            // console.log(error.response)
+            }).finally(() => {
+            setIsLoading(false)
+            })
     }
     const setPage = (item) => {
         searchData(search, item)
     }
-    
 
-
-
-    const [screenIsLoading, setScreenIsLoading] = useState(true)
-    const handleCompanyAcceptance = async (companyId) => {
-        if(!!user.accessToken){
-        setScreenIsLoading(true)
-        const response = await axios.post(`/admin/companies/${companyId}/update`, {},
-            {
-                headers: {
-                "Authorization" : `Bearer ${user.accessToken}`
-                }
-            })
-            .then((response) => {
-                console.log(response.data)
-                searchData(search)
-            }).catch((error) => {
-                console.log(error)
-            }).finally(() => {
-                setIsLoading(false)
-            })
-        }
+    const router = useRouter()
+    const viewCompanyHandler = (companyId) => {
+        console.log(companyId)
+        router.push(`/admin/superadmin/registry/company/${companyId}`)
     }
 
     return (
@@ -130,7 +77,7 @@ export default function Company() {
                     href={`/product/search`}
                     className="font-bold relative z-[2] bg-blueGray-700 active:bg-blueGray-600 px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:z-[3] focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
                 >
-                Search
+                Search!!
             </Link>
         </div>
         <div className="mb-0 px-4 py-3 border-0 bg-white">
@@ -141,7 +88,7 @@ export default function Company() {
                         "font-semibold text-lg text-blueGray-700"
                     }
                     >
-                    Pending Company
+                    Approved Company
                     </h3>
                 </div>
                 <div className="px-4 my-2">
@@ -155,12 +102,20 @@ export default function Company() {
             data={data}
             links={links}
             metaData={metaData}
-            companyAcceptance={handleCompanyAcceptance}
+            viewHandler={viewCompanyHandler}
         />
         </div>
         </>
     );
 }
 
-
 Company.layout = Admin;
+
+export async function getServerSideProps(context) {
+    const session = await getSession(context)
+    return {
+        props: {
+            session: session
+        }
+    }
+}

@@ -101,31 +101,6 @@ export default function Index() {
     //option
     //sector option
     const [sectors, setSectors] = useState([...sectorOptions, {value: 'other', label: 'Other'}])
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault()
-    //     setErrorMessage(null)
-    //     setIsLoading(true)
-    //     let datasend = registrationInfo
-    //         datasend.company_RegistrationDocument = refdata?.current?.elements?.company_RegistrationDocument?.files[0]
-    //         datasend.company_CertificationofActivity = refdata?.current?.elements?.company_CertificationofActivity?.files[0]
-    //         datasend.company_img = refdata?.current?.elements?.company_img?.files[0]
-    //         // datasend.company_country = registrationInfo.company_country?.label
-
-    //     let formData = new FormData();
-    //     for (const key in datasend) {
-    //         formData.append(key, datasend[key]);
-    //     }
-
-    //     const response = await axios.post("/registration", formData, {
-    //         headers: {
-    //             'Content-Type': 'multipart/form-data'
-    //         }
-    //     }).then((response) => {
-    //         setSuccesMessage(response.data)
-    //     })
-
-    // }
-
     const [sector, setSector] = useState(null);
     const handleSectorChange = value => {
         setRegistrationInfo({...registrationInfo, company_sector:''})

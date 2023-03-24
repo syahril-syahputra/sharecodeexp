@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import Link from "next/link";
 import { useSession, getSession } from "next-auth/react";
 import axios from "@/lib/axios";
@@ -9,20 +9,10 @@ import CompanyList from "@/components/Table/Superadmin/Registry/CompanyList";
 // layout for page
 import Admin from "layouts/Admin.js";
 
-
-export default function Company() {
-    const session = useSession()
-    const [user, setUser] = useState({
-        accessToken: ''
-    })
-    useEffect(() => { 
-        setUser({accessToken: session.data?.accessToken}) 
-    }, [session])
-
-
+export default function Company({session}) {
     //data search
     const [search, setSearch] = useState('')
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
     const [data, setData] = useState([])
     const [links, setLinks] = useState([])
     const [metaData, setMetaData] = useState({
@@ -31,17 +21,17 @@ export default function Company() {
         lastPage: 0
     })
 
-    // const [activePage, setActivePage] = 
+    useEffect(() => {
+        searchData(search)
+    }, [])
     const searchData = async (srch, page=1) =>{
-        if(!!user.accessToken){
         setIsLoading(true)
         const response = await axios.get(`/admin/companies?page=${page}`,
             {
                 headers: {
-                "Authorization" : `Bearer ${user.accessToken}`
+                "Authorization" : `Bearer ${session.accessToken}`
                 }
-            }
-            )
+            })
             .then((response) => {
             let result = response.data.data
             // console.log(result)
@@ -60,15 +50,11 @@ export default function Company() {
             }).finally(() => {
             setIsLoading(false)
             })
-        }
     }
     const setPage = (item) => {
         searchData(search, item)
     }
-    useEffect(() => {
-        searchData(search)
-    }, [user])
-
+    
     const [screenIsLoading, setScreenIsLoading] = useState(true)
     const handleCompanyAcceptance = async (companyId) => {
         if(!!user.accessToken){
@@ -120,7 +106,6 @@ export default function Company() {
                     </h3>
                 </div>
                 <div className="px-4 my-2">
-
                 </div>
             </div>
         </div>
@@ -138,5 +123,13 @@ export default function Company() {
     );
 }
 
-
 Company.layout = Admin;
+
+export async function getServerSideProps(context) {
+    const session = await getSession(context)
+    return {
+      props: {
+        session: session
+      }
+    }
+  }

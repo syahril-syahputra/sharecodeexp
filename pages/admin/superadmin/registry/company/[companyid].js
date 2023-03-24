@@ -21,7 +21,6 @@ export default function MyCompany() {
 
   //data search
   const [isLoading, setIsLoading] = useState(false)
-//   const [companyData, setCompanyData] = useState({})
   const [companyData, setCompanyData] = useState({
     name: "Dummy CMP",
     img: "1678851391.png",

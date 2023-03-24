@@ -6,7 +6,7 @@ export default function ItemStatuses(props){
                     <i title={props.title} className="mr-2 ml-1 fas fa-clock text-orange-500"></i> 
                 </>
             }
-            {props.status == "approved" && 
+            {props.status == "accepted" && 
                 <>
                     <i title={props.title} className="mr-2 ml-1 fas fa-circle-check text-blue-700"></i>
                 </>
