@@ -5,22 +5,18 @@ import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
 
 // components
-import ComponentStatus from "@/components/Shared/Component/Statuses";
+import InputForm from "@/components/Shared/InputForm";
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
-export default function MyProduct({session}) {
-    const router = useRouter()
-    const { manufacturerNumber } = router.query
-
+export default function AddToInquiryList({session, routeParam}) {
     //data search
-    const [search, setSearch] = useState('')
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState({})
-    const getData = async () => {
+    const getData = async () =>{
         setIsLoading(true)
-        const response = await axios.get(`/companyproduct/${manufacturerNumber}`,
+        const response = await axios.get(`/product/${routeParam.componentid}`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -30,6 +26,7 @@ export default function MyProduct({session}) {
             .then((response) => {
                 let result = response.data.data
                 setData(result)
+                setOrderQuantity(result.moq)
             }).catch((error) => {
                 // console.log(error.response)
             }).finally(() => {
@@ -39,6 +36,9 @@ export default function MyProduct({session}) {
     useEffect(() => {
         getData()
     }, [])
+
+    const [orderQuantity, setOrderQuantity] = useState(0)
+    
     return (
         <>
             <div className="relative shadow">
@@ -50,16 +50,16 @@ export default function MyProduct({session}) {
                                 "font-semibold text-lg text-blueGray-700"
                             }
                             >
-                            Company Product 
+                            Add To Cart
                             </h3>
                         </div>
-                        <div className="px-4 mt-2">
+                        {/* <div className="px-4 mt-2">
                             {!!manufacturerNumber && 
                                 <Link href={`/admin/product/myproduct/edit/${manufacturerNumber}`} className="relative bg-orange-500 p-2 text-white">
                                     <i className="mr-2 ml-1 fas fa-pen text-white"></i>
                                     Edit Product</Link>
                             }
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
@@ -67,77 +67,90 @@ export default function MyProduct({session}) {
                 <div className="">
                     <div className="flex flex-wrap w-full bg-white">
                         <div className="px-3 mb-6 md:mb-0 text-center">
-                            <div className="p-24 border mx-2 my-4">{manufacturerNumber}</div>
+                            <div className="p-24 border mx-2 my-4">{data.ManufacturerNumber}</div>
+                        </div>
+                        <div className="md:w-25 mt-5">
+                            <div>
+                                <InputForm
+                                    label="QTY(s)"
+                                    // inputDataName="ManufacturerNumber"
+                                    value={orderQuantity}
+                                    // setData={setDataHandler}
+                                    // errorMsg={errorInfo.ManufacturerNumber}
+                                    inpuptType="number"
+                                />
+                            </div>
+                            <div className="mt-5">
+                                <button className="bg-blueGray-700 p-2 text-white">
+                                    <i className="mr-2 ml-1 fas fa-cart-shopping text-white"></i>
+                                    Add to Cart
+                                </button>
+                            </div>
                         </div>
                     </div>
+
                     
                     <div className="relative overflow-x-auto">
                         <table className="w-full text-sm text-left text-gray-500 bg-white">
                             <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                                 <tr>
-                                    <th scope="col" className="px-6 py-3">
-                                        Manufacturer Part Number
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Manufacturer
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Available Quantity
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        MOQ
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
+                                    <th scope="col" className="px-6 py-3 text-center">
                                         Country
                                     </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Description
+                                    <th scope="col" className="px-6 py-3 text-center">
+                                        Available Quantity
                                     </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Date Code
+                                    <th scope="col" className="px-6 py-3 text-center">
+                                        MOQ
                                     </th>
-                                    <th scope="col" className="px-6 py-3">
+                                    <th scope="col" className="px-6 py-3 text-center">
+                                        Manufacturer Number
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 text-center">
+                                        Manufacture
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 text-center">
                                         Package
                                     </th>
-                                    <th scope="col" className="px-6 py-3">
+                                    <th scope="col" className="px-6 py-3 text-center">
                                         Packaging
                                     </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Status
+                                    <th scope="col" className="px-6 py-3 text-center">
+                                        Description
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 text-center">
+                                        Date Code
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr className="bg-white border-b hover:bg-gray-50">
-                                    <td scope="row" className="text-sm px-6 py-4">
-                                        {data.ManufacturerNumber}
-                                    </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {data.Manufacture}
-                                    </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {data.AvailableQuantity}
-                                    </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {data.moq}
-                                    </td>
-                                    <td className="text-sm px-6 py-4">
+                                    <td className="px-6 py-4">
                                         {data.country}
                                     </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {data.Description}
+                                    <td className="px-6 py-4">
+                                        {data.AvailableQuantity}
                                     </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {data.dateCode}
+                                    <td className="px-6 py-4">
+                                        {data.moq}
                                     </td>
-                                    <td className="text-sm px-6 py-4">
+                                    <td className="px-6 py-4">
+                                        {data.ManufacturerNumber}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {data.Manufacture}
+                                    </td>
+                                    <td className="px-6 py-4">
                                         {data.package}
                                     </td>
-                                    <td className="text-sm px-6 py-4">
+                                    <td className="px-6 py-4">
                                         {data.packaging}
                                     </td>
-                                    <td className="text-sm px-6 py-4 text-center">
-                                        <ComponentStatus status={data.status} title={`stock status ${data.status}`} label={data.status}/>
+                                    <td className="px-6 py-4">
+                                        {data.Description}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {data.dateCode}
                                     </td>
                                 </tr>
                             </tbody>
@@ -150,13 +163,15 @@ export default function MyProduct({session}) {
     );
 }
 
-MyProduct.layout = Admin;
+AddToInquiryList.layout = Admin;
 
 export async function getServerSideProps(context) {
-const session = await getSession(context)
+    const session = await getSession(context)
+
     return {
         props: {
-            session: session
+            session: session,
+            routeParam: context.query,
         }
     }
 }

@@ -1,93 +1,155 @@
 import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
-import { useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import Link from "next/link";
 
 // components
+import AcceptMembership from "@/components/Modal/Registry/AcceptMembership"
+import RejectMembership from "@/components/Modal/Registry/RejectMembership"
+import PendingMembership from "@/components/Modal/Registry/PendingMembership"
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
-export default function MyCompany() {
-  const publicDir = process.env.NEXT_PUBLIC_DIR
-  const session = useSession()
-  const [user, setUser] = useState({
-      accessToken: ''
-  })
+//toast
+import { toast } from 'react-toastify';
+import toastOptions from "@/lib/toastOptions"
 
-  useEffect(() => { 
-    setUser({accessToken: session.data?.accessToken})
-  }, [session])
+export default function CompanyList({session, routeParam}) {
+  const publicDir = process.env.NEXT_PUBLIC_DIR
 
   //data search
   const [isLoading, setIsLoading] = useState(false)
-  const [companyData, setCompanyData] = useState({
-    name: "Dummy CMP",
-    img: "1678851391.png",
-    country: "Indonesia",
-    address: "Indonesia",
-    phone: "081",
-    sector: "Aerospace",
-    master: {
-        name: "Master account",
-        email: "Master@email.com"
-    },
-    CertificationofActivity: "1678851391.pdf",
-    RegistrationDocument: "1678851391.pdf"
-  })
-  const [companyStatus, setCompanyStatus] = useState("pending")
-  const getData = async () =>{
-    //   if(!!user.accessToken){
-    //   setIsLoading(true)
-    //   const response = await axios.get(`/company`,
-    //       {
-    //           headers: {
-    //           "Authorization" : `Bearer ${user.accessToken}`
-    //           }
-    //       }
-    //       )
-    //       .then((response) => {
-    //           let result = response.data.data
-    //           let cmpStatus = result.is_confirmed == "false" ? "pending" : "accepted"
-    //           setCompanyData(result)
-    //           setCompanyStatus(cmpStatus) 
-    //       }).catch((error) => {
-    //           // console.log(error.response)
-    //       }).finally(() => {
-    //           setIsLoading(false)
-    //       })
-    //   }
+  const [companyData, setCompanyData] = useState({})
+  const getData = async () => {
+      setIsLoading(true)
+      const response = await axios.get(`admin/companies/${routeParam.companyid}`,
+        {
+            headers: {
+            "Authorization" : `Bearer ${session.accessToken}`
+            }
+        }
+        )
+        .then((response) => {
+            let result = response.data.data
+            setCompanyData(result)
+        }).catch((error) => {
+            // console.log(error.response)
+        }).finally(() => {
+            setIsLoading(false)
+        })
   }
-//   useEffect(() => {
-//       getData()
-//   }, [user])
+  useEffect(() => {
+      getData()
+  }, [])
+
+  const [showAcceptModal, setShowAcceptModal] = useState(false)
+  const handleAcceptCompany = async () => {
+    setShowAcceptModal(false)
+    setIsLoading(true)
+    const request = await axios.post(`admin/companies/${routeParam.companyid}/update`, {}, {
+      headers: {
+        "Authorization" : `Bearer ${session.accessToken}`
+      }
+    })
+    .then(() => {
+      toast.success("Company Accepted")
+    })
+    .catch((error) => {
+      console.log(error)
+      toast.error("Something went wrong")
+    })
+    .finally(() => {
+      getData()
+    })
+  }
+
+  const [showRejectModal, setShowRejectModal] = useState(false)
+  const handleRejectCompany = async (text) => {
+    setShowRejectModal(false)
+    setIsLoading(true)
+    const request = await axios.post(`admin/companies/${routeParam.companyid}/reject`, 
+    {
+      id: routeParam.companyid,
+      reason: text
+    },
+    {
+      headers: {
+        "Authorization" : `Bearer ${session.accessToken}`
+      }
+    })
+    .then(() => {
+      toast.success("Company Rejected")
+    })
+    .catch((error) => {
+      console.log(error)
+      toast.error("Something went wrong")
+    })
+    .finally(() => {
+      getData()
+    })
+  }
+
+  const [showPendingModal, setShowPendingModal] = useState(false)
+  const handlePendingCompany = async (text) => {
+    setShowPendingModal(false)
+    setIsLoading(true)
+    const request = await axios.post(`admin/companies/${routeParam.companyid}/pending`, 
+    {
+      id: routeParam.companyid,
+      reason: text
+    },
+    {
+      headers: {
+        "Authorization" : `Bearer ${session.accessToken}`
+      }
+    })
+    .then(() => {
+      toast.success("Company set to pending")
+    })
+    .catch((error) => {
+      console.log(error)
+      toast.error("Something went wrong")
+    })
+    .finally(() => {
+      getData()
+    })
+  }
+
+
 
   return (
     <>
       <div className="relative">
         <div className="mb-0 px-4 py-3 border-0 bg-white">
           <div className="flex justify-between">
-              <div className="px-4 bg-orange-400">
-                  <h3
-                  className={
-                      "font-semibold text-lg text-blueGray-700"
-                  }
-                  >
-                  THIS IS DUMMY VIEW
-                  </h3>
+              <div className="px-4 ">
+
               </div>
               <div className="px-4 my-2">
-                  <Link href="/admin/companycontrol/company">
+                  <Link href="/admin/superadmin/registry/approvedcompany">
                     <button  className="relative bg-blueGray-700 p-2 text-white mr-2">
                         Back
                     </button>
                   </Link>
-                  <Link href="/admin/settings/mycompany/edit">
-                    <button  className="relative bg-orange-500 p-2 text-white">
-                        <i className="mr-2 ml-1 fas fa-pen text-white"></i>
-                        Update Status
-                    </button>
-                  </Link>
+                  {(companyData.is_confirmed == "pending" || companyData.is_confirmed == "rejected") && 
+                  <button onClick={() => setShowAcceptModal(true) } className="relative bg-blue-500 p-2 text-white mr-2">
+                      <i className="mr-2 ml-1 fas fa-check text-white"></i>
+                      Accept
+                  </button>
+                  }
+                  {(companyData.is_confirmed == "accepted" || companyData.is_confirmed == "rejected") && 
+                  <button onClick={() => setShowPendingModal(true) } className="relative bg-orange-500 p-2 text-white mr-2">
+                      <i className="mr-2 ml-1 fas fa-clock text-white"></i>
+                      Pending
+                  </button>
+                  }
+                  {(companyData.is_confirmed == "accepted" || companyData.is_confirmed == "pending") && 
+                  <button onClick={() => setShowRejectModal(true) } className="relative bg-red-500 p-2 text-white">
+                      <i className="mr-2 ml-1 fas fa-times text-white"></i>
+                      Reject
+                  </button>
+                  }
               </div>
           </div>
           {!isLoading ? 
@@ -98,13 +160,13 @@ export default function MyCompany() {
                   src={publicDir + "/companies_images/" + companyData.img}/>
                 <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
                   {companyData.name}
-                  {companyStatus == "pending" && <i title="Member Pending" className="mr-2 ml-1 fas fa-clock text-orange-500"></i>}
-                  {companyStatus == "accepted" && <i title="Member Accepted" className="mr-2 ml-1 fas fa-circle-check text-blue-700"></i>}
-                  {companyStatus == "rejected" && <i title="Member Rejected" className="mr-2 ml-1 fas fa-circle-xmark text-red-700"></i>}
+                  {companyData.is_confirmed == "pending" && <i title="Member Pending" className="mr-2 ml-1 fas fa-clock text-orange-500"></i>}
+                  {companyData.is_confirmed == "accepted" && <i title="Member Accepted" className="mr-2 ml-1 fas fa-circle-check text-blue-700"></i>}
+                  {companyData.is_confirmed == "rejected" && <i title="Member Rejected" className="mr-2 ml-1 fas fa-circle-xmark text-red-700"></i>}
                 </h3>
-                {companyStatus == "pending" && <i className="text-orange-500">Your Member Status is Pending</i>}
-                {companyStatus == "accepted" && <i className="text-blue-700">Your Member Status is Accepted</i>}
-                {companyStatus == "rejected" && <i className="text-red-700">Your Member Status is Rejected</i>}
+                {companyData.is_confirmed == "pending" && <i className="text-orange-500">Member Status is Pending</i>}
+                {companyData.is_confirmed == "accepted" && <i className="text-blue-700">Member Status is Accepted</i>}
+                {companyData.is_confirmed == "rejected" && <i className="text-red-700">Member Status is Rejected</i>}
                 <div className="text-sm leading-normal mt-2 mb-2 text-blueGray-400 font-bold uppercase">
                   <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{" "}
                   {companyData.country}, {companyData.address}
@@ -159,10 +221,45 @@ export default function MyCompany() {
               </div>
             </>
           }
+
+          {showAcceptModal ? (
+            <AcceptMembership
+                setShowModal={setShowAcceptModal}
+                companyName={companyData.name}
+                acceptModal={handleAcceptCompany}
+            />
+          ) : null}
+
+          {showRejectModal ? (
+            <RejectMembership
+                setShowModal={setShowRejectModal}
+                companyName={companyData.name}
+                acceptModal={handleRejectCompany}
+            />
+          ) : null}
+
+        {showPendingModal ? (
+            <PendingMembership
+                setShowModal={setShowPendingModal}
+                companyName={companyData.name}
+                acceptModal={handlePendingCompany}
+            />
+          ) : null}
         </div>
       </div>
     </>
   );
 }
 
-MyCompany.layout = Admin;
+CompanyList.layout = Admin;
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+  return {
+      props: {
+          session: session,
+          routeParam: context.query
+      }
+  }
+}
+

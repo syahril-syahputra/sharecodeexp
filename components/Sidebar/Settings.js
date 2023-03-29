@@ -18,10 +18,10 @@ export default function SettingsBar(props){
             {statusId == 1 ? 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
               <li className="items-center">
-                <Link href="/admin/settings/mycompany"
+                <Link href="/admin/member/company/mycompany"
                   className={
                     "text-xs uppercase py-3 font-bold block " +
-                    (router.pathname.indexOf("/admin/settings/mycompany") !== -1
+                    (router.pathname.indexOf("/admin/member/company/mycompany") !== -1
                       ? "text-lightBlue-500 hover:text-lightBlue-600"
                       : "text-blueGray-700 hover:text-blueGray-500")
                   }>
@@ -42,8 +42,8 @@ export default function SettingsBar(props){
                       ? "text-lightBlue-500 hover:text-lightBlue-600"
                       : "text-blueGray-700 hover:text-blueGray-500")
                   }>
-                    <i className="fas fa-user text-blueGray-400 mr-2 text-sm"></i>{" "}
-                    Master Account
+                    <i className="fas fa-users text-blueGray-400 mr-2 text-sm"></i>{" "}
+                    Users Control
                 </Link> 
               </li>
             </ul>

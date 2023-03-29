@@ -3,9 +3,12 @@ import { getSession } from "next-auth/react";
 import axios from "@/lib/axios";
 
 // components
+import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep"
 
 // layout for page
 import Admin from "layouts/Admin.js";
+import VerifyInquiryModal from "@/components/Modal/OrderComponent/Seller/VerifyInquiry"
+import SendTrackerModal from "@/components/Modal/OrderComponent/Seller/SendTracker"
 
 export default function InquiryDetails({session}) {
     //data search
@@ -33,6 +36,16 @@ export default function InquiryDetails({session}) {
         loadData()
     }, [])
 
+    const [verifyInquiryModal, setVerifyInquiryModal] = useState(false)
+    const verifyInquiryModalHandle = (value) => {
+        setVerifyInquiryModal(value)
+    }
+
+    const [sendTrackerModal, setSendTrackerModal] = useState(false)
+    const sendTrackerModalHandle = (value) => {
+        setSendTrackerModal(value)
+    }
+
     return (
         <>
             <div className="relative bg-white">
@@ -41,7 +54,7 @@ export default function InquiryDetails({session}) {
                         <div className="">
                             <h3
                                 className="font-semibold text-lg text-blueGray-700">
-                                Order Detail
+                                Incoming Inquiry : Order Detail
                             </h3>
                         </div>
                         <div className="px-4 flex-initial w-64">
@@ -59,87 +72,56 @@ export default function InquiryDetails({session}) {
                         </div>
                     </div>
                 </div>
-                <div className="px-4 py-3 border-0 bg-white">
-                    <div className="flex justify-center">
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            Order Inquired
-                        </div>
-                        <div className="m-2 p-2 bg-white border border-blue-500 text-sm text-center">
-                            Information Verified
-                        </div>
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            Quoted for Approval
-                        </div>
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            Quote Approve / Rejected
-                        </div>
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            PI sent for Payment
-                        </div>
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            Payment Verified
-                        </div>
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            Preparing for Shipment
-                        </div>
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            Order Shiped
-                        </div>
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            Order Accepted / Rejected
-                        </div>
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            Order Complete
-                        </div>
-                    </div>
-                </div>
+
+                <OrderStatusStep/>
+                
                 <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-center">
                         <div className="px-3 mb-5">
-                            <div className="p-24 border mx-2 my-4">{123}</div>
+                            <div className="p-24 border mx-2 my-4">{"component image"}</div>
                         </div>
                     </div>
                     <div className="flex justify-center mb-10">
-                        Sample Text
+                       This is components description
                     </div>
                     {/*  table A */}
                     <div className="overflow-x-auto mb-5 flex justify-center">
                         <table className="w-50 text-sm text-left text-gray-500 bg-white border">
                             <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                                 <tr>
-                                    <th scope="col" className="text-center px-6 py-3">
+                                    <th scope="col" className="text-center px-6 py-3 w-28">
                                         Manufacturer Part Number
                                     </th>
-                                    <th scope="col" className="text-center px-6 py-3">
+                                    <th scope="col" className="text-center px-6 py-3 w-28">
                                         Manufacturer
                                     </th>
-                                    <th scope="col" className="text-center px-6 py-3">
-                                        Available Quantity
-                                    </th>
-                                    <th scope="col" className="text-center px-6 py-3">
+                                    <th scope="col" className="text-center px-6 py-3 w-28">
                                         MOQ
                                     </th>
-                                    <th scope="col" className="text-center px-6 py-3">
+                                    <th scope="col" className="text-center px-6 py-3 w-28">
                                         Country
+                                    </th>
+                                    <th scope="col" className="text-center px-6 py-3 w-28">
+                                        Packaging
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr className="bg-white hover:bg-gray-50">
                                     <td scope="row" className="text-center text-sm px-6 py-4">
-                                        1
+                                        ABC1123
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        1
+                                        DOHA
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        1
+                                        100
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        1
+                                        Afganistan
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        1
+                                        Tube
                                     </td>
                                 </tr>
                             </tbody>
@@ -148,35 +130,38 @@ export default function InquiryDetails({session}) {
                     {/* table B */}
                     <div className="overflow-x-auto mb-10 flex justify-center">
                         <table className="w-50 text-sm text-left text-gray-500 bg-white border">
-                            <thead className="text-xs text-gray-700 uppercase bg-gray-200">
+                            <thead className="text-xs text-white uppercase bg-blue-500">
                                 <tr>
                                     <th scope="col" className="text-center px-6 py-3">
-                                        Country
+                                        Order Quantity
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3">
                                         Date Code
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3">
-                                        Price
+                                        Avaliable Quantity
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3">
-                                        Packaging
+                                        Price (per item) / Total
                                     </th>
+                                    {/* <th scope="col" className="text-center px-6 py-3">
+                                        Exepart Price (per item) / Total
+                                    </th> */}
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr className="bg-white hover:bg-gray-50">
                                     <td className="text-center text-sm px-6 py-4">
-                                        1
+                                        5000 (pcs)
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        1
+                                        12-23-33
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        1
+                                        10000 (pcs)
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        1
+                                        $2 / $10,000
                                     </td>
                                 </tr>
                             </tbody>
@@ -189,7 +174,7 @@ export default function InquiryDetails({session}) {
                         <div className=" text-center">
                             <h4
                                 className="font-semibold text-xl">
-                                Tracker Number : 123
+                                Tracker Number : 22309AP00
                             </h4>
                         </div>
                     </div>
@@ -219,6 +204,42 @@ export default function InquiryDetails({session}) {
                         </button>
                     </div>
                 </div>
+
+                <div className="px-4 py-3 border-0 bg-slate-200">
+                    <div className="flex justify-center">
+                        <div className=" text-center">
+                            <h4
+                                className="font-semibold text-xl">
+                                Actions (Seller)
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="px-4 py-3 border-0 bg-white">
+                    <div className="flex justify-center">
+                        <button onClick={()=> setVerifyInquiryModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                            Verify Inquiry
+                        </button>
+                        <button onClick={()=> setSendTrackerModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                            Send Tracker
+                        </button>
+                    </div>
+                </div>
+
+                {verifyInquiryModal && 
+                    <VerifyInquiryModal
+                        closeModal={() => setVerifyInquiryModal(false)}
+                        acceptance={verifyInquiryModalHandle}
+                    />
+                }
+
+                {sendTrackerModal && 
+                    <SendTrackerModal
+                        closeModal={() => setSendTrackerModal(false)}
+                        acceptance={sendTrackerModalHandle}
+                    />
+                }
 
             </div>
         </>

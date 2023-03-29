@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-target-blank */
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import axios from "lib/axios";
 import Image from 'next/image';
 import { PageSEO } from '@/components/Utils/SEO'
@@ -13,9 +13,6 @@ import ErrorInput from '@/components/Shared/ErrorInput';
 import Select from 'react-tailwindcss-select';
 import countryList from 'react-select-country-list';
 import { useRouter } from 'next/router';
-
-//data
-import {sectorOptions} from "data/optionData"
 
 export default function Index() {
     const refdata = useRef()
@@ -100,7 +97,19 @@ export default function Index() {
 
     //option
     //sector option
-    const [sectors, setSectors] = useState([...sectorOptions, {value: 'other', label: 'Other'}])
+    const [sectors, setSectors] = useState([{value: 'other', label: 'Other'}])
+    const loadSectors = async () => {
+        const response = await axios.get(`/sectorlist`)
+        .then((response) => {
+            setSectors([...response.data.data, {value: 'other', label: 'Other'}])
+        }).catch((error) => {
+            console.log('failed to load sectors')
+        })
+    }
+    useEffect(() => {
+        loadSectors()
+    },[])
+
     const [sector, setSector] = useState(null);
     const handleSectorChange = value => {
         setRegistrationInfo({...registrationInfo, company_sector:''})
@@ -114,20 +123,6 @@ export default function Index() {
     //     value: option.id,
     //     label: option.label
     //   }));
-
-
-    //option
-    //packaging option
-    const [packagings, setPackagings] = useState(sectorOptions)
-
-    const [packaging, setPackaging] = useState(null);
-    const handlePackagingChange = value => {
-        setInputData({...inputData, packaging:''})
-        setPackaging(value);
-        if(value.value != 'other') {
-            setInputData({...inputData, packaging:value.value})
-        }
-    };
 
     return (
         <>
@@ -169,13 +164,13 @@ export default function Index() {
                             }
                             <div className="mt-8">
                                 <div className="relative flex py-5 items-center w-full mx-auto">
-                                    <div className="flex-shrink mr-4"><h2 className="font-semibold text-xl text-blueGray-500">Account Information</h2></div>
+                                    <div className="flex-shrink mr-4"><h2 className="font-semibold text-xl text-blueGray-500">Master Account Information</h2></div>
                                     <div className="flex-grow border-t border-blueGray-700"></div>
                                 </div>
                                 <div className="flex flex-wrap mb-6">
                                     <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                            Name
+                                            Master Name
                                         </label>
                                         <input 
                                             value={registrationInfo.name}
@@ -191,7 +186,7 @@ export default function Index() {
                                     </div>
                                     <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                            Email
+                                            Master Email
                                         </label>
                                         <input 
                                             value={registrationInfo.email}

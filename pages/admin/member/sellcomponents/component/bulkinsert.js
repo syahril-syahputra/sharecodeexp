@@ -73,6 +73,12 @@ export default function MyProduct() {
                   </h3>
               </div>
               <div className="px-4 mt-2">
+                  <Link href="/admin/member/sellcomponents/component/bulkinsert">
+                    <button className="relative bg-blueGray-700 p-2 text-white mr-2">
+                      <i className="mr-2 ml-1 fas fa-file text-white"></i>
+                      Download Bulk Template
+                    </button>
+                  </Link>
                   <Link href="/admin/member/sellcomponents/component/add" className="relative bg-blueGray-700 p-2 text-white">
                       <i className="mr-2 ml-1 fas fa-plus text-white"></i>
                       Single Insert</Link>

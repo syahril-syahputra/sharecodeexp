@@ -100,10 +100,10 @@ export default function IncomingInquiry(props) {
                                             {item.companies_products.packaging}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.buyer.company.name} ({item.buyer.company.country})
+                                            {item.buyer.name} ({item.buyer.country})
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.companies_products.company[0].name} ({item.companies_products.company[0].country})
+                                            {item.companies_products.company.name} ({item.companies_products.company.country})
                                         </td>
                                         <td className="text-sm px-6 py-4">
                                             {item.qty}

@@ -8,7 +8,11 @@ import Select from 'react-tailwindcss-select';
 import {orderStatusesOptions} from "data/optionData"
 
 export default function IncomingInquiry(props) {
-    const data = props.data
+    // const data = props.data
+    const data = [{
+        dummy: "data",
+        id: 123
+    }]
     const links = props.links
     const metaData = props.metaData
 
@@ -72,28 +76,26 @@ export default function IncomingInquiry(props) {
                             </h3>
                         </div>
                         <div className="px-4 flex-initial w-64">
-                            {/* <div className="w-full px-3"> */}
-                                <Select 
-                                    name="status"
-                                    value={status}
-                                    onChange={handleStatusChange}
-                                    options={orderStatuses}
-                                    classNames={{
-                                        menuButton: () => (
-                                            `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
-                                        ),
-                                        menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
-                                        listItem: ({ isSelected }) => (
-                                            `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
-                                                isSelected
-                                                    ? `text-white bg-blue-500`
-                                                    : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
-                                            }`
-                                        ),
-                                        searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
-                                    }}
-                                    />
-                            {/* </div> */}
+                            <Select 
+                                name="status"
+                                value={status}
+                                onChange={handleStatusChange}
+                                options={orderStatuses}
+                                classNames={{
+                                    menuButton: () => (
+                                        `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
+                                    ),
+                                    menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
+                                    listItem: ({ isSelected }) => (
+                                        `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
+                                            isSelected
+                                                ? `text-white bg-blue-500`
+                                                : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
+                                        }`
+                                    ),
+                                    searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
+                                }}
+                            />
                         </div>
                     </div>
                 </div>
@@ -135,33 +137,33 @@ export default function IncomingInquiry(props) {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td scope="row" className="text-sm px-6 py-4">
-                                            Manufacturer Part Number
+                                            {item.dummy}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            Manufacturer
+                                            {item.dummy}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            Coountry
+                                            {item.dummy}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            Packaging
+                                            {item.dummy}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            AQ
+                                            {item.dummy}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            MOQ
+                                            {item.dummy}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            Status
+                                            {item.dummy}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            Incoming QTY
+                                            {item.dummy}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
                                                 <Link 
-                                                    href={`/admin/member/sellcomponents/incominginquiry/detail/${123}`}
+                                                    href={`/admin/member/sellcomponents/incominginquiry/detail/${item.id}`}
                                                     className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">View</Link>
                                                 {/* <button className="font-medium text-blue-600 text-white bg-red-400 p-2">Delete</button> */}
                                             </div>

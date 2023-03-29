@@ -102,7 +102,23 @@ export default function InquiryDetails({session}) {
                                 Buyer
                             </div>
                             <div className="m-2 p-2 text-sm">
-                                CMP Name
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td className="w-28">Company Name</td>
+                                            <td className="w-8">:</td>
+                                            <td className="text-left w-28">
+                                                KDKCHY                                       
+                                                <i title="Member Rejected" className="ml-2 fas fa-circle-xmark text-red-700"></i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className="w-28">Country</td>
+                                            <td className="w-8">:</td>
+                                            <td className="text-left">Afganistan</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         <div className="w-1/2 px-3 mb-6">
@@ -110,7 +126,26 @@ export default function InquiryDetails({session}) {
                                 Seller
                             </div>
                             <div className="m-2 p-2 text-sm">
-                                CMP Name
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td className="w-28">Company Name</td>
+                                            <td className="w-8">:</td>
+                                            <td className="text-left w-28">
+                                                KDKCHY
+                                                {/* {companyData.is_confirmed == "pending" && <i title="Member Pending" className="mr-2 ml-1 fas fa-clock text-orange-500"></i>}
+                                                {companyData.is_confirmed == "accepted" && <i title="Member Accepted" className="mr-2 ml-1 fas fa-circle-check text-blue-700"></i>}
+                                                {companyData.is_confirmed == "rejected" && <i title="Member Rejected" className="mr-2 ml-1 fas fa-circle-xmark text-red-700"></i>} */}
+                                                <i title="Member Accepted" className="mr-2 ml-1 fas fa-circle-check text-blue-700"></i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className="w-28">Country</td>
+                                            <td className="w-8">:</td>
+                                            <td className="text-left">Afganistan</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -119,50 +154,50 @@ export default function InquiryDetails({session}) {
                 <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-center">
                         <div className="px-3 mb-5">
-                            <div className="p-24 border mx-2 my-4">{123}</div>
+                            <div className="p-24 border mx-2 my-4">{"component image"}</div>
                         </div>
                     </div>
                     <div className="flex justify-center mb-10">
-                        Sample Text
+                       This is components description
                     </div>
                     {/*  table A */}
                     <div className="overflow-x-auto mb-5 flex justify-center">
                         <table className="w-50 text-sm text-left text-gray-500 bg-white border">
                             <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                                 <tr>
-                                    <th scope="col" className="text-center px-6 py-3">
+                                    <th scope="col" className="text-center px-6 py-3 w-28">
                                         Manufacturer Part Number
                                     </th>
-                                    <th scope="col" className="text-center px-6 py-3">
+                                    <th scope="col" className="text-center px-6 py-3 w-28">
                                         Manufacturer
                                     </th>
-                                    <th scope="col" className="text-center px-6 py-3">
-                                        Available Quantity
-                                    </th>
-                                    <th scope="col" className="text-center px-6 py-3">
+                                    <th scope="col" className="text-center px-6 py-3 w-28">
                                         MOQ
                                     </th>
-                                    <th scope="col" className="text-center px-6 py-3">
+                                    <th scope="col" className="text-center px-6 py-3 w-28">
                                         Country
+                                    </th>
+                                    <th scope="col" className="text-center px-6 py-3 w-28">
+                                        Packaging
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr className="bg-white hover:bg-gray-50">
                                     <td scope="row" className="text-center text-sm px-6 py-4">
-                                        1
+                                        ABC1123
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        1
+                                        DOHA
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        1
+                                        100
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        1
+                                        Afganistan
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        1
+                                        Tube
                                     </td>
                                 </tr>
                             </tbody>
@@ -171,35 +206,41 @@ export default function InquiryDetails({session}) {
                     {/* table B */}
                     <div className="overflow-x-auto mb-10 flex justify-center">
                         <table className="w-50 text-sm text-left text-gray-500 bg-white border">
-                            <thead className="text-xs text-gray-700 uppercase bg-gray-200">
+                            <thead className="text-xs text-white uppercase bg-blue-500">
                                 <tr>
                                     <th scope="col" className="text-center px-6 py-3">
-                                        Country
+                                        Order Quantity
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3">
                                         Date Code
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3">
-                                        Price
+                                        Avaliable Quantity
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3">
-                                        Packaging
+                                        Seller Price (per item) / Total
+                                    </th>
+                                    <th scope="col" className="text-center px-6 py-3">
+                                        Exepart Price (per item) / Total
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr className="bg-white hover:bg-gray-50">
                                     <td className="text-center text-sm px-6 py-4">
-                                        1
+                                        5000 (pcs)
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        1
+                                        12-23-33
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        1
+                                        10000 (pcs)
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        1
+                                        $1 / $5,000
+                                    </td>
+                                    <td className="text-center text-sm px-6 py-4">
+                                        $2 / $10,000
                                     </td>
                                 </tr>
                             </tbody>
@@ -212,7 +253,7 @@ export default function InquiryDetails({session}) {
                         <div className=" text-center">
                             <h4
                                 className="font-semibold text-xl">
-                                Tracker Number : 123
+                                Tracker Number : 22309AP00
                             </h4>
                         </div>
                     </div>
@@ -240,6 +281,88 @@ export default function InquiryDetails({session}) {
                         <button className="m-2 p-2 bg-indigo-900 border text-lg text-center text-white">
                             Shipment Info
                         </button>
+                    </div>
+                </div>
+
+                <div className="px-4 py-3 border-0 bg-slate-200">
+                    <div className="flex justify-center">
+                        <div className=" text-center">
+                            <h4
+                                className="font-semibold text-xl">
+                                Actions (Buyer)
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="px-4 py-3 border-0 bg-white">
+                    <div className="flex justify-center">
+                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                            Accept Quotation
+                        </button>
+                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                            Reject Quotation
+                        </button>
+                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                            Send Payment Receipt
+                        </button>
+                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                            Order Accepted
+                        </button>
+                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                            Order Rejected
+                        </button>
+                    </div>
+                </div>
+
+                <div className="px-4 py-3 border-0 bg-slate-200">
+                    <div className="flex justify-center">
+                        <div className=" text-center">
+                            <h4
+                                className="font-semibold text-xl">
+                                Actions (Seller)
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="px-4 py-3 border-0 bg-white">
+                    <div className="flex justify-center">
+                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                            Verify Inquiry
+                        </button>
+                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                            Set Tracking
+                        </button>
+                    </div>
+                </div>
+
+                <div className="px-4 py-3 border-0 bg-slate-200">
+                    <div className="flex justify-center">
+                        <div className=" text-center">
+                            <h4
+                                className="font-semibold text-xl">
+                                Exepart
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="px-4 py-3 border-0 bg-white">
+                    <div className="flex justify-center">
+                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                            Send Quotation
+                        </button>
+                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                            Send PI
+                        </button>
+                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                            Accept Payment
+                        </button>
+                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                            Set Shipment Info
+                        </button>
+
                     </div>
                 </div>
 

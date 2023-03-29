@@ -27,7 +27,7 @@ export default function Company({session}) {
     }, [])
     const searchData = async (srch, page=1) =>{
         setIsLoading(true)
-        const response = await axios.get(`/admin/companies?page=${page}`,
+        const response = await axios.get(`/admin/companies?page=${page}&status=accepted`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`

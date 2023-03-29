@@ -32,18 +32,18 @@ export default function MasterUser({session}) {
                 }
             })
             .then((response) => {
-                console.log(response)
                 let result = response.data.data
-                setData(result)
-                // setLinks(result.links)
-                // setMetaData({
-                //     total: result.total,
-                //     perPage: result.per_page,
-                //     lastPage: result.last_page,
-                //     currentPage: result.current_page,
-                //     nextPage: result.next_page_url ? true : false,
-                //     prevPage: result.prev_page_url ? true : false
-                // })
+                console.log(result)
+                setData(result.data)
+                setLinks(result.links)
+                setMetaData({
+                    total: result.total,
+                    perPage: result.per_page,
+                    lastPage: result.last_page,
+                    currentPage: result.current_page,
+                    nextPage: result.next_page_url ? true : false,
+                    prevPage: result.prev_page_url ? true : false
+                })
             }).catch((error) => {
             // console.log(error.response)
             }).finally(() => {

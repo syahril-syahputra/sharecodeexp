@@ -23,7 +23,7 @@ export default function Product({session}) {
     })
     const searchData = async (srch, page=1) =>{
         setIsLoading(true)
-        const response = await axios.get(`/admin/product/pending?page=${page}`,
+        const response = await axios.get(`/admin/product?page=${page}&status=pending`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`

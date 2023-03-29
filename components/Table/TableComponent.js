@@ -17,7 +17,7 @@ export default function TableComponent(props){
         if(status === 'unauthenticated'){
             setShowModal(true)
         } else {
-            router.push(`/admin/product/mycart/${item}`)
+            router.push(`/admin/member/buycomponents/inquirynow/details/${item}`)
         }
     }
 

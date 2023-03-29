@@ -1,98 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import axios from "lib/axios";
-import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 
 // components
 import InputForm from "@/components/Shared/InputForm";
 import CountrySelector from "@/components/Shared/CountrySelector";
 import Select from 'react-tailwindcss-select';
 import ErrorInput from '@/components/Shared/ErrorInput';
+import { toast } from 'react-toastify';
+import toastOptions from "@/lib/toastOptions"
+
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
 //data
-import {packageOptions, packagingOptions} from "data/optionData"
+import {categoriesOptions} from "data/optionData"
+import { useRouter } from "next/router";
 
-export default function EditProduct() {
-    const sessionData = useSession()
-    const router = useRouter()
-    const { manufacturerNumber } = router.query
-    const session = useSession()
-    const [user, setUser] = useState({
-        accessToken: ''
-    })
-    useEffect(() => { setUser({accessToken: session.data?.accessToken}) }, [session])
-
-    //data search
-    const [search, setSearch] = useState('')
-    const [isLoading, setIsLoading] = useState(true)
-    const getData = async () =>{
-        if(!!user.accessToken && manufacturerNumber){
-        setIsLoading(true)
-        const response = await axios.get(`/companyproduct/${manufacturerNumber}`,
-            {
-                headers: {
-                "Authorization" : `Bearer ${user.accessToken}`
-                }
-            }
-            )
-            .then((response) => {
-                let result = response.data.data
-                setInputData({
-                    id: result.id,
-                    AvailableQuantity: result.AvailableQuantity,
-                    moq: result.moq,
-                    package: result.package,
-                    packaging: result.packaging,
-                    country: result.country,
-                    ManufacturerNumber: result.ManufacturerNumber,
-                    Manufacture: result.Manufacture,
-                    Description: result.Description,
-                    dateCode: result.dateCode
-                })
-                
-                //set package
-                let oldPackage = packageOptions.find(item => item.value == result.package)
-                if(oldPackage) {
-                    setPackage({value: result.package, label: result.package})
-                } else {
-                    setPackage({value: 'other', label: 'Other'})
-                }
-
-                //set packaging
-                let oldPackaging = packagingOptions.find(item => item.value == result.packaging)
-                if(oldPackaging) {
-                    setPackaging({value: result.packaging, label: result.packaging})
-                } else {
-                    setPackaging({value: 'other', label: 'Other'})
-                }
-
-            }).catch((error) => {
-                // console.log(error.response)
-            }).finally(() => {
-                setIsLoading(false)
-            })
-        }
-    }
-    useEffect(() => {
-        getData()
-    }, [user, manufacturerNumber])
-
+export default function EditComponent({session, routeParam, packaginglist}) {
     // update data
     const [inputData, setInputData] = useState({
+        id: '',
         AvailableQuantity: '',
         moq: '',
-        package: '',
         packaging: '',
         country: '',
         ManufacturerNumber: '',
         Manufacture: '',
         Description: '',
         dateCode: '',
-        status: ''
+        status: '',
+        // category: 'A',
+        // subcategory: 'sub-A',
       });
     const [errorInfo, setErrorInfo] = useState({})
     const [errorMessage, setErrorMessage] = useState(null)
@@ -108,44 +49,31 @@ export default function EditProduct() {
         setCountry(value)
     }
 
+    const router = useRouter()
     const handleSubmit = async (e) => {
         e.preventDefault()
-            setIsLoading(true)
-            setErrorInfo({})
-            setErrorMessage(null)
-            const response = await axios.post(`/companyproduct/${inputData.id}/update`, inputData, {
-            headers: {
-                "Authorization" : `Bearer ${sessionData.data.accessToken}`
-            }
-            })
-            .then((response) => {
-                let result = response.data.data
-                setSuccesMessage("Your product has been updated succefully")
-            }).catch((error) => {
-                setErrorMessage(error.response.data.message)
-                setErrorInfo(error.response.data.data)
-            }).finally(() => {
-                setIsLoading(false)
-            })
+        setIsLoading(true)
+        setErrorInfo({})
+        setErrorMessage(null)
+        const response = await axios.post(`/companyproduct/${inputData.id}/update`, inputData, {
+        headers: {
+            "Authorization" : `Bearer ${session.accessToken}`
+        }
+        })
+        .then(() => {
+            router.push(`/admin/member/sellcomponents/component/view/${routeParam.componentid}`)
+            toast.success("Your product has been updated succefully", toastOptions)
+        }).catch((error) => {
+            console.log(error.data.data)
+            toast.error("Something went wrong", toastOptions)
+            setErrorInfo(error.data.data)
+            setIsLoading(false)
+        })
     }
 
     //option
-    //package option
-    const [packages, setPackages] = useState([...packageOptions, {value: 'other', label: 'Other'}])
-
-    const [pckage, setPackage] = useState(null);
-    const handlePackageChange = value => {
-        setInputData({...inputData, package:''})
-        setPackage(value);
-        if(value.value != 'other') {
-            setInputData({...inputData, package:value.value})
-        }
-    };
-
-    //option
     //packaging option
-    const [packagings, setPackagings] = useState([...packagingOptions, {value: 'other', label: 'Other'}])
-
+    const [packagings, setPackagings] = useState([...packaginglist, {value: 'other', label: 'Other'}])
     const [packaging, setPackaging] = useState(null);
     const handlePackagingChange = value => {
         setInputData({...inputData, packaging:''})
@@ -154,6 +82,112 @@ export default function EditProduct() {
             setInputData({...inputData, packaging:value.value})
         }
     };
+
+
+    //option  
+    //categories option
+    const [categories, setCategories] = useState([...categoriesOptions])
+    // const loadCategories = async () => {
+    //   const response = await axios.get(`/packaginglist`)
+    //     .then((response) => {
+    //       setCategories([...response.data.data, {value: 'other', label: 'Other'}])
+    //     }).catch((error) => {
+    //       console.log('failed to load categories')
+    //     })
+    // }
+    // useEffect(() => {
+    //   loadCategories()
+    // },[])
+
+    const [category, setCategory] = useState(null);
+    const handleCategoryChange = value => {
+        loadSubCategory(value.value)
+        setCategory(value);
+        setInputData({...inputData, category:value.value})
+    };
+
+    //option
+    //sub-categories option
+    const [subcategories, setSubCategories] = useState([{value: 'select category first', label: 'Select Category First', disabled: true}])
+    const loadSubCategory = async (parent) => {
+        setSubCategories([{value: 'select category first', label: 'Select Category First', disabled: true}])
+        setSubCategory(null);
+        setInputData({...inputData, subcategory:''})
+
+        // const response = await axios.get(`/packaginglist`)
+        //   .then((response) => {
+        //     setPackagings([...response.data.data, {value: 'other', label: 'Other'}])
+        //   }).catch((error) => {
+        //     console.log('failed to load packaginglist')
+        //   })
+
+        if(parent == "A"){
+            setSubCategories([{value: 'new sub-cat A', label: 'new sub-cat A'}])
+        } else {
+            setSubCategories([{value: 'new sub-cat B', label: 'new sub-cat B'}])
+        }
+
+    }
+    // useEffect(() => {
+    //     loadSubCategory(category?.value)
+    // },[category])
+
+    const [subcategory, setSubCategory] = useState(null);
+    const handleSubCategoryChange = value => {
+        setSubCategory(value);
+        setInputData({...inputData, subcategory:value.value})
+    };
+
+
+    //data search
+    const [isLoading, setIsLoading] = useState(true)
+    const getData = async () =>{
+        setIsLoading(true)
+        const response = await axios.get(`/companyproduct?id=${routeParam.componentid}`,
+            {
+                headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+                }
+            }
+            )
+            .then((response) => {
+                let result = response.data.data
+                setInputData({
+                    id: result.id,
+                    AvailableQuantity: result.AvailableQuantity,
+                    moq: result.moq,
+                    packaging: result.packaging,
+                    country: result.country,
+                    ManufacturerNumber: result.ManufacturerNumber,
+                    Manufacture: result.Manufacture,
+                    Description: result.Description,
+                    dateCode: result.dateCode,
+                    category: result.category,
+                    subcategory: result.subcategory,
+                })
+
+                //set packagings
+                let oldPackaging = packagings.find(item => item.value == result.packaging)
+                if(oldPackaging) {
+                    setPackaging({value: result.packaging, label: result.packaging})
+                } else {
+                    setPackaging({value: 'other', label: 'Other'})
+                }   
+
+                setCategory({value: result.category, label: result.category}) 
+                // loadSubCategory(result.category)     
+                setSubCategory({value: result.subcategory, label: result.subcategory}) 
+
+            }).catch((error) => {
+                // console.log(error.response)
+            }).finally(() => {
+                setIsLoading(false)
+            })
+    }
+    useEffect(() => {
+        getData()
+    }, [])
+
 
     return (
         <>
@@ -170,7 +204,7 @@ export default function EditProduct() {
                             </h3>
                         </div>
                         <div className="px-4 mt-2">
-                            <Link href={`/admin/product/myproduct`} className="relative bg-blueGray-700 p-2 text-white">
+                            <Link href={`/admin/member/sellcomponents/component/view/${routeParam.componentid}`} className="relative bg-blueGray-700 p-2 text-white">
                                 {/* <i className="mr-2 ml-1 fas fa-pen text-white"></i> */}
                                 Back</Link>
                         </div>
@@ -181,7 +215,7 @@ export default function EditProduct() {
                 <div className="">
                     <div className="flex flex-wrap w-full bg-white">
                         <div className="px-3 mb-6 md:mb-0 text-center">
-                            <div className="p-24 border mx-2 my-4">{manufacturerNumber}</div>
+                            <div className="p-24 border mx-2 my-4">{routeParam.componentid}</div>
                         </div>
                     </div>
                 </div>
@@ -234,6 +268,7 @@ export default function EditProduct() {
                         <div className="w-full lg:w-1/2 px-3 mb-6">
                             <InputForm
                             isDisabled={isLoading}
+                            inputType="number"
                             label="Available Quantity"
                             inputDataName="AvailableQuantity"
                             value={inputData.AvailableQuantity}
@@ -244,6 +279,7 @@ export default function EditProduct() {
                         <div className="w-full lg:w-1/2 px-3 mb-6">
                             <InputForm
                             label="MOQ"
+                            inputType="number"
                             inputDataName="moq"
                             value={inputData.moq}
                             setData={setDataHandler}
@@ -280,42 +316,6 @@ export default function EditProduct() {
                         </div>
                         <div className="w-full lg:w-1/2 px-3 mb-6">
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                Package
-                            </label>
-                            <Select 
-                                name="pckage"
-                                value={pckage}
-                                onChange={handlePackageChange}
-                                options={packages}
-                                classNames={{
-                                    menuButton: () => (
-                                        `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
-                                    ),
-                                    menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
-                                    listItem: ({ isSelected }) => (
-                                        `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
-                                            isSelected
-                                                ? `text-white bg-blue-500`
-                                                : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
-                                        }`
-                                    ),
-                                    searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
-                                }}
-                                />
-                            {errorInfo.package &&
-                                <ErrorInput error={errorInfo.package}/>
-                            }
-                            { pckage?.value == "other" && 
-                            <InputForm
-                                inputDataName="package"
-                                value={inputData.package}
-                                setData={setDataHandler}
-                                errorMsg={errorInfo.package}
-                            />
-                            }
-                        </div>
-                        <div className="w-full lg:w-1/2 px-3 mb-6">
-                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
                                 Packaging
                             </label>
                             <Select 
@@ -342,12 +342,68 @@ export default function EditProduct() {
                                 <ErrorInput error={errorInfo.packaging}/>
                             }
                             { packaging?.value == "other" && 
-                            <InputForm
-                                inputDataName="packaging"
-                                value={inputData.packaging}
-                                setData={setDataHandler}
-                                errorMsg={errorInfo.packaging}
-                            />
+                                <InputForm
+                                    inputDataName="packaging"
+                                    value={inputData.packaging}
+                                    setData={setDataHandler}
+                                    errorMsg={errorInfo.packaging}
+                                />
+                            }
+                        </div>
+                        <div className="w-full lg:w-1/2 px-3 mb-6">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                                Category
+                            </label>
+                            <Select 
+                                name="category"
+                                value={category}
+                                onChange={handleCategoryChange}
+                                options={categories}
+                                classNames={{
+                                    menuButton: () => (
+                                        `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
+                                    ),
+                                    menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
+                                    listItem: ({ isSelected }) => (
+                                        `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
+                                            isSelected
+                                                ? `text-white bg-blue-500`
+                                                : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
+                                        }`
+                                    ),
+                                    searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
+                                }}
+                                />
+                            {errorInfo.category &&
+                                <ErrorInput error={errorInfo.category}/>
+                            }
+                        </div>
+                        <div className="w-full lg:w-1/2 px-3 mb-6">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                                Sub-Category
+                            </label>
+                            <Select 
+                                name="subcategory"
+                                value={subcategory}
+                                onChange={handleSubCategoryChange}
+                                options={subcategories}
+                                classNames={{
+                                    menuButton: () => (
+                                        `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
+                                    ),
+                                    menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
+                                    listItem: ({ isSelected }) => (
+                                        `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
+                                            isSelected
+                                                ? `text-white bg-blue-500`
+                                                : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
+                                        }`
+                                    ),
+                                    searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
+                                }}
+                                />
+                            {errorInfo.subcategory &&
+                                <ErrorInput error={errorInfo.subcategory}/>
                             }
                         </div>
                         <div className="w-full lg:w-1/2 px-3 mb-6 mt-20">
@@ -381,4 +437,19 @@ export default function EditProduct() {
     );
 }
 
-EditProduct.layout = Admin;
+EditComponent.layout = Admin;
+
+export async function getServerSideProps(context) {
+    const session = await getSession(context)
+    const loadPackagings = await axios.get(`/packaginglist`)
+    const packaginglist = loadPackagings.data.data
+
+    return {
+        props: {
+            session: session,
+            routeParam: context.query,
+            packaginglist: packaginglist
+        }
+    }
+}
+    

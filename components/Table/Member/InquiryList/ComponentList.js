@@ -8,7 +8,11 @@ import Select from 'react-tailwindcss-select';
 import {orderStatusesOptions} from "data/optionData"
 
 export default function InquiryComponents(props) {
-    const data = props.data
+    // const data = props.data
+    const data = [{
+        dummy: "data",
+        id: 123
+    }]
     const links = props.links
     const metaData = props.metaData
 

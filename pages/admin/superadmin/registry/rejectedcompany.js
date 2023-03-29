@@ -1,7 +1,8 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect} from "react";
 import Link from "next/link";
-import { useSession, getSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import axios from "@/lib/axios";
+import { useRouter } from "next/router";
 
 // components
 import CompanyList from "@/components/Table/Superadmin/Registry/CompanyList";
@@ -26,7 +27,7 @@ export default function Company({session}) {
     }, [])
     const searchData = async (srch, page=1) =>{
         setIsLoading(true)
-        const response = await axios.get(`/admin/companies?page=${page}`,
+        const response = await axios.get(`/admin/companies?page=${page}&status=rejected`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -55,25 +56,10 @@ export default function Company({session}) {
         searchData(search, item)
     }
     
-    const [screenIsLoading, setScreenIsLoading] = useState(true)
-    const handleCompanyAcceptance = async (companyId) => {
-        if(!!user.accessToken){
-        setScreenIsLoading(true)
-        const response = await axios.post(`/admin/companies/${companyId}/update`, {},
-            {
-                headers: {
-                "Authorization" : `Bearer ${user.accessToken}`
-                }
-            })
-            .then((response) => {
-                console.log(response.data)
-                searchData(search)
-            }).catch((error) => {
-                console.log(error)
-            }).finally(() => {
-                setIsLoading(false)
-            })
-        }
+    const router = useRouter()
+    const viewCompanyHandler = (companyId) => {
+        console.log(companyId)
+        router.push(`/admin/superadmin/registry/company/${companyId}`)
     }
 
     return (
@@ -102,7 +88,7 @@ export default function Company({session}) {
                         "font-semibold text-lg text-blueGray-700"
                     }
                     >
-                    Pending Company
+                    Rejected Company
                     </h3>
                 </div>
                 <div className="px-4 my-2">
@@ -116,7 +102,7 @@ export default function Company({session}) {
             data={data}
             links={links}
             metaData={metaData}
-            companyAcceptance={handleCompanyAcceptance}
+            viewHandler={viewCompanyHandler}
         />
         </div>
         </>

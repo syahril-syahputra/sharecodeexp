@@ -1,32 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "lib/axios";
-import { useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 // components
 import InputForm from "@/components/Shared/InputForm";
 import CountrySelector from "@/components/Shared/CountrySelector";
 import Select from 'react-tailwindcss-select';
 import ErrorInput from '@/components/Shared/ErrorInput';
+import { toast } from 'react-toastify';
+import toastOptions from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
 //data
-import {packageOptions, packagingOptions} from "data/optionData"
+import {categoriesOptions} from "data/optionData"
 
-export default function MyProduct() {
-  const sessionData = useSession()
+export default function MyProduct({session}) {
+  // const sessionData = useSession()
   const [inputData, setInputData] = useState({
     AvailableQuantity: '',
     moq: '',
-    package: '',
+    // package: '',
     packaging: '',
     country: '',
     ManufacturerNumber: '',
     Manufacture: '',
     Description: '',
-    dateCode: ''
+    dateCode: '',
+    category: '',
+    subcategory: ''
   });
 
   const [errorInfo, setErrorInfo] = useState({})
@@ -43,6 +48,8 @@ export default function MyProduct() {
     setInputData({...inputData, country:value.label})
     setCountry(value)
   }
+
+  const router = useRouter()
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
@@ -50,23 +57,13 @@ export default function MyProduct() {
     setErrorMessage(null)
     const response = await axios.post(`/companyproduct/create`, inputData, {
       headers: {
-        "Authorization" : `Bearer ${sessionData.data.accessToken}`
+        "Authorization" : `Bearer ${session.accessToken}`
       }
     })
       .then((response) => {
         let result = response.data.data
-        setSuccesMessage("Your product has been added succefully")
-        setInputData({
-          AvailableQuantity: '',
-          moq: '',
-          package: '',
-          packaging: '',
-          country: '',
-          ManufacturerNumber: '',
-          Manufacture: '',
-          Description: '',
-          dateCode: ''
-        }); 
+        router.replace('/admin/member/sellcomponents/component')
+        toast.success("Your component has been added succefully", toastOptions)
       }).catch((error) => {
         setErrorMessage("Please fill the form correctly")
         setErrorInfo(error.data.data)
@@ -77,7 +74,18 @@ export default function MyProduct() {
 
   //option
   //package option
-  const [packages, setPackages] = useState([...packageOptions, {value: 'other', label: 'Other'}])
+  const [packages, setPackages] = useState([])
+  const loadPackages = async () => {
+    const response = await axios.get(`/packaginglist`)
+      .then((response) => {
+        setPackages([...response.data.data, {value: 'other', label: 'Other'}])
+      }).catch((error) => {
+        console.log('failed to load packages')
+      })
+  }
+  useEffect(() => {
+    loadPackages()
+  },[])
 
   const [pckage, setPackage] = useState(null);
   const handlePackageChange = value => {
@@ -90,7 +98,18 @@ export default function MyProduct() {
 
   //option
   //packaging option
-  const [packagings, setPackagings] = useState([...packagingOptions, {value: 'other', label: 'Other'}])
+  const [packagings, setPackagings] = useState([{value: 'other', label: 'Other'}])
+  const loadPackagings = async () => {
+    const response = await axios.get(`/packaginglist`)
+      .then((response) => {
+        setPackagings([...response.data.data, {value: 'other', label: 'Other'}])
+      }).catch((error) => {
+        console.log('failed to load packaginglist')
+      })
+  }
+  useEffect(() => {
+    loadPackagings()
+  },[])
 
   const [packaging, setPackaging] = useState(null);
   const handlePackagingChange = value => {
@@ -99,6 +118,59 @@ export default function MyProduct() {
       if(value.value != 'other') {
         setInputData({...inputData, packaging:value.value})
       }
+  };
+
+  //option  
+  //categories option
+  const [categories, setCategories] = useState([...categoriesOptions])
+  // const loadCategories = async () => {
+  //   const response = await axios.get(`/packaginglist`)
+  //     .then((response) => {
+  //       setCategories([...response.data.data, {value: 'other', label: 'Other'}])
+  //     }).catch((error) => {
+  //       console.log('failed to load categories')
+  //     })
+  // }
+  // useEffect(() => {
+  //   loadCategories()
+  // },[])
+
+  const [category, setCategory] = useState(null);
+  const handleCategoryChange = value => {
+    // loadSubCategory(value.value)
+    setCategory(value);
+    setInputData({...inputData, category:value.value})
+  };
+
+  //option
+  //sub-categories option
+  const [subcategories, setSubCategories] = useState([{value: 'select category first', label: 'Select Category First', disabled: true}])
+  const loadSubCategory = async (parent) => {
+    setSubCategories([{value: 'select category first', label: 'Select Category First', disabled: true}])
+    setSubCategory(null);
+    setInputData({...inputData, subcategory:''})
+
+    // const response = await axios.get(`/packaginglist`)
+    //   .then((response) => {
+    //     setPackagings([...response.data.data, {value: 'other', label: 'Other'}])
+    //   }).catch((error) => {
+    //     console.log('failed to load packaginglist')
+    //   })
+
+    if(parent == "A"){
+      setSubCategories([{value: 'new sub-cat A', label: 'new sub-cat A'}])
+    } else {
+      setSubCategories([{value: 'new sub-cat B', label: 'new sub-cat B'}])
+    }
+  }
+   useEffect(() => {
+    loadSubCategory(category?.value)
+  },[category])
+
+  const [subcategory, setSubCategory] = useState(null);
+  const handleSubCategoryChange = value => {
+    setSubCategory(value);
+    setInputData({...inputData, subcategory:value.value})
   };
 
   return (
@@ -116,12 +188,6 @@ export default function MyProduct() {
                   </h3>
               </div>
               <div className="px-4 mt-2">
-                  <Link href="/admin/member/sellcomponents/component/bulkinsert">
-                    <button className="relative bg-blueGray-700 p-2 text-white mr-2">
-                      <i className="mr-2 ml-1 fas fa-file text-white"></i>
-                      Download Bulk Template
-                    </button>
-                  </Link>
                   <Link href="/admin/member/sellcomponents/component/bulkinsert">
                     <button className="relative bg-blueGray-700 p-2 text-white">
                       <i className="mr-2 ml-1 fas fa-file text-white"></i>
@@ -181,6 +247,7 @@ export default function MyProduct() {
               <div className="w-full lg:w-1/2 px-3 mb-6">
                 <InputForm
                   isDisabled={isLoading}
+                  inputType="number"
                   label="Available Quantity"
                   inputDataName="AvailableQuantity"
                   value={inputData.AvailableQuantity}
@@ -191,6 +258,7 @@ export default function MyProduct() {
               <div className="w-full lg:w-1/2 px-3 mb-6">
                 <InputForm
                   label="MOQ"
+                  inputType="number"
                   inputDataName="moq"
                   value={inputData.moq}
                   setData={setDataHandler}
@@ -223,42 +291,6 @@ export default function MyProduct() {
                   setData={setDataHandler}
                   errorMsg={errorInfo.dateCode}
                 />
-              </div>
-              <div className="w-full lg:w-1/2 px-3 mb-6">
-                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                    Package
-                </label>
-                <Select 
-                    name="pckage"
-                    value={pckage}
-                    onChange={handlePackageChange}
-                    options={packages}
-                    classNames={{
-                        menuButton: () => (
-                            `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
-                        ),
-                        menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
-                        listItem: ({ isSelected }) => (
-                            `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
-                                isSelected
-                                    ? `text-white bg-blue-500`
-                                    : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
-                            }`
-                        ),
-                        searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
-                    }}
-                    />
-                {errorInfo.package &&
-                    <ErrorInput error={errorInfo.package}/>
-                }
-                { pckage?.value == "other" && 
-                  <InputForm
-                    inputDataName="package"
-                    value={inputData.package}
-                    setData={setDataHandler}
-                    errorMsg={errorInfo.package}
-                  />
-                }
               </div>
               <div className="w-full lg:w-1/2 px-3 mb-6">
                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
@@ -296,6 +328,62 @@ export default function MyProduct() {
                   />
                 }
               </div>
+              <div className="w-full lg:w-1/2 px-3 mb-6">
+                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                    Category
+                </label>
+                <Select 
+                    name="category"
+                    value={category}
+                    onChange={handleCategoryChange}
+                    options={categories}
+                    classNames={{
+                        menuButton: () => (
+                            `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
+                        ),
+                        menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
+                        listItem: ({ isSelected }) => (
+                            `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
+                                isSelected
+                                    ? `text-white bg-blue-500`
+                                    : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
+                            }`
+                        ),
+                        searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
+                    }}
+                    />
+                {errorInfo.category &&
+                    <ErrorInput error={errorInfo.category}/>
+                }
+              </div>
+              <div className="w-full lg:w-1/2 px-3 mb-6">
+                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                    Sub-Category
+                </label>
+                <Select 
+                    name="subcategory"
+                    value={subcategory}
+                    onChange={handleSubCategoryChange}
+                    options={subcategories}
+                    classNames={{
+                        menuButton: () => (
+                            `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
+                        ),
+                        menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
+                        listItem: ({ isSelected }) => (
+                            `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
+                                isSelected
+                                    ? `text-white bg-blue-500`
+                                    : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
+                            }`
+                        ),
+                        searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
+                    }}
+                    />
+                {errorInfo.subcategory &&
+                    <ErrorInput error={errorInfo.subcategory}/>
+                }
+              </div>
               <div className="w-full lg:w-1/2 px-3 mb-6 mt-20">
                 <div className="mb-6">
                     {!isLoading && 
@@ -329,3 +417,12 @@ export default function MyProduct() {
 }
 
 MyProduct.layout = Admin;
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+  return {
+      props: {
+          session: session
+      }
+  }
+}

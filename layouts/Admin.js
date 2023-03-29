@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router";
+import { signOut } from "next-auth/react"
 
 // components
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
@@ -16,8 +17,9 @@ export default function Admin({ children }) {
 
   if(status == 'unauthenticated'){
     router.replace("/auth/login")
+    // return window.location.href = '/auth/login'
   }
-  
+
   return (
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />

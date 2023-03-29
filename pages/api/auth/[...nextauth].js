@@ -45,6 +45,7 @@ const authOptions = {
                 const { accessToken, ...rest } = user;
                 token.accessToken = accessToken;
                 token.user = rest;
+                token.userRole = "admin"
               }
             return token;
         },

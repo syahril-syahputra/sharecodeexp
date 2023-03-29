@@ -23,7 +23,7 @@ export default function MyProduct({session}) {
   })
   const searchData = async (srch, page=1) =>{
       setIsLoading(true)
-      const response = await axios.get(`/companyproduct?page=${page}`,
+      const response = await axios.get(`/companyproduct?page=${page}&status=approved`,
           {
             headers: {
               "Authorization" : `Bearer ${session.accessToken}`
@@ -61,7 +61,7 @@ export default function MyProduct({session}) {
         <div className="mb-10">
           <MiniSearchBar/>
           <ComponentList
-            title="Company Product"
+            title="Component List"
             setPage={setPage}
             isLoading={isLoading}
             data={data}

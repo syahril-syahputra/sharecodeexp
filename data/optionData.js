@@ -26,3 +26,8 @@ export const orderStatusesOptions = [
     {value: 'Verified', label: 'Verified'},
     {value: 'Rejected', label: 'Rejected'},
 ]
+
+export const categoriesOptions = [
+    {value: 'A', label: 'A'},
+    {value: 'B', label: 'B'},
+]

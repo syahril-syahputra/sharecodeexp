@@ -1,9 +1,6 @@
 import React, {useState} from "react";
-import PropTypes from "prop-types";
-import Link from "next/link";
 
 // components
-import ChangeStatus from "@/components/Modal/CompanyControl/ChangeStatus"
 import CompanyStatus from "./CompanyStatus";
 import Pagination from "@/components/Shared/Component/Pagination";
 
@@ -12,19 +9,6 @@ export default function CompanyList(props) {
     const data = props.data
     const links = props.links
     const metaData = props.metaData
-    
-    const [showModal, setShowModal] = useState(false);
-
-    const [companyName, setCompanyName] = useState("")
-    const [companyId, setCompanyId] = useState("")
-    const setModalData = (modalStatus, companyId, companyName) => {
-        setShowModal(modalStatus)
-        setCompanyName(companyName)
-        setCompanyId(companyId)
-    }
-    const handleCompanyAcceptance = () => {
-        props.companyAcceptance(companyId)
-    }
 
     return (
         <>  
@@ -138,13 +122,6 @@ export default function CompanyList(props) {
                     </div>
                 : null}
             </div>
-            {showModal ? (
-                <ChangeStatus
-                    setShowModal={setShowModal}
-                    companyName={companyName}
-                    acceptModal={handleCompanyAcceptance}
-                />
-            ) : null}
             {props.isLoading &&<div>
                 <div className='text-center my-auto mt-10'>
                     <i className="fas fa-circle-notch fa-spin text-blueGray-700 my-auto mx-10 fa-2xl"></i>

@@ -11,8 +11,8 @@ import Image from "next/image"
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import MemberCard from "@/components/LandingPage/MemberCard";
-import ManufacturerCard from "@/components/LandingPage/ManufacturerCard";
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
+import CategoriesCard from "@/components/LandingPage/CategoriesCard";
 
 export default function Index() {
   const router = useRouter()
@@ -242,7 +242,7 @@ export default function Index() {
         </div>
       </section>
 
-      <section className="mt-20 md:mt-20 pb-20 relative bg-indigo-50 pt-20">
+      {/* <section className="mt-20 md:mt-20 pb-20 relative bg-indigo-50 pt-20">
         <div className="container mx-auto">
           <div className="justify-center text-center flex flex-wrap mb-20">
             <div className="w-full md:w-6/12 px-12 md:px-4">
@@ -271,6 +271,29 @@ export default function Index() {
             </div>
           </div>
         </div>
+      </section> */}
+
+      <section className="mt-20 md:mt-20 pb-20 relative bg-indigo-50 pt-20">
+        <div className="container mx-auto">
+          <div className="justify-center text-center flex flex-wrap mb-20">
+            <div className="w-full md:w-6/12 px-12 md:px-4">
+              <h2 className="font-semibold text-4xl text-indigo-900">Component Categories</h2>
+            </div>
+          </div>
+
+          <div className="w-full px-12 md:px-4">
+            <div className="mb-4 text-end">
+              <Link href="/categories" className="font-medium text-blueGray-700 underline">View all Categories</Link>
+            </div>
+            <div className="grid gap-4 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 place-content-center">
+              {Array(12).fill(0).map((_, i) => 
+                <CategoriesCard
+                  label="Lorem Ipsum Dolor Amet"
+                />
+              )}              
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className="mt-20 md:mt-20 pb-40 relative bg-white">
@@ -283,7 +306,7 @@ export default function Index() {
 
           <div className="w-full px-12 md:px-4">
             <div className="mb-4 text-end">
-              <Link href="/" className="font-medium text-blueGray-700 underline">View all Members</Link>
+              <Link href="/members" className="font-medium text-blueGray-700 underline">View all Members</Link>
             </div>
             <div className="grid gap-4 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 place-content-center">
               <MemberCard

@@ -5,13 +5,12 @@ import Link from "next/link";
 import ComponentStatus from "./ComponentStatus";
 import Pagination from "@/components/Shared/Component/Pagination";
 
-export default function TableProduct(props) {
+export default function ComponentList(props) {
     const tableType = props.tableType
     const data = props.data
     const links = props.links
     const metaData = props.metaData
 
-    const [showModal, setShowModal] = useState(false);
     return (
         <>  
             <div className="relative">
@@ -39,9 +38,6 @@ export default function TableProduct(props) {
                                 </th>
                                 <th scope="col" className="px-6 py-3">
                                     Date Code
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Package
                                 </th>
                                 <th scope="col" className="px-6 py-3">
                                     Packaging
@@ -80,9 +76,6 @@ export default function TableProduct(props) {
                                             {item.dateCode}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item.package}
-                                        </td>
-                                        <td className="px-6 py-4">
                                             {item.packaging}
                                         </td>
                                         <td className="px-6 py-4 uppercase text-center">
@@ -99,7 +92,7 @@ export default function TableProduct(props) {
                                                         </>
                                                     } */}
 
-                                                    {tableType == "pending" && 
+                                                    {/* {tableType == "pending" && 
                                                         <>
                                                             <button onClick={()=> props.acceptHandler(item.id)} className="font-medium text-blue-600 text-white bg-indigo-500 hover:bg-indigo-600 p-2">Accept</button>
                                                             <button onClick={()=> props.rejectHandler(item.id)} className="font-medium text-blue-600 text-white bg-indigo-500 hover:bg-indigo-600 p-2">Reject</button>
@@ -111,7 +104,7 @@ export default function TableProduct(props) {
                                                             <button onClick={()=> props.acceptHandler(item.id)} className="font-medium text-blue-600 text-white bg-indigo-500 hover:bg-indigo-600 p-2">Accept</button>
                                                             <button onClick={()=> props.pendingHandler(item.id)} className="font-medium text-blue-600 text-white bg-indigo-500 hover:bg-indigo-600 p-2">Pending</button>
                                                         </>
-                                                    }
+                                                    } */}
                                                 </div>
                                             }
                                             {props.isLoading &&<div>

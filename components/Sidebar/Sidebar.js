@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useSession, getSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
@@ -18,6 +18,7 @@ import MasterControl from "./Superadmin/MasterControl"
 //member
 import MemberSellComponents from "./Member/SellComponents";
 import MemberBuyComponents from "./Member/BuyComponents";
+
 
 export default function Sidebar() {
   const session = useSession()
@@ -137,22 +138,13 @@ export default function Sidebar() {
               </>
             : null }
 
-            {/* <SettingsBar
+            <SettingsBar
               statusId={userDetail?.status_id}
-            /> */}
+            />
 
           </div>
         </div>
       </nav>
     </>
   );
-}
-
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-  return {
-      props: {
-          session: session
-      }
-  }
 }

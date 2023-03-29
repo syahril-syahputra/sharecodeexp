@@ -56,7 +56,7 @@ export default function TableProduct(props) {
             <div className="relative">
                 <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-between">
-                        <div className="px-4">
+                        <div className="">
                             <h3
                             className={
                                 "font-semibold text-lg text-blueGray-700"
@@ -120,9 +120,6 @@ export default function TableProduct(props) {
                                     Date Code
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Package
-                                </th>
-                                <th scope="col" className="px-6 py-3">
                                     Packaging
                                 </th>
                                 <th scope="col" className="px-6 py-3">
@@ -159,9 +156,6 @@ export default function TableProduct(props) {
                                             {item.dateCode}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.package}
-                                        </td>
-                                        <td className="text-sm px-6 py-4">
                                             {item.packaging}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-center">
@@ -170,7 +164,7 @@ export default function TableProduct(props) {
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
                                                 <Link 
-                                                    href={`/admin/member/sellcomponents/component/view/${item.ManufacturerNumber}`}
+                                                    href={`/admin/member/sellcomponents/component/view/${item.id}`}
                                                     className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">View</Link>
                                                 {/* <button className="font-medium text-blue-600 text-white bg-red-400 p-2">Delete</button> */}
                                             </div>
