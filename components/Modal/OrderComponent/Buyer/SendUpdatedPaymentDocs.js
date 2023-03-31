@@ -1,7 +1,7 @@
 import { useState } from "react"
 import AcceptButton from "@/components/Buttons/AcceptButton";
 import ErrorInput from '@/components/Shared/ErrorInput';
-export default function SendPaymentDocs(props){
+export default function SendUpdatedPaymentDocs(props){
     const [paymentDocs, setPaymentDocs] = useState()
     const [shipmentInfo, setShipmentInfo] = useState()
     return (
@@ -15,7 +15,7 @@ export default function SendPaymentDocs(props){
                     {/*header*/}
                     <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200">
                     <h3 className="text-3xl font-semibold">
-                        Send Payment
+                        Update Payment
                     </h3>
                     <button
                         className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"

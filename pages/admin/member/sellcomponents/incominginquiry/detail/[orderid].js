@@ -244,9 +244,15 @@ export default function InquiryDetails({session, routeParam}) {
                                 Verify Inquiry
                             </button>
                         }
-                        <button onClick={()=> setSendTrackerModal(true)} className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
-                            Send Tracker
-                        </button>
+
+                        {data.order_status_id == 8 ?
+                            <button onClick={()=> setSendTrackerModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                                Send Tracker Information
+                            </button>
+                            : <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                                Send Tracker Information
+                            </button>
+                        }
                     </div>
                 </div>
 

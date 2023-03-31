@@ -9,6 +9,9 @@ import Link from "next/link";
 import Admin from "layouts/Admin.js";
 import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep";
 import SendQuotationModal from "@/components/Modal/OrderComponent/Superadmin/SendQuotation"
+import SendProformaInvoiceModal from "@/components/Modal/OrderComponent/Superadmin/SendProformaInvoice"
+import AcceptPaymentDocumentModal from "@/components/Modal/OrderComponent/Superadmin/AcceptPaymentDocument"
+import RejectPaymentDocumentModal from "@/components/Modal/OrderComponent/Superadmin/RejectPaymentDocument"
 import { toast } from 'react-toastify';
 import toastOptions from "@/lib/toastOptions"
 
@@ -28,7 +31,6 @@ export default function InquiryDetails({session, routeParam}) {
             .then((response) => {
                 let result = response.data.data
                 setData(result)
-                console.log(result)
             }).catch((error) => {
                 // console.log(error.response)
             }).finally(() => {
@@ -53,6 +55,79 @@ export default function InquiryDetails({session, routeParam}) {
         .then(() => {
             toast.success("Quotation has been set", toastOptions)
             setSendQuotationModal(false)
+            loadData()
+        }).catch((error) => {
+            toast.error("Something went wrong", toastOptions)
+            setErrorInfo(error.data.data)
+            setIsLoading(false)
+        })
+    }
+
+    const [sendProformaInvoiceModal, setSendProformaInvoiceModal] = useState(false)
+    const handleSendProformaInvoiceModal = async (proformaDocs) => {
+        setIsLoading(true)
+        setErrorInfo({})
+        let formData = new FormData();
+        formData.append("proforma_doc", proformaDocs);
+        formData.append("id", data.id)
+
+        const response = await axios.post(`/admin/orders/UpdateProformaInvoice`, formData, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Proforma has been sent", toastOptions)
+            setSendProformaInvoiceModal(false)
+            loadData()
+        }).catch((error) => {
+            toast.error("Something went wrong", toastOptions)
+            setErrorInfo(error.data.data)
+            setIsLoading(false)
+        })
+    }
+
+    const [acceptPaymentDocumentModal, setAcceptPaymentDocumentModal] = useState(false)
+    const handleAcceptPaymentDocumentModal = async (shipinfoforseller) => {
+        setIsLoading(true)
+        let inputData = {
+            id: data.id,
+            shipinfoforseller: shipinfoforseller
+        }
+        const response = await axios.post(`/admin/orders/UpdateComplatePayment`, inputData, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Payment has been accepted", toastOptions)
+            setAcceptPaymentDocumentModal(false)
+            loadData()
+        }).catch((error) => {
+            toast.error("Something went wrong", toastOptions)
+            setErrorInfo(error.data.data)
+            setIsLoading(false)
+        })
+    }
+
+    const [rejectPaymentDocumentModal, setRejectPaymentDocumentModal] = useState(false)
+    const handleRejectPaymentDocumentModal = async (rejectionReason) => {
+        setIsLoading(true)
+        let inputData = {
+            id: data.id,
+            reason: rejectionReason
+        }
+        const response = await axios.post(`/admin/orders/UpdateRejectPayment`, inputData, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Payment has been rejected", toastOptions)
+            setRejectPaymentDocumentModal(false)
             loadData()
         }).catch((error) => {
             toast.error("Something went wrong", toastOptions)
@@ -123,6 +198,11 @@ export default function InquiryDetails({session, routeParam}) {
                                             <td className="w-28">Tracking Buyer</td>
                                             <td className="w-8">:</td>
                                             <td className="text-left">{data.trackingBuyer}</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="w-28">Payment Rejection</td>
+                                            <td className="w-8">:</td>
+                                            <td className="text-left">{data.reason}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -288,9 +368,18 @@ export default function InquiryDetails({session, routeParam}) {
 
                 <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-center">
-                        <button className="m-2 p-2 bg-indigo-900 border text-lg text-center text-white">
-                            Proforma Invoice
-                        </button>
+
+                        {data.proforma_doc ? 
+                            <Link target="_blank" href={publicDir + "/uploads/proforma_doc/" + data.proforma_doc}>
+                                <button className="m-2 py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
+                                    Proforma Invoice
+                                </button>
+                            </Link>
+                            : 
+                            <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
+                                Proforma Invoice
+                            </button>
+                        }
                         {data.Payment_doc ? 
                             <Link target="_blank" href={publicDir + "/uploads/Payment_doc/" + data.Payment_doc}>
                                 <button className="m-2 py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
@@ -302,7 +391,8 @@ export default function InquiryDetails({session, routeParam}) {
                                 Payment Receipt
                             </button>
                         }
-                        <button className="m-2 p-2 bg-indigo-900 border text-lg text-center text-white">
+
+                        <button className="m-2 p-2 bg-indigo-900 border text-center text-white">
                             Shipment Info
                         </button>
 
@@ -333,17 +423,32 @@ export default function InquiryDetails({session, routeParam}) {
                         }
 
                         {data.order_status_id == 5 ?
-                            <button onClick={() => setSendQuotationModal(true) } className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                            <button onClick={() => setSendProformaInvoiceModal(true) } className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
                                 Send Proforma Invoice
                             </button>
-                            : <button disabled onClick={() => setSendQuotationModal(true) } className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                            : <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
                                 Send Proforma Invoice
                             </button>
                         }
 
-                        <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
-                            Accept Payment
-                        </button>
+                        {data.order_status_id == 7 ?
+                            <button onClick={() => setAcceptPaymentDocumentModal(true) } className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                                Accept Payment
+                            </button>
+                            : <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                                Accept Payment
+                            </button>
+                        }
+
+                        {data.order_status_id == 7 ?
+                            <button onClick={() => setRejectPaymentDocumentModal(true) } className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                                Reject Payment
+                            </button>
+                            : <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                                Reject Payment
+                            </button>
+                        }
+
                         <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
                             Set Shipment Info
                         </button>
@@ -358,6 +463,33 @@ export default function InquiryDetails({session, routeParam}) {
                         orderQty={data.qty}
                         closeModal={() => setSendQuotationModal(false)}
                         acceptance={handleSendQuotationModal}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                {sendProformaInvoiceModal &&
+                    <SendProformaInvoiceModal
+                        isLoading={isLoading}
+                        closeModal={() => setSendProformaInvoiceModal(false)}
+                        acceptance={handleSendProformaInvoiceModal}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                {acceptPaymentDocumentModal && 
+                    <AcceptPaymentDocumentModal
+                        isLoading={isLoading}
+                        closeModal={() => setAcceptPaymentDocumentModal(false)}
+                        acceptance={handleAcceptPaymentDocumentModal}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                {rejectPaymentDocumentModal &&
+                    <RejectPaymentDocumentModal
+                        isLoading={isLoading}
+                        closeModal={() => setRejectPaymentDocumentModal(false)}
+                        acceptance={handleRejectPaymentDocumentModal}
                         errorInfo={errorInfo}
                     />
                 }

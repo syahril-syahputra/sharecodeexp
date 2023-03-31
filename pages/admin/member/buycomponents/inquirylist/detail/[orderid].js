@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from "react";
 import { getSession } from "next-auth/react";
 import axios from "@/lib/axios";
+import Link from "next/link";
 
 // components
 import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep"
 import AcceptQuotationModal from "@/components/Modal/OrderComponent/Buyer/AcceptQuotation"
 import RejectQuotationModal from "@/components/Modal/OrderComponent/Buyer/RejectQuotation"
 import SendPaymentDocsModal from "@/components/Modal/OrderComponent/Buyer/SendPaymentDocs"
+import SendUpdatedPaymentDocsModal from "@/components/Modal/OrderComponent/Buyer/SendUpdatedPaymentDocs"
 import AcceptOrderModal from "@/components/Modal/OrderComponent/Buyer/AcceptOrder"
 import RejectOrderModal from "@/components/Modal/OrderComponent/Buyer/RejectOrder"
 import { toast } from 'react-toastify';
@@ -17,6 +19,7 @@ import Admin from "layouts/Admin.js";
 
 
 export default function InquiryDetails({session, routeParam}) {
+    const publicDir = process.env.NEXT_PUBLIC_DIR
     //data search
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
@@ -133,6 +136,34 @@ export default function InquiryDetails({session, routeParam}) {
         .then(() => {
             toast.success("Payment has been sent", toastOptions)
             setSendPaymentDocsModal(false)
+            loadData()
+        }).catch((error) => {
+            console.log(error)
+            setErrorInfo(error.data.data)
+            toast.error("Something went wrong", toastOptions)
+            setIsLoading(false)
+        }).finally(() => {
+            setIsLoading(false)
+        })
+    }
+
+    const [sendUpdatedPaymentDocsModal, setSendUpdatedPaymentDocsModal] = useState(false)
+    const sendUpdatedPaymentDocsModalHandle = async (shipment, paymentDocs) => {
+        let formData = new FormData();
+        formData.append("Payment_doc", paymentDocs);
+        formData.append("shipinfobuyer", shipment);
+        formData.append("id", data.id)
+        setIsLoading(true)
+        const response = await axios.post(`/buyer/SendPayment?update=1`, 
+            formData,
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Payment has been updated", toastOptions)
+            setSendUpdatedPaymentDocsModal(false)
             loadData()
         }).catch((error) => {
             console.log(error)
@@ -298,13 +329,29 @@ export default function InquiryDetails({session, routeParam}) {
 
                 <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-center">
-                        <button className="m-2 p-2 bg-indigo-900 border text-lg text-center text-white">
-                            Proforma Invoice
-                        </button>
-                        <button className="m-2 p-2 bg-indigo-900 border text-lg text-center text-white">
-                            Payment Receipt
-                        </button>
-                        <button className="m-2 p-2 bg-indigo-900 border text-lg text-center text-white">
+                        {data.proforma_doc ? 
+                            <Link target="_blank" href={publicDir + "/uploads/proforma_doc/" + data.proforma_doc}>
+                                <button className="m-2 py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
+                                    Proforma Invoice
+                                </button>
+                            </Link>
+                            : 
+                            <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
+                                Proforma Invoice
+                            </button>
+                        }
+                        {data.Payment_doc ? 
+                            <Link target="_blank" href={publicDir + "/uploads/Payment_doc/" + data.Payment_doc}>
+                                <button className="m-2 py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
+                                    Payment Receipt
+                                </button>
+                            </Link>
+                            : 
+                            <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
+                                Payment Receipt
+                            </button>
+                        }
+                        <button className="m-2 p-2 bg-indigo-900 border text-center text-white">
                             Shipment Info
                         </button>
                     </div>
@@ -342,13 +389,18 @@ export default function InquiryDetails({session, routeParam}) {
                             </button>
                         }
                         
-                        {data.order_status_id == 6 ?
+                        {data.order_status_id == 6?
                             <button onClick={()=> setSendPaymentDocsModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
                                 Send Payment Receipt
                             </button>
                             :
                             <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
                                 Send Payment Receipt
+                            </button>
+                        }
+                        {data.order_status_id == 15 &&
+                            <button onClick={()=> setSendUpdatedPaymentDocsModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                                Update Payment Receipt
                             </button>
                         }
                         <button onClick={()=> setAcceptOrderModal(true)} className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
@@ -383,6 +435,15 @@ export default function InquiryDetails({session, routeParam}) {
                         isLoading={isLoading}
                         closeModal={() => setSendPaymentDocsModal(false)}
                         acceptance={sendPaymentDocsModalHandle}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                {sendUpdatedPaymentDocsModal && 
+                    <SendUpdatedPaymentDocsModal
+                        isLoading={isLoading}
+                        closeModal={() => setSendUpdatedPaymentDocsModal(false)}
+                        acceptance={sendUpdatedPaymentDocsModalHandle}
                         errorInfo={errorInfo}
                     />
                 }
