@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "lib/axios";
-import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
 
 // components
@@ -9,6 +8,8 @@ import ComponentStatus from "@/components/Shared/Component/Statuses";
 import AcceptComponent from "@/components/Modal/Component/AcceptComponent"
 import RejectComponent from "@/components/Modal/Component/RejectComponent"
 import PendingComponent from "@/components/Modal/Component/PendingComponent"
+import { toast } from 'react-toastify';
+import toastOptions from "@/lib/toastOptions"
 
 
 // layout for page
@@ -17,13 +18,10 @@ import Admin from "layouts/Admin.js";
 export default function ComponentDetails({session, routeParam}) {
     //data search
     const [isLoading, setIsLoading] = useState(true)
-    const [component, setComponent] = useState({
-        ManufactureNumber: '123',
-        status: "accepted"
-    })
+    const [component, setComponent] = useState({})
     const getData = async () => {
         setIsLoading(true)
-        const response = await axios.get(`/companyproduct?id=${routeParam.componentid}`,
+        const response = await axios.get(`/admin/product?id=${routeParam.componentid}`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -48,13 +46,17 @@ export default function ComponentDetails({session, routeParam}) {
     const handleAcceptComponent = async () => {
         setShowAcceptModal(false)
         setIsLoading(true)
-        const request = await axios.post(`admin/companies/${routeParam.companyid}/update`, {}, {
+        const request = await axios.post(`admin/product/update`, 
+        {
+            id: routeParam.componentid
+        },
+        {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
             }
         })
         .then(() => {
-            toast.success("Company Accepted")
+            toast.success("Component Accepted")
         })
         .catch((error) => {
             console.log(error)
@@ -69,9 +71,9 @@ export default function ComponentDetails({session, routeParam}) {
     const handleRejectComponent = async (text) => {
         setShowRejectModal(false)
         setIsLoading(true)
-        const request = await axios.post(`admin/companies/${routeParam.companyid}/reject`, 
+        const request = await axios.post(`admin/product/updateReject`, 
         {
-            id: routeParam.companyid,
+            id: routeParam.componentid,
             reason: text
         },
         {
@@ -80,7 +82,7 @@ export default function ComponentDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Company Rejected")
+            toast.success("Component Rejected")
         })
         .catch((error) => {
             console.log(error)
@@ -95,10 +97,9 @@ export default function ComponentDetails({session, routeParam}) {
     const handlePendingComponent = async (text) => {
         setShowPendingModal(false)
         setIsLoading(true)
-        const request = await axios.post(`admin/companies/${routeParam.companyid}/pending`, 
+        const request = await axios.post(`admin/product/updatePending`, 
         {
-            id: routeParam.companyid,
-            reason: text
+            id: routeParam.componentid
         },
         {
             headers: {
@@ -106,7 +107,7 @@ export default function ComponentDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Company set to pending")
+            toast.success("Component set to pending")
         })
         .catch((error) => {
             console.log(error)
@@ -133,24 +134,24 @@ export default function ComponentDetails({session, routeParam}) {
                             </h3>
                         </div>
                         <div className="px-4 mt-2">
-                            {/* {(component.status == "pending" || component.status == "rejected") &&  */}
+                            {(component.status == "pending" || component.status == "rejected") && 
                             <button onClick={() => setShowAcceptModal(true) } className="relative bg-blue-500 p-2 text-white mr-2">
                                 <i className="mr-2 ml-1 fas fa-check text-white"></i>
                                 Accept
                             </button>
-                            {/* } */}
-                            {/* {(component.status == "approved" || component.status == "rejected") &&  */}
+                            }
+                            {(component.status == "approved" || component.status == "rejected") && 
                             <button onClick={() => setShowPendingModal(true) } className="relative bg-orange-500 p-2 text-white mr-2">
                                 <i className="mr-2 ml-1 fas fa-clock text-white"></i>
                                 Pending
                             </button>
-                            {/* } */}
-                            {/* {(component.status == "approved" || component.status == "pending") &&  */}
+                            }
+                            {(component.status == "approved" || component.status == "pending") &&
                             <button onClick={() => setShowRejectModal(true) } className="relative bg-red-500 p-2 text-white mr-2">
                                 <i className="mr-2 ml-1 fas fa-times text-white"></i>
                                 Reject
                             </button>
-                            {/* } */}
+                            }
 
                             {!!routeParam.componentid && 
                                 <Link href={`/admin/member/sellcomponents/component/edit/${routeParam.componentid}`}>
@@ -201,6 +202,12 @@ export default function ComponentDetails({session, routeParam}) {
                                         Packaging
                                     </th>
                                     <th scope="col" className="px-6 py-3">
+                                        Category
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Sub-Category
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
                                         Status
                                     </th>
                                 </tr>
@@ -231,6 +238,12 @@ export default function ComponentDetails({session, routeParam}) {
                                     <td className="text-sm px-6 py-4">
                                         {component.packaging}
                                     </td>
+                                    <td className="text-sm px-6 py-4">
+                                        {component.subcategory?.category?.name}
+                                    </td>
+                                    <td className="text-sm px-6 py-4">
+                                        {component.subcategory?.name}
+                                    </td>
                                     <td className="text-sm px-6 py-4 text-center">
                                         <ComponentStatus status={component.status} title={`stock status ${component.status}`} label={component.status}/>
                                     </td>
@@ -242,7 +255,7 @@ export default function ComponentDetails({session, routeParam}) {
                     {showAcceptModal ? (
                         <AcceptComponent
                             setShowModal={setShowAcceptModal}
-                            itemName={component.ManufactureNumber}
+                            itemName={component.ManufacturerNumber}
                             acceptModal={handleAcceptComponent}
                         />
                     ) : null}
@@ -250,7 +263,7 @@ export default function ComponentDetails({session, routeParam}) {
                     {showRejectModal ? (
                         <RejectComponent
                             setShowModal={setShowRejectModal}
-                            itemName={component.ManufactureNumber}
+                            itemName={component.ManufacturerNumber}
                             acceptModal={handleRejectComponent}
                         />
                     ) : null}
@@ -258,7 +271,7 @@ export default function ComponentDetails({session, routeParam}) {
                     {showPendingModal ? (
                         <PendingComponent
                             setShowModal={setShowPendingModal}
-                            itemName={component.ManufactureNumber}
+                            itemName={component.ManufacturerNumber}
                             acceptModal={handlePendingComponent}
                         />
                     ) : null}

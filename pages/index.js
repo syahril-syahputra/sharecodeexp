@@ -61,6 +61,26 @@ export default function Index() {
     searchData(search)
   }, [])
 
+
+  //load categories
+  const [categories, setCategories] = useState([])
+  const loadCategories = async () => {
+    const request = await axios.get(`/categories?limit=12`)
+      .then((res) => {
+        let result = res.data.data
+        setCategories(result.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }
+  useEffect(() => {
+    loadCategories()
+  }, [])
+
   return (
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
@@ -229,49 +249,10 @@ export default function Index() {
                 className="mx-auto shadow-lg"
               />
             </div>
-            {/* <div className="w-1/2 ml-auto mr-auto">
-              <div className="text-center">
-                <p className="text-xl font-light leading-relaxed mt-4 mb-4 text-blueGray-600">
-                  EXEpart is a closed sales platform that only allows verified industrial manufacturers to list their excess stocks and buy stocks from fellow manufacturers. 
-                  It is a great tool to overcome the shortage crisis while enabling the manufacturers to capitalize their unused stocks. 
-                  No brokers are allowed to register at EXEpart
-                </p>
-              </div>
-            </div> */}
             
         </div>
       </section>
 
-      {/* <section className="mt-20 md:mt-20 pb-20 relative bg-indigo-50 pt-20">
-        <div className="container mx-auto">
-          <div className="justify-center text-center flex flex-wrap mb-20">
-            <div className="w-full md:w-6/12 px-12 md:px-4">
-              <h2 className="font-semibold text-4xl text-indigo-900">Our Manufacturer</h2>
-            </div>
-          </div>
-
-          <div className="w-full px-12 md:px-4">
-            <div className="grid gap-4 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 place-content-center">
-              <ManufacturerCard
-                imageSrc='/img/manufacturer/bluespacelogo_blue.png'
-                label='BlueSpace'
-              />
-              <ManufacturerCard
-                imageSrc='/img/manufacturer/HESA_LOGO.png'
-                label='HESA'
-              />
-              <ManufacturerCard
-                imageSrc='/img/manufacturer/Hitit_Defense.png'
-                label='Hitit Defense'
-              />
-              <ManufacturerCard
-                imageSrc='/img/manufacturer/RFLOGY-Logo.png'
-                label='RFLOGY'
-              />
-            </div>
-          </div>
-        </div>
-      </section> */}
 
       <section className="mt-20 md:mt-20 pb-20 relative bg-indigo-50 pt-20">
         <div className="container mx-auto">
@@ -285,11 +266,13 @@ export default function Index() {
             <div className="mb-4 text-end">
               <Link href="/categories" className="font-medium text-blueGray-700 underline">View all Categories</Link>
             </div>
-            <div className="grid gap-4 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 place-content-center">
-              {Array(12).fill(0).map((_, i) => 
-                <CategoriesCard
-                  label="Lorem Ipsum Dolor Amet"
-                />
+            <div className="grid gap-4 lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 place-content-center text-center">
+              {categories.map((item, index) => 
+                <div key={index}>
+                  <CategoriesCard
+                    label={item.name}
+                  />
+                </div>
               )}              
             </div>
           </div>

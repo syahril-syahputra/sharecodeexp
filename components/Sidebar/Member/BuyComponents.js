@@ -10,10 +10,10 @@ export default function BuyComponents(){
 
   const [totalItem, setTotalItem] = useState(0)
   const countCart = async () =>{
-    const response = await axios.get(`/countlist`,
+    const response = await axios.get(`/countWish`,
       {
         headers: {
-          "Authorization" : `Bearer ${session.accessToken}`
+          "Authorization" : `Bearer ${session.data.accessToken}`
         }
       })
       .then((response) => {
@@ -49,7 +49,7 @@ export default function BuyComponents(){
                 : "text-blueGray-700 hover:text-blueGray-500")
             }>
               <i className="fas fa-cart-shopping text-blueGray-400 mr-2 text-sm"></i>{" "}
-              Inquiry Now
+              Inquiry List
               <span className="ml-5 text-xs font-semibold inline-block py-1 px-2 uppercase text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
                 {totalItem}
               </span>
@@ -67,7 +67,7 @@ export default function BuyComponents(){
                 : "text-blueGray-700 hover:text-blueGray-500")
             }>
               <i className="fas fa-truck text-blueGray-400 mr-2 text-sm"></i>{" "}
-              Inquiry List 
+              Inquired Components 
           </Link>
         </li>
       </ul>

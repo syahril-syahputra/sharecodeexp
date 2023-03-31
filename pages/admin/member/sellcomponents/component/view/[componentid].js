@@ -133,10 +133,10 @@ export default function MyProduct({session, routeParam}) {
                                         {data.dateCode}
                                     </td>
                                     <td className="text-sm px-6 py-4">
-                                        {data.category}
+                                        {data.subcategory?.category.name}
                                     </td>
                                     <td className="text-sm px-6 py-4">
-                                        {data.subcategory}
+                                        {data.subcategory?.name}
                                     </td>
                                     <td className="text-sm px-6 py-4">
                                         {data.packaging}

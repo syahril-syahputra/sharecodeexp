@@ -1,3 +1,4 @@
+import AcceptButton from "@/components/Buttons/AcceptButton"
 export default function VerifyOrder(props){
     return (
         <>
@@ -10,7 +11,7 @@ export default function VerifyOrder(props){
                     {/*header*/}
                     <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200">
                     <h3 className="text-3xl font-semibold">
-                        Modal Title
+                        Accept Quotation
                     </h3>
                     <button
                         className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
@@ -24,11 +25,7 @@ export default function VerifyOrder(props){
                     {/*body*/}
                     <div className="relative p-6 flex-auto">
                     <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                        I always felt like I could do anything. That’s the main
-                        thing people are controlled by! Thoughts- their perception
-                        of themselves! They're slowed down by their perception of
-                        themselves. If you're taught you can’t do anything, you
-                        won’t do anything. I was taught I could do everything.
+                        Do you agree to <span className="text-blueGray-700 font-bold">Accept</span> this Quotation?
                     </p>
                     </div>
                     {/*footer*/}
@@ -40,13 +37,12 @@ export default function VerifyOrder(props){
                     >
                         Close
                     </button>
-                    <button
-                        className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                        type="button"
+
+                    <AcceptButton
+                        buttonTitle="Accept"
+                        isLoading={props.isLoading}
                         onClick={() => props.acceptance()}
-                    >
-                        Accept
-                    </button>
+                    />
                     </div>
                 </div>
                 </div>

@@ -22,9 +22,20 @@ export const sectorOptions = [
 ]
 
 export const orderStatusesOptions = [
-    {value: 'Order Inquiry', label: 'Order Inquiry'},
-    {value: 'Verified', label: 'Verified'},
-    {value: 'Rejected', label: 'Rejected'},
+    {value: 'inquired', label: 'Order Inquiry'},
+    {value: 'verified', label: 'Verified'},
+    {value: 'qoutation_approval', label: 'Quotation Approval'},
+    {value: 'accepted', label: 'Quotation Accepted'},
+    {value: 'rejected', label: 'Quotation Rejected'},
+    {value: 'proforma_send', label: 'Profoma Invoice Send'},
+    {value: 'payment_verified', label: 'Payment Verified'},
+    {value: 'payment_completed', label: 'Payment Completed'},
+    {value: 'preparing_shipment', label: 'Preparing Shipment'},
+    {value: 'shipped', label: 'Shipped'},
+    {value: 'order_returned', label: 'Order Returned'},
+    {value: 'order_accepted', label: 'Order Accepted'},
+    {value: 'order_complited', label: 'Order Completed'},
+    {value: 'order_cancelled', label: 'Order Cancelled'},
 ]
 
 export const categoriesOptions = [

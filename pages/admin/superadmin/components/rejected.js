@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import Link from "next/link";
 import { getSession } from "next-auth/react";
 import axios from "@/lib/axios";
+import { useRouter } from "next/router";
 
 // components
 import ComponentList from "@/components/Table/Superadmin/Components/ComponentList"
@@ -10,6 +11,7 @@ import ComponentList from "@/components/Table/Superadmin/Components/ComponentLis
 import Admin from "layouts/Admin.js";
 
 export default function Product({session}) {
+    const router = useRouter()
 
     //data search
     const [search, setSearch] = useState('')
@@ -54,8 +56,8 @@ export default function Product({session}) {
         searchData(search)
     }, [])
 
-    const viewHandler = (productId) => {
-        console.log(productId)
+    const viewHandler = (componentid) => {
+        router.push(`/admin/superadmin/components/details/${componentid}`)
     }
 
   return (

@@ -1,58 +1,46 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import axios from "lib/axios";
-import { useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 // components
-import InputForm from "@/components/Shared/InputForm";
+import { toast } from 'react-toastify';
+import toastOptions from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
-export default function MyProduct() {
-  const sessionData = useSession()
-  const [inputData, setInputData] = useState({
-    AvailableQuantity: '',
-    moq: '',
-    package: '',
-    packaging: '',
-    country: '',
-    ManufacturerNumber: '',
-    Manufacture: ''
-  });
+export default function BulkInsert({session}) {
+  const publicDir = process.env.NEXT_PUBLIC_DIR
 
   const [errorInfo, setErrorInfo] = useState({})
   const [errorMessage, setErrorMessage] = useState(null)
-  const [succesMessage, setSuccesMessage] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
-  const setDataHandler = (item, inputName) => {
-    setInputData({...inputData, [inputName]:item.value})
-  }
+  const router = useRouter()
+  const [excelFile, setExcelFile] = useState()
   const handleSubmit = async (e) => {
     e.preventDefault()
+    // let inputData = {
+    //   excel_file: excelFile
+    // }
+    let formData = new FormData();
+    formData.append("excel_file", excelFile);
     setIsLoading(true)
     setErrorInfo({})
     setErrorMessage(null)
-    const response = await axios.post(`/companyproduct/create`, inputData, {
+    const response = await axios.post(`/upload`, formData, {
       headers: {
-        "Authorization" : `Bearer ${sessionData.data.accessToken}`
+        "Authorization" : `Bearer ${session.accessToken}`
       }
     })
       .then((response) => {
         let result = response.data.data
-        setSuccesMessage("Create Product Success")
-        setInputData({
-          AvailableQuantity: '',
-          moq: '',
-          package: '',
-          packaging: '',
-          country: '',
-          ManufacturerNumber: '',
-          Manufacture: ''
-        }); 
+        router.replace('/admin/member/sellcomponents/component/pending')
+        toast.success("Your components has been added succefully", toastOptions)
       }).catch((error) => {
-        setErrorMessage(error.response.data.message)
-        setErrorInfo(error.response.data.data)
+        setErrorMessage("Please fill the form correctly")
+        console.log(error)
       }).finally(() => {
         setIsLoading(false)
       })
@@ -72,8 +60,8 @@ export default function MyProduct() {
                   Add Raw Data
                   </h3>
               </div>
-              <div className="px-4 mt-2">
-                  <Link href="/admin/member/sellcomponents/component/bulkinsert">
+              <div className="px-4 mt-2">          
+                  <Link target="_blank" href={publicDir + "/template/exepart_template.xlsx"}>
                     <button className="relative bg-blueGray-700 p-2 text-white mr-2">
                       <i className="mr-2 ml-1 fas fa-file text-white"></i>
                       Download Bulk Template
@@ -100,18 +88,6 @@ export default function MyProduct() {
                   </div>
               </div>
             }
-            {succesMessage &&
-              <div  className="w-50">
-                  <div className="text-white px-6 py-4 border-0 relative mb-4 mt-5 bg-emerald-500">
-                      <span className="text-xl inline-block mr-5 align-middle">
-                          <i className="fas fa-bell"></i>
-                      </span>
-                      <span className="inline-block align-middle mr-8">
-                          <b className="capitalize">{succesMessage}</b>
-                      </span>
-                  </div>
-              </div>
-            }
           </div>
           <form onSubmit={handleSubmit}>
               <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -128,11 +104,11 @@ export default function MyProduct() {
                               <input 
                                   className="mt-3" 
                                   type="file"
-                                  name='company_RequiredDocuments'
+                                  name='excel'
                                   accept=".xlsx,.xlsm,.xls"
-                                  // onChange={({target}) => 
-                                  //     setRegistrationInfo({...registrationInfo, companyRequiredDocuments:target.files[0]})
-                                  // }
+                                  onChange={({target}) => 
+                                    setExcelFile(target.files[0])
+                                  }
                                   // onChange={({target}) => 
                                   //     setRegistrationInfo({...registrationInfo,company_RequiredDocuments:target.files[0]})
                                   // }
@@ -175,4 +151,13 @@ export default function MyProduct() {
   );
 }
 
-MyProduct.layout = Admin;
+BulkInsert.layout = Admin;
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+  return {
+      props: {
+          session: session
+      }
+  }
+}

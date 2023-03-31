@@ -5,7 +5,7 @@ export default function OrderStatusStep(){
                 <div className="mr-1 p-2 bg-white border text-sm text-center">
                     Order Inquired
                 </div>
-                <div className="mr-1 p-2 bg-blue-500 border text-white text-sm text-center">
+                <div className="mr-1 p-2 bg-white border text-sm text-center">
                     Information Verified
                 </div>
                 <div className="mr-1 p-2 bg-white border text-sm text-center">

@@ -4,41 +4,62 @@ import axios from "@/lib/axios";
 
 // components
 import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep"
+import { toast } from 'react-toastify';
+import toastOptions from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";
 import VerifyInquiryModal from "@/components/Modal/OrderComponent/Seller/VerifyInquiry"
 import SendTrackerModal from "@/components/Modal/OrderComponent/Seller/SendTracker"
 
-export default function InquiryDetails({session}) {
+export default function InquiryDetails({session, routeParam}) {
     //data search
     const [isLoading, setIsLoading] = useState(true)
-    const [data, setData] = useState([])
-    const loadData = async (page=1) =>{
+    const [data, setData] = useState({})
+    const loadData = async () =>{
         setIsLoading(true)
-        // const response = await axios.get(`/cartlist?page=${page}`,
-        //     {
-        //     headers: {
-        //         "Authorization" : `Bearer ${session.accessToken}`
-        //     }
-        //     })
-        //     .then((response) => {
-        //         // console.log(response)
-        //         let result = response.data.data
-        //         setData(result.data)
-        //     }).catch((error) => {
-        //         // console.log(error.response)
-        //     }).finally(() => {
-        //         setIsLoading(false)
-        //     })
+        const response = await axios.get(`/seller/${routeParam.orderid}/data`,
+            {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+            })
+            .then((response) => {
+                // console.log(response)
+                let result = response.data.data
+                setData(result)
+            }).catch((error) => {
+                // console.log(error.response)
+            }).finally(() => {
+                setIsLoading(false)
+            })
     }
     useEffect(() => {
         loadData()
     }, [])
 
+    const [errorInfo, setErrorInfo] = useState({})
     const [verifyInquiryModal, setVerifyInquiryModal] = useState(false)
-    const verifyInquiryModalHandle = (value) => {
-        setVerifyInquiryModal(value)
+    const verifyInquiryModalHandle = async (inputData) => {
+        console.log(inputData)
+        // setVerifyInquiryModal(value)
+        setIsLoading(true)
+        setErrorInfo({})
+        const response = await axios.post(`/seller/UpdateToVerified`, inputData, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Order has been verified", toastOptions)
+            setVerifyInquiryModal(false)
+            loadData()
+        }).catch((error) => {
+            toast.error("Something went wrong", toastOptions)
+            setErrorInfo(error.data.data)
+            setIsLoading(false)
+        })
     }
 
     const [sendTrackerModal, setSendTrackerModal] = useState(false)
@@ -66,8 +87,8 @@ export default function InquiryDetails({session}) {
                     <div className="flex justify-center">
                         <div className=" text-center">
                             <h4
-                                className="font-semibold text-xl text-white">
-                                VERIFIED
+                                className="font-semibold uppercase text-xl text-white">
+                                {data.order_status?.name}
                             </h4>
                         </div>
                     </div>
@@ -82,7 +103,7 @@ export default function InquiryDetails({session}) {
                         </div>
                     </div>
                     <div className="flex justify-center mb-10">
-                       This is components description
+                       {data.companies_products?.Description}
                     </div>
                     {/*  table A */}
                     <div className="overflow-x-auto mb-5 flex justify-center">
@@ -109,19 +130,19 @@ export default function InquiryDetails({session}) {
                             <tbody>
                                 <tr className="bg-white hover:bg-gray-50">
                                     <td scope="row" className="text-center text-sm px-6 py-4">
-                                        ABC1123
+                                        {data.companies_products?.ManufacturerNumber}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        DOHA
+                                        {data.companies_products?.Manufacture}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        100
+                                        {data.companies_products?.moq}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        Afganistan
+                                        {data.companies_products?.country}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        Tube
+                                        {data.companies_products?.packaging}
                                     </td>
                                 </tr>
                             </tbody>
@@ -144,24 +165,21 @@ export default function InquiryDetails({session}) {
                                     <th scope="col" className="text-center px-6 py-3">
                                         Price (per item) / Total
                                     </th>
-                                    {/* <th scope="col" className="text-center px-6 py-3">
-                                        Exepart Price (per item) / Total
-                                    </th> */}
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr className="bg-white hover:bg-gray-50">
                                     <td className="text-center text-sm px-6 py-4">
-                                        5000 (pcs)
+                                        {data.qty}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        12-23-33
+                                        {data.companies_products?.dateCode}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        10000 (pcs)
+                                        {data.companies_products?.AvailableQuantity}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        $2 / $10,000
+                                        ${data.price} / ${parseFloat(data.price) * parseInt(data.qty)}
                                     </td>
                                 </tr>
                             </tbody>
@@ -218,10 +236,15 @@ export default function InquiryDetails({session}) {
 
                 <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-center">
-                        <button onClick={()=> setVerifyInquiryModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
-                            Verify Inquiry
-                        </button>
-                        <button onClick={()=> setSendTrackerModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                        {data.order_status_id == 1 ?
+                            <button onClick={()=> setVerifyInquiryModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                                Verify Inquiry
+                            </button>
+                            : <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                                Verify Inquiry
+                            </button>
+                        }
+                        <button onClick={()=> setSendTrackerModal(true)} className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
                             Send Tracker
                         </button>
                     </div>
@@ -229,8 +252,15 @@ export default function InquiryDetails({session}) {
 
                 {verifyInquiryModal && 
                     <VerifyInquiryModal
+                        isLoading={isLoading}
+                        orderId={data.id}
+                        orderQty={data.qty}
+                        availableQty={data.companies_products?.AvailableQuantity}
+                        moq={data.companies_products?.moq}
+                        dateCode={data.companies_products?.dateCode}
                         closeModal={() => setVerifyInquiryModal(false)}
                         acceptance={verifyInquiryModalHandle}
+                        errorInfo={errorInfo}
                     />
                 }
 
@@ -252,7 +282,8 @@ export async function getServerSideProps(context) {
     const session = await getSession(context)
     return {
         props: {
-            session: session
+            session: session,
+            routeParam: context.query
         }
     }
 }

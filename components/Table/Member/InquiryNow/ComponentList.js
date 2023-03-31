@@ -3,54 +3,12 @@ import PropTypes from "prop-types";
 import Link from "next/link";
 
 // components
-
+import Pagination from "@/components/Shared/Component/Pagination";
 
 export default function ComponentList(props) {
     const data = props.data
     const links = props.links
     const metaData = props.metaData
-
-    const setPaginationLabel = (item, index) => {
-        if(item.label === "&laquo; Previous") {
-            return (
-                <button 
-                    disabled={!metaData.prevPage}
-                    onClick={() => props.setPage(metaData.currentPage - 1)}
-                    key={index} 
-                    className={`
-                        ${!metaData.prevPage ? 'border border-solid border-blueGray-400' : 'border border-solid border-blueGray-500 text-blueGray-700'}
-                        text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative`}
-                >
-                    <i className={`${!metaData.prevPage ? 'text-blueGray-400' : 'text-blueGray-700'} fas fa-angle-left my-auto mx-10 fa-xl`}></i>
-                </button>
-            )
-        }
-
-        if(item.label === "Next &raquo;") {
-                return (
-                    <button 
-                        disabled={!metaData.nextPage}
-                        onClick={() => props.setPage(metaData.currentPage + 1)}
-                        key={index} 
-                        className={`
-                            ${!metaData.nextPage ? 'border border-solid border-blueGray-400' : 'border border-solid border-blueGray-500 text-blueGray-700'}
-                            text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative`}
-                    >
-                        <i className={`${!metaData.nextPage ? 'text-blueGray-400' : 'text-blueGray-700'} fas fa-angle-right my-auto mx-10 fa-xl`}></i>
-                    </button>
-                )
-            }
-
-        return(
-            <button 
-                onClick={() => props.setPage(item.label)}
-                key={index} 
-                className={`${item.active ? 'bg-blueGray-700 text-white' : 'border border-solid border-blueGray-500 text-blueGray-700'} text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative`}
-            >
-                {item.label}
-            </button>
-        )
-    }
 
     return (
         <>  
@@ -63,7 +21,7 @@ export default function ComponentList(props) {
                                 "font-semibold text-lg text-blueGray-700"
                             }
                             >
-                            Inquiry Component
+                            Inquired Component
                             </h3>
                         </div>
                         <div className="px-4">
@@ -80,6 +38,9 @@ export default function ComponentList(props) {
                         <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                             <tr>
                                 <th scope="col" className="px-6 py-3">
+                                    Order Quantity
+                                </th>
+                                <th scope="col" className="px-6 py-3">
                                     Manufacturer Part Number
                                 </th>
                                 <th scope="col" className="px-6 py-3">
@@ -95,13 +56,7 @@ export default function ComponentList(props) {
                                     Country
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Description
-                                </th>
-                                <th scope="col" className="px-6 py-3">
                                     Date Code
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Package
                                 </th>
                                 <th scope="col" className="px-6 py-3">
                                     Packaging
@@ -112,47 +67,12 @@ export default function ComponentList(props) {
                             </tr>
                         </thead>
                         <tbody className="text-xs text-gray-700 bg-white">
-                            <tr className="bg-white border-b hover:bg-gray-50">
-                                <td scope="row" className="text-sm px-6 py-4">
-                                    123
-                                </td>
-                                <td className="text-sm px-6 py-4">
-                                    123
-                                </td>
-                                <td className="text-sm px-6 py-4">
-                                    123
-                                </td>
-                                <td className="text-sm px-6 py-4">
-                                    123
-                                </td>
-                                <td className="text-sm px-6 py-4">
-                                    123
-                                </td>
-                                <td className="text-sm px-6 py-4">
-                                    123
-                                </td>
-                                <td className="text-sm px-6 py-4">
-                                    123
-                                </td>
-                                <td className="text-sm px-6 py-4">
-                                    123
-                                </td>
-                                <td className="text-sm px-6 py-4">
-                                    123
-                                </td>
-                                <td className="px-6 py-4 text-right">
-                                    <div className="inline-flex">
-                                        <button className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Edit</button>
-                                        <button className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry Now</button>
-                                        <button className="font-medium text-blue-600 text-white bg-red-400 p-2">Delete</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                        {/* <tbody className="text-xs text-gray-700 bg-white">
                             {data.map((item, index) => {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
+                                        <td scope="row" className="text-sm px-6 py-4">
+                                            {item.qty}
+                                        </td>
                                         <td scope="row" className="text-sm px-6 py-4">
                                             {item.companies_products.ManufacturerNumber}
                                         </td>
@@ -169,28 +89,22 @@ export default function ComponentList(props) {
                                             {item.companies_products.country}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.companies_products.Description}
-                                        </td>
-                                        <td className="text-sm px-6 py-4">
                                             {item.companies_products.dateCode}
-                                        </td>
-                                        <td className="text-sm px-6 py-4">
-                                            {item.companies_products.package}
                                         </td>
                                         <td className="text-sm px-6 py-4">
                                             {item.companies_products.packaging}
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="inline-flex">
-                                                <button className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Edit</button>
-                                                <button className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry Now</button>
-                                                <button className="font-medium text-blue-600 text-white bg-red-400 p-2">Delete</button>
+                                                <button onClick={() => props.handleEdit(item.id, item.qty, item.companies_products.ManufacturerNumber)} className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Edit</button>
+                                                <button onClick={() => props.handleInquiryNow(item.id, item.qty, item.companies_products.ManufacturerNumber)} className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry Now</button>
+                                                <button disabled onClick={() => props.handleDelete(item.id, item.companies_products.ManufacturerNumber)} className="font-medium text-blue-600 text-white bg-red-200 p-2">Delete</button>
                                             </div>
                                         </td>
                                     </tr>
                                 )
                             })}
-                        </tbody> */}
+                        </tbody>
                     </table>
                 </div>
                 <div className="mt-2">
@@ -203,11 +117,11 @@ export default function ComponentList(props) {
                 </div>
             </div>}
 
-            {/* <div className="flex justify-center mt-10 mx-auto justify-center">
-                {links.map((item, index) => {
-                    return setPaginationLabel(item, index)
-                })}
-            </div> */}
+            {/* <Pagination 
+                links={links}
+                metaData={metaData}
+                setPage={props.setPage}
+            /> */}
         </>
     );
 }

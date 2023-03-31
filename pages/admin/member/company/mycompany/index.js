@@ -72,6 +72,9 @@ export default function MyCompany({session}) {
                 {companyData.is_confirmed == "pending" && <i className="text-orange-500">Your Member Status is Pending</i>}
                 {companyData.is_confirmed == "accepted" && <i className="text-blue-700">Your Member Status is Accepted</i>}
                 {companyData.is_confirmed == "rejected" && <i className="text-red-700">Your Member Status is Rejected</i>}
+                <div>
+                  {companyData.is_confirmed == "rejected" && <i className="text-red-700">{companyData.reason}</i>}
+                </div>
                 <div className="text-sm leading-normal mt-2 mb-2 text-blueGray-400 font-bold uppercase">
                   <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{" "}
                   {companyData.country}, {companyData.address}

@@ -100,7 +100,7 @@ export default function IncomingInquiry(props) {
                                             {item.companies_products.packaging}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.buyer.name} ({item.buyer.country})
+                                            {/* {item.buyer.name} ({item.buyer.country}) */}
                                         </td>
                                         <td className="text-sm px-6 py-4">
                                             {item.companies_products.company.name} ({item.companies_products.company.country})
@@ -109,12 +109,12 @@ export default function IncomingInquiry(props) {
                                             {item.qty}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.order_status.name}
+                                            {/* {item.order_status.name} */}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
                                                 <Link 
-                                                    href={`/admin/superadmin/orders/details/${123}`}
+                                                    href={`/admin/superadmin/orders/details/${item.id}`}
                                                     className="mr-2 font-medium text-blue-600 text-white bg-indigo-500 p-2">View</Link>
                                             </div>
                                         </td>

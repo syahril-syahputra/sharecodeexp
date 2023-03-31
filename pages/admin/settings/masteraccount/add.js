@@ -37,7 +37,7 @@ export default function MyProduct() {
     })
       .then((response) => {
         let result = response.data.data
-        setSuccesMessage("Create Account Success")
+        setSuccesMessage("New account has been added succesfully")
         setInputData({
             name: '',
             email: '',
@@ -45,8 +45,9 @@ export default function MyProduct() {
             password_confirmation: ''
           });    
       }).catch((error) => {
-        setErrorMessage(error.response.data.message)
-        setErrorInfo(error.response.data.data)
+        // console.log(error.data)
+        setErrorMessage(error.data.data)
+        setErrorInfo(error.data.data)
       }).finally(() => {
         setIsLoading(false)
       })

@@ -22,7 +22,7 @@ export default function InquiryNow({session}) {
     })
     const searchData = async (page=1) =>{
         setIsLoading(true)
-        const response = await axios.get(`/cartlist?page=${page}`,
+        const response = await axios.get(`/buyer/order/${orderStatus}?page=${page}&search=${search}`,
             {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -54,7 +54,7 @@ export default function InquiryNow({session}) {
         searchData()
     }, [])
 
-    const [orderStatus, setOrderStatuses] = useState("Inquiry")
+    const [orderStatus, setOrderStatuses] = useState("inquired")
     const handleStatusChange = (status) => {
         setOrderStatuses(status.value)
     }
@@ -73,7 +73,7 @@ export default function InquiryNow({session}) {
             <div className="mb-10">
               <MiniSearchBar searchItem={handleSearch}/>
               <ComponentList
-                title="Incoming List"
+                title="Inquired Components"
                 setPage={setPage}
                 isLoading={isLoading}
                 data={data}

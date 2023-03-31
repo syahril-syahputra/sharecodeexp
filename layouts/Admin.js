@@ -16,7 +16,8 @@ export default function Admin({ children }) {
   const router = useRouter();
 
   if(status == 'unauthenticated'){
-    router.replace("/auth/login")
+    // router.replace("/auth/login")
+    console.log('please login')
     // return window.location.href = '/auth/login'
   }
 

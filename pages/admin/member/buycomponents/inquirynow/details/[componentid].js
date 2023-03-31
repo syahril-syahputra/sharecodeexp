@@ -6,6 +6,8 @@ import { getSession } from "next-auth/react";
 
 // components
 import InputForm from "@/components/Shared/InputForm";
+import { toast } from 'react-toastify';
+import toastOptions from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -38,6 +40,33 @@ export default function AddToInquiryList({session, routeParam}) {
     }, [])
 
     const [orderQuantity, setOrderQuantity] = useState(0)
+    const router = useRouter()
+    const setDataHandler = (item, inputName) => {
+        setOrderQuantity(item.value)
+    }
+    const [errorInfo, setErrorInfo] = useState({})
+    const addToListHandle = async (e) => {
+        e.preventDefault()
+        setIsLoading(true)
+        setErrorInfo({})
+        const response = await axios.post(`/addtoWish`, {
+            id: routeParam.componentid,
+            qty: orderQuantity
+        }, {
+        headers: {
+            "Authorization" : `Bearer ${session.accessToken}`
+        }
+        })
+        .then(() => {
+            router.push(`/admin/member/buycomponents/inquirynow`)
+            toast.success("Component has been added to list", toastOptions)
+        }).catch((error) => {
+            toast.error("Something went wrong", toastOptions)
+            setErrorInfo(error.data.data)
+            setIsLoading(false)
+        })
+    } 
+
     
     return (
         <>
@@ -50,7 +79,7 @@ export default function AddToInquiryList({session, routeParam}) {
                                 "font-semibold text-lg text-blueGray-700"
                             }
                             >
-                            Add To Cart
+                            Add To List
                             </h3>
                         </div>
                         {/* <div className="px-4 mt-2">
@@ -73,17 +102,17 @@ export default function AddToInquiryList({session, routeParam}) {
                             <div>
                                 <InputForm
                                     label="QTY(s)"
-                                    // inputDataName="ManufacturerNumber"
+                                    inputDataName="qty"
                                     value={orderQuantity}
-                                    // setData={setDataHandler}
-                                    // errorMsg={errorInfo.ManufacturerNumber}
-                                    inpuptType="number"
+                                    setData={setDataHandler}
+                                    errorMsg={errorInfo.qty}
+                                    inputType="number"
                                 />
                             </div>
                             <div className="mt-5">
-                                <button className="bg-blueGray-700 p-2 text-white">
+                                <button onClick={addToListHandle} className="bg-blueGray-700 p-2 text-white">
                                     <i className="mr-2 ml-1 fas fa-cart-shopping text-white"></i>
-                                    Add to Cart
+                                    Add to List
                                 </button>
                             </div>
                         </div>
@@ -110,10 +139,13 @@ export default function AddToInquiryList({session, routeParam}) {
                                         Manufacture
                                     </th>
                                     <th scope="col" className="px-6 py-3 text-center">
-                                        Package
+                                        Packaging
                                     </th>
                                     <th scope="col" className="px-6 py-3 text-center">
-                                        Packaging
+                                        Category
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 text-center">
+                                        Subcategory
                                     </th>
                                     <th scope="col" className="px-6 py-3 text-center">
                                         Description
@@ -141,10 +173,13 @@ export default function AddToInquiryList({session, routeParam}) {
                                         {data.Manufacture}
                                     </td>
                                     <td className="px-6 py-4">
-                                        {data.package}
+                                        {data.packaging}
                                     </td>
                                     <td className="px-6 py-4">
-                                        {data.packaging}
+                                        {data.subcategory?.category?.name}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {data.subcategory?.name}
                                     </td>
                                     <td className="px-6 py-4">
                                         {data.Description}

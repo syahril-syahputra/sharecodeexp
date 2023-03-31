@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
 import InputForm from "@/components/Shared/InputForm";
 import AcceptButton from "@/components/Buttons/AcceptButton"
-export default function VerifyOrder(props){
+export default function SendQuotation(props){
     const [inputData, setInputData] = useState(
         {
             id: props.orderId,
-            AvailableQuantity: props.availableQty,
-            moq: props.moq,
-            dateCode: props.dateCode,
-            price: 0
+            price_profite: 0
         }
     )
     const [total, setTotal] = useState(0)
@@ -19,9 +16,9 @@ export default function VerifyOrder(props){
     }
 
     useEffect(() => {
-        let total = props.orderQty * inputData.price
+        let total = props.orderQty * inputData.price_profite
         setTotal(total)
-    }, [inputData.price])
+    }, [inputData.price_profite])
     
     return (
         <>
@@ -63,43 +60,12 @@ export default function VerifyOrder(props){
                         <div className="flex flex-wrap mb-6">
                             <div className="w-1/2 px-3 mb-6">
                                 <InputForm
-                                    label="Avaliable Quantity"
-                                    inputType="number"
-                                    inputDataName="AvailableQuantity"
-                                    value={inputData.AvailableQuantity}
-                                    setData={setDataHandler}
-                                    errorMsg={errorInfo?.AvailableQuantity}
-                                />
-                            </div>
-                            <div className="w-1/2 px-3 mb-6">
-                                <InputForm
-                                    label="MOQ"
-                                    inputType="number"
-                                    inputDataName="moq"
-                                    value={inputData.moq}
-                                    setData={setDataHandler}
-                                    errorMsg={errorInfo?.moq}
-                                />
-                            </div>                            
-                            <div className="w-1/2 px-3 mb-6">
-                                <InputForm
-                                    label="Date Code"
-                                    inputDataName="dateCode"
-                                    value={inputData.dateCode}
-                                    setData={setDataHandler}
-                                    errorMsg={errorInfo?.dateCode}
-                                />
-                            </div>
-                        </div>
-                        <div className="flex flex-wrap mb-6">
-                            <div className="w-1/2 px-3 mb-6">
-                                <InputForm
                                     label="Price per Item ($)"
                                     inputType="number"
-                                    inputDataName="price"
-                                    value={inputData.price}
+                                    inputDataName="price_profite"
+                                    value={inputData.price_profite}
                                     setData={setDataHandler}
-                                    errorMsg={errorInfo?.price}
+                                    errorMsg={errorInfo?.price_profite}
                                 />
                             </div>
 
@@ -125,7 +91,7 @@ export default function VerifyOrder(props){
                     </button>
 
                     <AcceptButton
-                        buttonTitle="Verify"
+                        buttonTitle="Send Quotation"
                         isLoading={props.isLoading}
                         onClick={() => props.acceptance(inputData)}
                     />

@@ -60,8 +60,8 @@ export default function TableAccount(props) {
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="inline-flex">
-                                                <button className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Edit</button>
-                                                <button className="font-medium text-blue-600 text-white bg-red-400 p-2">Delete</button>
+                                                {/* <button className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Edit</button> */}
+                                                <button onClick={() => props.deleteAccount(item.id)} className="font-medium text-blue-600 text-white bg-red-400 p-2">Delete</button>
                                             </div>
                                         </td>
                                     </tr>

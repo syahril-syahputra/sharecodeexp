@@ -1,4 +1,8 @@
+import { useState } from "react"
+import ErrorInput from '@/components/Shared/ErrorInput';
 export default function VerifyOrder(props){
+    const [paymentDocs, setPaymentDocs] = useState()
+    const [shipmentInfo, setShipmentInfo] = useState()
     return (
         <>
             <div
@@ -39,8 +43,11 @@ export default function VerifyOrder(props){
                                         <input 
                                             className="mt-3" 
                                             type="file"
-                                            // name='company_RegistrationDocument'
+                                            name='payment_docs'
                                             accept='.pdf'
+                                            onChange={({target}) => 
+                                                setPaymentDocs(target.files[0])
+                                            }
                                             // onChange={({target}) => 
                                             //     setRegistrationInfo({...registrationInfo,company_RegistrationDocument:target.files[0]})
                                             // }
@@ -48,9 +55,25 @@ export default function VerifyOrder(props){
                                     </div>
                                 </div>
                             </div>
-                            {/* {errorInfo.company_RegistrationDocument &&
-                                <ErrorInput error={errorInfo.company_RegistrationDocument}/>
-                            } */}
+                            {props.errorInfo.Payment_doc &&
+                                <ErrorInput error={props.errorInfo.Payment_doc}/>
+                            }
+                        </div>
+                        <div className="w-full px-3 mb-6 mt-10">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                                Buyer Shipment Info
+                            </label>
+                            <textarea 
+                                value={shipmentInfo}
+                                onChange={({target}) => 
+                                    setShipmentInfo(target.value)
+                                }
+                                autoComplete="off" 
+                                type="text"
+                                className="shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+                            {props.errorInfo.shipinfobuyer &&
+                                <ErrorInput error={props.errorInfo.shipinfobuyer}/>
+                            }
                         </div>
                     </form>
                     </div>
@@ -66,7 +89,7 @@ export default function VerifyOrder(props){
                     <button
                         className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
-                        onClick={() => props.acceptance()}
+                        onClick={() => props.acceptance(shipmentInfo, paymentDocs)}
                     >
                         Send
                     </button>

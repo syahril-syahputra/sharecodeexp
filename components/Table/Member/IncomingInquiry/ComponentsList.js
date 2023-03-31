@@ -8,11 +8,7 @@ import Select from 'react-tailwindcss-select';
 import {orderStatusesOptions} from "data/optionData"
 
 export default function IncomingInquiry(props) {
-    // const data = props.data
-    const data = [{
-        dummy: "data",
-        id: 123
-    }]
+    const data = props.data
     const links = props.links
     const metaData = props.metaData
 
@@ -59,7 +55,7 @@ export default function IncomingInquiry(props) {
     }
 
     const [orderStatuses, setOrderStatuses] = useState(orderStatusesOptions)
-    const [status, setStatus] = useState({value: "Inquiry", label: "Inquiry"});
+    const [status, setStatus] = useState({value: 'inquired', label: 'Order Inquiry'});
     const handleStatusChange = value => {
         setStatus(value)
         props.statusChange(value)
@@ -113,9 +109,6 @@ export default function IncomingInquiry(props) {
                                     Country
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Packaging
-                                </th>
-                                <th scope="col" className="px-6 py-3">
                                     AQ
                                 </th>
                                 <th scope="col" className="px-6 py-3">
@@ -137,28 +130,25 @@ export default function IncomingInquiry(props) {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td scope="row" className="text-sm px-6 py-4">
-                                            {item.dummy}
+                                            {item.companies_products.ManufacturerNumber}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.dummy}
+                                            {item.companies_products.Manufacture}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.dummy}
+                                            {item.companies_products.country}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.dummy}
+                                            {item.companies_products.AvailableQuantity}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.dummy}
+                                            {item.companies_products.moq}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.dummy}
+                                            {item.qty}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.dummy}
-                                        </td>
-                                        <td className="text-sm px-6 py-4">
-                                            {item.dummy}
+                                            {item.order_status_id}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">

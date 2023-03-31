@@ -32,6 +32,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
         Description: '',
         dateCode: '',
         status: '',
+        subcategory_id: ''
         // category: 'A',
         // subcategory: 'sub-A',
       });
@@ -51,6 +52,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
 
     const router = useRouter()
     const handleSubmit = async (e) => {
+        console.log(inputData)
         e.preventDefault()
         setIsLoading(true)
         setErrorInfo({})
@@ -86,22 +88,24 @@ export default function EditComponent({session, routeParam, packaginglist}) {
 
     //option  
     //categories option
-    const [categories, setCategories] = useState([...categoriesOptions])
-    // const loadCategories = async () => {
-    //   const response = await axios.get(`/packaginglist`)
-    //     .then((response) => {
-    //       setCategories([...response.data.data, {value: 'other', label: 'Other'}])
-    //     }).catch((error) => {
-    //       console.log('failed to load categories')
-    //     })
-    // }
-    // useEffect(() => {
-    //   loadCategories()
-    // },[])
+    const [categories, setCategories] = useState([{value: "loading", label: "loading", disabled: true}])
+    const loadCategories = async () => {
+        const response = await axios.get(`/categories`)
+        .then((response) => {
+            setCategories(response.data.data)
+        }).catch((error) => {
+            console.log('failed to load categories')
+        })
+    }
+    useEffect(() => {
+        loadCategories()
+    },[])
 
     const [category, setCategory] = useState(null);
     const handleCategoryChange = value => {
-        loadSubCategory(value.value)
+        // loadSubCategory(value.value)
+        setSubCategory(null);
+        setInputData({...inputData, subcategory_id:''})
         setCategory(value);
         setInputData({...inputData, category:value.value})
     };
@@ -111,33 +115,25 @@ export default function EditComponent({session, routeParam, packaginglist}) {
     const [subcategories, setSubCategories] = useState([{value: 'select category first', label: 'Select Category First', disabled: true}])
     const loadSubCategory = async (parent) => {
         setSubCategories([{value: 'select category first', label: 'Select Category First', disabled: true}])
-        setSubCategory(null);
-        setInputData({...inputData, subcategory:''})
+    const response = await axios.get(`/${parent}/subcategories?drop=1`)
+      .then((response) => {
+        setSubCategories(response.data.data)
+      }).catch((error) => {
+        console.log('failed to load subcategories')
+      })
 
-        // const response = await axios.get(`/packaginglist`)
-        //   .then((response) => {
-        //     setPackagings([...response.data.data, {value: 'other', label: 'Other'}])
-        //   }).catch((error) => {
-        //     console.log('failed to load packaginglist')
-        //   })
-
-        if(parent == "A"){
-            setSubCategories([{value: 'new sub-cat A', label: 'new sub-cat A'}])
-        } else {
-            setSubCategories([{value: 'new sub-cat B', label: 'new sub-cat B'}])
-        }
 
     }
-    // useEffect(() => {
-    //     loadSubCategory(category?.value)
-    // },[category])
+    useEffect(() => {
+        loadSubCategory(category?.value)
+    },[category])
 
     const [subcategory, setSubCategory] = useState(null);
     const handleSubCategoryChange = value => {
         setSubCategory(value);
-        setInputData({...inputData, subcategory:value.value})
+        setInputData({...inputData, subcategory_id:value.value})
+        console.log(inputData)
     };
-
 
     //data search
     const [isLoading, setIsLoading] = useState(true)
@@ -162,8 +158,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                     Manufacture: result.Manufacture,
                     Description: result.Description,
                     dateCode: result.dateCode,
-                    category: result.category,
-                    subcategory: result.subcategory,
+                    subcategory_id: result.subcategory.id
                 })
 
                 //set packagings
@@ -174,9 +169,8 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                     setPackaging({value: 'other', label: 'Other'})
                 }   
 
-                setCategory({value: result.category, label: result.category}) 
-                // loadSubCategory(result.category)     
-                setSubCategory({value: result.subcategory, label: result.subcategory}) 
+                setCategory({value: result.subcategory.category.id, label: result.subcategory.category.name})  
+                setSubCategory({value: result.subcategory.id, label: result.subcategory.name}) 
 
             }).catch((error) => {
                 // console.log(error.response)
@@ -383,7 +377,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                                 Sub-Category
                             </label>
                             <Select 
-                                name="subcategory"
+                                name="subcategory_id"
                                 value={subcategory}
                                 onChange={handleSubCategoryChange}
                                 options={subcategories}
@@ -402,10 +396,10 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                                     searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
                                 }}
                                 />
-                            {errorInfo.subcategory &&
-                                <ErrorInput error={errorInfo.subcategory}/>
+                            {errorInfo.subcategory_id &&
+                                <ErrorInput error={errorInfo.subcategory_id}/>
                             }
-                        </div>
+                        </div> 
                         <div className="w-full lg:w-1/2 px-3 mb-6 mt-20">
                             <div className="mb-6">
                                 {!isLoading && 

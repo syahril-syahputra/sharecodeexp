@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
-import { useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 
 // components
 import TableAccount from "components/Table/Settings/TableAccount"
@@ -10,23 +10,17 @@ import TableAccount from "components/Table/Settings/TableAccount"
 // layout for page
 import Admin from "layouts/Admin.js";
 
-export default function Account() {
-  const session = useSession()
-  const [user, setUser] = useState({
-    accessToken: ''
-  })
-  useEffect(() => { setUser({accessToken: session.data?.accessToken}) }, [session])
+export default function Account({session}) {
 
   //data search
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const getData = async () =>{
-    if(!!user.accessToken){
       setIsLoading(true)
       const response = await axios.get(`/master/users`,
           {
             headers: {
-              "Authorization" : `Bearer ${user.accessToken}`
+              "Authorization" : `Bearer ${session.accessToken}`
             }
           }
         )
@@ -38,11 +32,31 @@ export default function Account() {
         }).finally(() => {
           setIsLoading(false)
         })
-    }
   }
   useEffect(() => {
     getData()
-  }, [user])
+  }, [])
+
+  const handleDeleteAccount = async (userId) => {
+    setIsLoading(true)
+    const response = await axios.delete(`/master/users/delete`, {
+      headers: {
+        "Authorization" : `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      data: {
+        id: userId
+      }
+    })
+    .then((response) => {
+      console.log(response)
+      getData()
+    }).catch((error) => {
+      console.log(error)
+    }).finally(() => {
+      setIsLoading(false)
+    })
+  }
 
   return (
     <>
@@ -53,6 +67,7 @@ export default function Account() {
             <TableAccount
               isLoading={isLoading}
               data={data}
+              deleteAccount={handleDeleteAccount}
             ></TableAccount>
         {/* </div> */}
       </div>
@@ -61,3 +76,12 @@ export default function Account() {
 }
 
 Account.layout = Admin;
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+  return {
+      props: {
+          session: session
+      }
+  }
+}

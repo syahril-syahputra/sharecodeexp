@@ -1,37 +1,65 @@
 import React, {useState, useEffect} from "react";
 import { getSession } from "next-auth/react";
 import axios from "@/lib/axios";
+import Link from "next/link";
 
 // components
 
 // layout for page
 import Admin from "layouts/Admin.js";
+import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep";
+import SendQuotationModal from "@/components/Modal/OrderComponent/Superadmin/SendQuotation"
+import { toast } from 'react-toastify';
+import toastOptions from "@/lib/toastOptions"
 
-export default function InquiryDetails({session}) {
+export default function InquiryDetails({session, routeParam}) {
+    const publicDir = process.env.NEXT_PUBLIC_DIR
     //data search
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
-    const loadData = async (page=1) =>{
+    const loadData = async () =>{
         setIsLoading(true)
-        // const response = await axios.get(`/cartlist?page=${page}`,
-        //     {
-        //     headers: {
-        //         "Authorization" : `Bearer ${session.accessToken}`
-        //     }
-        //     })
-        //     .then((response) => {
-        //         // console.log(response)
-        //         let result = response.data.data
-        //         setData(result.data)
-        //     }).catch((error) => {
-        //         // console.log(error.response)
-        //     }).finally(() => {
-        //         setIsLoading(false)
-        //     })
+        const response = await axios.get(`/admin/orders/${routeParam.orderid}/data`,
+            {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+            })
+            .then((response) => {
+                let result = response.data.data
+                setData(result)
+                console.log(result)
+            }).catch((error) => {
+                // console.log(error.response)
+            }).finally(() => {
+                setIsLoading(false)
+            })
     }
     useEffect(() => {
         loadData()
     }, [])
+
+    const [errorInfo, setErrorInfo] = useState({})
+    const [sendQuotationModal, setSendQuotationModal] = useState(false)
+    const handleSendQuotationModal = async (inputData) => {
+        setIsLoading(true)
+        setErrorInfo({})
+        const response = await axios.post(`/admin/orders/UpdateQuotedApproval`, inputData, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Quotation has been set", toastOptions)
+            setSendQuotationModal(false)
+            loadData()
+        }).catch((error) => {
+            toast.error("Something went wrong", toastOptions)
+            setErrorInfo(error.data.data)
+            setIsLoading(false)
+        })
+    }
 
     return (
         <>
@@ -53,46 +81,13 @@ export default function InquiryDetails({session}) {
                     <div className="flex justify-center">
                         <div className=" text-center">
                             <h4
-                                className="font-semibold text-xl text-white">
-                                VERIFIED
+                                className="font-semibold text-xl text-white uppercase">
+                                {data.order_status?.name}
                             </h4>
                         </div>
                     </div>
                 </div>
-                <div className="px-4 py-3 border-0 bg-white">
-                    <div className="flex justify-center">
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            Order Inquired
-                        </div>
-                        <div className="m-2 p-2 bg-white border border-blue-500 text-sm text-center">
-                            Information Verified
-                        </div>
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            Quoted for Approval
-                        </div>
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            Quote Approve / Rejected
-                        </div>
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            PI sent for Payment
-                        </div>
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            Payment Verified
-                        </div>
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            Preparing for Shipment
-                        </div>
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            Order Shiped
-                        </div>
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            Order Accepted / Rejected
-                        </div>
-                        <div className="m-2 p-2 bg-white border text-sm text-center">
-                            Order Complete
-                        </div>
-                    </div>
-                </div>
+                <OrderStatusStep/>
                 
                 {/* Buyer Seller */}
                 <div className="px-4 py-3 border-0 bg-white">
@@ -108,14 +103,26 @@ export default function InquiryDetails({session}) {
                                             <td className="w-28">Company Name</td>
                                             <td className="w-8">:</td>
                                             <td className="text-left w-28">
-                                                KDKCHY                                       
-                                                <i title="Member Rejected" className="ml-2 fas fa-circle-xmark text-red-700"></i>
+                                                {data.buyer?.name}     
+                                                {data.buyer?.is_confirmed == "pending" && <i title="Member Pending" className="mr-2 ml-1 fas fa-clock text-orange-500"></i>}
+                                                {data.buyer?.is_confirmed == "accepted" && <i title="Member Accepted" className="mr-2 ml-1 fas fa-circle-check text-blue-700"></i>}
+                                                {data.buyer?.is_confirmed == "rejected" && <i title="Member Rejected" className="mr-2 ml-1 fas fa-circle-xmark text-red-700"></i>}                                  
                                             </td>
                                         </tr>
                                         <tr>
                                             <td className="w-28">Country</td>
                                             <td className="w-8">:</td>
-                                            <td className="text-left">Afganistan</td>
+                                            <td className="text-left">{data.buyer?.country}</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="w-28">Shipment info</td>
+                                            <td className="w-8">:</td>
+                                            <td className="text-left">{data.shipinfobuyer}</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="w-28">Tracking Buyer</td>
+                                            <td className="w-8">:</td>
+                                            <td className="text-left">{data.trackingBuyer}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -132,17 +139,26 @@ export default function InquiryDetails({session}) {
                                             <td className="w-28">Company Name</td>
                                             <td className="w-8">:</td>
                                             <td className="text-left w-28">
-                                                KDKCHY
-                                                {/* {companyData.is_confirmed == "pending" && <i title="Member Pending" className="mr-2 ml-1 fas fa-clock text-orange-500"></i>}
-                                                {companyData.is_confirmed == "accepted" && <i title="Member Accepted" className="mr-2 ml-1 fas fa-circle-check text-blue-700"></i>}
-                                                {companyData.is_confirmed == "rejected" && <i title="Member Rejected" className="mr-2 ml-1 fas fa-circle-xmark text-red-700"></i>} */}
-                                                <i title="Member Accepted" className="mr-2 ml-1 fas fa-circle-check text-blue-700"></i>
+                                                {data.companies_products?.company?.name}
+                                                {data.companies_products?.company?.is_confirmed == "pending" && <i title="Member Pending" className="mr-2 ml-1 fas fa-clock text-orange-500"></i>}
+                                                {data.companies_products?.company?.is_confirmed == "accepted" && <i title="Member Accepted" className="mr-2 ml-1 fas fa-circle-check text-blue-700"></i>}
+                                                {data.companies_products?.company?.is_confirmed == "rejected" && <i title="Member Rejected" className="mr-2 ml-1 fas fa-circle-xmark text-red-700"></i>}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td className="w-28">Country</td>
                                             <td className="w-8">:</td>
-                                            <td className="text-left">Afganistan</td>
+                                            <td className="text-left">{data.companies_products?.company?.country}</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="w-28">Shipment info</td>
+                                            <td className="w-8">:</td>
+                                            <td className="text-left">{data.shipinfoforseller}</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="w-28">Tracking Seller</td>
+                                            <td className="w-8">:</td>
+                                            <td className="text-left">{data.trackingSeller}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -185,19 +201,19 @@ export default function InquiryDetails({session}) {
                             <tbody>
                                 <tr className="bg-white hover:bg-gray-50">
                                     <td scope="row" className="text-center text-sm px-6 py-4">
-                                        ABC1123
+                                        {data.companies_products?.ManufacturerNumber}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        DOHA
+                                        {data.companies_products?.Manufacture}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        100
+                                        {data.companies_products?.moq}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        Afganistan
+                                        {data.companies_products?.country}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        Tube
+                                        {data.companies_products?.packaging}
                                     </td>
                                 </tr>
                             </tbody>
@@ -213,7 +229,7 @@ export default function InquiryDetails({session}) {
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3">
                                         Date Code
-                                    </th>
+                                    </th>   
                                     <th scope="col" className="text-center px-6 py-3">
                                         Avaliable Quantity
                                     </th>
@@ -228,19 +244,19 @@ export default function InquiryDetails({session}) {
                             <tbody>
                                 <tr className="bg-white hover:bg-gray-50">
                                     <td className="text-center text-sm px-6 py-4">
-                                        5000 (pcs)
+                                        {data.qty}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        12-23-33
+                                        {data.companies_products?.dateCode}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        10000 (pcs)
+                                        {data.companies_products?.AvailableQuantity}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        $1 / $5,000
+                                        ${data.price} / ${parseFloat(data.price) * parseInt(data.qty) }
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        $2 / $10,000
+                                        ${data.price_profite} / ${parseFloat(data.price_profite) * parseInt(data.qty) }
                                     </td>
                                 </tr>
                             </tbody>
@@ -275,65 +291,22 @@ export default function InquiryDetails({session}) {
                         <button className="m-2 p-2 bg-indigo-900 border text-lg text-center text-white">
                             Proforma Invoice
                         </button>
-                        <button className="m-2 p-2 bg-indigo-900 border text-lg text-center text-white">
-                            Payment Receipt
-                        </button>
+                        {data.Payment_doc ? 
+                            <Link target="_blank" href={publicDir + "/uploads/Payment_doc/" + data.Payment_doc}>
+                                <button className="m-2 py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
+                                    Payment Receipt
+                                </button>
+                            </Link>
+                            : 
+                            <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
+                                Payment Receipt
+                            </button>
+                        }
                         <button className="m-2 p-2 bg-indigo-900 border text-lg text-center text-white">
                             Shipment Info
                         </button>
-                    </div>
-                </div>
 
-                <div className="px-4 py-3 border-0 bg-slate-200">
-                    <div className="flex justify-center">
-                        <div className=" text-center">
-                            <h4
-                                className="font-semibold text-xl">
-                                Actions (Buyer)
-                            </h4>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="px-4 py-3 border-0 bg-white">
-                    <div className="flex justify-center">
-                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
-                            Accept Quotation
-                        </button>
-                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
-                            Reject Quotation
-                        </button>
-                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
-                            Send Payment Receipt
-                        </button>
-                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
-                            Order Accepted
-                        </button>
-                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
-                            Order Rejected
-                        </button>
-                    </div>
-                </div>
-
-                <div className="px-4 py-3 border-0 bg-slate-200">
-                    <div className="flex justify-center">
-                        <div className=" text-center">
-                            <h4
-                                className="font-semibold text-xl">
-                                Actions (Seller)
-                            </h4>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="px-4 py-3 border-0 bg-white">
-                    <div className="flex justify-center">
-                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
-                            Verify Inquiry
-                        </button>
-                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
-                            Set Tracking
-                        </button>
+                        
                     </div>
                 </div>
 
@@ -350,21 +323,44 @@ export default function InquiryDetails({session}) {
 
                 <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-center">
-                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
-                            Send Quotation
-                        </button>
-                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
-                            Send PI
-                        </button>
-                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                        {data.order_status_id == 2 ?
+                            <button onClick={() => setSendQuotationModal(true) } className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                                Send Quotation
+                            </button>
+                            : <button disabled onClick={() => setSendQuotationModal(true) } className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                                Send Quotation
+                            </button>
+                        }
+
+                        {data.order_status_id == 5 ?
+                            <button onClick={() => setSendQuotationModal(true) } className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                                Send Proforma Invoice
+                            </button>
+                            : <button disabled onClick={() => setSendQuotationModal(true) } className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                                Send Proforma Invoice
+                            </button>
+                        }
+
+                        <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
                             Accept Payment
                         </button>
-                        <button className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                        <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
                             Set Shipment Info
                         </button>
 
                     </div>
                 </div>
+
+                {sendQuotationModal &&
+                    <SendQuotationModal
+                        isLoading={isLoading}
+                        orderId={data.id}
+                        orderQty={data.qty}
+                        closeModal={() => setSendQuotationModal(false)}
+                        acceptance={handleSendQuotationModal}
+                        errorInfo={errorInfo}
+                    />
+                }
 
             </div>
         </>
@@ -377,7 +373,8 @@ export async function getServerSideProps(context) {
     const session = await getSession(context)
     return {
         props: {
-            session: session
+            session: session,
+            routeParam: context.query
         }
     }
 }

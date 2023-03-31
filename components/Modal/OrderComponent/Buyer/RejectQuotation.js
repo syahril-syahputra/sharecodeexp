@@ -1,10 +1,23 @@
-export default function VerifyOrder(props){
+import { useState } from "react"
+import RejectButton from "@/components/Buttons/RejectButton"
+import Select from 'react-tailwindcss-select';
+import ErrorInput from '@/components/Shared/ErrorInput';
+export default function RejectQuotation(props){
+    const [rejectionReason, setRejectionReason] = useState()
+    const handleRejectionChange = (value) => {
+        setRejectionReason(value);
+    }
+
+    const handleRejection = () => {
+        props.acceptance(rejectionReason.value)
+    }
+
     return (
         <>
             <div
                 className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
             >
-                <div className="relative w-auto my-6 mx-auto max-w-sm">
+                <div className="relative w-full h-full max-w-lg md:h-auto">
                 {/*content*/}
                 <div className="border-0 shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                     {/*header*/}
@@ -24,12 +37,37 @@ export default function VerifyOrder(props){
                     {/*body*/}
                     <div className="relative p-6 flex-auto">
                     <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                        I always felt like I could do anything. That’s the main
-                        thing people are controlled by! Thoughts- their perception
-                        of themselves! They're slowed down by their perception of
-                        themselves. If you're taught you can’t do anything, you
-                        won’t do anything. I was taught I could do everything.
+                        Do you agree to <span className="text-blueGray-700 font-bold">Reject</span> this Quotation? Select the reason bellow to continue rejecting.
                     </p>
+                    <div className="w-full mb-6">
+                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                            Rejection Reason
+                        </label>
+                        <Select 
+                            name="rejectionReason"
+                            value={rejectionReason}
+                            onChange={handleRejectionChange}
+                            options={props.rejectionReason}
+                            classNames={{
+                                menuButton: () => (
+                                    `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
+                                ),
+                                menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
+                                listItem: ({ isSelected }) => (
+                                    `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
+                                        isSelected
+                                            ? `text-white bg-blue-500`
+                                            : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
+                                    }`
+                                ),
+                                searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
+                            }}
+                            />
+                        {props.errorInfo.reason &&
+                            <ErrorInput error={props.errorInfo.reason}/>
+                        }
+                    </div>
+
                     </div>
                     {/*footer*/}
                     <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200">
@@ -40,13 +78,31 @@ export default function VerifyOrder(props){
                     >
                         Close
                     </button>
-                    <button
+                    {/* <button
                         className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
-                        onClick={() => props.acceptance()}
+                        onClick={() => props.acceptance(rejectionReason)}
                     >
                         Reject
-                    </button>
+                    </button> */}
+
+                    {rejectionReason &&
+                        <RejectButton
+                            buttonTitle="Accept"
+                            isLoading={props.isLoading}
+                            onClick={handleRejection}
+                        />
+                    }
+
+                    {!!rejectionReason == false &&
+                        <RejectButton
+                            buttonTitle="Accept"
+                            isLoading={true}
+                            onClick={handleRejection}
+                        />
+                    }
+                    
+
                     </div>
                 </div>
                 </div>

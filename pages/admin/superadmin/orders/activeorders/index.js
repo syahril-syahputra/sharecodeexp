@@ -23,7 +23,7 @@ export default function ActiveOrders({session}) {
   })
   const searchData = async (page=1) =>{
       setIsLoading(true)
-      const response = await axios.get(`/admin/orders/inquired?page=${page}&status=${orderStatus}&search=${search}`,
+      const response = await axios.get(`/admin/orders/ongoing?page=${page}&status=${orderStatus}&search=${search}`,
           {
             headers: {
               "Authorization" : `Bearer ${session.accessToken}`

@@ -5,6 +5,11 @@ import axios from "@/lib/axios";
 // components
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 import ComponentList from "components/Table/Member/InquiryNow/ComponentList"
+import EditQuantityModal from "@/components/Modal/InquiryComponent/EditQuantity"
+import InquiryNowModal from "@/components/Modal/InquiryComponent/InquiryNow"
+import { toast } from 'react-toastify';
+import toastOptions from "@/lib/toastOptions"
+
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -22,16 +27,15 @@ export default function InquiryNow({session}) {
     })
     const searchData = async (page=1) =>{
         setIsLoading(true)
-        const response = await axios.get(`/cartlist?page=${page}`,
+        const response = await axios.get(`/Wishlist?page=${page}`,
             {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
             }
             })
             .then((response) => {
-                // console.log(response)
                 let result = response.data.data
-                setData(result.data)
+                setData(result)
                 setLinks(result.links)
                 setMetaData({
                     total: result.total,
@@ -57,7 +61,79 @@ export default function InquiryNow({session}) {
     const handleSearch = (item) =>{
         setSearch(item)
         searchData()
-      }
+    }
+
+    const [orderQuantity, setOrderQuantity] = useState(0)
+    const [listId, setListid] = useState(0)
+    const [itemSingleValue, setItemSingleValue] = useState(0)
+    const [errorInfo, setErrorInfo] = useState({})
+
+    const [showEditQuantityModal, setShowEditQuantityModal] = useState(false)
+    const handleEdit = (listId, qty, itemValue) => {
+        setOrderQuantity(qty)
+        setListid(listId)
+        setItemSingleValue(itemValue)
+        setShowEditQuantityModal(true)
+    }
+    const handleEditSubmitQuantity = async (qty) => {
+        setIsLoading(true)
+        setErrorInfo({})
+        const response = await axios.post(`/updateWish`, {
+            id: listId,
+            qty: qty
+        }, {
+        headers: {
+            "Authorization" : `Bearer ${session.accessToken}`
+        }
+        })
+        .then(() => {
+            toast.success("Component has been edited", toastOptions)
+            searchData()
+            setShowEditQuantityModal(false)
+            setOrderQuantity(0)
+            setListid(0)
+        }).catch((error) => {
+            toast.error("Something went wrong", toastOptions)
+            setErrorInfo(error.data.data)
+            setIsLoading(false)
+        })
+
+    }
+
+    const [showInquiryNowModal, setShowInquiryNowModal] = useState(false)
+    const handleInquiryNow = (listId, qty, itemValue) => {
+        setListid(listId)
+        setOrderQuantity(qty)
+        setItemSingleValue(itemValue)
+        setShowInquiryNowModal(true)
+    }
+    const handleSubmitInquiryNow = async (qty) => {
+        setIsLoading(true)
+        setErrorInfo({})
+        const response = await axios.post(`/InquiryWishList`, {
+            id: listId
+        }, {
+        headers: {
+            "Authorization" : `Bearer ${session.accessToken}`
+        }
+        })
+        .then(() => {
+            toast.success("Component has been inquired", toastOptions)
+            searchData()
+            setShowInquiryNowModal(false)
+            setOrderQuantity(0)
+            setListid(0)
+        }).catch((error) => {
+            toast.error("Something went wrong", toastOptions)
+            setErrorInfo(error.data.data)
+            setIsLoading(false)
+        })
+
+    }
+
+    const handleDelete = (listId) => {
+        console.log(listId)
+    }
 
     return (
         <>
@@ -69,8 +145,31 @@ export default function InquiryNow({session}) {
                     data={data}
                     links={links}
                     metaData={metaData}
+                    handleEdit={handleEdit}
+                    handleInquiryNow={handleInquiryNow}
+                    handleDelete={handleDelete}
                 ></ComponentList>
             </div>
+
+            {showEditQuantityModal ? (
+                <EditQuantityModal
+                    setShowModal={setShowEditQuantityModal}
+                    orderQuantity={orderQuantity}
+                    title={itemSingleValue}
+                    acceptModal={handleEditSubmitQuantity}
+                    errorMsg={errorInfo?.qty}
+                />
+            ) : null}
+
+            {showInquiryNowModal ? (
+                <InquiryNowModal
+                    title={itemSingleValue}
+                    orderQuantity={orderQuantity}
+                    setShowModal={setShowInquiryNowModal}
+                    acceptModal={handleSubmitInquiryNow}
+                />
+            ) : null}
+
         </>
     );
 }

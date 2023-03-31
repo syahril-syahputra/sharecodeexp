@@ -9,50 +9,139 @@ import RejectQuotationModal from "@/components/Modal/OrderComponent/Buyer/Reject
 import SendPaymentDocsModal from "@/components/Modal/OrderComponent/Buyer/SendPaymentDocs"
 import AcceptOrderModal from "@/components/Modal/OrderComponent/Buyer/AcceptOrder"
 import RejectOrderModal from "@/components/Modal/OrderComponent/Buyer/RejectOrder"
+import { toast } from 'react-toastify';
+import toastOptions from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
 
-export default function InquiryDetails({session}) {
+export default function InquiryDetails({session, routeParam}) {
     //data search
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
-    const loadData = async (page=1) =>{
+    const loadData = async () =>{
         setIsLoading(true)
-        // const response = await axios.get(`/cartlist?page=${page}`,
-        //     {
-        //     headers: {
-        //         "Authorization" : `Bearer ${session.accessToken}`
-        //     }
-        //     })
-        //     .then((response) => {
-        //         // console.log(response)
-        //         let result = response.data.data
-        //         setData(result.data)
-        //     }).catch((error) => {
-        //         // console.log(error.response)
-        //     }).finally(() => {
-        //         setIsLoading(false)
-        //     })
+        const response = await axios.get(`/buyer/${routeParam.orderid}/data`,
+            {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+            })
+            .then((response) => {
+                console.log(response)
+                let result = response.data.data
+                setData(result)
+            }).catch((error) => {
+                // console.log(error.response)
+            }).finally(() => {
+                setIsLoading(false)
+            })
     }
     useEffect(() => {
         loadData()
     }, [])
 
+    const [errorInfo, setErrorInfo] = useState({})
+
     const [acceptQuotationModal, setAcceptQuotationModal] = useState(false)
-    const acceptQuotationModalHandle = (value) => {
-        setAcceptQuotationModal(value)
+    const acceptQuotationModalHandle = async () => {
+
+        setIsLoading(true)
+        const response = await axios.post(`/buyer/AcceptOrder`, 
+            {
+              id:  data.id
+            },
+            {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+            })
+            .then(() => {
+                toast.success("Quotation has been accepted", toastOptions)
+                setAcceptQuotationModal(false)
+                loadData()
+            }).catch((error) => {
+                console.log(error)
+                toast.error("Something went wrong", toastOptions)
+                setIsLoading(false)
+            }).finally(() => {
+                setIsLoading(false)
+            })
+
+
     }
 
+    const [rejectionReason, setRejectionReasons] = useState([])
+    const loadRejectionReason = async () =>{
+        setIsLoading(true)
+        const response = await axios.get(`/reason`)
+            .then((response) => {
+                let result = response.data
+                setRejectionReasons(result.data)
+            }).catch((error) => {
+                console.log(error)
+                toast.error("Failed to load rejcetion reason", toastOptions)
+            }).finally(() => {
+                setIsLoading(false)
+            })
+    }
+    useEffect(() => {
+        loadRejectionReason()
+    }, [])
     const [rejectQuotationModal, setRejectQuotationModal] = useState(false)
-    const rejectQuotationModalHandle = (value) => {
-        setRejectQuotationModal(value)
+    const rejectQuotationModalHandle = async (value) => {
+        console.log(value)
+        setIsLoading(true)
+        const response = await axios.post(`/buyer/RejectOrder`, 
+        {
+            id:  data.id,
+            reason: value
+        },
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Quotation has been rejected", toastOptions)
+            setRejectQuotationModal(false)
+            loadData()
+        }).catch((error) => {
+            console.log(error)
+            toast.error("Something went wrong", toastOptions)
+            setIsLoading(false)
+        }).finally(() => {
+            setIsLoading(false)
+        })
     }
 
     const [sendPaymentDocsModal, setSendPaymentDocsModal] = useState(false)
-    const sendPaymentDocsModalHandle = (value) => {
-        setSendPaymentDocsModal(value)
+    const sendPaymentDocsModalHandle = async (shipment, paymentDocs) => {
+        let formData = new FormData();
+        formData.append("Payment_doc", paymentDocs);
+        formData.append("shipinfobuyer", shipment);
+        formData.append("id", data.id)
+        setIsLoading(true)
+        const response = await axios.post(`/buyer/SendPayment`, 
+            formData,
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Payment has been sent", toastOptions)
+            setSendPaymentDocsModal(false)
+            loadData()
+        }).catch((error) => {
+            console.log(error)
+            setErrorInfo(error.data.data)
+            toast.error("Something went wrong", toastOptions)
+            setIsLoading(false)
+        }).finally(() => {
+            setIsLoading(false)
+        })
     }
 
     const [acceptOrderModal, setAcceptOrderModal] = useState(false)
@@ -85,8 +174,8 @@ export default function InquiryDetails({session}) {
                     <div className="flex justify-center">
                         <div className=" text-center">
                             <h4
-                                className="font-semibold text-xl text-white">
-                                VERIFIED
+                                className="font-semibold uppercase text-xl text-white">
+                                {data.order_status?.name}
                             </h4>
                         </div>
                     </div>
@@ -168,16 +257,16 @@ export default function InquiryDetails({session}) {
                             <tbody>
                                 <tr className="bg-white hover:bg-gray-50">
                                     <td className="text-center text-sm px-6 py-4">
-                                        5000 (pcs)
+                                        {data.qty}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        12-23-33
+                                        {data.companies_products?.dateCode}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        10000 (pcs)
+                                        {data.companies_products?.AvailableQuantity}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        $2 / $10,000
+                                        ${data.price_profite} / ${parseFloat(data.price_profite) * parseFloat(data.qty)}
                                     </td>
                                 </tr>
                             </tbody>
@@ -234,19 +323,38 @@ export default function InquiryDetails({session}) {
 
                 <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-center">
-                        <button onClick={()=> setAcceptQuotationModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
-                            Accept Quotation
-                        </button>
-                        <button onClick={()=> setRejectQuotationModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
-                            Reject Quotation
-                        </button>
-                        <button onClick={()=> setSendPaymentDocsModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
-                            Send Payment Receipt
-                        </button>
-                        <button onClick={()=> setAcceptOrderModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+
+                        {data.order_status_id == 3 ?
+                            <button onClick={()=> setAcceptQuotationModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                                Accept Quotation
+                            </button>
+                            : <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                                Accept Quotation
+                            </button>
+                        }
+
+                        {data.order_status_id == 3 ?
+                            <button onClick={()=> setRejectQuotationModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                                Reject Quotation
+                            </button>
+                            : <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                                Reject Quotation
+                            </button>
+                        }
+                        
+                        {data.order_status_id == 6 ?
+                            <button onClick={()=> setSendPaymentDocsModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                                Send Payment Receipt
+                            </button>
+                            :
+                            <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                                Send Payment Receipt
+                            </button>
+                        }
+                        <button onClick={()=> setAcceptOrderModal(true)} className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
                             Accept Order
                         </button>
-                        <button onClick={()=> setRejectOrderModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                        <button onClick={()=> setRejectOrderModal(true)} className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
                             Reject Order
                         </button>
                     </div>
@@ -254,6 +362,7 @@ export default function InquiryDetails({session}) {
 
                 {acceptQuotationModal && 
                     <AcceptQuotationModal
+                        isLoading={isLoading}
                         closeModal={() => setAcceptQuotationModal(false)}
                         acceptance={acceptQuotationModalHandle}
                     />
@@ -261,15 +370,20 @@ export default function InquiryDetails({session}) {
 
                 {rejectQuotationModal && 
                     <RejectQuotationModal
+                        isLoading={isLoading}
+                        rejectionReason={rejectionReason}
                         closeModal={() => setRejectQuotationModal(false)}
                         acceptance={rejectQuotationModalHandle}
+                        errorInfo={errorInfo}
                     />
                 }
 
                 {sendPaymentDocsModal && 
                     <SendPaymentDocsModal
+                        isLoading={isLoading}
                         closeModal={() => setSendPaymentDocsModal(false)}
                         acceptance={sendPaymentDocsModalHandle}
+                        errorInfo={errorInfo}
                     />
                 }
 
@@ -295,9 +409,11 @@ InquiryDetails.layout = Admin;
 
 export async function getServerSideProps(context) {
     const session = await getSession(context)
+
     return {
         props: {
-            session: session
+            session: session,
+            routeParam: context.query,
         }
     }
 }

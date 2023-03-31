@@ -31,7 +31,7 @@ export default function MyProduct({session}) {
     Description: '',
     dateCode: '',
     category: '',
-    subcategory: ''
+    subcategory_id: ''
   });
 
   const [errorInfo, setErrorInfo] = useState({})
@@ -62,7 +62,7 @@ export default function MyProduct({session}) {
     })
       .then((response) => {
         let result = response.data.data
-        router.replace('/admin/member/sellcomponents/component')
+        router.replace('/admin/member/sellcomponents/component/pending')
         toast.success("Your component has been added succefully", toastOptions)
       }).catch((error) => {
         setErrorMessage("Please fill the form correctly")
@@ -72,29 +72,6 @@ export default function MyProduct({session}) {
       })
   }
 
-  //option
-  //package option
-  const [packages, setPackages] = useState([])
-  const loadPackages = async () => {
-    const response = await axios.get(`/packaginglist`)
-      .then((response) => {
-        setPackages([...response.data.data, {value: 'other', label: 'Other'}])
-      }).catch((error) => {
-        console.log('failed to load packages')
-      })
-  }
-  useEffect(() => {
-    loadPackages()
-  },[])
-
-  const [pckage, setPackage] = useState(null);
-  const handlePackageChange = value => {
-      setInputData({...inputData, package:''})
-      setPackage(value);
-      if(value.value != 'other') {
-        setInputData({...inputData, package:value.value})
-      }
-  };
 
   //option
   //packaging option
@@ -122,18 +99,18 @@ export default function MyProduct({session}) {
 
   //option  
   //categories option
-  const [categories, setCategories] = useState([...categoriesOptions])
-  // const loadCategories = async () => {
-  //   const response = await axios.get(`/packaginglist`)
-  //     .then((response) => {
-  //       setCategories([...response.data.data, {value: 'other', label: 'Other'}])
-  //     }).catch((error) => {
-  //       console.log('failed to load categories')
-  //     })
-  // }
-  // useEffect(() => {
-  //   loadCategories()
-  // },[])
+  const [categories, setCategories] = useState([{value: "loading", label: "loading", disabled: true}])
+  const loadCategories = async () => {
+    const response = await axios.get(`/categories`)
+      .then((response) => {
+        setCategories(response.data.data)
+      }).catch((error) => {
+        console.log('failed to load categories')
+      })
+  }
+  useEffect(() => {
+    loadCategories()
+  },[])
 
   const [category, setCategory] = useState(null);
   const handleCategoryChange = value => {
@@ -148,29 +125,24 @@ export default function MyProduct({session}) {
   const loadSubCategory = async (parent) => {
     setSubCategories([{value: 'select category first', label: 'Select Category First', disabled: true}])
     setSubCategory(null);
-    setInputData({...inputData, subcategory:''})
+    setInputData({...inputData, subcategory_id:''})
 
-    // const response = await axios.get(`/packaginglist`)
-    //   .then((response) => {
-    //     setPackagings([...response.data.data, {value: 'other', label: 'Other'}])
-    //   }).catch((error) => {
-    //     console.log('failed to load packaginglist')
-    //   })
+    const response = await axios.get(`/${parent}/subcategories?drop=1`)
+      .then((response) => {
+        setSubCategories(response.data.data)
+      }).catch((error) => {
+        console.log('failed to load subcategories')
+      })
 
-    if(parent == "A"){
-      setSubCategories([{value: 'new sub-cat A', label: 'new sub-cat A'}])
-    } else {
-      setSubCategories([{value: 'new sub-cat B', label: 'new sub-cat B'}])
-    }
   }
-   useEffect(() => {
+  useEffect(() => {
     loadSubCategory(category?.value)
   },[category])
 
   const [subcategory, setSubCategory] = useState(null);
   const handleSubCategoryChange = value => {
     setSubCategory(value);
-    setInputData({...inputData, subcategory:value.value})
+    setInputData({...inputData, subcategory_id:value.value})
   };
 
   return (
