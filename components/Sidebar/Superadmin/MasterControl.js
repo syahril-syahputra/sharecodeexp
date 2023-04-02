@@ -23,7 +23,7 @@ export default function Orders(){
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
-                        <i className="fas fa-user text-blueGray-400 mr-2 text-sm"></i>{" "}
+                        <i className="fas fa-users text-blueGray-400 mr-2 text-sm"></i>{" "}
                         Master Users
                     </Link>
                 </li>
@@ -38,7 +38,7 @@ export default function Orders(){
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
                         <i className="fas fa-user text-blueGray-400 mr-2 text-sm"></i>{" "}
-                        Admin User
+                        Admin Account
                     </Link>
                 </li>
             </ul>

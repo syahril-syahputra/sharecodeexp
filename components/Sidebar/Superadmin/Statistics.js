@@ -16,10 +16,10 @@ export default function Statistics(){
             {/* Navigation */}
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
                 <li className="items-center">
-                    <Link href="/admin/companycontrol/company"
+                    <Link href="/admin/superadmin/statistics/unfoundcomponent"
                     className={
                         "text-xs uppercase py-3 font-bold block " +
-                        (router.pathname.indexOf("/admin/companycontrol/company") !== -1
+                        (router.pathname.indexOf("/admin/superadmin/statistics/unfoundcomponent") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
@@ -61,10 +61,10 @@ export default function Statistics(){
 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
                 <li className="items-center">
-                    <Link href="/admin/companycontrol/company"
+                    <Link href="/admin/superadmin/statistics/databasestatistic"
                     className={
                         "text-xs uppercase py-3 font-bold block " +
-                        (router.pathname.indexOf("/admin/companycontrol/company") !== -1
+                        (router.pathname.indexOf("/admin/superadmin/statistics/databasestatistic") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>

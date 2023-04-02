@@ -4,7 +4,7 @@ import { getSession } from "next-auth/react";
 import Link from "next/link";
 
 // components
-import OrderList from "@/components/Table/Superadmin/Orders/OrderList"
+import CancelledOrder from "@/components/Table/Superadmin/Orders/CancelledOrder"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
 // layout for page
@@ -23,7 +23,7 @@ export default function CancelledOrders({session}) {
   })
   const searchData = async (page=1) =>{
       setIsLoading(true)
-      const response = await axios.get(`/admin/orders/cancelled?page=${page}&status=${orderStatus}&search=${search}`,
+      const response = await axios.get(`/admin/orders/order_canceled?page=${page}&search=${search}`,
           {
             headers: {
               "Authorization" : `Bearer ${session.accessToken}`
@@ -55,14 +55,6 @@ export default function CancelledOrders({session}) {
     searchData()
   }, [])
 
-  const [orderStatus, setOrderStatuses] = useState("Inquiry")
-  const handleStatusChange = (status) => {
-    setOrderStatuses(status.value)
-  }
-  useEffect(() => {
-    searchData()
-  }, [orderStatus])
-
   const handleSearch = (item) =>{
     setSearch(item)
     searchData()
@@ -73,15 +65,14 @@ export default function CancelledOrders({session}) {
       <div className="">
         <div className="mb-10">
           <MiniSearchBar searchItem={handleSearch}/>
-          <OrderList
-            filterStatus={false}
+          <CancelledOrder
             title="Cancelled Orders"
             setPage={setPage}
             isLoading={isLoading}
             data={data}
             links={links}
             metaData={metaData}
-          ></OrderList>
+          ></CancelledOrder>
         </div>
       </div>
     </>

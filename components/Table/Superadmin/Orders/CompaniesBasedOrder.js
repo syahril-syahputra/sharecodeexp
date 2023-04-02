@@ -8,7 +8,7 @@ import Select from 'react-tailwindcss-select';
 import {orderStatusesOptions} from "data/optionData"
 import Pagination from "@/components/Shared/Component/Pagination";
 
-export default function IncomingInquiry(props) {
+export default function CompaniesBasedOrder(props) {
     const data = props.data
     const links = props.links
     const metaData = props.metaData
@@ -61,22 +61,16 @@ export default function IncomingInquiry(props) {
                         <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                             <tr>
                                 <th scope="col" className="px-6 py-3">
-                                    Manufacturer Part Number (Country)
+                                    Company Name
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Manufacturer Part Number
                                 </th>
                                 <th scope="col" className="px-6 py-3">
                                     Manufacturer
-                                </th>
+                                </th>                               
                                 <th scope="col" className="px-6 py-3">
-                                    Packaging
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Buyer (Country)
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Seller (Country)
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Incoming Inquiry QTY
+                                    Inquiry QTY
                                 </th>
                                 <th scope="col" className="px-6 py-3">
                                     Status
@@ -91,25 +85,19 @@ export default function IncomingInquiry(props) {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td scope="row" className="text-sm px-6 py-4">
-                                            {item.companies_products.ManufacturerNumber} ({item.companies_products.country})
+                                            dummy
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.companies_products.Manufacture}
+                                            dummy
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.companies_products.packaging}
+                                            dummy
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.buyer.name} ({item.buyer.country})
+                                            dummy
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.companies_products.company.name} ({item.companies_products.company.country})
-                                        </td>
-                                        <td className="text-sm px-6 py-4">
-                                            {item.qty}
-                                        </td>
-                                        <td className="text-sm px-6 py-4">
-                                            {item.order_status.name}
+                                            dummy
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">

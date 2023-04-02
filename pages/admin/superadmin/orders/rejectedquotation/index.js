@@ -4,13 +4,13 @@ import { getSession } from "next-auth/react";
 import Link from "next/link";
 
 // components
-import CompleteOrder from "@/components/Table/Superadmin/Orders/CompleteOrder"
+import RejectedOrder from "@/components/Table/Superadmin/Orders/RejectedOrder"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
-export default function ActiveOrders({session}) {
+export default function RejectedQuotation({session}) {
   //data search
   const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState(true)
@@ -23,7 +23,7 @@ export default function ActiveOrders({session}) {
   })
   const searchData = async (page=1) =>{
       setIsLoading(true)
-      const response = await axios.get(`/admin/orders/order_completed?page=${page}&search=${search}`,
+      const response = await axios.get(`/admin/orders/rejected?page=${page}&status=${orderStatus}&search=${search}`,
           {
             headers: {
               "Authorization" : `Bearer ${session.accessToken}`
@@ -55,6 +55,14 @@ export default function ActiveOrders({session}) {
     searchData()
   }, [])
 
+  const [orderStatus, setOrderStatuses] = useState("Inquiry")
+  const handleStatusChange = (status) => {
+    setOrderStatuses(status.value)
+  }
+  useEffect(() => {
+    searchData()
+  }, [orderStatus])
+
   const handleSearch = (item) =>{
     setSearch(item)
     searchData()
@@ -65,22 +73,22 @@ export default function ActiveOrders({session}) {
       <div className="">
         <div className="mb-10">
           <MiniSearchBar searchItem={handleSearch}/>
-          <CompleteOrder
+          <RejectedOrder
             filterStatus={false}
-            title="Completed Orders"
+            title="Rejected Quotations"
             setPage={setPage}
             isLoading={isLoading}
             data={data}
             links={links}
             metaData={metaData}
-          ></CompleteOrder>
+          ></RejectedOrder>
         </div>
       </div>
     </>
   );
 }
 
-ActiveOrders.layout = Admin;
+RejectedQuotation.layout = Admin;
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)

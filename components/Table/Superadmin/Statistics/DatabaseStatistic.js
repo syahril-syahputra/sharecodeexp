@@ -1,7 +1,7 @@
 // components
 // import Pagination from "@/components/Shared/Component/Pagination";
 
-export default function UnfoundComponent(props) {
+export default function DatabaseStatistic(props) {
     const data = props.data
     // const links = props.links
     // const metaData = props.metaData
@@ -14,13 +14,16 @@ export default function UnfoundComponent(props) {
                         <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                             <tr>
                                 <th scope="col" className="px-6 py-3">
-                                    Company Name
+                                    Total Member
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Manufacture Part Number
+                                    Total Completed Orders
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Search Date
+                                    Total Sales Volume
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Total Stocks
                                 </th>
                             </tr>
                         </thead>
@@ -29,13 +32,16 @@ export default function UnfoundComponent(props) {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td className="px-6 py-4">
-                                            {item.name}
+                                            
                                         </td>
                                         <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                            {item.ManufacturerNumber}
+                                            
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item.date}
+                                            
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            
                                         </td>
                                     </tr>
                                 )

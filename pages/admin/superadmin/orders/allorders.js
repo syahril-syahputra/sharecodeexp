@@ -4,6 +4,7 @@ import { getSession } from "next-auth/react";
 import Link from "next/link";
 
 // components
+import OrderList from "@/components/Table/Superadmin/Orders/OrderList"
 import ComponentList from "@/components/Table/Member/IncomingInquiry/ComponentsList"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
@@ -23,7 +24,7 @@ export default function IncomingInquiry({session}) {
   })
   const searchData = async (page=1) =>{
       setIsLoading(true)
-      const response = await axios.get(`/companyproduct?page=${page}&status=${orderStatus}&search=${search}`,
+      const response = await axios.get(`/admin/orders/${orderStatus}?page=${page}&search=${search}`,
           {
             headers: {
               "Authorization" : `Bearer ${session.accessToken}`
@@ -43,7 +44,7 @@ export default function IncomingInquiry({session}) {
             prevPage: result.prev_page_url ? true : false
           })
         }).catch((error) => {
-            console.log(error.response)
+            console.log(error)
         }).finally(() => {
           setIsLoading(false)
         })
@@ -55,7 +56,7 @@ export default function IncomingInquiry({session}) {
     searchData()
   }, [])
 
-  const [orderStatus, setOrderStatuses] = useState("Inquiry")
+  const [orderStatus, setOrderStatuses] = useState('inquired')
   const handleStatusChange = (status) => {
     setOrderStatuses(status.value)
   }
@@ -73,15 +74,26 @@ export default function IncomingInquiry({session}) {
       <div className="">
         <div className="mb-10">
           <MiniSearchBar searchItem={handleSearch}/>
-          <ComponentList
-            title="All Orders"
+          {/* <ComponentList
+            title="Incoming Inquiry"
             setPage={setPage}
             isLoading={isLoading}
             data={data}
             links={links}
             metaData={metaData}
             statusChange={handleStatusChange}
-          ></ComponentList>
+          ></ComponentList> */}
+
+          <OrderList
+            filterStatus={true}
+            title="Find by Status"
+            setPage={setPage}
+            isLoading={isLoading}
+            data={data}
+            links={links}
+            metaData={metaData}
+            statusChange={handleStatusChange}
+          ></OrderList>
         </div>
       </div>
     </>

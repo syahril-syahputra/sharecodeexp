@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { getSession } from "next-auth/react";
 import axios from "@/lib/axios";
-
+import Link from "next/link";
 // components
 import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep"
 import { toast } from 'react-toastify';
@@ -13,6 +13,7 @@ import VerifyInquiryModal from "@/components/Modal/OrderComponent/Seller/VerifyI
 import SendTrackerModal from "@/components/Modal/OrderComponent/Seller/SendTracker"
 
 export default function InquiryDetails({session, routeParam}) {
+    const publicDir = process.env.NEXT_PUBLIC_DIR
     //data search
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState({})
@@ -41,8 +42,6 @@ export default function InquiryDetails({session, routeParam}) {
     const [errorInfo, setErrorInfo] = useState({})
     const [verifyInquiryModal, setVerifyInquiryModal] = useState(false)
     const verifyInquiryModalHandle = async (inputData) => {
-        console.log(inputData)
-        // setVerifyInquiryModal(value)
         setIsLoading(true)
         setErrorInfo({})
         const response = await axios.post(`/seller/UpdateToVerified`, inputData, 
@@ -63,8 +62,28 @@ export default function InquiryDetails({session, routeParam}) {
     }
 
     const [sendTrackerModal, setSendTrackerModal] = useState(false)
-    const sendTrackerModalHandle = (value) => {
-        setSendTrackerModal(value)
+    const sendTrackerModalHandle = async (sellerTracker) => {
+        setIsLoading(true)
+        setErrorInfo({})
+        let inputData = {
+            id: data.id,
+            trackingSeller: sellerTracker
+        }
+        const response = await axios.post(`/seller/UpdateToPreparingShipment`, inputData, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Tracker has been set", toastOptions)
+            setSendTrackerModal(false)
+            loadData()
+        }).catch((error) => {
+            toast.error("Something went wrong", toastOptions)
+            setErrorInfo(error.data.data)
+            setIsLoading(false)
+        })
     }
 
     return (
@@ -93,6 +112,18 @@ export default function InquiryDetails({session, routeParam}) {
                         </div>
                     </div>
                 </div>
+                {data.reason && 
+                <div className="px-4 py-3 border-0 bg-red-400 mt-2">
+                    <div className="flex justify-center">
+                        <div className=" text-center">
+                            <h4
+                                className="font-semibold text-sm text-white italic">
+                                Rejection: {data.reason}
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                }
 
                 <OrderStatusStep/>
                 
@@ -115,6 +146,9 @@ export default function InquiryDetails({session, routeParam}) {
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3 w-28">
                                         Manufacturer
+                                    </th>                                    
+                                    <th scope="col" className="text-center px-6 py-3">
+                                        Avaliable Quantity
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3 w-28">
                                         MOQ
@@ -124,6 +158,12 @@ export default function InquiryDetails({session, routeParam}) {
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3 w-28">
                                         Packaging
+                                    </th>
+                                    <th scope="col" className="text-center px-6 py-3 w-28">
+                                        Category
+                                    </th>
+                                    <th scope="col" className="text-center px-6 py-3 w-28">
+                                        Sub-Category
                                     </th>
                                 </tr>
                             </thead>
@@ -136,6 +176,9 @@ export default function InquiryDetails({session, routeParam}) {
                                         {data.companies_products?.Manufacture}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
+                                        {data.companies_products?.AvailableQuantity}
+                                    </td>
+                                    <td className="text-center text-sm px-6 py-4">
                                         {data.companies_products?.moq}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
@@ -143,6 +186,12 @@ export default function InquiryDetails({session, routeParam}) {
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
                                         {data.companies_products?.packaging}
+                                    </td>
+                                    <td className="text-center text-sm px-6 py-4">
+                                        {data.companies_products?.subcategory?.name}
+                                    </td>
+                                    <td className="text-center text-sm px-6 py-4">
+                                        {data.companies_products?.subcategory?.category?.name}
                                     </td>
                                 </tr>
                             </tbody>
@@ -160,9 +209,6 @@ export default function InquiryDetails({session, routeParam}) {
                                         Date Code
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3">
-                                        Avaliable Quantity
-                                    </th>
-                                    <th scope="col" className="text-center px-6 py-3">
                                         Price (per item) / Total
                                     </th>
                                 </tr>
@@ -176,9 +222,6 @@ export default function InquiryDetails({session, routeParam}) {
                                         {data.companies_products?.dateCode}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        {data.companies_products?.AvailableQuantity}
-                                    </td>
-                                    <td className="text-center text-sm px-6 py-4">
                                         ${data.price} / ${parseFloat(data.price) * parseInt(data.qty)}
                                     </td>
                                 </tr>
@@ -187,48 +230,49 @@ export default function InquiryDetails({session, routeParam}) {
                     </div>
                 </div>
 
+                {data.shipinfoforseller && 
+                <>
+                    <div className="px-4 py-3 border-0 bg-slate-200 mb-5">
+                        <div className="flex justify-center">
+                            <div className=" text-center">
+                                <h4
+                                    className="font-semibold text-xl">
+                                    Shipment Info
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="px-4 py-3 border-0 bg-white">
+                        <div className="flex justify-center">
+                            <div className="px-3 mb-5">
+                                <div className="py-10 px-20 border mx-2 my-4">
+                                {data.shipinfoforseller}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+                }
+
+                {data.trackingSeller && 
                 <div className="px-4 py-3 border-0 bg-slate-200 mb-5">
                     <div className="flex justify-center">
                         <div className=" text-center">
                             <h4
                                 className="font-semibold text-xl">
-                                Tracker Number : 22309AP00
+                                Tracker Number : {data.trackingSeller}
                             </h4>
                         </div>
                     </div>
                 </div>
+                }
 
                 <div className="px-4 py-3 border-0 bg-slate-200">
                     <div className="flex justify-center">
                         <div className=" text-center">
                             <h4
                                 className="font-semibold text-xl">
-                                Documents
-                            </h4>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="px-4 py-3 border-0 bg-white">
-                    <div className="flex justify-center">
-                        <button className="m-2 p-2 bg-indigo-900 border text-lg text-center text-white">
-                            Proforma Invoice
-                        </button>
-                        <button className="m-2 p-2 bg-indigo-900 border text-lg text-center text-white">
-                            Payment Receipt
-                        </button>
-                        <button className="m-2 p-2 bg-indigo-900 border text-lg text-center text-white">
-                            Shipment Info
-                        </button>
-                    </div>
-                </div>
-
-                <div className="px-4 py-3 border-0 bg-slate-200">
-                    <div className="flex justify-center">
-                        <div className=" text-center">
-                            <h4
-                                className="font-semibold text-xl">
-                                Actions (Seller)
+                                Actions
                             </h4>
                         </div>
                     </div>
@@ -272,8 +316,10 @@ export default function InquiryDetails({session, routeParam}) {
 
                 {sendTrackerModal && 
                     <SendTrackerModal
+                        isLoading={isLoading}
                         closeModal={() => setSendTrackerModal(false)}
                         acceptance={sendTrackerModalHandle}
+                        errorInfo={errorInfo}
                     />
                 }
 

@@ -65,7 +65,7 @@ export default function Index() {
   //load categories
   const [categories, setCategories] = useState([])
   const loadCategories = async () => {
-    const request = await axios.get(`/categories?limit=12`)
+    const request = await axios.get(`/categories?limit=8`)
       .then((res) => {
         let result = res.data.data
         setCategories(result.data)
@@ -79,6 +79,27 @@ export default function Index() {
   }
   useEffect(() => {
     loadCategories()
+  }, [])
+
+  //load companies
+  const publicDir = process.env.NEXT_PUBLIC_DIR
+  const [companies, setCompanies] = useState([])
+  const loadCompanies = async () => {
+    const request = await axios.get(`/newstcompany`)
+      .then((res) => {
+        let result = res.data
+        console.log(result.data)
+        setCompanies(result.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }
+  useEffect(() => {
+    loadCompanies()
   }, [])
 
   return (
@@ -292,30 +313,14 @@ export default function Index() {
               <Link href="/members" className="font-medium text-blueGray-700 underline">View all Members</Link>
             </div>
             <div className="grid gap-4 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 place-content-center">
-              <MemberCard
-                imageSrc='/img/exepart-black.png'
-                label='EXEPART'
-              />
-              <MemberCard
-                imageSrc='/img/manufacturer/RFLOGY-Logo.png'
-                label='RFLOGY'
-              />
-              <MemberCard
-                imageSrc='/img/manufacturer/Hitit_Defense.png'
-                label='Hitit Defense'
-              />
-              <MemberCard
-                imageSrc='/img/exepart-black.png'
-                label='EXEPART'
-              />
-              <MemberCard
-                imageSrc='/img/manufacturer/RFLOGY-Logo.png'
-                label='RFLOGY'
-              />
-              <MemberCard
-                imageSrc='/img/manufacturer/Hitit_Defense.png'
-                label='Hitit Defense'
-              />
+              {companies.map((item, index) => 
+                <div key={index}>
+                  <MemberCard
+                    imageSrc={publicDir + "/companies_images/" + item.img}
+                    label={item.name}
+                  />
+                </div>
+              )}              
             </div>
           </div>
         </div>

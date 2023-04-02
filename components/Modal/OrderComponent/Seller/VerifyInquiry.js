@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import InputForm from "@/components/Shared/InputForm";
+import InputNumberForm from "@/components/Shared/InputNumberForm";
 import AcceptButton from "@/components/Buttons/AcceptButton"
 export default function VerifyOrder(props){
     const [inputData, setInputData] = useState(
@@ -93,9 +94,9 @@ export default function VerifyOrder(props){
                         </div>
                         <div className="flex flex-wrap mb-6">
                             <div className="w-1/2 px-3 mb-6">
-                                <InputForm
+                                <InputNumberForm
                                     label="Price per Item ($)"
-                                    inputType="number"
+                                    numberStep={0.01}
                                     inputDataName="price"
                                     value={inputData.price}
                                     setData={setDataHandler}
@@ -104,10 +105,10 @@ export default function VerifyOrder(props){
                             </div>
 
                             <div className="w-1/2 px-3 mb-6">
-                                <InputForm
+                                <InputNumberForm
                                     isDisabled
                                     label="Total ($)"
-                                    type="number"
+                                    numberStep={0.01}
                                     value={total}
                                 />
                             </div>

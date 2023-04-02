@@ -21,7 +21,7 @@ export default function ComponentList(props) {
                                 "font-semibold text-lg text-blueGray-700"
                             }
                             >
-                            Inquired Component
+                            Inquiry List
                             </h3>
                         </div>
                         <div className="px-4">
@@ -98,7 +98,7 @@ export default function ComponentList(props) {
                                             <div className="inline-flex">
                                                 <button onClick={() => props.handleEdit(item.id, item.qty, item.companies_products.ManufacturerNumber)} className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Edit</button>
                                                 <button onClick={() => props.handleInquiryNow(item.id, item.qty, item.companies_products.ManufacturerNumber)} className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry Now</button>
-                                                <button disabled onClick={() => props.handleDelete(item.id, item.companies_products.ManufacturerNumber)} className="font-medium text-blue-600 text-white bg-red-200 p-2">Delete</button>
+                                                <button onClick={() => props.handleDelete(item.id)} className="font-medium text-blue-600 text-white bg-red-500 p-2">Delete</button>
                                             </div>
                                         </td>
                                     </tr>

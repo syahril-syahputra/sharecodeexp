@@ -4,7 +4,7 @@ import { getSession } from "next-auth/react";
 import Link from "next/link";
 
 // components
-import CompleteOrder from "@/components/Table/Superadmin/Orders/CompleteOrder"
+import PendingPayment from "@/components/Table/Superadmin/Orders/PendingPayment"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
 // layout for page
@@ -23,7 +23,7 @@ export default function ActiveOrders({session}) {
   })
   const searchData = async (page=1) =>{
       setIsLoading(true)
-      const response = await axios.get(`/admin/orders/order_completed?page=${page}&search=${search}`,
+      const response = await axios.get(`/admin/orders/payment_verified?page=${page}&search=${search}`,
           {
             headers: {
               "Authorization" : `Bearer ${session.accessToken}`
@@ -65,15 +65,15 @@ export default function ActiveOrders({session}) {
       <div className="">
         <div className="mb-10">
           <MiniSearchBar searchItem={handleSearch}/>
-          <CompleteOrder
+          <PendingPayment
             filterStatus={false}
-            title="Completed Orders"
+            title="Pending Payments"
             setPage={setPage}
             isLoading={isLoading}
             data={data}
             links={links}
             metaData={metaData}
-          ></CompleteOrder>
+          ></PendingPayment>
         </div>
       </div>
     </>

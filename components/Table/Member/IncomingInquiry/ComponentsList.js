@@ -148,7 +148,7 @@ export default function IncomingInquiry(props) {
                                             {item.qty}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.order_status_id}
+                                            {item.order_status.name}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">

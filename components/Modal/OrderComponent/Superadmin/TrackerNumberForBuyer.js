@@ -1,10 +1,10 @@
 import { useState } from "react"
 import InputForm from "@/components/Shared/InputForm";
 import AcceptButton from "@/components/Buttons/AcceptButton";
-export default function SendTracker(props){
-    const [sellerTracker, setSellerTracker] = useState('')
+export default function VerifyOrder(props){
+    const [buyerTracker, setBuyerTracker] = useState('')
     const setDataHandler = (item, inputName) => {
-        setSellerTracker(item.value)
+        setBuyerTracker(item.value)
     }
     return (
         <>
@@ -17,7 +17,7 @@ export default function SendTracker(props){
                     {/*header*/}
                     <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200">
                     <h3 className="text-3xl font-semibold">
-                        Send Tracker Information
+                        Send Tracker Information to Buyer
                     </h3>
                     <button
                         className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
@@ -36,10 +36,10 @@ export default function SendTracker(props){
                             <div className="w-full px-3">
                                 <InputForm
                                     label="Tracker Number"
-                                    inputDataName="sellerTracker"
-                                    value={sellerTracker}
+                                    inputDataName="buyerTracker"
+                                    value={buyerTracker}
                                     setData={setDataHandler}
-                                    errorMsg={props.errorInfo?.trackingSeller}
+                                    errorMsg={props.errorInfo?.trackingBuyer}
                                 />
                             </div>
                         </div>
@@ -58,7 +58,7 @@ export default function SendTracker(props){
                     <AcceptButton
                         buttonTitle="Send"
                         isLoading={props.isLoading}
-                        onClick={() => props.acceptance(sellerTracker)}
+                        onClick={() => props.acceptance(buyerTracker)}
                     />
                     </div>
                 </div>

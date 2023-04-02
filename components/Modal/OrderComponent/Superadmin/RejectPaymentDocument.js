@@ -3,6 +3,10 @@ import ErrorInput from '@/components/Shared/ErrorInput';
 import RejectButton from "@/components/Buttons/RejectButton";
 export default function RejectPaymentDocument(props){
     const [rejectionReason, setRejectionReason] = useState()
+
+    const handleRejection = () => {
+        props.acceptance(rejectionReason.value)
+    }
     return (
         <>
             <div
@@ -38,7 +42,7 @@ export default function RejectPaymentDocument(props){
                                 Rejection Reason
                             </label>
                             <textarea 
-                                placeholder=" Write rejection reason for buyer, click Reject Payment to Continue."
+                                placeholder="Write rejection reason for buyer, click Reject Payment to Continue."
                                 value={rejectionReason}
                                 onChange={({target}) => 
                                     setRejectionReason(target.value)
@@ -62,11 +66,21 @@ export default function RejectPaymentDocument(props){
                         Close
                     </button>
 
-                    <RejectButton
-                        buttonTitle="Reject Payment"
-                        isLoading={props.isLoading}
-                        onClick={() => props.acceptance(rejectionReason)}
-                    />
+                    {rejectionReason &&
+                        <RejectButton
+                            buttonTitle="Reject Payment"
+                            isLoading={props.isLoading}
+                            onClick={handleRejection}
+                        />
+                    }
+
+                    {!!rejectionReason == false &&
+                        <RejectButton
+                            buttonTitle="Reject Payment"
+                            isLoading={true}
+                            onClick={handleRejection}
+                        />
+                    }
                     </div>
                 </div>
                 </div>

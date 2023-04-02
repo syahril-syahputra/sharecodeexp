@@ -58,6 +58,10 @@ export default function Account({session}) {
     })
   }
 
+  const handleEditAccount = (id) => {
+    alert(`not ready yet :( ${id}`)
+  }
+
   return (
     <>
       <div className="">
@@ -68,6 +72,7 @@ export default function Account({session}) {
               isLoading={isLoading}
               data={data}
               deleteAccount={handleDeleteAccount}
+              editAccount={handleEditAccount}
             ></TableAccount>
         {/* </div> */}
       </div>

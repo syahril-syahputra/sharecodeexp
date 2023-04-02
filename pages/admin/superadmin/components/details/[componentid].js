@@ -154,12 +154,12 @@ export default function ComponentDetails({session, routeParam}) {
                             }
 
                             {!!routeParam.componentid && 
-                                <Link href={`/admin/member/sellcomponents/component/edit/${routeParam.componentid}`}>
-                                    <button className="relative bg-orange-500 p-2 text-white">
+                                // <Link href={`/admin/member/sellcomponents/component/edit/${routeParam.componentid}`}>
+                                    <button onClick={() => alert("not ready :(")} className="relative bg-orange-500 p-2 text-white">
                                         <i className="mr-2 ml-1 fas fa-pen text-white"></i>
                                         Edit Product
                                     </button>
-                                </Link>
+                                // </Link>
                             }
                         </div>
                     </div>

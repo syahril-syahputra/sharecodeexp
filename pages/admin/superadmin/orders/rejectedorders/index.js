@@ -4,7 +4,7 @@ import { getSession } from "next-auth/react";
 import Link from "next/link";
 
 // components
-import OrderList from "@/components/Table/Superadmin/Orders/OrderList"
+import RejectedOrder from "@/components/Table/Superadmin/Orders/RejectedOrder"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
 // layout for page
@@ -23,7 +23,7 @@ export default function RejectedOrders({session}) {
   })
   const searchData = async (page=1) =>{
       setIsLoading(true)
-      const response = await axios.get(`/admin/orders/rejected?page=${page}&status=${orderStatus}&search=${search}`,
+      const response = await axios.get(`/admin/orders/order_returned?page=${page}&status=${orderStatus}&search=${search}`,
           {
             headers: {
               "Authorization" : `Bearer ${session.accessToken}`
@@ -73,7 +73,7 @@ export default function RejectedOrders({session}) {
       <div className="">
         <div className="mb-10">
           <MiniSearchBar searchItem={handleSearch}/>
-          <OrderList
+          <RejectedOrder
             filterStatus={false}
             title="Rejected Orders"
             setPage={setPage}
@@ -81,7 +81,7 @@ export default function RejectedOrders({session}) {
             data={data}
             links={links}
             metaData={metaData}
-          ></OrderList>
+          ></RejectedOrder>
         </div>
       </div>
     </>

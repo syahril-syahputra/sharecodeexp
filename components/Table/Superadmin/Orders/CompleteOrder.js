@@ -13,12 +13,6 @@ export default function IncomingInquiry(props) {
     const links = props.links
     const metaData = props.metaData
 
-    const [orderStatuses, setOrderStatuses] = useState(orderStatusesOptions)
-    const [status, setStatus] = useState({value: "inquired", label: "Order Inquired"});
-    const handleStatusChange = value => {
-        setStatus(value)
-        props.statusChange(value)
-    };
     return (
         <>  
             <div className="relative">
@@ -31,28 +25,7 @@ export default function IncomingInquiry(props) {
                             </h3>
                         </div>
                         <div className="px-4 flex-initial w-64">
-                            {props.filterStatus && 
-                                <Select 
-                                    name="status"
-                                    value={status}
-                                    onChange={handleStatusChange}
-                                    options={orderStatuses}
-                                    classNames={{
-                                        menuButton: () => (
-                                            `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
-                                        ),
-                                        menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
-                                        listItem: ({ isSelected }) => (
-                                            `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
-                                                isSelected
-                                                    ? `text-white bg-blue-500`
-                                                    : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
-                                            }`
-                                        ),
-                                        searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
-                                    }}
-                                    />
-                                }
+                            
                         </div>
                     </div>
                 </div>
@@ -61,27 +34,24 @@ export default function IncomingInquiry(props) {
                         <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                             <tr>
                                 <th scope="col" className="px-6 py-3">
-                                    Manufacturer Part Number (Country)
+                                    Company Name
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Manufacturer
+                                    Manufacturer Part Number
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Packaging
+                                    Order Qty
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Buyer (Country)
+                                    Exepart - Seller
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Seller (Country)
+                                    Order Amount ($) for Exepart
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Incoming Inquiry QTY
+                                    Order Amount ($) for Seller
                                 </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Status
-                                </th>
-                                <th scope="col" className="px-6 py-3">
+                                <th scope="col" className="px-6 py-3 text-right">
                                     *
                                 </th>
                             </tr>
@@ -91,25 +61,22 @@ export default function IncomingInquiry(props) {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td scope="row" className="text-sm px-6 py-4">
-                                            {item.companies_products.ManufacturerNumber} ({item.companies_products.country})
+                                            {item.buyer?.name}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.companies_products.Manufacture}
-                                        </td>
-                                        <td className="text-sm px-6 py-4">
-                                            {item.companies_products.packaging}
-                                        </td>
-                                        <td className="text-sm px-6 py-4">
-                                            {item.buyer.name} ({item.buyer.country})
-                                        </td>
-                                        <td className="text-sm px-6 py-4">
-                                            {item.companies_products.company.name} ({item.companies_products.company.country})
+                                            {item.companies_products?.ManufacturerNumber}
                                         </td>
                                         <td className="text-sm px-6 py-4">
                                             {item.qty}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.order_status.name}
+                                            ${parseFloat(item.price_profite)} - ${parseFloat(item.price)}
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
+                                            ${parseInt(item.qty) * parseFloat(item.price_profite)}
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
+                                            ${parseInt(item.qty) * parseFloat(item.price)}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">

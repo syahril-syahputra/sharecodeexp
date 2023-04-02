@@ -125,6 +125,9 @@ export default function Sidebar() {
               <>
                 <MemberSellComponents/>
                 <MemberBuyComponents/>
+                <SettingsBar
+                  statusId={userDetail?.status_id}
+                />
               </>
               : null }
 
@@ -138,9 +141,7 @@ export default function Sidebar() {
               </>
             : null }
 
-            <SettingsBar
-              statusId={userDetail?.status_id}
-            />
+            
 
           </div>
         </div>

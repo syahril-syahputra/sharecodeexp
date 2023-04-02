@@ -75,16 +75,16 @@ export default function InquiryDetails({session, routeParam}) {
 
     }
 
-    const [rejectionReason, setRejectionReasons] = useState([])
+    const [rejectionReason, setRejectionReasons] = useState([{value: 'other', label: 'Other'}])
     const loadRejectionReason = async () =>{
         setIsLoading(true)
         const response = await axios.get(`/reason`)
             .then((response) => {
                 let result = response.data
-                setRejectionReasons(result.data)
+                setRejectionReasons([...result.data, {value: 'other', label: 'Other'}])
             }).catch((error) => {
                 console.log(error)
-                toast.error("Failed to load rejcetion reason", toastOptions)
+                toast.error("Failed to load rejection reason", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -94,7 +94,6 @@ export default function InquiryDetails({session, routeParam}) {
     }, [])
     const [rejectQuotationModal, setRejectQuotationModal] = useState(false)
     const rejectQuotationModalHandle = async (value) => {
-        console.log(value)
         setIsLoading(true)
         const response = await axios.post(`/buyer/RejectOrder`, 
         {
@@ -176,13 +175,55 @@ export default function InquiryDetails({session, routeParam}) {
     }
 
     const [acceptOrderModal, setAcceptOrderModal] = useState(false)
-    const acceptOrderModalHandle = (value) => {
-        setAcceptOrderModal(value)
+    const acceptOrderModalHandle = async () => {
+        setIsLoading(true)
+        const response = await axios.post(`/buyer/OrderAcc`, 
+        {
+            id:  data.id
+        },
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Order has been Accepted", toastOptions)
+            setAcceptOrderModal(false)
+            loadData()
+        }).catch((error) => {
+            console.log(error)
+            toast.error("Something went wrong", toastOptions)
+            setIsLoading(false)
+        }).finally(() => {
+            setIsLoading(false)
+        })
     }
 
     const [rejectOrderModal, setRejectOrderModal] = useState(false)
-    const rejectOrderModalHandle = (value) => {
-        setRejectOrderModal(value)
+    const rejectOrderModalHandle = async (rejection) => {
+        setIsLoading(true)
+        const response = await axios.post(`/buyer/ReturnOrder`, 
+        {
+            id:  data.id,
+            reason: rejection
+        },
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Order has been Rejected", toastOptions)
+            setRejectOrderModal(false)
+            loadData()
+        }).catch((error) => {
+            console.log(error)
+            setErrorInfo(error.data.data)
+            toast.error("Something went wrong", toastOptions)
+            setIsLoading(false)
+        }).finally(() => {
+            setIsLoading(false)
+        })
     }
 
     return (
@@ -211,6 +252,18 @@ export default function InquiryDetails({session, routeParam}) {
                         </div>
                     </div>
                 </div>
+                {data.reason && 
+                <div className="px-4 py-3 border-0 bg-red-400 mt-2">
+                    <div className="flex justify-center">
+                        <div className=" text-center">
+                            <h4
+                                className="font-semibold text-sm text-white italic">
+                                Rejection: {data.reason}
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                }
                 
                 <OrderStatusStep/>
 
@@ -234,6 +287,9 @@ export default function InquiryDetails({session, routeParam}) {
                                     <th scope="col" className="text-center px-6 py-3 w-28">
                                         Manufacturer
                                     </th>
+                                    <th scope="col" className="text-center px-6 py-3">
+                                        Avaliable Quantity
+                                    </th>
                                     <th scope="col" className="text-center px-6 py-3 w-28">
                                         MOQ
                                     </th>
@@ -243,24 +299,39 @@ export default function InquiryDetails({session, routeParam}) {
                                     <th scope="col" className="text-center px-6 py-3 w-28">
                                         Packaging
                                     </th>
+                                    <th scope="col" className="text-center px-6 py-3 w-28">
+                                        Category
+                                    </th>
+                                    <th scope="col" className="text-center px-6 py-3 w-28">
+                                        Sub-Category
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr className="bg-white hover:bg-gray-50">
                                     <td scope="row" className="text-center text-sm px-6 py-4">
-                                        ABC1123
+                                        {data.companies_products?.ManufacturerNumber}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        DOHA
+                                        {data.companies_products?.Manufacture}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        100
+                                        {data.companies_products?.AvailableQuantity}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        Afganistan
+                                        {data.companies_products?.moq}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        Tube
+                                        {data.companies_products?.country}
+                                    </td>
+                                    <td className="text-center text-sm px-6 py-4">
+                                        {data.companies_products?.packaging}
+                                    </td>
+                                    <td className="text-center text-sm px-6 py-4">
+                                        {data.companies_products?.subcategory?.name}
+                                    </td>
+                                    <td className="text-center text-sm px-6 py-4">
+                                        {data.companies_products?.subcategory?.category?.name}
                                     </td>
                                 </tr>
                             </tbody>
@@ -278,9 +349,6 @@ export default function InquiryDetails({session, routeParam}) {
                                         Date Code
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3">
-                                        Avaliable Quantity
-                                    </th>
-                                    <th scope="col" className="text-center px-6 py-3">
                                         Price (per item) / Total
                                     </th>
                                 </tr>
@@ -294,9 +362,6 @@ export default function InquiryDetails({session, routeParam}) {
                                         {data.companies_products?.dateCode}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        {data.companies_products?.AvailableQuantity}
-                                    </td>
-                                    <td className="text-center text-sm px-6 py-4">
                                         ${data.price_profite} / ${parseFloat(data.price_profite) * parseFloat(data.qty)}
                                     </td>
                                 </tr>
@@ -305,16 +370,18 @@ export default function InquiryDetails({session, routeParam}) {
                     </div>
                 </div>
 
+                {data.trackingBuyer && 
                 <div className="px-4 py-3 border-0 bg-slate-200 mb-5">
                     <div className="flex justify-center">
                         <div className=" text-center">
                             <h4
                                 className="font-semibold text-xl">
-                                Tracker Number : 22309AP00
+                                Tracker Number : {data.trackingBuyer}
                             </h4>
                         </div>
                     </div>
                 </div>
+                }
 
                 <div className="px-4 py-3 border-0 bg-slate-200">
                     <div className="flex justify-center">
@@ -351,9 +418,9 @@ export default function InquiryDetails({session, routeParam}) {
                                 Payment Receipt
                             </button>
                         }
-                        <button className="m-2 p-2 bg-indigo-900 border text-center text-white">
+                        {/* <button className="m-2 p-2 bg-indigo-900 border text-center text-white">
                             Shipment Info
-                        </button>
+                        </button> */}
                     </div>
                 </div>
 
@@ -362,7 +429,7 @@ export default function InquiryDetails({session, routeParam}) {
                         <div className=" text-center">
                             <h4
                                 className="font-semibold text-xl">
-                                Actions (Buyer)
+                                Actions
                             </h4>
                         </div>
                     </div>
@@ -403,12 +470,27 @@ export default function InquiryDetails({session, routeParam}) {
                                 Update Payment Receipt
                             </button>
                         }
-                        <button onClick={()=> setAcceptOrderModal(true)} className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
-                            Accept Order
-                        </button>
-                        <button onClick={()=> setRejectOrderModal(true)} className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
-                            Reject Order
-                        </button>
+
+                        {data.order_status_id == 10?
+                            <button onClick={()=> setAcceptOrderModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                                Accept Order
+                            </button>
+                            :
+                            <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                                Accept Order
+                            </button>
+                        }
+
+                        {data.order_status_id == 10?
+                            <button onClick={()=> setRejectOrderModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                                Reject Order
+                            </button>
+                            :
+                            <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                                Reject Order
+                            </button>
+                        }
+
                     </div>
                 </div>
 
@@ -450,6 +532,7 @@ export default function InquiryDetails({session, routeParam}) {
 
                 {acceptOrderModal && 
                     <AcceptOrderModal
+                        isLoading={isLoading}
                         closeModal={() => setAcceptOrderModal(false)}
                         acceptance={acceptOrderModalHandle}
                     />
@@ -457,8 +540,10 @@ export default function InquiryDetails({session, routeParam}) {
 
                 {rejectOrderModal && 
                     <RejectOrderModal
+                        isLoading={isLoading}
                         closeModal={() => setRejectOrderModal(false)}
                         acceptance={rejectOrderModalHandle}
+                        errorInfo={errorInfo}
                     />
                 }
             </div>

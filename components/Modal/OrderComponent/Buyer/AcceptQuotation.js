@@ -24,9 +24,9 @@ export default function VerifyOrder(props){
                     </div>
                     {/*body*/}
                     <div className="relative p-6 flex-auto">
-                    <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                        Do you agree to <span className="text-blueGray-700 font-bold">Accept</span> this Quotation?
-                    </p>
+                        <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
+                            Do you agree to <span className="text-blueGray-700 font-bold">Accept</span> this Quotation?
+                        </p>
                     </div>
                     {/*footer*/}
                     <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200">

@@ -1,15 +1,25 @@
 import { useState } from "react"
 import RejectButton from "@/components/Buttons/RejectButton"
+import InputForm from "@/components/Shared/InputForm";
 import Select from 'react-tailwindcss-select';
 import ErrorInput from '@/components/Shared/ErrorInput';
 export default function RejectQuotation(props){
     const [rejectionReason, setRejectionReason] = useState()
     const handleRejectionChange = (value) => {
-        setRejectionReason(value);
+        setRejectionData('')
+        setRejectionReason(value)
+        if(value.value != 'other') {
+            setRejectionData(value.value)
+        }
     }
 
+    const [rejectionData, setRejectionData] = useState()
     const handleRejection = () => {
-        props.acceptance(rejectionReason.value)
+        props.acceptance(rejectionData)
+    }
+
+    const setDataHandler = (item, inputName) => {
+        setRejectionData(item.value)
     }
 
     return (
@@ -66,6 +76,14 @@ export default function RejectQuotation(props){
                         {props.errorInfo.reason &&
                             <ErrorInput error={props.errorInfo.reason}/>
                         }
+                        { rejectionReason?.value == "other" && 
+                            <InputForm
+                                inputDataName="rejectionData"
+                                value={rejectionData}
+                                setData={setDataHandler}
+                                errorMsg={props.errorInfo?.reason}
+                            />
+                        }
                     </div>
 
                     </div>
@@ -88,7 +106,7 @@ export default function RejectQuotation(props){
 
                     {rejectionReason &&
                         <RejectButton
-                            buttonTitle="Accept"
+                            buttonTitle="Reject Quotaion"
                             isLoading={props.isLoading}
                             onClick={handleRejection}
                         />
@@ -96,7 +114,7 @@ export default function RejectQuotation(props){
 
                     {!!rejectionReason == false &&
                         <RejectButton
-                            buttonTitle="Accept"
+                            buttonTitle="Reject Quotaion"
                             isLoading={true}
                             onClick={handleRejection}
                         />

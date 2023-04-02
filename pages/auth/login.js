@@ -18,7 +18,7 @@ export default function Index() {
         router.replace("/")
     }
     
-    const [userInfo, setUserInfo] = useState({email: 'kdkchy@gmail.com', password: 'ThisisPassword123@'})
+    const [userInfo, setUserInfo] = useState({email: '', password: ''})
     const [isLoading, setIsLoading] = useState(false)
     const [errMessage, setErrMessage] = useState({
         error: ' ',

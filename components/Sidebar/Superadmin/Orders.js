@@ -46,6 +46,21 @@ export default function Orders(){
 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
                 <li className="items-center">
+                    <Link href="/admin/superadmin/orders/rejectedquotation"
+                    className={
+                        "text-xs uppercase py-3 font-bold block " +
+                        (router.pathname.indexOf("/admin/superadmin/orders/rejectedquotation") !== -1
+                        ? "text-lightBlue-500 hover:text-lightBlue-600"
+                        : "text-blueGray-700 hover:text-blueGray-500")
+                    }>
+                        <i className="fas fa-thumbs-down text-blueGray-400 mr-2 text-sm"></i>{" "}
+                        Rejected Quotations
+                    </Link>
+                </li>
+            </ul>
+
+            <ul className="md:flex-col md:min-w-full flex flex-col list-none">
+                <li className="items-center">
                     <Link href="/admin/superadmin/orders/rejectedorders"
                     className={
                         "text-xs uppercase py-3 font-bold block " +
@@ -106,10 +121,10 @@ export default function Orders(){
 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
                 <li className="items-center">
-                    <Link href="/admin/superadmin/orders/pendingshipments"
+                    <Link href="/admin/superadmin/orders/pendingshipment"
                     className={
                         "text-xs uppercase py-3 font-bold block " +
-                        (router.pathname.indexOf("/admin/superadmin/orders/pendingshipmenst") !== -1
+                        (router.pathname.indexOf("/admin/superadmin/orders/pendingshipment") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
@@ -121,10 +136,10 @@ export default function Orders(){
 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
                 <li className="items-center">
-                    <Link href="/admin/superadmin/orders/completedshipments"
+                    <Link href="/admin/superadmin/orders/completedshipment"
                     className={
                         "text-xs uppercase py-3 font-bold block " +
-                        (router.pathname.indexOf("/admin/superadmin/orders/completedshipments") !== -1
+                        (router.pathname.indexOf("/admin/superadmin/orders/completedshipment") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
@@ -134,20 +149,20 @@ export default function Orders(){
                 </li>
             </ul>
 
-            {/* <ul className="md:flex-col md:min-w-full flex flex-col list-none">
+            <ul className="md:flex-col md:min-w-full flex flex-col list-none">
                 <li className="items-center">
-                    <Link href="/admin/"
+                    <Link href="/admin/superadmin/orders/allorders"
                     className={
                         "text-xs uppercase py-3 font-bold block " +
-                        (router.pathname.indexOf("/admin/") !== -1
+                        (router.pathname.indexOf("/admin/superadmin/orders/allorders") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
                         <i className="fas fa-file text-blueGray-400 mr-2 text-sm"></i>{" "}
-                        Show All Orders
+                        Find By Status
                     </Link>
                 </li>
-            </ul> */}
+            </ul>
 
         </>
     )

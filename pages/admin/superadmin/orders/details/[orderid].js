@@ -12,6 +12,8 @@ import SendQuotationModal from "@/components/Modal/OrderComponent/Superadmin/Sen
 import SendProformaInvoiceModal from "@/components/Modal/OrderComponent/Superadmin/SendProformaInvoice"
 import AcceptPaymentDocumentModal from "@/components/Modal/OrderComponent/Superadmin/AcceptPaymentDocument"
 import RejectPaymentDocumentModal from "@/components/Modal/OrderComponent/Superadmin/RejectPaymentDocument"
+import TrackerNumberForBuyerModal from "@/components/Modal/OrderComponent/Superadmin/TrackerNumberForBuyer"
+import CompleteOrderModal from "@/components/Modal/OrderComponent/Superadmin/CompleteOrder"
 import { toast } from 'react-toastify';
 import toastOptions from "@/lib/toastOptions"
 
@@ -136,6 +138,56 @@ export default function InquiryDetails({session, routeParam}) {
         })
     }
 
+    const [trackerNumberForBuyerModal, setTrackerNumberForBuyerModal] = useState(false)
+    const handleTrackerNumberForBuyerModal = async (buyerTracker) => {
+        setIsLoading(true)
+        setErrorInfo({})
+        let inputData = {
+            id: data.id,
+            trackingBuyer: buyerTracker
+        }
+        const response = await axios.post(`/admin/orders/UpdateOrderShiped`, inputData, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Tracker has been sent to buyer", toastOptions)
+            setTrackerNumberForBuyerModal(false)
+            loadData()
+        }).catch((error) => {
+            toast.error("Something went wrong", toastOptions)
+            setErrorInfo(error.data.data)
+            setIsLoading(false)
+        })
+    }
+
+    const [completeOrderModal, setCompleteOrderModal] = useState(false)
+    const handleCompleteOrderModal = async () => {
+        setIsLoading(true)
+        setErrorInfo({})
+
+        let inputData = {
+            id: data.id,
+        }
+        const response = await axios.post(`/admin/orders/UpdateCompletedOrder`, inputData, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Order has been Completed", toastOptions)
+            setCompleteOrderModal(false)
+            loadData()
+        }).catch((error) => {
+            console.log(error)
+            toast.error("Something went wrong", toastOptions)
+            setIsLoading(false)
+        })
+    }
+
     return (
         <>
             <div className="relative bg-white">
@@ -162,6 +214,18 @@ export default function InquiryDetails({session, routeParam}) {
                         </div>
                     </div>
                 </div>
+                {data.reason && 
+                <div className="px-4 py-3 border-0 bg-red-400 mt-2">
+                    <div className="flex justify-center">
+                        <div className=" text-center">
+                            <h4
+                                className="font-semibold text-sm text-white italic">
+                                Rejection: {data.reason}
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                }
                 <OrderStatusStep/>
                 
                 {/* Buyer Seller */}
@@ -172,11 +236,11 @@ export default function InquiryDetails({session, routeParam}) {
                                 Buyer
                             </div>
                             <div className="m-2 p-2 text-sm">
-                                <table>
+                                <table className="w-full">
                                     <tbody>
                                         <tr>
-                                            <td className="w-28">Company Name</td>
-                                            <td className="w-8">:</td>
+                                            <td className="w-10">Company Name</td>
+                                            <td className="w-2">:</td>
                                             <td className="text-left w-28">
                                                 {data.buyer?.name}     
                                                 {data.buyer?.is_confirmed == "pending" && <i title="Member Pending" className="mr-2 ml-1 fas fa-clock text-orange-500"></i>}
@@ -186,7 +250,7 @@ export default function InquiryDetails({session, routeParam}) {
                                         </tr>
                                         <tr>
                                             <td className="w-28">Country</td>
-                                            <td className="w-8">:</td>
+                                            <td className="w-2">:</td>
                                             <td className="text-left">{data.buyer?.country}</td>
                                         </tr>
                                         <tr>
@@ -195,14 +259,9 @@ export default function InquiryDetails({session, routeParam}) {
                                             <td className="text-left">{data.shipinfobuyer}</td>
                                         </tr>
                                         <tr>
-                                            <td className="w-28">Tracking Buyer</td>
-                                            <td className="w-8">:</td>
+                                            <td className="w-28">Buyer's Tracker</td>
+                                            <td className="w-2">:</td>
                                             <td className="text-left">{data.trackingBuyer}</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="w-28">Payment Rejection</td>
-                                            <td className="w-8">:</td>
-                                            <td className="text-left">{data.reason}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -213,11 +272,11 @@ export default function InquiryDetails({session, routeParam}) {
                                 Seller
                             </div>
                             <div className="m-2 p-2 text-sm">
-                                <table>
+                                <table className="w-full">
                                     <tbody>
                                         <tr>
-                                            <td className="w-28">Company Name</td>
-                                            <td className="w-8">:</td>
+                                            <td className="w-10">Company Name</td>
+                                            <td className="w-2">:</td>
                                             <td className="text-left w-28">
                                                 {data.companies_products?.company?.name}
                                                 {data.companies_products?.company?.is_confirmed == "pending" && <i title="Member Pending" className="mr-2 ml-1 fas fa-clock text-orange-500"></i>}
@@ -236,7 +295,7 @@ export default function InquiryDetails({session, routeParam}) {
                                             <td className="text-left">{data.shipinfoforseller}</td>
                                         </tr>
                                         <tr>
-                                            <td className="w-28">Tracking Seller</td>
+                                            <td className="w-28">Seller's Tracker</td>
                                             <td className="w-8">:</td>
                                             <td className="text-left">{data.trackingSeller}</td>
                                         </tr>
@@ -254,7 +313,7 @@ export default function InquiryDetails({session, routeParam}) {
                         </div>
                     </div>
                     <div className="flex justify-center mb-10">
-                       This is components description
+                       {data.companies_products?.Description}
                     </div>
                     {/*  table A */}
                     <div className="overflow-x-auto mb-5 flex justify-center">
@@ -266,6 +325,9 @@ export default function InquiryDetails({session, routeParam}) {
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3 w-28">
                                         Manufacturer
+                                    </th>   
+                                    <th scope="col" className="text-center px-6 py-3">
+                                        Avaliable Quantity
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3 w-28">
                                         MOQ
@@ -275,6 +337,12 @@ export default function InquiryDetails({session, routeParam}) {
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3 w-28">
                                         Packaging
+                                    </th>
+                                    <th scope="col" className="text-center px-6 py-3 w-28">
+                                        Category
+                                    </th>
+                                    <th scope="col" className="text-center px-6 py-3 w-28">
+                                        Sub-Category
                                     </th>
                                 </tr>
                             </thead>
@@ -287,6 +355,9 @@ export default function InquiryDetails({session, routeParam}) {
                                         {data.companies_products?.Manufacture}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
+                                        {data.companies_products?.AvailableQuantity}
+                                    </td>
+                                    <td className="text-center text-sm px-6 py-4">
                                         {data.companies_products?.moq}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
@@ -294,6 +365,12 @@ export default function InquiryDetails({session, routeParam}) {
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
                                         {data.companies_products?.packaging}
+                                    </td>
+                                    <td className="text-center text-sm px-6 py-4">
+                                        {data.companies_products?.subcategory?.name}
+                                    </td>
+                                    <td className="text-center text-sm px-6 py-4">
+                                        {data.companies_products?.subcategory?.category?.name}
                                     </td>
                                 </tr>
                             </tbody>
@@ -309,9 +386,6 @@ export default function InquiryDetails({session, routeParam}) {
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3">
                                         Date Code
-                                    </th>   
-                                    <th scope="col" className="text-center px-6 py-3">
-                                        Avaliable Quantity
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3">
                                         Seller Price (per item) / Total
@@ -330,9 +404,6 @@ export default function InquiryDetails({session, routeParam}) {
                                         {data.companies_products?.dateCode}
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
-                                        {data.companies_products?.AvailableQuantity}
-                                    </td>
-                                    <td className="text-center text-sm px-6 py-4">
                                         ${data.price} / ${parseFloat(data.price) * parseInt(data.qty) }
                                     </td>
                                     <td className="text-center text-sm px-6 py-4">
@@ -341,17 +412,6 @@ export default function InquiryDetails({session, routeParam}) {
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
-                </div>
-
-                <div className="px-4 py-3 border-0 bg-slate-200 mb-5">
-                    <div className="flex justify-center">
-                        <div className=" text-center">
-                            <h4
-                                className="font-semibold text-xl">
-                                Tracker Number : 22309AP00
-                            </h4>
-                        </div>
                     </div>
                 </div>
 
@@ -390,13 +450,7 @@ export default function InquiryDetails({session, routeParam}) {
                             <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
                                 Payment Receipt
                             </button>
-                        }
-
-                        <button className="m-2 p-2 bg-indigo-900 border text-center text-white">
-                            Shipment Info
-                        </button>
-
-                        
+                        }                
                     </div>
                 </div>
 
@@ -449,9 +503,29 @@ export default function InquiryDetails({session, routeParam}) {
                             </button>
                         }
 
-                        <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
-                            Set Shipment Info
-                        </button>
+                        {data.order_status_id == 9 ?
+                            <button onClick={() => setTrackerNumberForBuyerModal(true) } className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                               Set Tracker for Buyer
+                            </button>
+                            : <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                               Set Tracker for Buyer
+                            </button>
+                        }
+
+                        {data.order_status_id == 12 ?
+                            <button onClick={() => setCompleteOrderModal(true) } className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                               Complete Order
+                            </button>
+                            : <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                               Complete Order
+                            </button>
+                        }
+
+                        {/* {data.order_status_id != 13 &&
+                            <button onClick={() => setCancelOrderModal(true) } className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                                Cancel Order
+                            </button>
+                        } */}
 
                     </div>
                 </div>
@@ -493,6 +567,31 @@ export default function InquiryDetails({session, routeParam}) {
                         errorInfo={errorInfo}
                     />
                 }
+
+                {trackerNumberForBuyerModal &&
+                    <TrackerNumberForBuyerModal
+                        isLoading={isLoading}
+                        closeModal={() => setTrackerNumberForBuyerModal(false)}
+                        acceptance={handleTrackerNumberForBuyerModal}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                {completeOrderModal &&
+                    <CompleteOrderModal
+                        isLoading={isLoading}
+                        closeModal={() => setCompleteOrderModal(false)}
+                        acceptance={handleCompleteOrderModal}
+                    />
+                }
+
+                {/* {cancelOrderModal &&
+                    <CancelOrderModal
+                        isLoading={isLoading}
+                        closeModal={() => setCancelOrderModal(false)}
+                        acceptance={handleCancelOrderModal}
+                    />
+                } */}
 
             </div>
         </>

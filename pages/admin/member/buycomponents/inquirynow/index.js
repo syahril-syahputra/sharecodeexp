@@ -131,8 +131,26 @@ export default function InquiryNow({session}) {
 
     }
 
-    const handleDelete = (listId) => {
-        console.log(listId)
+    const handleDelete = async (listId) => {
+        setIsLoading(true)
+        const response = await axios.delete(`/removefromWish`, {
+          headers: {
+            "Authorization" : `Bearer ${session.accessToken}`,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          data: {
+            id: listId
+          }
+        })
+        .then(() => {
+            toast.success("Deleted", toastOptions)
+            searchData()
+        }).catch((error) => {
+            console.log(error)
+            toast.error("Something went wrong", toastOptions)
+        }).finally(() => {
+          setIsLoading(false)
+        })
     }
 
     return (

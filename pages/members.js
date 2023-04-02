@@ -11,53 +11,73 @@ import Image from "next/image"
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import ManufacturerCard from "@/components/LandingPage/ManufacturerCard";
+import CompaniesGroup from "@/components/LandingPage/CompaniesGroup";
 
 export default function Index() {
   const router = useRouter()
-  const [search, setSearch] = useState('')
-  function searchComponent(event){
-    if (event.key === 'Enter' && !!search) {
-      router.replace(`/product/search?q=${search}`)
-    }
-  }
-
-  //search suggestion
-  const [suggestion, setSuggestion] = useState([])
-  const [isSuggestionLoading, setSuggestionLoading] = useState(false)
-  useEffect(() => {
-    if(search){
-      setSuggestionLoading(true)
-      const getData = setTimeout(() => {
-        axios
-        .get(`/search/suggest/${search}`)
-        .then((response) => {
-          setSuggestion(response.data.data)
-        })
-        .finally(() => setSuggestionLoading(false));
-      }, 1000)
-
-      return () => clearTimeout(getData)
-    }
-  }, [search])
-
-  //data search
   const [isLoading, setIsLoading] = useState(true)
-  const [data, setData] = useState([])
-  const searchData = async (page=1) =>{
-    setIsLoading(true)
-    const response = await axios.get(`/search?page=${page}`)
-      .then((response) => {
-        let result = response.data.data
-        setData(result.data)
-      }).catch((error) => {
-        // console.log(error.response)
-      }).finally(() => {
-        setIsLoading(false)
-      })
-  }
-  useEffect(() => {
-    searchData(search)
-  }, [])
+  //load companies
+  const publicDir = process.env.NEXT_PUBLIC_DIR
+  const [companies, setCompanies] = useState([
+    {
+      companyAlphabet: "0-9",
+      companies: [
+        {
+          name: "007"
+        },
+        {
+          name: "7Eleven"
+        }
+      ]
+    },
+    {
+      companyAlphabet: "A",
+      companies: [
+        {
+          name: "Ala"
+        },
+        {
+          name: "Aloe"
+        }
+      ]
+    },
+    {
+      companyAlphabet: "C",
+      companies: [
+        {
+          name: "Chimera"
+        },
+        {
+          name: "Chitose"
+        }
+      ]
+    },
+    {
+      companyAlphabet: "M",
+      companies: [
+        {
+          name: "Mitsubishi"
+        },
+      ]
+    },
+  ])
+  // const loadCompanies = async () => {
+  //   const request = await axios.get(`/allcompany`)
+  //     .then((res) => {
+  //       let result = res.data
+  //       console.log(result)
+  //       setCompanies(result.data)
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  //     .finally(() => {
+  //       setIsLoading(false)
+  //     })
+  // }
+  // useEffect(() => {
+  //   loadCompanies()
+  // }, [])
 
   return (
     <>
@@ -72,7 +92,8 @@ export default function Index() {
                 <h2 className="font-semibold text-4xl text-indigo-900">Our Member</h2>
               </div>
             </div>
-            <div className="grid gap-4 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 place-content-center">
+            {/* <div className="grid gap-4 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 place-content-center">
+
               <ManufacturerCard
                 imageSrc='/img/manufacturer/bluespacelogo_blue.png'
                 label='BlueSpace'
@@ -121,7 +142,19 @@ export default function Index() {
                 imageSrc='/img/manufacturer/RFLOGY-Logo.png'
                 label='RFLOGY'
               />
-            </div>
+
+
+            </div> */}
+
+              {companies.map((item, index) => {
+                return(
+                  <div className="pt-10" key={index}>
+                    <CompaniesGroup
+                        company={item}
+                    />
+                  </div>
+                )
+              })}
           </div>
         </div>
       </section>
