@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { signIn, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 
 // components
 import ImageLogo from "@/components/ImageLogo/ImageLogo";

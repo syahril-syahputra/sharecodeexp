@@ -44,23 +44,6 @@ export default function Index() {
 
   //data search
   const [isLoading, setIsLoading] = useState(true)
-  const [data, setData] = useState([])
-  const searchData = async (page=1) =>{
-    setIsLoading(true)
-    const response = await axios.get(`/search?page=${page}`)
-      .then((response) => {
-        let result = response.data.data
-        setData(result.data)
-      }).catch((error) => {
-        // console.log(error.response)
-      }).finally(() => {
-        setIsLoading(false)
-      })
-  }
-  useEffect(() => {
-    searchData(search)
-  }, [])
-
 
   //load categories
   const [categories, setCategories] = useState([])
@@ -87,9 +70,9 @@ export default function Index() {
   const loadCompanies = async () => {
     const request = await axios.get(`/newstcompany`)
       .then((res) => {
-        let result = res.data
-        console.log(result.data)
-        setCompanies(result.data)
+        let result = res.data.data
+        let getFewData = result.slice(Math.max(result.length - 10, 1))
+        setCompanies(getFewData)
       })
       .catch((err) => {
         console.log(err)
@@ -175,84 +158,6 @@ export default function Index() {
         </div>
       </section>
 
-      {/* <section className="pb-28 relative bg-blueGray-100">
-        <div className="container mx-auto">
-          <div className="justify-center text-center flex flex-wrap">
-            <div className="w-full md:w-6/12 px-12 md:px-4 mt-16 mb-16">
-              <h2 className="font-semibold text-4xl">How Exepart System Operates</h2>
-            </div>
-          </div>
-          <div className="flex flex-wrap">
-            <div className="w-full md:w-1/2 ml-auto mr-auto">
-              <Image
-                src='/img/how-exepart-system-operates.png'
-                alt="how-exepart-system-operates"
-                height={800}
-                width={800}
-                className="mx-auto shadow-lg"
-              />
-            </div>
-            <div className="w-full md:w-4/12">
-              <p className="text-xl font-light leading-relaxed mt-4 mb-4 text-blueGray-600">
-                EXEpart is a closed sales platform that only allows verified industrial manufacturers to list their excess stocks and buy stocks from fellow manufacturers. 
-                It is a great tool to overcome the shortage crisis while enabling the manufacturers to capitalize their unused stocks. 
-                No brokers are allowed to register at EXEpart
-              </p>
-            </div>
-          </div>
-        </div>
-      </section> */}
-
-
-      {/* <section className="pb-28 relative bg-white">
-        <div className="container mx-auto">
-          <div className="justify-center text-center flex flex-wrap">
-            <div className="w-full md:w-6/12 px-12 md:px-4 mt-16 mb-16">
-              <h2 className="font-semibold text-4xl">How Exepart System Operates</h2>
-            </div>
-          </div>
-          <div className="flex flex-wrap">
-            <div className="w-full sm:w-1/2 ml-auto mr-auto">
-              <Image
-                src='/img/how-exepart-system-operates.png'
-                alt="how-exepart-system-operates"
-                height={800}
-                width={800}
-                className="mx-auto shadow"
-              />
-            </div>
-            <div className="w-full sm:w-4/12 ml-auto mr-auto">
-              <h2 className="text-2xl mb-1 font-semibold">Example subtitle</h2>
-              <p className="text-xl font-light leading-relaxed mt-4 mb-4 text-blueGray-600">
-                EXEpart is a closed sales platform that only allows verified industrial manufacturers to list their excess stocks and buy stocks from fellow manufacturers. 
-                It is a great tool to overcome the shortage crisis while enabling the manufacturers to capitalize their unused stocks. 
-                No brokers are allowed to register at EXEpart
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-wrap pt-36">
-            <div className="w-full sm:w-4/12 ml-auto mr-auto">
-              <h2 className="text-2xl mb-1 font-semibold">Example subtitle</h2>             
-              <p className="text-xl font-light leading-relaxed mt-4 mb-4 text-blueGray-600">
-                EXEpart is a closed sales platform that only allows verified industrial manufacturers to list their excess stocks and buy stocks from fellow manufacturers. 
-                It is a great tool to overcome the shortage crisis while enabling the manufacturers to capitalize their unused stocks. 
-                No brokers are allowed to register at EXEpart
-              </p>
-            </div>
-            <div className="w-full sm:w-1/2 ml-auto mr-auto">
-              <Image
-                src='/img/how-exepart-system-operates.png'
-                alt="how-exepart-system-operates"
-                height={800}
-                width={800}
-                className="mx-auto shadow"
-              />
-            </div>
-          </div>
-        </div>
-      </section> */}
-
-
       <section className="pb-28 relative bg-white">
         <div className="container mx-auto">
           <div className="justify-center text-center flex flex-wrap">
@@ -312,7 +217,7 @@ export default function Index() {
             <div className="mb-4 text-end">
               <Link href="/members" className="font-medium text-blueGray-700 underline">View all Members</Link>
             </div>
-            <div className="grid gap-4 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 place-content-center">
+            <div className="grid gap-4 lg:grid-cols-5 md:grid-cols-2 sm:grid-cols-2 place-content-center">
               {companies.map((item, index) => 
                 <div key={index}>
                   <MemberCard

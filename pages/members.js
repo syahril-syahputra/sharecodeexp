@@ -18,66 +18,23 @@ export default function Index() {
   const [isLoading, setIsLoading] = useState(true)
   //load companies
   const publicDir = process.env.NEXT_PUBLIC_DIR
-  const [companies, setCompanies] = useState([
-    {
-      companyAlphabet: "0-9",
-      companies: [
-        {
-          name: "007"
-        },
-        {
-          name: "7Eleven"
-        }
-      ]
-    },
-    {
-      companyAlphabet: "A",
-      companies: [
-        {
-          name: "Ala"
-        },
-        {
-          name: "Aloe"
-        }
-      ]
-    },
-    {
-      companyAlphabet: "C",
-      companies: [
-        {
-          name: "Chimera"
-        },
-        {
-          name: "Chitose"
-        }
-      ]
-    },
-    {
-      companyAlphabet: "M",
-      companies: [
-        {
-          name: "Mitsubishi"
-        },
-      ]
-    },
-  ])
-  // const loadCompanies = async () => {
-  //   const request = await axios.get(`/allcompany`)
-  //     .then((res) => {
-  //       let result = res.data
-  //       console.log(result)
-  //       setCompanies(result.data)
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  //     .finally(() => {
-  //       setIsLoading(false)
-  //     })
-  // }
-  // useEffect(() => {
-  //   loadCompanies()
-  // }, [])
+  const [companies, setCompanies] = useState([])
+  const loadCompanies = async () => {
+    const request = await axios.get(`/allcompany`)
+      .then((res) => {
+        let result = res.data
+        setCompanies(result.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }
+  useEffect(() => {
+    loadCompanies()
+  }, [])
 
   return (
     <>
@@ -89,63 +46,9 @@ export default function Index() {
           <div className="w-full px-12 md:px-4 mt-40">
             <div className="justify-center text-center flex flex-wrap mb-20">
               <div className="w-full md:w-6/12 px-12 md:px-4">
-                <h2 className="font-semibold text-4xl text-indigo-900">Our Member</h2>
+                <h2 className="font-semibold text-4xl text-indigo-900">Our Members</h2>
               </div>
             </div>
-            {/* <div className="grid gap-4 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 place-content-center">
-
-              <ManufacturerCard
-                imageSrc='/img/manufacturer/bluespacelogo_blue.png'
-                label='BlueSpace'
-              />
-              <ManufacturerCard
-                imageSrc='/img/manufacturer/HESA_LOGO.png'
-                label='HESA'
-              />
-              <ManufacturerCard
-                imageSrc='/img/manufacturer/Hitit_Defense.png'
-                label='Hitit Defense'
-              />
-              <ManufacturerCard
-                imageSrc='/img/manufacturer/RFLOGY-Logo.png'
-                label='RFLOGY'
-              />
-              <ManufacturerCard
-                imageSrc='/img/manufacturer/bluespacelogo_blue.png'
-                label='BlueSpace'
-              />
-              <ManufacturerCard
-                imageSrc='/img/manufacturer/HESA_LOGO.png'
-                label='HESA'
-              />
-              <ManufacturerCard
-                imageSrc='/img/manufacturer/Hitit_Defense.png'
-                label='Hitit Defense'
-              />
-              <ManufacturerCard
-                imageSrc='/img/manufacturer/RFLOGY-Logo.png'
-                label='RFLOGY'
-              />
-              <ManufacturerCard
-                imageSrc='/img/manufacturer/bluespacelogo_blue.png'
-                label='BlueSpace'
-              />
-              <ManufacturerCard
-                imageSrc='/img/manufacturer/HESA_LOGO.png'
-                label='HESA'
-              />
-              <ManufacturerCard
-                imageSrc='/img/manufacturer/Hitit_Defense.png'
-                label='Hitit Defense'
-              />
-              <ManufacturerCard
-                imageSrc='/img/manufacturer/RFLOGY-Logo.png'
-                label='RFLOGY'
-              />
-
-
-            </div> */}
-
               {companies.map((item, index) => {
                 return(
                   <div className="pt-10" key={index}>
@@ -155,6 +58,11 @@ export default function Index() {
                   </div>
                 )
               })}
+              {isLoading &&<div>
+              <div className='text-center my-auto mt-10'>
+                  <i className="fas fa-circle-notch fa-spin text-blueGray-700 my-auto mx-10 fa-2xl"></i>
+              </div>
+          </div>}
           </div>
         </div>
       </section>

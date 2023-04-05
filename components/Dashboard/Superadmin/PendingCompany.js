@@ -2,7 +2,9 @@ import React from "react";
 import Link from "next/link";
 // components
 
-export default function PendingCompany() {
+export default function PendingCompany(props) {
+  const data = props.data.slice(Math.max(props.data.length - 5, 1))
+  
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg">
@@ -40,43 +42,32 @@ export default function PendingCompany() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                  CmpNM
-                </th>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  Germany
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
-                  <button className="px-3 py-1 bg-blueGray-700 text-white">Review Docs</button>
-                </td>
-              </tr>
-              <tr>
-                <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                  CmpNM
-                </th>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  Germany
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
-                  <button className="px-3 py-1 bg-blueGray-700 text-white">Review Docs</button>
-                </td>
-              </tr>
-              <tr>
-                <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                  CmpNM
-                </th>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  Germany
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
-                  <button className="px-3 py-1 bg-blueGray-700 text-white">Review Docs</button>
-                </td>
-              </tr>
+              {data.map((item, index) => {
+                return (
+                  <tr key={index}>
+                    <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
+                      {item.name}
+                    </th>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      {item.country}
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
+                      <Link href={`/admin/registry/company/${item.id}`}>                      
+                        <button className="px-3 py-1 bg-blueGray-700 text-white">Review Docs</button>
+                      </Link>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
       </div>
+      {props.isLoading &&<div>
+          <div className='text-center my-auto mt-10'>
+              <i className="fas fa-circle-notch fa-spin text-blueGray-700 my-auto mx-10 fa-2xl"></i>
+          </div>
+      </div>}
     </>
   );
 }

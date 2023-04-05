@@ -19,93 +19,26 @@ export default function Footer() {
                 />
               </div>
               <h5 className="text-lg mt-0 mb-2 text-slate-400">
-                Find us on any of these platforms, we respond 1-2 business days.
+                M2M Excess Stock Management
               </h5>
               <div className="mt-6 lg:mb-0 mb-6">
-                <button
-                  className="bg-white text-lightBlue-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                  type="button"
-                >
-                  <i className="fab fa-twitter"></i>
-                </button>
-                <button
-                  className="bg-white text-lightBlue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                  type="button"
-                >
-                  <i className="fab fa-facebook-square"></i>
-                </button>
-                <button
-                  className="bg-white text-pink-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                  type="button"
-                >
-                  <i className="fab fa-dribbble"></i>
-                </button>
-                <button
-                  className="bg-white text-blueGray-800 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                  type="button"
-                >
-                  <i className="fab fa-github"></i>
-                </button>
+
               </div>
             </div>
             <div className="w-full lg:w-6/12 px-4">
               <div className="flex flex-wrap items-top mb-6">
                 <div className="w-full lg:w-4/12 px-4 ml-auto">
-                  <span className="block uppercase text-white text-sm font-semibold mb-2">
-                    Useful Links
-                  </span>
-                  <ul className="list-unstyled">
-                    <li>
-                      <a
-                        className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
-                        href="https://www.creative-tim.com/presentation?ref=nnjs-footer"
-                      >
-                        About Us
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
-                        href="https://blog.creative-tim.com?ref=nnjs-footer"
-                      >
-                        Blog
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
-                        href="https://www.github.com/creativetimofficial?ref=nnjs-footer"
-                      >
-                        Github
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
-                        href="https://www.creative-tim.com/bootstrap-themes/free?ref=nnjs-footer"
-                      >
-                        Free Products
-                      </a>
-                    </li>
-                  </ul>
+
                 </div>
                 <div className="w-full lg:w-4/12 px-4">
                   <span className="block uppercase text-white text-sm font-semibold mb-2">
-                    Other Resources
+                    Resources
                   </span>
                   <ul className="list-unstyled">
                     <li>
                       <a
                         className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
-                        href="https://github.com/creativetimofficial/notus-nextjs/blob/main/LICENSE.md?ref=nnjs-footer"
-                      >
-                        MIT License
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
-                        href="https://creative-tim.com/terms?ref=nnjs-footer"
+                        href="/termsandconditions"
                       >
                         Terms & Conditions
                       </a>
@@ -113,7 +46,7 @@ export default function Footer() {
                     <li>
                       <a
                         className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
-                        href="https://creative-tim.com/privacy?ref=nnjs-footer"
+                        href="/privacypolicy"
                       >
                         Privacy Policy
                       </a>
@@ -121,7 +54,7 @@ export default function Footer() {
                     <li>
                       <a
                         className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
-                        href="https://creative-tim.com/contact-us?ref=nnjs-footer"
+                        href="/contactus"
                       >
                         Contact Us
                       </a>

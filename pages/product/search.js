@@ -14,6 +14,8 @@ import axios from "lib/axios";
 export default function Index() {
   const router = useRouter()
   const [search, setSearch] = useState(router.query.q ? router.query.q : '')
+  const [category, setCategory] = useState(router.query.category ? router.query.category : '')
+  const [subcategory, setSubcategory] = useState(router.query.subcategory ? router.query.subcategory : '')
   
   function searchComponent(event){
     if (event.key === 'Enter' && !!search) {
@@ -33,7 +35,7 @@ export default function Index() {
   })
   const searchData = async (srch, page=1) =>{
     setIsLoading(true)
-    const response = await axios.get(`/search?query=${srch}&&page=${page}`)
+    const response = await axios.get(`/search?query=${srch}&page=${page}&cat=${category}&sub=${subcategory}`)
       .then((response) => {
         let result = response.data.data
         setData(result.data)

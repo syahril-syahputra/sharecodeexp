@@ -7,6 +7,7 @@ export default function InputForm(props){
                 {props.label}
             </label>
             <input 
+                required={props.isRequired}
                 disabled={props.isDisabled}
                 value={inputData}
                 onChange={({target}) => 

@@ -1,6 +1,7 @@
 import React, {useState, useEffect }from "react";
 import { getSession } from "next-auth/react";
 import { signOut } from "next-auth/react"
+import axios from "@/lib/axios";
 
 // superadmin
 import PendingCompany from "@/components/Dashboard/Superadmin/PendingCompany"
@@ -25,6 +26,144 @@ export default function Dashboard({session}) {
     setCompanyStatus(session.user.isCompanyConfirmed)
   }, [])
 
+  const [loadingPendingCompany, setLoadingPendingCompany] = useState()
+  const [pendingCompany, setPendingCompany] = useState([])
+  const loadPendingCompany = async () => {
+    setLoadingPendingCompany(true)
+    const response = await axios.get(`/admin/companies?status=pending`,
+        {
+            headers: {
+            "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then((response) => {
+          let result = response.data.data
+          setPendingCompany(result.data)
+        }).catch((error) => {
+          console.log(error)
+        }).finally(() => {
+          setLoadingPendingCompany(false)
+        })
+  }
+  useEffect(() => {
+    loadPendingCompany()
+  }, [])
+
+  const [loadingNewInquiries, setLoadingNewInquiries] = useState()
+  const [newInquiries, setNewInquiries] = useState([])
+  const loadNewInquiries = async () => {
+    setLoadingNewInquiries(true)
+    const response = await axios.get(`/admin/orders/inquired`,
+        {
+            headers: {
+            "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then((response) => {
+          let result = response.data.data
+          setNewInquiries(result.data)
+        }).catch((error) => {
+          console.log(error)
+        }).finally(() => {
+          setLoadingNewInquiries(false)
+        })
+  }
+  useEffect(() => {
+    loadNewInquiries()
+  }, [])
+
+  const [loadingActiveOrders, setLoadingActiveOrders] = useState()
+  const [activeOrders, setActiveOrders] = useState([])
+  const loadActiveOrders = async () => {
+    setLoadingActiveOrders(true)
+    const response = await axios.get(`/admin/orders/ongoing`,
+        {
+            headers: {
+            "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then((response) => {
+          let result = response.data.data
+          setActiveOrders(result.data)
+        }).catch((error) => {
+          console.log(error)
+        }).finally(() => {
+          setLoadingActiveOrders(false)
+        })
+  }
+  useEffect(() => {
+    loadActiveOrders()
+  }, [])
+
+  const [loadingPendingShipments, setLoadingPendingShipments] = useState()
+  const [pendingShipments, setPendingShipments] = useState([])
+  const loadPendingShipments = async () => {
+    setLoadingPendingShipments(true)
+    const response = await axios.get(`/admin/orders/preparing_shipment`,
+        {
+            headers: {
+            "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then((response) => {
+          let result = response.data.data
+          setPendingShipments(result.data)
+        }).catch((error) => {
+          console.log(error)
+        }).finally(() => {
+          setLoadingPendingShipments(false)
+        })
+  }
+  useEffect(() => {
+    loadPendingShipments()
+  }, [])
+
+  const [loadingPendingPayments, setLoadingPendingPayments] = useState()
+  const [pendingPayments, setPendingPayments] = useState([])
+  const loadPendingPayments = async () => {
+    setLoadingPendingPayments(true)
+    const response = await axios.get(`/admin/orders/payment_verified`,
+        {
+            headers: {
+            "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then((response) => {
+          let result = response.data.data
+          setPendingPayments(result.data)
+        }).catch((error) => {
+          console.log(error)
+        }).finally(() => {
+          setLoadingPendingPayments(false)
+        })
+  }
+  useEffect(() => {
+    loadPendingPayments()
+  }, [])
+
+  const [loadingMemberStatistics, setLoadingMemberStatistics] = useState()
+  const [memberStatistics, setMemberStatistics] = useState([])
+  const loadMemberStatistics = async () => {
+    setLoadingMemberStatistics(true)
+    const response = await axios.get(`/admin/visitor`,
+        {
+            headers: {
+            "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then((response) => {
+          let result = response.data.data
+          console.log(result)
+          setMemberStatistics(result)
+        }).catch((error) => {
+          console.log(error)
+        }).finally(() => {
+          setLoadingMemberStatistics(false)
+        })
+  }
+  useEffect(() => {
+    loadMemberStatistics()
+  }, [])
 
   return (
     <>
@@ -32,28 +171,46 @@ export default function Dashboard({session}) {
         <>
           <div className="flex flex-wrap mt-4">
             <div className="w-full xl:w-5/12 px-4">
-              <PendingCompany />
+              <PendingCompany 
+                isLoading={loadingPendingCompany}
+                data={pendingCompany}
+              />
             </div>
             <div className="w-full xl:w-7/12 mb-12 xl:mb-0 px-4">
-              <NewInquiries/>
+              <NewInquiries
+                isLoading={loadingNewInquiries}
+                data={newInquiries}
+              />
             </div>          
           </div>
           <div className="flex flex-wrap mt-4">
             <div className="w-full px-4">
-              <StatusUpdateOngoingOrder />
+              <StatusUpdateOngoingOrder 
+                isLoading={loadingActiveOrders}
+                data={activeOrders}
+              />
             </div>         
           </div>
           <div className="flex flex-wrap mt-4">
             <div className="w-full xl:w-6/12 px-4">
-              <PendingShipment />
+              <PendingShipment 
+                isLoading={loadingPendingShipments}
+                data={pendingShipments}
+              />
             </div>
             <div className="w-full xl:w-6/12 px-4">
-              <PendingPayment/>
+              <PendingPayment
+                isLoading={loadingPendingPayments}
+                data={pendingPayments}
+              />
             </div>          
           </div>
           <div className="flex flex-wrap mt-4">
             <div className="w-full px-4">
-              <MemberStatistic />
+              <MemberStatistic 
+                isLoading={loadingMemberStatistics}
+                data={memberStatistics}
+              />
             </div>         
           </div>
         </>
