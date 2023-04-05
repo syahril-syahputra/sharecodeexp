@@ -15,7 +15,7 @@ import RejectPaymentDocumentModal from "@/components/Modal/OrderComponent/Supera
 import TrackerNumberForBuyerModal from "@/components/Modal/OrderComponent/Superadmin/TrackerNumberForBuyer"
 import CompleteOrderModal from "@/components/Modal/OrderComponent/Superadmin/CompleteOrder"
 import { toast } from 'react-toastify';
-import toastOptions from "@/lib/toastOptions"
+import { toastOptions } from "@/lib/toastOptions"
 
 export default function InquiryDetails({session, routeParam}) {
     const publicDir = process.env.NEXT_PUBLIC_DIR

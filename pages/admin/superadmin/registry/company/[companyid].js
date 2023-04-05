@@ -13,7 +13,7 @@ import Admin from "layouts/Admin.js";
 
 //toast
 import { toast } from 'react-toastify';
-import toastOptions from "@/lib/toastOptions"
+import { toastOptions } from "@/lib/toastOptions"
 
 export default function CompanyList({session, routeParam}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR

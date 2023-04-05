@@ -12,7 +12,7 @@ import SendUpdatedPaymentDocsModal from "@/components/Modal/OrderComponent/Buyer
 import AcceptOrderModal from "@/components/Modal/OrderComponent/Buyer/AcceptOrder"
 import RejectOrderModal from "@/components/Modal/OrderComponent/Buyer/RejectOrder"
 import { toast } from 'react-toastify';
-import toastOptions from "@/lib/toastOptions"
+import { toastOptions } from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";

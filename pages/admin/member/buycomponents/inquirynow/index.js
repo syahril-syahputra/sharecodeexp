@@ -8,7 +8,7 @@ import ComponentList from "components/Table/Member/InquiryNow/ComponentList"
 import EditQuantityModal from "@/components/Modal/InquiryComponent/EditQuantity"
 import InquiryNowModal from "@/components/Modal/InquiryComponent/InquiryNow"
 import { toast } from 'react-toastify';
-import toastOptions from "@/lib/toastOptions"
+import { toastOptions } from "@/lib/toastOptions"
 
 
 // layout for page

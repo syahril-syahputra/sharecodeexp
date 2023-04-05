@@ -11,8 +11,6 @@ import Footer from "components/Footers/Footer.js";
 import InputForm from "@/components/Shared/InputForm";
 import ErrorInput from '@/components/Shared/ErrorInput';
 import SubmitButton from '@/components/Buttons/SubmitButton'
-import { toast } from 'react-toastify';
-import toastOptions from "@/lib/toastOptions"
 
 export default function Index() {
   const [isLoading, setIsloading] = useState(false)
@@ -35,7 +33,7 @@ export default function Index() {
     const request = await axios.post('/formmail', inputData)
       .then((res) => {
         console.log(res)
-        setSuccesMessage("Your email has been sent", toastOptions)
+        setSuccesMessage("Your email has been sent")
         setEnteredEmail('')
         setEnteredSubject('')
         setEnteredMessages('')
@@ -43,7 +41,6 @@ export default function Index() {
       .catch((err) => {
         console.log(err.data)
         setErrorInfo(err.data.data)
-        // toast.error("Something went wrong", toastOptions)
       })
       .finally(() => {
         setIsloading(false)

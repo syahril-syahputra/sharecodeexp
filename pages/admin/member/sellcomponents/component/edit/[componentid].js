@@ -9,7 +9,7 @@ import CountrySelector from "@/components/Shared/CountrySelector";
 import Select from 'react-tailwindcss-select';
 import ErrorInput from '@/components/Shared/ErrorInput';
 import { toast } from 'react-toastify';
-import toastOptions from "@/lib/toastOptions"
+import { toastOptions } from "@/lib/toastOptions"
 
 
 // layout for page

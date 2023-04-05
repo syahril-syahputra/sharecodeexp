@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 
 // components
 import { toast } from 'react-toastify';
-import toastOptions from "@/lib/toastOptions"
+import { toastOptions } from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";

@@ -9,7 +9,7 @@ import AcceptComponent from "@/components/Modal/Component/AcceptComponent"
 import RejectComponent from "@/components/Modal/Component/RejectComponent"
 import PendingComponent from "@/components/Modal/Component/PendingComponent"
 import { toast } from 'react-toastify';
-import toastOptions from "@/lib/toastOptions"
+import { toastOptions } from "@/lib/toastOptions"
 
 
 // layout for page

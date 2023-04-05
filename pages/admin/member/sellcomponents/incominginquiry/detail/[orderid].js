@@ -5,7 +5,7 @@ import Link from "next/link";
 // components
 import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep"
 import { toast } from 'react-toastify';
-import toastOptions from "@/lib/toastOptions"
+import { toastOptions } from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";

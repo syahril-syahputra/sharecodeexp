@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import InputForm from "@/components/Shared/InputForm";
 import CountrySelector from "@/components/Shared/CountrySelector";
 import { toast } from 'react-toastify';
-import toastOptions from "@/lib/toastOptions"
+import { toastOptions } from "@/lib/toastOptions"
 
 
 //data

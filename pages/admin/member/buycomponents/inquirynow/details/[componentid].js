@@ -7,7 +7,7 @@ import { getSession } from "next-auth/react";
 // components
 import InputForm from "@/components/Shared/InputForm";
 import { toast } from 'react-toastify';
-import toastOptions from "@/lib/toastOptions"
+import { toastOptions } from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";
