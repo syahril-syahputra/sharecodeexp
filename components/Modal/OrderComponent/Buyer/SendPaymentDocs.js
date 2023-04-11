@@ -1,9 +1,25 @@
 import { useState } from "react"
 import AcceptButton from "@/components/Buttons/AcceptButton";
 import ErrorInput from '@/components/Shared/ErrorInput';
+import Select from 'react-tailwindcss-select';
 export default function SendPaymentDocs(props){
+    const [couriers, setCouriers] = useState(props.couriers)
     const [paymentDocs, setPaymentDocs] = useState()
     const [shipmentInfo, setShipmentInfo] = useState()
+
+    const [courier, setCourier] = useState(null);
+    const [selectedCourier, setSelectedCourier] = useState(null);
+    const handleCourierChange = value => {
+        setCourier(value);
+        setSelectedCourier(value.value)
+    };
+
+    const [buyerAccountInformation, setBuyerAccountInformation] = useState()
+
+    const handleSubmit = () => {
+        props.acceptance(shipmentInfo, paymentDocs, selectedCourier, buyerAccountInformation)
+    }
+
     return (
         <>
             <div
@@ -56,13 +72,13 @@ export default function SendPaymentDocs(props){
                                     </div>
                                 </div>
                             </div>
-                            {props.errorInfo.Payment_doc &&
-                                <ErrorInput error={props.errorInfo.Payment_doc}/>
+                            {props.errorInfo?.Payment_doc &&
+                                <ErrorInput error={props.errorInfo?.Payment_doc}/>
                             }
                         </div>
                         <div className="w-full px-3 mb-6 mt-10">
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                Buyer Shipment Info
+                                Buyer’s Shipment Address
                             </label>
                             <textarea 
                                 value={shipmentInfo}
@@ -72,8 +88,52 @@ export default function SendPaymentDocs(props){
                                 autoComplete="off" 
                                 type="text"
                                 className="shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
-                            {props.errorInfo.shipinfobuyer &&
-                                <ErrorInput error={props.errorInfo.shipinfobuyer}/>
+                            {props.errorInfo?.shipinfobuyer &&
+                                <ErrorInput error={props.errorInfo?.shipinfobuyer}/>
+                            }
+                        </div>                        
+                        <div className="w-full md:w-full px-3">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                                Courier
+                            </label>
+                            <Select 
+                                name="courier"
+                                value={courier}
+                                onChange={handleCourierChange}
+                                options={couriers}
+                                classNames={{
+                                    menuButton: () => (
+                                        `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
+                                    ),
+                                    menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
+                                    listItem: ({ isSelected }) => (
+                                        `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
+                                            isSelected
+                                                ? `text-white bg-blue-500`
+                                                : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
+                                        }`
+                                    ),
+                                    searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
+                                }}
+                                />
+                            {props.errorInfo?.courier &&
+                                <ErrorInput error={props.errorInfo?.courier}/>
+                            }
+                        </div>
+                        <div className="w-full px-3 mb-6 mt-10">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                                Buyer’s Courier Account Information
+                            </label>
+                            <textarea 
+                                value={buyerAccountInformation}
+                                onChange={({target}) => 
+                                    setBuyerAccountInformation(target.value)
+                                }
+                                autoComplete="off" 
+                                type="text"
+                                className="shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+                            {props.errorInfo?.shipinfobuyer &&
+                                <ErrorInput error={props.errorInfo?.shipinfobuyer}/>
                             }
                         </div>
                     </form>
@@ -90,7 +150,7 @@ export default function SendPaymentDocs(props){
                     <AcceptButton
                         buttonTitle="Send"
                         isLoading={props.isLoading}
-                        onClick={() => props.acceptance(shipmentInfo, paymentDocs)}
+                        onClick={handleSubmit}
                     />
                     </div>
                 </div>

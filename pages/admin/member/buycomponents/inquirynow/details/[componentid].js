@@ -202,6 +202,24 @@ AddToInquiryList.layout = Admin;
 
 export async function getServerSideProps(context) {
     const session = await getSession(context)
+    const loadCompany = await axios.get(`/company`, {
+        headers: {
+        "Authorization" : `Bearer ${session.accessToken}`
+        }
+    })
+    const company = loadCompany.data.data
+
+    if(company.is_confirmed === 'pending' || company.is_confirmed === 'rejected'){
+        return {
+            redirect: {
+              permanent: false,
+              destination: '/admin/member?redirect=true',
+            },
+            props: {
+                
+            }
+          };
+    }
 
     return {
         props: {

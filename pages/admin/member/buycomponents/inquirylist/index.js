@@ -54,7 +54,7 @@ export default function InquiryNow({session}) {
         searchData()
     }, [])
 
-    const [orderStatus, setOrderStatuses] = useState("inquired")
+    const [orderStatus, setOrderStatuses] = useState("all")
     const handleStatusChange = (status) => {
         setOrderStatuses(status.value)
     }

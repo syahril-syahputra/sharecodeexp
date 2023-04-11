@@ -4,6 +4,7 @@ import axios from "lib/axios";
 import Image from 'next/image';
 import { PageSEO } from '@/components/Utils/SEO'
 import siteMetadata from '@/data/siteMetadata'
+import Link from 'next/link'
 
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
@@ -17,6 +18,8 @@ import { useRouter } from 'next/router';
 export default function Index() {
     const refdata = useRef()
     const router = useRouter()
+    const [isAgreed, setIsAgreed] = useState(false)
+    const [isAgreedMessage, setIsAgreedMessage] = useState('')
     const [registrationInfo, setRegistrationInfo] = useState(
         {
             //Account Information
@@ -39,7 +42,7 @@ export default function Index() {
             
         }
     )
-
+    
     const countries = useMemo(() => countryList().getData(), [])
     const [country, setCountry] = useState(null);
     const countryHandleChange = value => {
@@ -53,6 +56,10 @@ export default function Index() {
     const [isLoading, setIsLoading] = useState(false)
     const handleSubmit = async (e) => {
         e.preventDefault()
+        if(!isAgreed){
+            setIsAgreedMessage('Please check the box bellow before continue.')
+            return
+        }
         setErrorMessage(null)
         setIsLoading(true)
         let datasend = registrationInfo
@@ -81,6 +88,20 @@ export default function Index() {
             setIsLoading(false)
         })
 
+    }
+
+    const validateIsAgreed = () => {
+        if(!isAgreed){
+            alert("please agreed!")
+        }
+    }
+
+    const handleIsAgreed = () => {
+        setIsAgreed(prev => !prev)
+
+        if(!isAgreed){
+            setIsAgreedMessage()
+        }
     }
 
     const [image, setImage] = useState(null)
@@ -481,8 +502,22 @@ export default function Index() {
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <div className="text-center mb-6 mt-20">
+                                <div class="items-center">
+                                    {isAgreedMessage &&
+                                        <div>
+                                            <span className=" inline-block mr-2 align-middle">
+                                                <i className="text-red-500 fas fa-bell"></i>
+                                            </span>
+                                            <span className="font-light text-sm">
+                                                <i className="text-red-500 capitalize">{isAgreedMessage}</i>
+                                            </span>
+                                        </div>
+                                    }
+                                    <input id="link-checkbox" type="checkbox" checked={isAgreed} onChange={handleIsAgreed} class="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"/>
+                                    <label htmlFor="link-checkbox" class="ml-2 text-sm font-medium text-gray-900">I agree with the <Link target="_blank" href="/termsandconditions" class="text-blue-600 hover:underline">terms and conditions</Link>.</label>
+                                </div>
                                 {!isLoading && 
                                     <button
                                         type="submit"

@@ -32,7 +32,7 @@ export default function SettingsBar(props){
             </ul>
              : null} 
 
-            {statusId == 1 ? 
+            {statusId == 1 && props.companyStatus == 'accepted' ? 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
               <li className="items-center">
                 <Link href="/admin/settings/masteraccount"

@@ -16,13 +16,40 @@ export default function VerifyOrder(props){
 
     const [errorInfo, setErrorInfo] = useState(props.errorInfo)
     const setDataHandler = (item, inputName) => {
+        setErrorInfo()
         setInputData({...inputData, [inputName]:item.value})
+    }
+
+    const [updatedMOQ, setUpdatedMOQ] = useState()
+    const setAQHandler = (item, inputName) => {
+        setInputData({...inputData, [inputName]:item.value})
+
+        if(parseInt(item.value) < parseInt(inputData.moq)) {
+            setUpdatedMOQ(item.value)
+        } else {
+            setUpdatedMOQ()
+        }
     }
 
     useEffect(() => {
         let total = props.orderQty * inputData.price
         setTotal(total)
     }, [inputData.price])
+
+    const handleVerify = () => {
+        if(inputData.price == 0) {
+            setErrorInfo({price: "Price can not be 0"})
+            return
+        }
+        
+        let finalData = inputData
+        if(updatedMOQ) {
+            finalData.moq = updatedMOQ
+
+        }
+
+        props.acceptance(finalData)
+    }
     
     return (
         <>
@@ -68,7 +95,7 @@ export default function VerifyOrder(props){
                                     inputType="number"
                                     inputDataName="AvailableQuantity"
                                     value={inputData.AvailableQuantity}
-                                    setData={setDataHandler}
+                                    setData={setAQHandler}
                                     errorMsg={errorInfo?.AvailableQuantity}
                                 />
                             </div>
@@ -81,6 +108,13 @@ export default function VerifyOrder(props){
                                     setData={setDataHandler}
                                     errorMsg={errorInfo?.moq}
                                 />
+                                {updatedMOQ && 
+                                <div className="mt-1 text-slate-500"  title="MOQ will updated if Available Quantity is lowest than MOQ">
+                                    <i>MOQ will updated to: {updatedMOQ}
+                                        <i className="fas fa-question-circle ml-2 mt-2"></i>
+                                    </i>
+                                </div>
+                                }
                             </div>                            
                             <div className="w-1/2 px-3 mb-6">
                                 <InputForm
@@ -128,7 +162,7 @@ export default function VerifyOrder(props){
                     <AcceptButton
                         buttonTitle="Verify"
                         isLoading={props.isLoading}
-                        onClick={() => props.acceptance(inputData)}
+                        onClick={handleVerify}
                     />
                     </div>
                 </div>

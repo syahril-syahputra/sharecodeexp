@@ -4,7 +4,7 @@ import axios from "@/lib/axios";
 import Link from "next/link";
 
 // components
-import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep"
+import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep";
 import AcceptQuotationModal from "@/components/Modal/OrderComponent/Buyer/AcceptQuotation"
 import RejectQuotationModal from "@/components/Modal/OrderComponent/Buyer/RejectQuotation"
 import SendPaymentDocsModal from "@/components/Modal/OrderComponent/Buyer/SendPaymentDocs"
@@ -16,6 +16,7 @@ import { toastOptions } from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";
+import { courierOptions } from "@/data/optionData";
 
 
 export default function InquiryDetails({session, routeParam}) {
@@ -119,11 +120,19 @@ export default function InquiryDetails({session, routeParam}) {
     }
 
     const [sendPaymentDocsModal, setSendPaymentDocsModal] = useState(false)
-    const sendPaymentDocsModalHandle = async (shipment, paymentDocs) => {
+    const sendPaymentDocsModalHandle = async (shipment, paymentDocs, courier, accountInfo) => {
         let formData = new FormData();
+        if(!shipment){
+            setErrorInfo({shipinfobuyer: "This field can't be empty"})
+            toast.error("Something went wrong", toastOptions)
+            setIsLoading(false)
+            return
+        }
         formData.append("Payment_doc", paymentDocs);
         formData.append("shipinfobuyer", shipment);
-        formData.append("id", data.id)
+        formData.append("courier", courier);
+        formData.append("accountInfo", accountInfo);
+        formData.append("id", data.id)        
         setIsLoading(true)
         const response = await axios.post(`/buyer/SendPayment`, 
             formData,
@@ -137,7 +146,6 @@ export default function InquiryDetails({session, routeParam}) {
             setSendPaymentDocsModal(false)
             loadData()
         }).catch((error) => {
-            console.log(error)
             setErrorInfo(error.data.data)
             toast.error("Something went wrong", toastOptions)
             setIsLoading(false)
@@ -147,10 +155,18 @@ export default function InquiryDetails({session, routeParam}) {
     }
 
     const [sendUpdatedPaymentDocsModal, setSendUpdatedPaymentDocsModal] = useState(false)
-    const sendUpdatedPaymentDocsModalHandle = async (shipment, paymentDocs) => {
+    const sendUpdatedPaymentDocsModalHandle = async (shipment, paymentDocs, courier, accountInfo) => {
         let formData = new FormData();
+        if(!shipment){
+            setErrorInfo({shipinfobuyer: "This field can't be empty"})
+            toast.error("Something went wrong", toastOptions)
+            setIsLoading(false)
+            return
+        }
         formData.append("Payment_doc", paymentDocs);
         formData.append("shipinfobuyer", shipment);
+        formData.append("courier", courier);
+        formData.append("accountInfo", accountInfo);
         formData.append("id", data.id)
         setIsLoading(true)
         const response = await axios.post(`/buyer/SendPayment?update=1`, 
@@ -265,7 +281,7 @@ export default function InquiryDetails({session, routeParam}) {
                 </div>
                 }
                 
-                <OrderStatusStep/>
+                <OrderStatusStep orderStatus={data.order_status}/>
 
                 <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-center">
@@ -517,6 +533,7 @@ export default function InquiryDetails({session, routeParam}) {
                         isLoading={isLoading}
                         closeModal={() => setSendPaymentDocsModal(false)}
                         acceptance={sendPaymentDocsModalHandle}
+                        couriers={courierOptions}
                         errorInfo={errorInfo}
                     />
                 }
@@ -526,6 +543,7 @@ export default function InquiryDetails({session, routeParam}) {
                         isLoading={isLoading}
                         closeModal={() => setSendUpdatedPaymentDocsModal(false)}
                         acceptance={sendUpdatedPaymentDocsModalHandle}
+                        couriers={courierOptions}
                         errorInfo={errorInfo}
                     />
                 }

@@ -35,33 +35,33 @@ export default function Account({session}) {
     }, [])
 
     return (
-        <>
-        <div className="relative">
-            <div className="mb-0 px-4 py-3 border-0 bg-white">
-                <div className="flex justify-between">
-                    <div className="px-4">
-                        <h3
-                        className={
-                            "font-semibold text-lg text-blueGray-700"
-                        }
-                        >
-                        My Account
-                        </h3>
+            <>
+            <div className="relative">
+                <div className="mb-0 px-4 py-3 border-0 bg-white">
+                    <div className="flex justify-between">
+                        <div className="px-4">
+                            <h3
+                            className={
+                                "font-semibold text-lg text-blueGray-700"
+                            }
+                            >
+                            My Account
+                            </h3>
+                        </div>
+                        <div className="px-4 my-2">
+                            <Link href={`/admin/superadmin/usercontrol/admin/update`} className="relative bg-orange-500 p-2 text-white">
+                                <i className="mr-2 ml-1 fas fa-pen text-white"></i>
+                                Update Master
+                            </Link>
+                        </div>
                     </div>
-                    <div className="px-4 my-2">
-                        <Link href={`/admin/superadmin/usercontrol/admin/update`} className="relative bg-orange-500 p-2 text-white">
-                            <i className="mr-2 ml-1 fas fa-pen text-white"></i>
-                            Update Master
-                        </Link>
+                    <div className="p-10">
+                        <h2 className="text-md text-blueGray-700 font-bold">Admin Account</h2>
+                        <h3 className="text-md text-blueGray-700">{data.name}</h3>
+                        <h3 className="text-md text-blueGray-700">{data.email}</h3>
                     </div>
                 </div>
-                <div className="p-10">
-                <h2 className="text-md text-blueGray-700 font-bold">Admin Account</h2>
-                <h3 className="text-md text-blueGray-700">{data.name}</h3>
-                <h3 className="text-md text-blueGray-700">{data.email}</h3>
             </div>
-            </div>
-        </div>
         </>
     );
 }

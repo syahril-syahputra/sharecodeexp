@@ -125,7 +125,7 @@ export default function InquiryDetails({session, routeParam}) {
                 </div>
                 }
 
-                <OrderStatusStep/>
+                <OrderStatusStep orderStatus={data.order_status}/>
                 
                 <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-center">
@@ -282,10 +282,10 @@ export default function InquiryDetails({session, routeParam}) {
                     <div className="flex justify-center">
                         {data.order_status_id == 1 ?
                             <button onClick={()=> setVerifyInquiryModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
-                                Verify Inquiry
+                                Edit & Verify
                             </button>
                             : <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
-                                Verify Inquiry
+                                Edit & Verify
                             </button>
                         }
 

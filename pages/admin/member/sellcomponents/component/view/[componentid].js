@@ -61,14 +61,24 @@ export default function MyProduct({session, routeParam}) {
                         </div>
                     </div>
                 </div>
-
-
+                
+                {data.reason && 
+                <div className="bg-red-400 p-2 text-white">
+                    <h3 className={"ml-3 font-semibold text-lg"}>
+                        Your Component is Rejected :
+                    </h3>
+                    <h3 className={"ml-3 text-md"}>
+                        {data.reason}
+                    </h3>
+                </div>
+                }
                 <div className="">
                     <div className="flex flex-wrap w-full bg-white">
                         <div className="px-3 mb-6 md:mb-0 text-center">
                             <div className="p-24 border mx-2 my-4">{routeParam.componentid}</div>
                         </div>
                     </div>
+                    
                     
                     <div className="relative overflow-x-auto">
                         <table className="w-full text-sm text-left text-gray-500 bg-white">
@@ -147,6 +157,7 @@ export default function MyProduct({session, routeParam}) {
                                 </tr>
                             </tbody>
                         </table>
+                        
                     </div>
 
                 </div>

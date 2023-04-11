@@ -154,18 +154,27 @@ export default function ComponentDetails({session, routeParam}) {
                             }
 
                             {!!routeParam.componentid && 
-                                // <Link href={`/admin/member/sellcomponents/component/edit/${routeParam.componentid}`}>
-                                    <button onClick={() => alert("not ready :(")} className="relative bg-orange-500 p-2 text-white">
+                                <Link href={`/admin/superadmin/components/edit/${routeParam.componentid}`}>
+                                    <button className="relative bg-orange-500 p-2 text-white">
                                         <i className="mr-2 ml-1 fas fa-pen text-white"></i>
                                         Edit Product
                                     </button>
-                                // </Link>
+                                </Link>
                             }
                         </div>
                     </div>
                 </div>
 
-
+                {component.reason && 
+                <div className="bg-red-400 p-2 text-white">
+                    <h3 className={"ml-3 font-semibold text-lg"}>
+                        Component is being rejected :
+                    </h3>
+                    <h3 className={"ml-3 text-md"}>
+                        {component.reason}
+                    </h3>
+                </div>
+                }
                 <div className="">
                     <div className="flex flex-wrap w-full bg-white">
                         <div className="px-3 mb-6 md:mb-0 text-center">

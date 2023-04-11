@@ -1,5 +1,6 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { useSession } from "next-auth/react"
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react"
 
@@ -10,21 +11,35 @@ import HeaderStats from "components/Headers/HeaderStats.js";
 import FooterAdmin from "components/Footers/FooterAdmin.js";
 import { PageSEO } from "@/components/Utils/SEO";
 import siteMetadata from '@/data/siteMetadata'
+import axios from "@/lib/axios";
+
+//hooks
+import useCompany from '@/hooks/useCompany'
 
 export default function Admin({ children }) {
-  const {data, status} = useSession();
-  const router = useRouter();
-
-  if(status == 'unauthenticated'){
-    // router.replace("/auth/login")
-    console.log('please login')
-    // return window.location.href = '/auth/login'
+  const session = useSession();
+  if (session.status == 'unauthenticated') {
+    return (
+      <div className="relative p-2 bg-white">
+            <div className="text-center pb-10 mt-10">
+              <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2 uppercase">
+                <p>unauthenticated</p>
+              </h3>
+              <h3 className="text-md font-semibold leading-normal mb-2 text-blue-700 mb-2">
+                <i>Please <Link href="/auth/login" className="text-blueGray-700 underline">login</Link> before accesing this URL</i>
+              </h3>
+            </div>
+          </div> 
+    );
   }
 
+  const company = useCompany(session.data.user.userDetail, session.data.accessToken)
+
+  // if unauth it should render a page showing user need login to access
   return (
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
-      <Sidebar />
+      <Sidebar company={company}/>
       <div className="relative md:ml-64 bg-blueGray-100">
       <AdminNavbar />
         {/* Header */}

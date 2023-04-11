@@ -27,8 +27,8 @@ export default function ComponentList(props) {
                         <div className="px-4">
                             <Link href="/product/search">
                                 <button className="relative bg-blueGray-700 p-2 text-white">
-                                    <i className="mr-2 ml-1 fas fa-cart-shopping text-white"></i>
-                                    Inquiry Component</button>
+                                    <i className="mr-2 ml-1 fas fa-search text-white"></i>
+                                    Search New Component</button>
                             </Link>
                         </div>
                     </div>
@@ -97,7 +97,7 @@ export default function ComponentList(props) {
                                         <td className="px-6 py-4 text-right">
                                             <div className="inline-flex">
                                                 <button onClick={() => props.handleEdit(item.id, item.qty, item.companies_products.ManufacturerNumber)} className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Edit</button>
-                                                <button onClick={() => props.handleInquiryNow(item.id, item.qty, item.companies_products.ManufacturerNumber)} className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry Now</button>
+                                                <button onClick={() => props.handleInquiryNow(item.id, item.qty, item.companies_products.ManufacturerNumber)} className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquire Now</button>
                                                 <button onClick={() => props.handleDelete(item.id)} className="font-medium text-blue-600 text-white bg-red-500 p-2">Delete</button>
                                             </div>
                                         </td>

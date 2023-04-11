@@ -29,6 +29,27 @@ export default function BuyComponents(){
     countCart()
   }, [])
 
+  const [totalInquiredItem, setTotalInquiredItem] = useState(0)
+  const countInquiredList = async () =>{
+    const response = await axios.get(`/countWish`,
+      {
+        headers: {
+          "Authorization" : `Bearer ${session.data.accessToken}`
+        }
+      })
+      .then((response) => {
+        let result = response.data
+        setTotalInquiredItem(result.data)
+      }).catch((error) => {
+        // console.log(error.response)
+      }).finally(() => {
+        // setIsLoading(false)
+      })
+  }
+  useEffect(() => {
+    countInquiredList()
+  }, [])
+
   return (
     <>
       {/* Divider */}
@@ -66,8 +87,11 @@ export default function BuyComponents(){
                 ? "text-lightBlue-500 hover:text-lightBlue-600"
                 : "text-blueGray-700 hover:text-blueGray-500")
             }>
-              <i className="fas fa-truck text-blueGray-400 mr-2 text-sm"></i>{" "}
+              <i className="fas fa-truck text-blueGray-400 mr-1 text-sm"></i>{" "}
               Inquired Components 
+              <span className="ml-1 text-xs font-semibold inline-block py-1 px-2 uppercase text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
+                {totalInquiredItem}
+              </span>
           </Link>
         </li>
       </ul>

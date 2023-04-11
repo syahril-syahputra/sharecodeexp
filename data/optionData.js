@@ -44,3 +44,8 @@ export const categoriesOptions = [
     {value: 'A', label: 'A'},
     {value: 'B', label: 'B'},
 ]
+
+export const courierOptions = [
+    {value: 'A', label: 'A'},
+    {value: 'B', label: 'B'},
+]

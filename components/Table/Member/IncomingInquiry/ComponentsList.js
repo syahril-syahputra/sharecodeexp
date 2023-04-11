@@ -55,7 +55,7 @@ export default function IncomingInquiry(props) {
     }
 
     const [orderStatuses, setOrderStatuses] = useState(orderStatusesOptions)
-    const [status, setStatus] = useState({value: 'inquired', label: 'Order Inquiry'});
+    const [status, setStatus] = useState({value: 'all', label: 'All Status'});
     const handleStatusChange = value => {
         setStatus(value)
         props.statusChange(value)

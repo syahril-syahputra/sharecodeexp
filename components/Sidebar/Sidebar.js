@@ -20,13 +20,11 @@ import MemberSellComponents from "./Member/SellComponents";
 import MemberBuyComponents from "./Member/BuyComponents";
 
 
-export default function Sidebar() {
+export default function Sidebar(props) {
   const session = useSession()
   const [userDetail, setUserDetail] = useState()
-  const [companyStatus, setCompanyStatus] = useState()
   useEffect(() => { 
     setUserDetail(session.data?.user.userDetail) 
-    setCompanyStatus(session.data?.user.isCompanyConfirmed) 
   }, [session])
 
   const [collapseShow, setCollapseShow] = React.useState("hidden");
@@ -120,16 +118,26 @@ export default function Sidebar() {
                 </Link>
               </li>
             </ul>
-            
-            {companyStatus == "accepted" && userDetail.role_id == 2? 
+            {(!props.company?.is_confirmed && userDetail?.role_id == 2)&& 
+              <div>
+                <div className='text-center my-auto mt-10 mb-10'>
+                    <i className="fas fa-circle-notch fa-spin text-blueGray-700 my-auto mx-10 fa-2xl"></i>
+                </div>
+            </div>
+            }
+            {props.company?.is_confirmed == "accepted" && userDetail?.role_id == 2? 
               <>
                 <MemberSellComponents/>
                 <MemberBuyComponents/>
-                <SettingsBar
-                  statusId={userDetail?.status_id}
-                />
               </>
               : null }
+
+            {userDetail?.role_id == 2 &&
+              <SettingsBar
+                companyStatus={props.company?.is_confirmed}
+                statusId={userDetail?.status_id}
+              />
+            }
 
             {userDetail?.role_id == 1 ? 
               <>

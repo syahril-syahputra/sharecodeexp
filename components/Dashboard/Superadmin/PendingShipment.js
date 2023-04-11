@@ -47,7 +47,7 @@ export default function PendingShipment(props) {
             <tbody>
               {data.map((item, index) => {
                 return (
-                  <tr key={index}>
+                  <tr key={index} className="bg-white border-b hover:bg-gray-50">
                     <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
                       {item.buyer?.name}
                     </th>

@@ -4,6 +4,8 @@ import { getSession } from "next-auth/react";
 import Link from "next/link";
 
 // components
+import SendEmailModal from "@/components/Modal/Registry/SendEmail"
+import UpdateImageModal from "@/components/Modal/Registry/UpdateImage"
 import AcceptMembership from "@/components/Modal/Registry/AcceptMembership"
 import RejectMembership from "@/components/Modal/Registry/RejectMembership"
 import PendingMembership from "@/components/Modal/Registry/PendingMembership"
@@ -116,6 +118,66 @@ export default function CompanyList({session, routeParam}) {
     })
   }
 
+  const [showSendEmailModal, setShowSendEmailModal] = useState(false)
+  const handleSendEmail = async (email, subject, messages) => {
+    setShowSendEmailModal(false)
+    // setIsLoading(true)
+    alert("not ready yet :(")
+    console.log(email, subject, messages)
+    // const request = await axios.post(`admin/companies/${routeParam.companyid}/pending`, 
+    // {
+    //   id: routeParam.companyid,
+    //   subject: subject,
+    //   messages: messages
+    // },
+    // {
+    //   headers: {
+    //     "Authorization" : `Bearer ${session.accessToken}`
+    //   }
+    // })
+    // .then(() => {
+    //   toast.success("Company set to pending")
+    // })
+    // .catch((error) => {
+    //   console.log(error)
+    //   toast.error("Something went wrong")
+    // })
+    // .finally(() => {
+    //   getData()
+    // })
+  }
+
+  const [showUpdateImageModal, setShowUpdateImageModal] = useState()
+  const handleUpdateImage = async (image) => {
+    console.log(image)
+    // setIsLoading(true)
+    alert("not ready yet :(")
+    let formData = new FormData();
+    formData.append("image", image);
+    formData.append("id", routeParam.companyid)
+    // const request = await axios.post(`admin/companies/${routeParam.companyid}/pending`, 
+    // {
+    //   id: routeParam.companyid,
+    //   subject: subject,
+    //   messages: messages
+    // },
+    // {
+    //   headers: {
+    //     "Authorization" : `Bearer ${session.accessToken}`
+    //   }
+    // })
+    // .then(() => {
+    //   toast.success("Company set to pending")
+    // })
+    // .catch((error) => {
+    //   console.log(error)
+    //   toast.error("Something went wrong")
+    // })
+    // .finally(() => {
+    //   getData()
+    // })
+  }
+
 
 
   return (
@@ -132,6 +194,10 @@ export default function CompanyList({session, routeParam}) {
                         Back
                     </button>
                   </Link>
+                  <button onClick={() => setShowSendEmailModal(true) } className="relative bg-blueGray-700 p-2 text-white mr-2">
+                    <i className="mr-2 ml-1 fas fa-envelope text-white"></i>
+                      Send Email
+                  </button>
                   {(companyData.is_confirmed == "pending" || companyData.is_confirmed == "rejected") && 
                   <button onClick={() => setShowAcceptModal(true) } className="relative bg-blue-500 p-2 text-white mr-2">
                       <i className="mr-2 ml-1 fas fa-check text-white"></i>
@@ -158,6 +224,10 @@ export default function CompanyList({session, routeParam}) {
                 <img className="object-contain mb-3 h-40 mx-auto" 
                   alt={companyData.name}
                   src={publicDir + "/companies_images/" + companyData.img}/>
+                <button onClick={() => setShowUpdateImageModal(true) } className="relative bg-orange-500 py-1 px-2 text-white">
+                    <i className="mr-2 ml-1 fas fa-image text-white"></i>
+                    Update Image
+                </button>
                 <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
                   {companyData.name}
                   {companyData.is_confirmed == "pending" && <i title="Member Pending" className="mr-2 ml-1 fas fa-clock text-orange-500"></i>}
@@ -224,6 +294,24 @@ export default function CompanyList({session, routeParam}) {
               </div>
             </>
           }
+          
+          {showSendEmailModal ? (
+            <SendEmailModal
+                isLoading={isLoading}
+                setShowModal={setShowSendEmailModal}
+                companyName={companyData.name}
+                acceptModal={handleSendEmail}
+            />
+          ) : null}
+
+          {showUpdateImageModal ? (
+            <UpdateImageModal
+                isLoading={isLoading}
+                setShowModal={setShowUpdateImageModal}
+                companyName={companyData.name}
+                acceptModal={handleUpdateImage}
+            />
+          ) : null}
 
           {showAcceptModal ? (
             <AcceptMembership

@@ -64,15 +64,14 @@ export default function Index() {
     loadCategories()
   }, [])
 
-  //load companies
+  //load companies //
   const publicDir = process.env.NEXT_PUBLIC_DIR
   const [companies, setCompanies] = useState([])
   const loadCompanies = async () => {
-    const request = await axios.get(`/newstcompany`)
+    const request = await axios.get(`/newstcompany?limit=10`)
       .then((res) => {
         let result = res.data.data
-        let getFewData = result.slice(Math.max(result.length - 10, 1))
-        setCompanies(getFewData)
+        setCompanies(result)
       })
       .catch((err) => {
         console.log(err)

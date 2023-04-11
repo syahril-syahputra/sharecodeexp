@@ -13,6 +13,7 @@ import SendProformaInvoiceModal from "@/components/Modal/OrderComponent/Superadm
 import AcceptPaymentDocumentModal from "@/components/Modal/OrderComponent/Superadmin/AcceptPaymentDocument"
 import RejectPaymentDocumentModal from "@/components/Modal/OrderComponent/Superadmin/RejectPaymentDocument"
 import TrackerNumberForBuyerModal from "@/components/Modal/OrderComponent/Superadmin/TrackerNumberForBuyer"
+import SendInvoiceToSellerModal from "@/components/Modal/OrderComponent/Superadmin/SendInvoiceToSeller"
 import CompleteOrderModal from "@/components/Modal/OrderComponent/Superadmin/CompleteOrder"
 import { toast } from 'react-toastify';
 import { toastOptions } from "@/lib/toastOptions"
@@ -188,6 +189,37 @@ export default function InquiryDetails({session, routeParam}) {
         })
     }
 
+    const [sendInvoiceToSellerModal, setSendIvoiceToSellerModal] = useState(false)
+    const handleSendInvoiceCompleteOrderModal = async (invoice) => {
+        console.log(invoice)
+        // setIsLoading(true)
+        alert("not ready yet :(")
+        let formData = new FormData();
+        formData.append("invoice", invoice);
+
+        // setIsLoading(true)
+        // setErrorInfo({})
+
+        // let inputData = {
+        //     id: data.id,
+        // }
+        // const response = await axios.post(`/admin/orders/UpdateCompletedOrder`, inputData, 
+        // {
+        //     headers: {
+        //         "Authorization" : `Bearer ${session.accessToken}`
+        //     }
+        // })
+        // .then(() => {
+        //     toast.success("Order has been Completed", toastOptions)
+        //     setCompleteOrderModal(false)
+        //     loadData()
+        // }).catch((error) => {
+        //     console.log(error)
+        //     toast.error("Something went wrong", toastOptions)
+        //     setIsLoading(false)
+        // })
+    }
+
     return (
         <>
             <div className="relative bg-white">
@@ -226,7 +258,7 @@ export default function InquiryDetails({session, routeParam}) {
                     </div>
                 </div>
                 }
-                <OrderStatusStep/>
+                <OrderStatusStep orderStatus={data.order_status}/>
                 
                 {/* Buyer Seller */}
                 <div className="px-4 py-3 border-0 bg-white">
@@ -242,7 +274,7 @@ export default function InquiryDetails({session, routeParam}) {
                                             <td className="w-10">Company Name</td>
                                             <td className="w-2">:</td>
                                             <td className="text-left w-28">
-                                                {data.buyer?.name}     
+                                                <Link href={`/admin/superadmin/registry/company/${data.buyer?.id}`} className="text-blueGray-700 underline">{data.buyer?.name}</Link>
                                                 {data.buyer?.is_confirmed == "pending" && <i title="Member Pending" className="mr-2 ml-1 fas fa-clock text-orange-500"></i>}
                                                 {data.buyer?.is_confirmed == "accepted" && <i title="Member Accepted" className="mr-2 ml-1 fas fa-circle-check text-blue-700"></i>}
                                                 {data.buyer?.is_confirmed == "rejected" && <i title="Member Rejected" className="mr-2 ml-1 fas fa-circle-xmark text-red-700"></i>}                                  
@@ -278,7 +310,7 @@ export default function InquiryDetails({session, routeParam}) {
                                             <td className="w-10">Company Name</td>
                                             <td className="w-2">:</td>
                                             <td className="text-left w-28">
-                                                {data.companies_products?.company?.name}
+                                                <Link href={`/admin/superadmin/registry/company/${data.companies_products?.company?.id}`} className="text-blueGray-700 underline">{data.companies_products?.company?.name}</Link>
                                                 {data.companies_products?.company?.is_confirmed == "pending" && <i title="Member Pending" className="mr-2 ml-1 fas fa-clock text-orange-500"></i>}
                                                 {data.companies_products?.company?.is_confirmed == "accepted" && <i title="Member Accepted" className="mr-2 ml-1 fas fa-circle-check text-blue-700"></i>}
                                                 {data.companies_products?.company?.is_confirmed == "rejected" && <i title="Member Rejected" className="mr-2 ml-1 fas fa-circle-xmark text-red-700"></i>}
@@ -513,6 +545,15 @@ export default function InquiryDetails({session, routeParam}) {
                         }
 
                         {data.order_status_id == 12 ?
+                            <button onClick={() => setSendIvoiceToSellerModal(true) } className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                               Send Invoice to Seller
+                            </button>
+                            : <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                               Send Invoice to Seller
+                            </button> 
+                        }
+
+                        {data.order_status_id == 12 ?
                             <button onClick={() => setCompleteOrderModal(true) } className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
                                Complete Order
                             </button>
@@ -573,6 +614,15 @@ export default function InquiryDetails({session, routeParam}) {
                         isLoading={isLoading}
                         closeModal={() => setTrackerNumberForBuyerModal(false)}
                         acceptance={handleTrackerNumberForBuyerModal}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                {sendInvoiceToSellerModal &&
+                    <SendInvoiceToSellerModal
+                        isLoading={isLoading}
+                        closeModal={() => setSendIvoiceToSellerModal(false)}
+                        acceptance={handleSendInvoiceCompleteOrderModal}
                         errorInfo={errorInfo}
                     />
                 }
