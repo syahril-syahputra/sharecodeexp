@@ -18,236 +18,235 @@ import NewInquiriesMember from "@/components/Dashboard/Member/NewInquiries";
 import Admin from "layouts/Admin.js";
 
 export default function Dashboard({session}) {
-  const [superadmin, setSuperadmin] = useState()
-  const [companyStatus, setCompanyStatus] = useState()
+  // const [superadmin, setSuperadmin] = useState()
+  // const [companyStatus, setCompanyStatus] = useState()
 
-  useEffect(() => {
-    setSuperadmin(session.user.userDetail.role_id == 1 ? true : false)
-    setCompanyStatus(session.user.isCompanyConfirmed)
-  }, [])
+  // useEffect(() => {
+  //   setSuperadmin(session.user.userDetail.role_id == 1 ? true : false)
+  //   setCompanyStatus(session.user.isCompanyConfirmed)
+  // }, [])
 
-  const [loadingPendingCompany, setLoadingPendingCompany] = useState()
-  const [pendingCompany, setPendingCompany] = useState([])
-  const loadPendingCompany = async () => {
-    setLoadingPendingCompany(true)
-    const response = await axios.get(`/admin/companies?status=pending`,
-        {
-            headers: {
-            "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then((response) => {
-          let result = response.data.data
-          setPendingCompany(result.data)
-        }).catch((error) => {
-          console.log(error)
-        }).finally(() => {
-          setLoadingPendingCompany(false)
-        })
-  }
-  useEffect(() => {
-    loadPendingCompany()
-  }, [])
+  // const [loadingPendingCompany, setLoadingPendingCompany] = useState()
+  // const [pendingCompany, setPendingCompany] = useState([])
+  // const loadPendingCompany = async () => {
+  //   setLoadingPendingCompany(true)
+  //   const response = await axios.get(`/admin/companies?status=pending`,
+  //       {
+  //           headers: {
+  //           "Authorization" : `Bearer ${session.accessToken}`
+  //           }
+  //       })
+  //       .then((response) => {
+  //         let result = response.data.data
+  //         setPendingCompany(result.data)
+  //       }).catch((error) => {
+  //         console.log(error)
+  //       }).finally(() => {
+  //         setLoadingPendingCompany(false)
+  //       })
+  // }
+  // useEffect(() => {
+  //   loadPendingCompany()
+  // }, [])
 
-  const [loadingNewInquiries, setLoadingNewInquiries] = useState()
-  const [newInquiries, setNewInquiries] = useState([])
-  const loadNewInquiries = async () => {
-    setLoadingNewInquiries(true)
-    const response = await axios.get(`/admin/orders/inquired`,
-        {
-            headers: {
-            "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then((response) => {
-          let result = response.data.data
-          setNewInquiries(result.data)
-        }).catch((error) => {
-          console.log(error)
-        }).finally(() => {
-          setLoadingNewInquiries(false)
-        })
-  }
-  useEffect(() => {
-    loadNewInquiries()
-  }, [])
+  // const [loadingNewInquiries, setLoadingNewInquiries] = useState()
+  // const [newInquiries, setNewInquiries] = useState([])
+  // const loadNewInquiries = async () => {
+  //   setLoadingNewInquiries(true)
+  //   const response = await axios.get(`/admin/orders/inquired`,
+  //       {
+  //           headers: {
+  //           "Authorization" : `Bearer ${session.accessToken}`
+  //           }
+  //       })
+  //       .then((response) => {
+  //         let result = response.data.data
+  //         setNewInquiries(result.data)
+  //       }).catch((error) => {
+  //         console.log(error)
+  //       }).finally(() => {
+  //         setLoadingNewInquiries(false)
+  //       })
+  // }
+  // useEffect(() => {
+  //   loadNewInquiries()
+  // }, [])
 
-  const [loadingActiveOrders, setLoadingActiveOrders] = useState()
-  const [activeOrders, setActiveOrders] = useState([])
-  const loadActiveOrders = async () => {
-    setLoadingActiveOrders(true)
-    const response = await axios.get(`/admin/orders/ongoing`,
-        {
-            headers: {
-            "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then((response) => {
-          let result = response.data.data
-          setActiveOrders(result.data)
-        }).catch((error) => {
-          console.log(error)
-        }).finally(() => {
-          setLoadingActiveOrders(false)
-        })
-  }
-  useEffect(() => {
-    loadActiveOrders()
-  }, [])
+  // const [loadingActiveOrders, setLoadingActiveOrders] = useState()
+  // const [activeOrders, setActiveOrders] = useState([])
+  // const loadActiveOrders = async () => {
+  //   setLoadingActiveOrders(true)
+  //   const response = await axios.get(`/admin/orders/ongoing`,
+  //       {
+  //           headers: {
+  //           "Authorization" : `Bearer ${session.accessToken}`
+  //           }
+  //       })
+  //       .then((response) => {
+  //         let result = response.data.data
+  //         setActiveOrders(result.data)
+  //       }).catch((error) => {
+  //         console.log(error)
+  //       }).finally(() => {
+  //         setLoadingActiveOrders(false)
+  //       })
+  // }
+  // useEffect(() => {
+  //   loadActiveOrders()
+  // }, [])
 
-  const [loadingPendingShipments, setLoadingPendingShipments] = useState()
-  const [pendingShipments, setPendingShipments] = useState([])
-  const loadPendingShipments = async () => {
-    setLoadingPendingShipments(true)
-    const response = await axios.get(`/admin/orders/preparing_shipment`,
-        {
-            headers: {
-            "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then((response) => {
-          let result = response.data.data
-          setPendingShipments(result.data)
-        }).catch((error) => {
-          console.log(error)
-        }).finally(() => {
-          setLoadingPendingShipments(false)
-        })
-  }
-  useEffect(() => {
-    loadPendingShipments()
-  }, [])
+  // const [loadingPendingShipments, setLoadingPendingShipments] = useState()
+  // const [pendingShipments, setPendingShipments] = useState([])
+  // const loadPendingShipments = async () => {
+  //   setLoadingPendingShipments(true)
+  //   const response = await axios.get(`/admin/orders/preparing_shipment`,
+  //       {
+  //           headers: {
+  //           "Authorization" : `Bearer ${session.accessToken}`
+  //           }
+  //       })
+  //       .then((response) => {
+  //         let result = response.data.data
+  //         setPendingShipments(result.data)
+  //       }).catch((error) => {
+  //         console.log(error)
+  //       }).finally(() => {
+  //         setLoadingPendingShipments(false)
+  //       })
+  // }
+  // useEffect(() => {
+  //   loadPendingShipments()
+  // }, [])
 
-  const [loadingPendingPayments, setLoadingPendingPayments] = useState()
-  const [pendingPayments, setPendingPayments] = useState([])
-  const loadPendingPayments = async () => {
-    setLoadingPendingPayments(true)
-    const response = await axios.get(`/admin/orders/payment_verified`,
-        {
-            headers: {
-            "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then((response) => {
-          let result = response.data.data
-          setPendingPayments(result.data)
-        }).catch((error) => {
-          console.log(error)
-        }).finally(() => {
-          setLoadingPendingPayments(false)
-        })
-  }
-  useEffect(() => {
-    loadPendingPayments()
-  }, [])
+  // const [loadingPendingPayments, setLoadingPendingPayments] = useState()
+  // const [pendingPayments, setPendingPayments] = useState([])
+  // const loadPendingPayments = async () => {
+  //   setLoadingPendingPayments(true)
+  //   const response = await axios.get(`/admin/orders/payment_verified`,
+  //       {
+  //           headers: {
+  //           "Authorization" : `Bearer ${session.accessToken}`
+  //           }
+  //       })
+  //       .then((response) => {
+  //         let result = response.data.data
+  //         setPendingPayments(result.data)
+  //       }).catch((error) => {
+  //         console.log(error)
+  //       }).finally(() => {
+  //         setLoadingPendingPayments(false)
+  //       })
+  // }
+  // useEffect(() => {
+  //   loadPendingPayments()
+  // }, [])
 
-  const [loadingMemberStatistics, setLoadingMemberStatistics] = useState()
-  const [memberStatistics, setMemberStatistics] = useState([])
-  const loadMemberStatistics = async () => {
-    setLoadingMemberStatistics(true)
-    const response = await axios.get(`/admin/visitor`,
-        {
-            headers: {
-            "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then((response) => {
-          let result = response.data.data
-          console.log(result)
-          setMemberStatistics(result)
-        }).catch((error) => {
-          console.log(error)
-        }).finally(() => {
-          setLoadingMemberStatistics(false)
-        })
-  }
-  useEffect(() => {
-    loadMemberStatistics()
-  }, [])
+  // const [loadingMemberStatistics, setLoadingMemberStatistics] = useState()
+  // const [memberStatistics, setMemberStatistics] = useState([])
+  // const loadMemberStatistics = async () => {
+  //   setLoadingMemberStatistics(true)
+  //   const response = await axios.get(`/admin/visitor`,
+  //       {
+  //           headers: {
+  //           "Authorization" : `Bearer ${session.accessToken}`
+  //           }
+  //       })
+  //       .then((response) => {
+  //         let result = response.data.data
+  //         setMemberStatistics(result)
+  //       }).catch((error) => {
+  //         console.log(error)
+  //       }).finally(() => {
+  //         setLoadingMemberStatistics(false)
+  //       })
+  // }
+  // useEffect(() => {
+  //   loadMemberStatistics()
+  // }, [])
 
-  return (
-    <>
-      { superadmin && 
-        <>
-          <div className="flex flex-wrap mt-4">
-            <div className="w-full xl:w-5/12 px-4">
-              <PendingCompany 
-                isLoading={loadingPendingCompany}
-                data={pendingCompany}
-              />
-            </div>
-            <div className="w-full xl:w-7/12 mb-12 xl:mb-0 px-4">
-              <NewInquiries
-                isLoading={loadingNewInquiries}
-                data={newInquiries}
-              />
-            </div>          
-          </div>
-          <div className="flex flex-wrap mt-4">
-            <div className="w-full px-4">
-              <StatusUpdateOngoingOrder 
-                isLoading={loadingActiveOrders}
-                data={activeOrders}
-              />
-            </div>         
-          </div>
-          <div className="flex flex-wrap mt-4">
-            <div className="w-full xl:w-6/12 px-4">
-              <PendingShipment 
-                isLoading={loadingPendingShipments}
-                data={pendingShipments}
-              />
-            </div>
-            <div className="w-full xl:w-6/12 px-4">
-              <PendingPayment
-                isLoading={loadingPendingPayments}
-                data={pendingPayments}
-              />
-            </div>          
-          </div>
-          <div className="flex flex-wrap mt-4">
-            <div className="w-full px-4">
-              <MemberStatistic 
-                isLoading={loadingMemberStatistics}
-                data={memberStatistics}
-              />
-            </div>         
-          </div>
-        </>
-      }
+  // return (
+  //   <>
+  //     { superadmin && 
+  //       <>
+  //         <div className="flex flex-wrap mt-4">
+  //           <div className="w-full xl:w-5/12 px-4">
+  //             <PendingCompany 
+  //               isLoading={loadingPendingCompany}
+  //               data={pendingCompany}
+  //             />
+  //           </div>
+  //           <div className="w-full xl:w-7/12 mb-12 xl:mb-0 px-4">
+  //             <NewInquiries
+  //               isLoading={loadingNewInquiries}
+  //               data={newInquiries}
+  //             />
+  //           </div>          
+  //         </div>
+  //         <div className="flex flex-wrap mt-4">
+  //           <div className="w-full px-4">
+  //             <StatusUpdateOngoingOrder 
+  //               isLoading={loadingActiveOrders}
+  //               data={activeOrders}
+  //             />
+  //           </div>         
+  //         </div>
+  //         <div className="flex flex-wrap mt-4">
+  //           <div className="w-full xl:w-6/12 px-4">
+  //             <PendingShipment 
+  //               isLoading={loadingPendingShipments}
+  //               data={pendingShipments}
+  //             />
+  //           </div>
+  //           <div className="w-full xl:w-6/12 px-4">
+  //             <PendingPayment
+  //               isLoading={loadingPendingPayments}
+  //               data={pendingPayments}
+  //             />
+  //           </div>          
+  //         </div>
+  //         <div className="flex flex-wrap mt-4">
+  //           <div className="w-full px-4">
+  //             <MemberStatistic 
+  //               isLoading={loadingMemberStatistics}
+  //               data={memberStatistics}
+  //             />
+  //           </div>         
+  //         </div>
+  //       </>
+  //     }
 
-    { !superadmin && 
-      <div>
-        {companyStatus == "pending" && 
-          <div className="relative p-2 bg-white">
-            <div className="text-center pb-10 mt-10">
-              <h3 className="text-4xl font-semibold leading-normal text-blueGray-700">
-                <i title="Member Pending" className="mr-2 ml-1 fas fa-clock text-orange-500"></i>
-              </h3>
-              <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
-                <p>Wait for your confirmation from Exepart registration expert</p>
-              </h3>
-              <h3 className="text-md font-semibold leading-normal mb-2 text-blue-700 mb-2">
-                <i>Please re-login your session if Exepart registration expert is accepted your member status</i>
-              </h3>
-            </div>
-          </div> 
-        }
+  //   { !superadmin && 
+  //     <div>
+  //       {companyStatus == "pending" && 
+  //         <div className="relative p-2 bg-white">
+  //           <div className="text-center pb-10 mt-10">
+  //             <h3 className="text-4xl font-semibold leading-normal text-blueGray-700">
+  //               <i title="Member Pending" className="mr-2 ml-1 fas fa-clock text-orange-500"></i>
+  //             </h3>
+  //             <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
+  //               <p>Wait for your confirmation from Exepart registration expert</p>
+  //             </h3>
+  //             <h3 className="text-md font-semibold leading-normal mb-2 text-blue-700 mb-2">
+  //               <i>Please re-login your session if Exepart registration expert is accepted your member status</i>
+  //             </h3>
+  //           </div>
+  //         </div> 
+  //       }
 
-        {companyStatus == "accepted" &&
-          <div className="flex flex-wrap mt-4">
-            <div className="w-full xl:w-5/12 px-4">
-            </div>
-            <div className="w-full xl:w-7/12 mb-12 xl:mb-0 px-4">
-              <NewInquiriesMember/>
-            </div>          
-          </div>
-        }
+  //       {companyStatus == "accepted" &&
+  //         <div className="flex flex-wrap mt-4">
+  //           <div className="w-full xl:w-5/12 px-4">
+  //           </div>
+  //           <div className="w-full xl:w-7/12 mb-12 xl:mb-0 px-4">
+  //             <NewInquiriesMember/>
+  //           </div>          
+  //         </div>
+  //       }
 
-      </div>
-    }
-  </>
-  )
+  //     </div>
+  //   }
+  // </>
+  // )
 }
   
 

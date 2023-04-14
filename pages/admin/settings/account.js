@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
-import { useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import Link from "next/link";
 
 // components
@@ -8,17 +8,8 @@ import Link from "next/link";
 // layout for page
 import Admin from "layouts/Admin.js";
 
-export default function Account() {
-  const session = useSession()
-  const [userDetail, setUserDetail] = useState()
-  const [token, setToken] = useState({
-    accessToken: ''
-  })
-  useEffect(() => { setToken({accessToken: session.data?.accessToken}) }, [session])
-  useEffect(() => { 
-    setUserDetail(session.data?.user.userDetail) 
-  }, [session])
-
+export default function Account({session}) {
+  const [userDetail, setUserDetail] = useState(session.user.userDetail)
 
   return (
     <>
@@ -64,3 +55,13 @@ export default function Account() {
 }
 
 Account.layout = Admin;
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+
+  return {
+      props: {
+          session: session
+      }
+  }
+}

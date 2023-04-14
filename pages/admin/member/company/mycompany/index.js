@@ -4,6 +4,9 @@ import { getSession } from "next-auth/react";
 import Link from "next/link";
 
 // components
+import WarningButton from "@/components/Interface/Buttons/WarningButton";
+import UploadAdditionalDocsModal from "@/components/Modal/Member/Company/UploadAdditinalDocs";
+import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -36,6 +39,10 @@ export default function MyCompany({session}) {
       getData()
   }, [])
 
+  const [uploadAditionalDocsModal, setUploadAditionalDocsModal] = useState()
+  const handleUploadAditionalDocsModal = (file) => {
+    console.log(file)
+  }
   return (
     <>
       <div className="relative">
@@ -51,11 +58,40 @@ export default function MyCompany({session}) {
                   </h3>
               </div>
               <div className="px-4 my-2">
-                  <Link href="/admin/member/company/mycompany/edit" className="relative bg-orange-500 p-2 text-white">
-                    <i className="mr-2 ml-1 fas fa-pen text-white"></i>
-                  Update Company</Link>
+                  <WarningButton onClick={() => setUploadAditionalDocsModal(true) } size="sm">
+                    <i className="mr-2 ml-1 fas fa-folder text-white"></i>
+                    Upload Aditional Documents
+                  </WarningButton>
+                  <Link href="/admin/member/company/mycompany/edit">
+                    <WarningButton size="sm">
+                      <i className="mr-2 ml-1 fas fa-pen text-white"></i>
+                      Update Company
+                    </WarningButton>
+                  </Link>
               </div>
           </div>
+
+          {(companyData?.reason && companyData.is_confirmed == "rejected") &&
+            <div className="bg-red-400 p-2 text-white">
+                <h3 className={"ml-3 font-semibold text-lg"}>
+                    Your Company is Rejected :
+                </h3>
+                <h3 className={"ml-3 text-md"}>
+                    {companyData.reason}
+                </h3>
+            </div>
+          }
+
+          {(companyData?.reason && companyData.is_confirmed == "pending") &&
+            <div className="bg-orange-400 p-2 text-white">
+                <h3 className={"ml-3 font-semibold text-lg"}>
+                    Update Needed
+                </h3>
+                <h3 className={"ml-3 text-md"}>
+                    {companyData.reason}
+                </h3>
+            </div>
+          }
           
           {!!companyData ? 
             <> 
@@ -72,9 +108,9 @@ export default function MyCompany({session}) {
                 {companyData.is_confirmed == "pending" && <i className="text-orange-500">Your Member Status is Pending</i>}
                 {companyData.is_confirmed == "accepted" && <i className="text-blue-700">Your Member Status is Accepted</i>}
                 {companyData.is_confirmed == "rejected" && <i className="text-red-700">Your Member Status is Rejected</i>}
-                <div>
+                {/* <div>
                   {companyData.is_confirmed == "rejected" && <i className="text-red-700">{companyData.reason}</i>}
-                </div>
+                </div> */}
                 <div className="text-sm leading-normal mt-2 mb-2 text-blueGray-400 font-bold uppercase">
                   <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{" "}
                   {companyData.country}, {companyData.address}
@@ -102,18 +138,25 @@ export default function MyCompany({session}) {
                 
                 <div className="mt-10 py-5 border-t border-blueGray-200 text-center">
                   <div className="flex flex-wrap justify-center mt-5">
-                    <div className="w-full lg:w-9/12 px-4 mb-5">
+                    <div className="w-full lg:w-9/12 px-4 mb-3">
                       <Link target="_blank" href={publicDir + "/companies_RegistrationDocument/" + companyData.RegistrationDocument}>
-                        <button className="py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
+                        <SecondaryButton size="sm">
                           View Company Registration Document
-                        </button>
+                        </SecondaryButton>
+                      </Link>
+                    </div>
+                    <div className="w-full lg:w-9/12 px-4 mb-3">
+                      <Link target="_blank" href={publicDir + "/companies_CertificationofActivity/" + companyData.CertificationofActivity}>
+                        <SecondaryButton size="sm">
+                          View Certification of Activity
+                        </SecondaryButton>
                       </Link>
                     </div>
                     <div className="w-full lg:w-9/12 px-4">
                       <Link target="_blank" href={publicDir + "/companies_CertificationofActivity/" + companyData.CertificationofActivity}>
-                        <button className="py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
-                          View Certification of Activity
-                        </button>
+                        <SecondaryButton size="sm">
+                          View Additional Documents
+                        </SecondaryButton>
                       </Link>
                     </div>
                   </div>
@@ -131,6 +174,13 @@ export default function MyCompany({session}) {
           }
         </div>
       </div>
+
+      {uploadAditionalDocsModal &&
+        <UploadAdditionalDocsModal
+          closeModal={() => setUploadAditionalDocsModal(false)}
+          acceptance={handleUploadAditionalDocsModal}
+        />
+      }
 
     </>
   );

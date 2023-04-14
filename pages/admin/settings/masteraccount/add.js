@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import axios from "lib/axios";
-import { useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 
 // components
 import InputForm from "@/components/Shared/InputForm";
@@ -9,8 +9,7 @@ import InputForm from "@/components/Shared/InputForm";
 // layout for page
 import Admin from "layouts/Admin.js";
 
-export default function MyProduct() {
-  const sessionData = useSession()
+export default function AddAccount({session}) {
   const [inputData, setInputData] = useState({
     name: '',
     email: '',
@@ -32,7 +31,7 @@ export default function MyProduct() {
     setErrorMessage(null)
     const response = await axios.post(`/master/users/create`, inputData, {
       headers: {
-        "Authorization" : `Bearer ${sessionData.data.accessToken}`
+        "Authorization" : `Bearer ${session.accessToken}`
       }
     })
       .then((response) => {
@@ -167,4 +166,14 @@ export default function MyProduct() {
   );
 }
 
-MyProduct.layout = Admin;
+AddAccount.layout = Admin;
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context)
+
+  return {
+      props: {
+          session: session
+      }
+  }
+}

@@ -18,8 +18,10 @@ import { useRouter } from 'next/router';
 export default function Index() {
     const refdata = useRef()
     const router = useRouter()
-    const [isAgreed, setIsAgreed] = useState(false)
-    const [isAgreedMessage, setIsAgreedMessage] = useState('')
+    const [isAgreeTerm, setIsAgreeTerm] = useState(false)
+    const [isAgreeTermMessage, setIsAgreeTermMessage] = useState('')
+    const [isAgreePolicy, setIsAgreePolicy] = useState(false)
+    const [isAgreePolicyMessage, setIsAgreePolicyMessage] = useState('')
     const [registrationInfo, setRegistrationInfo] = useState(
         {
             //Account Information
@@ -56,8 +58,12 @@ export default function Index() {
     const [isLoading, setIsLoading] = useState(false)
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if(!isAgreed){
-            setIsAgreedMessage('Please check the box bellow before continue.')
+        if(!isAgreeTerm){
+            setIsAgreeTermMessage('Please agreed the Term and Conditions before continue.')
+            return
+        }
+        if(!isAgreePolicy){
+            setIsAgreePolicyMessage('Please agreed the Privacy Policy bellow before continue.')
             return
         }
         setErrorMessage(null)
@@ -90,17 +96,19 @@ export default function Index() {
 
     }
 
-    const validateIsAgreed = () => {
-        if(!isAgreed){
-            alert("please agreed!")
+    const handleIsAgreeTerm = () => {
+        setIsAgreeTerm(prev => !prev)
+
+        if(!isAgreeTerm){
+            setIsAgreeTermMessage()
         }
     }
 
-    const handleIsAgreed = () => {
-        setIsAgreed(prev => !prev)
+    const handleIsAgreePolicy = () => {
+        setIsAgreePolicy(prev => !prev)
 
-        if(!isAgreed){
-            setIsAgreedMessage()
+        if(!isAgreePolicy){
+            setIsAgreePolicyMessage()
         }
     }
 
@@ -505,18 +513,32 @@ export default function Index() {
                             
                             <div className="text-center mb-6 mt-20">
                                 <div class="items-center">
-                                    {isAgreedMessage &&
+                                    {isAgreeTermMessage &&
                                         <div>
                                             <span className=" inline-block mr-2 align-middle">
                                                 <i className="text-red-500 fas fa-bell"></i>
                                             </span>
                                             <span className="font-light text-sm">
-                                                <i className="text-red-500 capitalize">{isAgreedMessage}</i>
+                                                <i className="text-red-500 capitalize">{isAgreeTermMessage}</i>
                                             </span>
                                         </div>
                                     }
-                                    <input id="link-checkbox" type="checkbox" checked={isAgreed} onChange={handleIsAgreed} class="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"/>
-                                    <label htmlFor="link-checkbox" class="ml-2 text-sm font-medium text-gray-900">I agree with the <Link target="_blank" href="/termsandconditions" class="text-blue-600 hover:underline">terms and conditions</Link>.</label>
+                                    <input id="link-checkbox" type="checkbox" checked={isAgreeTerm} onChange={handleIsAgreeTerm} class="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"/>
+                                    <label htmlFor="link-checkbox" class="ml-2 text-sm font-medium text-gray-900">I agree with the <Link target="_blank" href="/termsandconditions" class="text-blue-600 hover:underline">Terms and Conditions</Link>.</label>
+                                </div>
+                                <div class="items-center">
+                                    {isAgreePolicyMessage &&
+                                        <div>
+                                            <span className=" inline-block mr-2 align-middle">
+                                                <i className="text-red-500 fas fa-bell"></i>
+                                            </span>
+                                            <span className="font-light text-sm">
+                                                <i className="text-red-500 capitalize">{isAgreePolicyMessage}</i>
+                                            </span>
+                                        </div>
+                                    }
+                                    <input id="link-checkbox" type="checkbox" checked={isAgreePolicy} onChange={handleIsAgreePolicy} class="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"/>
+                                    <label htmlFor="link-checkbox" class="ml-2 text-sm font-medium text-gray-900">I agree with the <Link target="_blank" href="/privacypolicy" class="text-blue-600 hover:underline">Privacy Policy</Link>.</label>
                                 </div>
                                 {!isLoading && 
                                     <button

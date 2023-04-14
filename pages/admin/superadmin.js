@@ -153,7 +153,6 @@ export default function Dashboard({session}) {
         })
         .then((response) => {
           let result = response.data.data
-          console.log(result)
           setMemberStatistics(result)
         }).catch((error) => {
           console.log(error)

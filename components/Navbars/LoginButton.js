@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import IndexUserDropdown from "components/Dropdowns/IndexUserDropdown.js";
 import UserPopover from "components/Shared/Popover/UserPopover"
+import LogoutModal from "@/components/Modal/Logout/Logout";
 
 export default function Component() {
     // const {data, status} = useSession();
@@ -11,11 +12,10 @@ export default function Component() {
         name: '...'
     })
     useEffect(() => { setUser({name: session.data?.name}) }, [session])
-
+    const [logoutModal, setLogoutModal] = useState(false)
     if (session.status === 'authenticated') {
         return (
         <>
-            
             <li>
                 <IndexUserDropdown />
             </li>
@@ -27,19 +27,25 @@ export default function Component() {
             </li>
             <li  title="Logout">
                 <button title="Logout"
-                    onClick={() => {
-                        signOut({
-                        callbackUrl: `${window.location.origin}`
-                        });
-                    }}
+                    onClick={() => setLogoutModal(true)}
                     className="p-1 ml-4"
                     type="button"
                 >
                     <i className="fas fa-right-from-bracket text-blueGray-400"></i> 
                     <span className="lg:hidden inline-block ml-2">Logout</span>
                 </button>
-            </li>
+            </li>  
             
+            {logoutModal && 
+                <LogoutModal 
+                    closeModal={() => setLogoutModal(false)}
+                    acceptance={() => {
+                        signOut({
+                            callbackUrl: `${window.location.origin}`
+                        });
+                    }}
+                />
+            }
         </>
         )
     }

@@ -10,6 +10,8 @@ import AcceptMembership from "@/components/Modal/Registry/AcceptMembership"
 import RejectMembership from "@/components/Modal/Registry/RejectMembership"
 import PendingMembership from "@/components/Modal/Registry/PendingMembership"
 
+import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
+
 // layout for page
 import Admin from "layouts/Admin.js";
 
@@ -267,18 +269,25 @@ export default function CompanyList({session, routeParam}) {
                 
                 <div className="mt-10 py-5 border-t border-blueGray-200 text-center">
                   <div className="flex flex-wrap justify-center mt-5">
-                    <div className="w-full lg:w-9/12 px-4 mb-5">
+                    <div className="w-full lg:w-9/12 px-4 mb-3">
                       <Link target="_blank" href={publicDir + "/companies_RegistrationDocument/" + companyData.RegistrationDocument}>
-                        <button className="py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
+                        <SecondaryButton size="sm">
                           View Company Registration Document
-                        </button>
+                        </SecondaryButton>
+                      </Link>
+                    </div>
+                    <div className="w-full lg:w-9/12 px-4 mb-3">
+                      <Link target="_blank" href={publicDir + "/companies_CertificationofActivity/" + companyData.CertificationofActivity}>
+                        <SecondaryButton size="sm">
+                          View Certification of Activity
+                        </SecondaryButton>
                       </Link>
                     </div>
                     <div className="w-full lg:w-9/12 px-4">
                       <Link target="_blank" href={publicDir + "/companies_CertificationofActivity/" + companyData.CertificationofActivity}>
-                        <button className="py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
-                          View Certification of Activity
-                        </button>
+                        <SecondaryButton size="sm">
+                          View Additional Documents
+                        </SecondaryButton>
                       </Link>
                     </div>
                   </div>

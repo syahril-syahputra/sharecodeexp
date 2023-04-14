@@ -1,17 +1,42 @@
-import PrimaryButton from "@/components/Buttons/PrimaryButton"
-import SecondaryButton from "@/components/Buttons/SecondaryButton"
-import SuccessButton from "@/components/Buttons/SuccessButton"
-import DangerButton from "@/components/Buttons/DangerButton"
-import WarningButton from "@/components/Buttons/WarningButton"
-import InfoButton from "@/components/Buttons/InfoButton"
-import LightButton from "@/components/Buttons/LightButton"
+//button
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton"
+import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton"
+import SuccessButton from "@/components/Interface/Buttons/SuccessButton"
+import DangerButton from "@/components/Interface/Buttons/DangerButton"
+import WarningButton from "@/components/Interface/Buttons/WarningButton"
+import InfoButton from "@/components/Interface/Buttons/InfoButton"
+import LightButton from "@/components/Interface/Buttons/LightButton"
+
+//input
+import TextInput from "@/components/Interface/Form/TextInput"
+import NumberInput from "@/components/Interface/Form/NumberInput"
+import AreaInput from "@/components/Interface/Form/AreaInput"
+import SelectInput from "@/components/Interface/Form/SelectInput"
 
 import { useState } from "react"
 
 export default function ComponentList() {
     const [isDisabled, setIsDisabled] = useState(false)
+
+    const [enteredUser, setEnteredUser] = useState("")
+    const handleEnteredUser = (input) => {
+        setEnteredUser(input.value)
+    }
+    const [enteredInput, setEnteredInput] = useState({
+        textarea: '',
+        number: ''
+    })
+    const handleEnteredInput = (input) => {
+        setEnteredInput({...enteredInput, [input.name]:input.value})
+    }
+
+    const [category, setCategory] = useState({})
+    const handleSelectInput = (input) => {
+        setCategory(input)
+    }
+
     return (
-        <div className="relative p-2 bg-white">
+        <div className="relative p-2 bg-white mb-20">
             <div className="text-center pb-10 mt-10">
                 <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2 uppercase">
                     <p>Components List</p>
@@ -70,6 +95,62 @@ export default function ComponentList() {
                 <h3 className="text-xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2 uppercase">
                     <p>Input Field</p>
                 </h3>
+
+                <div className="w-1/2 px-3 mx-auto">
+                    <div className="mb-5">
+                        <TextInput
+                            label="User Email"
+                            name="email"
+                            required
+                            value={enteredUser}
+                            onChange={(input) => handleEnteredUser(input)}
+                        />
+                    </div>
+                    <div className="mb-5">
+                        <TextInput
+                            label="User Email"
+                            name="email"
+                            required
+                            disabled
+                            value={enteredUser}
+                            onChange={(input) => handleEnteredUser(input)}
+                            errorMsg={["disabled", "second error"]}
+                        />
+                    </div>
+                    <div className="mb-5">
+                        <AreaInput
+                            label="Text Area"
+                            name="textarea"
+                            required
+                            value={enteredInput?.textarea}
+                            onChange={(input) => handleEnteredInput(input)}
+                        />
+                        {enteredInput?.textarea}
+                    </div>
+                    <div className="mb-5">
+                        <NumberInput
+                            label="Number"
+                            name="number"
+                            required
+                            min={15}
+                            step={2}
+                            value={enteredInput?.number}
+                            onChange={(input) => handleEnteredInput(input)}
+                        />
+                        {enteredInput?.number}
+                    </div>
+                    <div className="mb-5">
+                        <SelectInput
+                            searchable
+                            disabled    
+                            label="Categories"
+                            name="categories"
+                            value={category}
+                            onChange={(input) => handleSelectInput(input)}
+                        />
+                        
+                    </div>
+                </div>
 
                 
             </div>

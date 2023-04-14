@@ -4,6 +4,7 @@ import axios from "@/lib/axios";
 import Link from "next/link";
 // components
 import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep"
+import OrderTodo from "@/components/Shared/Order/OrderTodo"
 import { toast } from 'react-toastify';
 import { toastOptions } from "@/lib/toastOptions"
 
@@ -126,6 +127,7 @@ export default function InquiryDetails({session, routeParam}) {
                 }
 
                 <OrderStatusStep orderStatus={data.order_status}/>
+                <OrderTodo orderStatus={data.order_status} action="This is action"/>
                 
                 <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-center">
@@ -198,7 +200,7 @@ export default function InquiryDetails({session, routeParam}) {
                         </table>
                     </div>
                     {/* table B */}
-                    <div className="overflow-x-auto mb-10 flex justify-center">
+                    <div className="overflow-x-auto mb-5 flex justify-center">
                         <table className="w-50 text-sm text-left text-gray-500 bg-white border">
                             <thead className="text-xs text-white uppercase bg-blue-500">
                                 <tr>
@@ -227,6 +229,30 @@ export default function InquiryDetails({session, routeParam}) {
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    {data.price &&
+                        <div className="text-center mb-10 w-1/2 mx-auto">
+                            <i className="text-light italic text-red-500">Note: Price is only for the product. The order type is Ex-works. The price you see on screen does not include logistical costs, customs, tax, insurance or any additional expenses that may occur.</i>
+                        </div>
+                    }
+                </div>
+
+                <div className="px-4 py-3 border-0 bg-slate-200">
+                    <div className="flex justify-center">
+                        <div className=" text-center">
+                            <h4
+                                className="font-semibold text-xl">
+                                Documents
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="px-4 py-3 border-0 bg-white">
+                    <div className="flex justify-center">
+                        <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
+                            Shipment Info
+                        </button>                
                     </div>
                 </div>
 

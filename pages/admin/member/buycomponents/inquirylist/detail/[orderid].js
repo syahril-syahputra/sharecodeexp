@@ -5,6 +5,7 @@ import Link from "next/link";
 
 // components
 import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep";
+import OrderTodo from "@/components/Shared/Order/OrderTodo"
 import AcceptQuotationModal from "@/components/Modal/OrderComponent/Buyer/AcceptQuotation"
 import RejectQuotationModal from "@/components/Modal/OrderComponent/Buyer/RejectQuotation"
 import SendPaymentDocsModal from "@/components/Modal/OrderComponent/Buyer/SendPaymentDocs"
@@ -282,6 +283,7 @@ export default function InquiryDetails({session, routeParam}) {
                 }
                 
                 <OrderStatusStep orderStatus={data.order_status}/>
+                <OrderTodo orderStatus={data.order_status} action="This is action"/>
 
                 <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-center">

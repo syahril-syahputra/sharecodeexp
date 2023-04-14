@@ -39,7 +39,7 @@ export default function BuyComponents(){
       })
       .then((response) => {
         let result = response.data
-        setTotalInquiredItem(result.data)
+        setTotalInquiredItem(0)
       }).catch((error) => {
         // console.log(error.response)
       }).finally(() => {

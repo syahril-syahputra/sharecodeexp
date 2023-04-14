@@ -8,7 +8,9 @@ import Link from "next/link";
 // layout for page
 import Admin from "layouts/Admin.js";
 import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep";
+import OrderTodo from "@/components/Shared/Order/OrderTodo";
 import SendQuotationModal from "@/components/Modal/OrderComponent/Superadmin/SendQuotation"
+import SendOrderToInquireModal from "@/components/Modal/OrderComponent/Superadmin/SendOrderToInquire"
 import SendProformaInvoiceModal from "@/components/Modal/OrderComponent/Superadmin/SendProformaInvoice"
 import AcceptPaymentDocumentModal from "@/components/Modal/OrderComponent/Superadmin/AcceptPaymentDocument"
 import RejectPaymentDocumentModal from "@/components/Modal/OrderComponent/Superadmin/RejectPaymentDocument"
@@ -189,6 +191,17 @@ export default function InquiryDetails({session, routeParam}) {
         })
     }
 
+    const [sendOrderToInquire, setSendOrderToInquire] = useState(false)
+    const handleSendOrderToInquire = (infoOrder) => {
+        setIsLoading(true)
+        setErrorInfo({})
+        let inputData = {
+            id: data.id,
+            infoOrder: infoOrder
+        }
+        console.log(inputData)
+    }
+
     const [sendInvoiceToSellerModal, setSendIvoiceToSellerModal] = useState(false)
     const handleSendInvoiceCompleteOrderModal = async (invoice) => {
         console.log(invoice)
@@ -259,6 +272,7 @@ export default function InquiryDetails({session, routeParam}) {
                 </div>
                 }
                 <OrderStatusStep orderStatus={data.order_status}/>
+                <OrderTodo orderStatus={data.order_status} action="This is action"/>
                 
                 {/* Buyer Seller */}
                 <div className="px-4 py-3 border-0 bg-white">
@@ -445,6 +459,11 @@ export default function InquiryDetails({session, routeParam}) {
                             </tbody>
                         </table>
                     </div>
+                    {data.price_profite &&
+                        <div className="text-center mb-10 w-1/2 mx-auto">
+                            <i className="text-light italic text-red-500">Note: Price is only for the product. The order type is Ex-works. The price you see on screen does not include logistical costs, customs, tax, insurance or any additional expenses that may occur.</i>
+                        </div>
+                    }
                 </div>
 
                 <div className="px-4 py-3 border-0 bg-slate-200">
@@ -482,7 +501,10 @@ export default function InquiryDetails({session, routeParam}) {
                             <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
                                 Payment Receipt
                             </button>
-                        }                
+                        }
+                        <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
+                            Shipment Info
+                        </button>                
                     </div>
                 </div>
 
@@ -503,8 +525,16 @@ export default function InquiryDetails({session, routeParam}) {
                             <button onClick={() => setSendQuotationModal(true) } className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
                                 Send Quotation
                             </button>
-                            : <button disabled onClick={() => setSendQuotationModal(true) } className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                            : <button className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
                                 Send Quotation
+                            </button>
+                        }
+                        {data.order_status_id == 2 ?
+                            <button onClick={() => setSendOrderToInquire(true) } className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                                Send Order to Inquired
+                            </button>
+                            : <button className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                                Send Order to Inquired
                             </button>
                         }
 
@@ -578,6 +608,15 @@ export default function InquiryDetails({session, routeParam}) {
                         orderQty={data.qty}
                         closeModal={() => setSendQuotationModal(false)}
                         acceptance={handleSendQuotationModal}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                {sendOrderToInquire &&
+                    <SendOrderToInquireModal
+                        isLoading={isLoading}
+                        closeModal={() => setSendOrderToInquire(false)}
+                        acceptance={handleSendOrderToInquire}
                         errorInfo={errorInfo}
                     />
                 }

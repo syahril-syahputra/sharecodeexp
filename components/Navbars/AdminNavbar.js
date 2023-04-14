@@ -3,6 +3,7 @@ import { useSession, signOut } from "next-auth/react"
 
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
 import UserPopover from "components/Shared/Popover/UserPopover"
+import LogoutModal from "@/components/Modal/Logout/Logout";
 
 export default function Navbar() {
   const session = useSession()
@@ -10,7 +11,7 @@ export default function Navbar() {
   useEffect(() => { 
     setUserDetail(session.data?.user.userDetail) 
   }, [session])
-
+  const [logoutModal, setLogoutModal] = useState(false)
   return (
     <>
       {/* Navbar */}
@@ -30,11 +31,12 @@ export default function Navbar() {
           <ul className="flex-col md:flex-row list-none items-center hidden md:flex">
             <UserDropdown />
             <button
-              onClick={() => {
-                signOut({
-                  callbackUrl: `${window.location.origin}`
-                });
-              }}
+              onClick={() => setLogoutModal(true)}
+              // onClick={() => {
+              //   signOut({
+              //     callbackUrl: `${window.location.origin}`
+              //   });
+              // }}
             className="ml-4" title="Logout">
               <i className="fas fa-right-from-bracket text-white mr-2"></i>
             </button>
@@ -44,6 +46,16 @@ export default function Navbar() {
           </ul> */}
         </div>
       </nav>
+      {logoutModal && 
+        <LogoutModal 
+            closeModal={() => setLogoutModal(false)}
+            acceptance={() => {
+                signOut({
+                    callbackUrl: `${window.location.origin}`
+                });
+            }}
+        />
+      }
       {/* End Navbar */}
     </>
   );

@@ -90,7 +90,7 @@ export default function Index() {
                                             className="md:w-8/12 shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-4 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 pl-10"/>
                                     </div>
                                     <div className="text-center mt-10">
-                                        {/* <p className="text-blueGray-400 hover:text-blueGray-700"><Link href="/forgot_password">Forgot Password</Link></p> */}
+                                        <p className="text-blueGray-400 hover:text-blueGray-700"><Link href="/auth/forgotpassword">Forgot Password</Link></p>
                                     </div>
                                     <div className="text-center mb-6">
                                         {!isLoading && 

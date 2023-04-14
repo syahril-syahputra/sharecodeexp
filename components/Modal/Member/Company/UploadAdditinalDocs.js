@@ -1,8 +1,8 @@
 import { useState } from "react"
 import ErrorInput from '@/components/Shared/ErrorInput';
-import AcceptButton from "@/components/Buttons/AcceptButton";
-export default function AcceptPaymentDocument(props){
-    const [shipInfoForSeller, setShipInfoForSeller] = useState()
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
+export default function UploadAdditionalDocuments(props){
+    const [additionalDocs, setAdditionalDocs] = useState()
     return (
         <>
             <div
@@ -14,7 +14,7 @@ export default function AcceptPaymentDocument(props){
                     {/*header*/}
                     <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200">
                     <h3 className="text-3xl font-semibold">
-                       Accept Payment
+                       Upload Additional Documents
                     </h3>
                     <button
                         className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
@@ -30,13 +30,9 @@ export default function AcceptPaymentDocument(props){
 
                     {/* <form onSubmit={handleSubmit} ref={refdata}> */}
                     <form className="">
-                        <p className="text-blueGray-500 text-lg leading-relaxed">
-                            Do you agree to <span className="text-blueGray-700 font-bold">Accept</span> this Payment?
-                        </p>
-
-                        <div className="w-full mb-6 mt-10">
+                        <div className="w-full mb-6">
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                Shipment Info Document
+                               Upload Required Documents (Accept Multiple Document)
                             </label>
                             <div className="p-5 border-dashed border-2 border-indigo-200">
                                 <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>
@@ -46,19 +42,14 @@ export default function AcceptPaymentDocument(props){
                                     <div className="text-xs ">
                                         <p>PDF file size no more than 10MB</p>
                                         <input 
+                                            multiple
                                             className="mt-3" 
                                             type="file"
                                             name='shipInfoForSeller'
                                             accept='.pdf'
                                             onChange={({target}) => 
-                                                setShipInfoForSeller(target.files[0])
+                                                setAdditionalDocs(target.files)
                                             }
-                                            // onChange={({target}) => 
-                                            //     setPaymentDocs(target.files[0])
-                                            // }
-                                            // onChange={({target}) => 
-                                            //     setRegistrationInfo({...registrationInfo,company_RegistrationDocument:target.files[0]})
-                                            // }
                                         />
                                     </div>
                                 </div>
@@ -67,24 +58,6 @@ export default function AcceptPaymentDocument(props){
                                 <ErrorInput error={props.errorInfo?.shipinfoforseller}/>
                             }
                         </div>
-
-                        {/* <div className="w-full mb-6 mt-10">
-                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                To Seller Shipment Info
-                            </label>
-                            <textarea 
-                                placeholder=" Write Shipment Information for seller here, click Accept Payment to Continue."
-                                value={shipInfoForSeller}
-                                onChange={({target}) => 
-                                    setShipInfoForSeller(target.value)
-                                }
-                                autoComplete="off" 
-                                type="text"
-                                className="shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
-                            {props.errorInfo?.shipinfoforseller &&
-                                <ErrorInput error={props.errorInfo?.shipinfoforseller}/>
-                            }
-                        </div> */}
                     </form>
                     </div>
                     {/*footer*/}
@@ -97,11 +70,11 @@ export default function AcceptPaymentDocument(props){
                         Close
                     </button>
 
-                    <AcceptButton
-                        buttonTitle="Accept Payment & Send"
-                        isLoading={props.isLoading}
-                        onClick={() => props.acceptance(shipInfoForSeller)}
-                    />
+                    <PrimaryButton
+                        className="font-bold uppercase "
+                        onClick={() => props.acceptance(additionalDocs)}>
+                        Submit
+                    </PrimaryButton>
                     </div>
                 </div>
                 </div>
