@@ -3,7 +3,7 @@ import Link from "next/link";
 // components
 
 export default function PendingCompany(props) {
-  const data = props.data.slice(Math.max(props.data.length - 5, 1))
+  const data = props.data.slice(0, 5)
   
   return (
     <>

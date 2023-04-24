@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import InputForm from "@/components/Shared/InputForm";
 import InputNumberForm from "@/components/Shared/InputNumberForm";
 import AcceptButton from "@/components/Buttons/AcceptButton"
-export default function VerifyOrder(props){
+export default function EditVerifiedOrder(props){
     const [inputData, setInputData] = useState(
         {
             id: props.orderId,
             AvailableQuantity: props.availableQty,
             moq: props.moq,
             dateCode: props.dateCode,
-            price: 0
+            price: props.price
         }
     )
     const [total, setTotal] = useState(0)
@@ -62,7 +62,7 @@ export default function VerifyOrder(props){
                     {/*header*/}
                     <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200">
                     <h3 className="text-3xl font-semibold">
-                        Verify Inquiry
+                        Edit Verified Order
                     </h3>
                     <button
                         className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"

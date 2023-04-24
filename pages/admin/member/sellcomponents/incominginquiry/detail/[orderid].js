@@ -11,6 +11,7 @@ import { toastOptions } from "@/lib/toastOptions"
 // layout for page
 import Admin from "layouts/Admin.js";
 import VerifyInquiryModal from "@/components/Modal/OrderComponent/Seller/VerifyInquiry"
+import EditVerifiedOrderModal from "@/components/Modal/OrderComponent/Seller/EditVerifiedOrder"
 import SendTrackerModal from "@/components/Modal/OrderComponent/Seller/SendTracker"
 
 export default function InquiryDetails({session, routeParam}) {
@@ -30,6 +31,7 @@ export default function InquiryDetails({session, routeParam}) {
                 // console.log(response)
                 let result = response.data.data
                 setData(result)
+                loadTodoAction(result.order_status.id)
             }).catch((error) => {
                 // console.log(error.response)
             }).finally(() => {
@@ -39,6 +41,20 @@ export default function InquiryDetails({session, routeParam}) {
     useEffect(() => {
         loadData()
     }, [])
+
+    const [todoValue, setTodoValue] = useState()
+    const loadTodoAction = async (order_status_id) => {
+        const request = await axios.get(`/seller/notification/${order_status_id}`, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then((response) => {
+            console.log(response.data)
+            setTodoValue(response.data.data.message)
+        })
+    }
 
     const [errorInfo, setErrorInfo] = useState({})
     const [verifyInquiryModal, setVerifyInquiryModal] = useState(false)
@@ -62,15 +78,37 @@ export default function InquiryDetails({session, routeParam}) {
         })
     }
 
-    const [sendTrackerModal, setSendTrackerModal] = useState(false)
-    const sendTrackerModalHandle = async (sellerTracker) => {
+    const [editVerifiedOrderModal, setEditVerifiedOrderModal] = useState(false)
+    const editVerifiedOrderModalHandle = async (inputData) => {
         setIsLoading(true)
         setErrorInfo({})
-        let inputData = {
-            id: data.id,
-            trackingSeller: sellerTracker
-        }
-        const response = await axios.post(`/seller/UpdateToPreparingShipment`, inputData, 
+        const response = await axios.post(`/seller/EditWrongVerify`, inputData, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Order has been verified", toastOptions)
+            setEditVerifiedOrderModal(false)
+            loadData()
+        }).catch((error) => {
+            toast.error("Something went wrong", toastOptions)
+            setErrorInfo(error.data.data)
+            setIsLoading(false)
+        })
+    }
+
+    const [sendTrackerModal, setSendTrackerModal] = useState(false)
+    const sendTrackerModalHandle = async (sellerTracker, paymentAccount) => {
+        setIsLoading(true)
+        setErrorInfo({})
+
+        let formData = new FormData();
+        formData.append("PaymentDocSeller", paymentAccount);
+        formData.append("trackingSeller", sellerTracker);
+        formData.append("id", data.id)  
+        const response = await axios.post(`/seller/UpdateToPreparingShipment`, formData, 
         {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -127,7 +165,7 @@ export default function InquiryDetails({session, routeParam}) {
                 }
 
                 <OrderStatusStep orderStatus={data.order_status}/>
-                <OrderTodo orderStatus={data.order_status} action="This is action"/>
+                <OrderTodo action={todoValue}/>
                 
                 <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-center">
@@ -250,9 +288,42 @@ export default function InquiryDetails({session, routeParam}) {
 
                 <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-center">
-                        <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
-                            Shipment Info
-                        </button>                
+                        {data.shipinfoforseller ? 
+                            <Link target="_blank" href={publicDir + "/uploads/shipinfoforseller/" + data.shipinfoforseller}>
+                                <button className="m-2 py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
+                                    Shipment Info
+                                </button>
+                            </Link>
+                            : 
+                            <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
+                                Shipment Info
+                            </button>
+                        }  
+
+                        {data.PaymentDocSeller ? 
+                            <Link target="_blank" href={publicDir + "/PaymentDocSeller/" + data.PaymentDocSeller}>
+                                <button className="m-2 py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
+                                    Seller's Payment Account
+                                </button>
+                            </Link>
+                            : 
+                            <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
+                                Seller's Payment Account
+                            </button>
+                        } 
+
+                        {data.PaymentProof ? 
+                            <Link target="_blank" href={publicDir + "/PaymentProof/" + data.PaymentProof}>
+                                <button className="m-2 py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
+                                    Seller's Invoice
+                                </button>
+                            </Link>
+                            : 
+                            <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
+                                Seller's Invoice
+                            </button>
+                        } 
+                                
                     </div>
                 </div>
 
@@ -315,6 +386,15 @@ export default function InquiryDetails({session, routeParam}) {
                             </button>
                         }
 
+                        {data.order_status_id == 2 ?
+                            <button onClick={()=> setEditVerifiedOrderModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
+                                Edit Verified Order
+                            </button>
+                            : <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
+                                Edit Verified Order
+                            </button>
+                        }
+
                         {data.order_status_id == 8 ?
                             <button onClick={()=> setSendTrackerModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
                                 Send Tracker Information
@@ -336,6 +416,21 @@ export default function InquiryDetails({session, routeParam}) {
                         dateCode={data.companies_products?.dateCode}
                         closeModal={() => setVerifyInquiryModal(false)}
                         acceptance={verifyInquiryModalHandle}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                {editVerifiedOrderModal && 
+                    <EditVerifiedOrderModal
+                        isLoading={isLoading}
+                        orderId={data.id}
+                        orderQty={data.qty}
+                        availableQty={data.companies_products?.AvailableQuantity}
+                        moq={data.companies_products?.moq}
+                        price={data.price}
+                        dateCode={data.companies_products?.dateCode}
+                        closeModal={() => setEditVerifiedOrderModal(false)}
+                        acceptance={editVerifiedOrderModalHandle}                        
                         errorInfo={errorInfo}
                     />
                 }

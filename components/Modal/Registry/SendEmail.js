@@ -1,22 +1,11 @@
 import { useEffect, useState } from "react"
-import AcceptButton from "@/components/Buttons/AcceptButton";
-import InputForm from "@/components/Shared/InputForm";
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import ErrorInput from '@/components/Shared/ErrorInput';
 export default function Modal(props) {
-    const [email, setEmail] = useState('')
-    const setEmailHandler = (item, inputName) => {
-      setEmail(item.value)
-    }
-
-    const [subject, setSubject] = useState('')
-    const setSubjectHandler = (item, inputName) => {
-      setSubject(item.value)
-    }
-    
-    const [messages, setMessages] = useState('')
+    const [messages, setMessages] = useState('Please send additional document to complete your registration')
 
     const handleSend = () => {
-        props.acceptModal(email, subject, messages)
+        props.acceptModal(messages)
     }
 
     return (
@@ -43,29 +32,7 @@ export default function Modal(props) {
                 </div>
                 {/*body*/}
                 <form className=""> 
-                <div className="flex flex-wrap mt-10">
-                      <div className="w-full px-3">
-                          <InputForm
-                              label="Email"
-                              inputDataName="email"
-                              value={email}
-                              setData={setEmailHandler}
-                              errorMsg={props.errorInfo?.subject}
-                          />
-                      </div>
-                  </div>
-                  <div className="flex flex-wrap mt-10">
-                      <div className="w-full px-3">
-                          <InputForm
-                              label="Subject"
-                              inputDataName="subject"
-                              value={subject}
-                              setData={setSubjectHandler}
-                              errorMsg={props.errorInfo?.subject}
-                          />
-                      </div>
-                  </div>
-                  <div className="relative p-3 flex-auto mt-5">
+                  <div className="relative p-3 flex-auto">
                     <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
                       Messages
                     </label>
@@ -94,11 +61,15 @@ export default function Modal(props) {
                     Close
                   </button>
 
-                  <AcceptButton
-                      buttonTitle="Send"
-                      isLoading={props.isLoading}
-                      onClick={handleSend}
-                  />
+                    <PrimaryButton
+                        disabled={props.isLoading}
+                        className="font-bold uppercase "
+                        onClick={handleSend}>
+                        {props.isLoading &&
+                            <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
+                        }
+                        Send
+                    </PrimaryButton>
                 </div>
               </div>
             </div>

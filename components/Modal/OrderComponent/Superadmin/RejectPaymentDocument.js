@@ -2,10 +2,10 @@ import { useState } from "react"
 import ErrorInput from '@/components/Shared/ErrorInput';
 import RejectButton from "@/components/Buttons/RejectButton";
 export default function RejectPaymentDocument(props){
-    const [rejectionReason, setRejectionReason] = useState()
+    const [rejectionReason, setRejectionReason] = useState('')
 
     const handleRejection = () => {
-        props.acceptance(rejectionReason.value)
+        props.acceptance(rejectionReason)
     }
     return (
         <>

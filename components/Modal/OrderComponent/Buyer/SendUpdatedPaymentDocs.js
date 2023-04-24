@@ -1,11 +1,14 @@
 import { useState } from "react"
-import AcceptButton from "@/components/Buttons/AcceptButton";
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
+import TextInput from "@/components/Interface/Form/TextInput"
 import ErrorInput from '@/components/Shared/ErrorInput';
 import Select from 'react-tailwindcss-select';
 export default function SendUpdatedPaymentDocs(props){
     const [couriers, setCouriers] = useState(props.couriers)
     const [paymentDocs, setPaymentDocs] = useState()
-    const [shipmentInfo, setShipmentInfo] = useState()
+    const [buyerShipmentAddress, setBuyerShipmentAddress] = useState('')
+    const [buyerAccountInformation, setBuyerAccountInformation] = useState()
+    const [receiversName, setReceiversName] = useState('')
 
     const [courier, setCourier] = useState(null);
     const [selectedCourier, setSelectedCourier] = useState(null);
@@ -14,16 +17,15 @@ export default function SendUpdatedPaymentDocs(props){
         setSelectedCourier(value.value)
     };
 
-    const [buyerAccountInformation, setBuyerAccountInformation] = useState()
 
     const handleSubmit = () => {
-        props.acceptance(shipmentInfo, paymentDocs, selectedCourier, buyerAccountInformation)
+        props.acceptance(buyerShipmentAddress, paymentDocs, selectedCourier, buyerAccountInformation, receiversName)
     }
 
     return (
         <>
             <div
-                className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+                className="fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full"
             >
                 <div className="relative w-auto my-6 mx-auto max-w-3xl">
                 {/*content*/}
@@ -43,7 +45,7 @@ export default function SendUpdatedPaymentDocs(props){
                     </button>
                     </div>
                     {/*body*/}
-                    <div className="relative p-6 flex-auto">
+                    <div className="relative overflow-y-auto p-4">
                     {/* <form onSubmit={handleSubmit} ref={refdata}> */}
                     <form>
                         <div className="w-full px-3 mb-6 md:mb-0">
@@ -81,15 +83,15 @@ export default function SendUpdatedPaymentDocs(props){
                                 Buyer’s Shipment Address
                             </label>
                             <textarea 
-                                value={shipmentInfo}
+                                value={buyerShipmentAddress}
                                 onChange={({target}) => 
-                                    setShipmentInfo(target.value)
+                                    setBuyerShipmentAddress(target.value)
                                 }
                                 autoComplete="off" 
                                 type="text"
                                 className="shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
-                            {props.errorInfo?.shipinfobuyer &&
-                                <ErrorInput error={props.errorInfo?.shipinfobuyer}/>
+                            {props.errorInfo?.addressBuyer &&
+                                <ErrorInput error={props.errorInfo?.addressBuyer}/>
                             }
                         </div>                        
                         <div className="w-full md:w-full px-3">
@@ -121,6 +123,16 @@ export default function SendUpdatedPaymentDocs(props){
                             }
                         </div>
                         <div className="w-full px-3 mb-6 mt-10">
+                            <TextInput
+                                label="Receivers Name"
+                                name="receiversName"
+                                required
+                                value={receiversName}
+                                errorMsg={props.errorInfo?.fullnameReceiving}
+                                onChange={(input) => setReceiversName(input.value)}
+                            />
+                        </div>
+                        <div className="w-full px-3 mb-6 mt-10">
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
                                 Buyer’s Courier Account Information
                             </label>
@@ -132,10 +144,11 @@ export default function SendUpdatedPaymentDocs(props){
                                 autoComplete="off" 
                                 type="text"
                                 className="shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
-                            {props.errorInfo?.shipinfobuyer &&
-                                <ErrorInput error={props.errorInfo?.shipinfobuyer}/>
+                            {props.errorInfo?.AccountInformation &&
+                                <ErrorInput error={props.errorInfo?.AccountInformation}/>
                             }
                         </div>
+                        
                     </form>
                     </div>
                     {/*footer*/}
@@ -147,11 +160,15 @@ export default function SendUpdatedPaymentDocs(props){
                     >
                         Close
                     </button>
-                    <AcceptButton
-                        buttonTitle="Send"
-                        isLoading={props.isLoading}
-                        onClick={handleSubmit}
-                    />
+                    <PrimaryButton
+                        disabled={props.isLoading}
+                        className="font-bold uppercase "
+                        onClick={handleSubmit}>
+                        {props.isLoading &&
+                            <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
+                        }
+                        Send
+                    </PrimaryButton>
                     </div>
                 </div>
                 </div>

@@ -31,7 +31,7 @@ export default function BuyComponents(){
 
   const [totalInquiredItem, setTotalInquiredItem] = useState(0)
   const countInquiredList = async () =>{
-    const response = await axios.get(`/countWish`,
+    const response = await axios.get(`/buyer/order/count`,
       {
         headers: {
           "Authorization" : `Bearer ${session.data.accessToken}`
@@ -39,7 +39,7 @@ export default function BuyComponents(){
       })
       .then((response) => {
         let result = response.data
-        setTotalInquiredItem(0)
+        setTotalInquiredItem(result.data)
       }).catch((error) => {
         // console.log(error.response)
       }).finally(() => {
@@ -71,7 +71,7 @@ export default function BuyComponents(){
             }>
               <i className="fas fa-cart-shopping text-blueGray-400 mr-2 text-sm"></i>{" "}
               Inquiry List
-              <span className="ml-5 text-xs font-semibold inline-block py-1 px-2 uppercase text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
+              <span className="ml-1 text-xs font-semibold inline-block py-1 px-2 uppercase text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
                 {totalItem}
               </span>
           </Link>

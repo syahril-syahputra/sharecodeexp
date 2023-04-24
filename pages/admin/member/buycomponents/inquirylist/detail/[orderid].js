@@ -17,10 +17,8 @@ import { toastOptions } from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";
-import { courierOptions } from "@/data/optionData";
 
-
-export default function InquiryDetails({session, routeParam}) {
+export default function InquiryDetails({session, routeParam, couriers}) {
     const publicDir = process.env.NEXT_PUBLIC_DIR
     //data search
     const [isLoading, setIsLoading] = useState(true)
@@ -34,9 +32,9 @@ export default function InquiryDetails({session, routeParam}) {
             }
             })
             .then((response) => {
-                console.log(response)
                 let result = response.data.data
                 setData(result)
+                loadTodoAction(result.order_status.id)
             }).catch((error) => {
                 // console.log(error.response)
             }).finally(() => {
@@ -46,6 +44,19 @@ export default function InquiryDetails({session, routeParam}) {
     useEffect(() => {
         loadData()
     }, [])
+
+    const [todoValue, setTodoValue] = useState()
+    const loadTodoAction = async (order_status_id) => {
+        const request = await axios.get(`/buyer/notification/${order_status_id}`, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then((response) => {
+            setTodoValue(response.data.data.message)
+        })
+    }
 
     const [errorInfo, setErrorInfo] = useState({})
 
@@ -121,7 +132,7 @@ export default function InquiryDetails({session, routeParam}) {
     }
 
     const [sendPaymentDocsModal, setSendPaymentDocsModal] = useState(false)
-    const sendPaymentDocsModalHandle = async (shipment, paymentDocs, courier, accountInfo) => {
+    const sendPaymentDocsModalHandle = async (shipment, paymentDocs, courier, accountInfo, receiversName) => {    
         let formData = new FormData();
         if(!shipment){
             setErrorInfo({shipinfobuyer: "This field can't be empty"})
@@ -130,9 +141,10 @@ export default function InquiryDetails({session, routeParam}) {
             return
         }
         formData.append("Payment_doc", paymentDocs);
-        formData.append("shipinfobuyer", shipment);
+        formData.append("addressBuyer", shipment);
         formData.append("courier", courier);
-        formData.append("accountInfo", accountInfo);
+        formData.append("fullnameReceiving", receiversName);
+        formData.append("AccountInformation", accountInfo);
         formData.append("id", data.id)        
         setIsLoading(true)
         const response = await axios.post(`/buyer/SendPayment`, 
@@ -156,7 +168,7 @@ export default function InquiryDetails({session, routeParam}) {
     }
 
     const [sendUpdatedPaymentDocsModal, setSendUpdatedPaymentDocsModal] = useState(false)
-    const sendUpdatedPaymentDocsModalHandle = async (shipment, paymentDocs, courier, accountInfo) => {
+    const sendUpdatedPaymentDocsModalHandle = async (shipment, paymentDocs, courier, accountInfo, receiversName) => {
         let formData = new FormData();
         if(!shipment){
             setErrorInfo({shipinfobuyer: "This field can't be empty"})
@@ -165,10 +177,11 @@ export default function InquiryDetails({session, routeParam}) {
             return
         }
         formData.append("Payment_doc", paymentDocs);
-        formData.append("shipinfobuyer", shipment);
+        formData.append("addressBuyer", shipment);
         formData.append("courier", courier);
-        formData.append("accountInfo", accountInfo);
-        formData.append("id", data.id)
+        formData.append("fullnameReceiving", receiversName);
+        formData.append("AccountInformation", accountInfo);
+        formData.append("id", data.id)   
         setIsLoading(true)
         const response = await axios.post(`/buyer/SendPayment?update=1`, 
             formData,
@@ -283,7 +296,7 @@ export default function InquiryDetails({session, routeParam}) {
                 }
                 
                 <OrderStatusStep orderStatus={data.order_status}/>
-                <OrderTodo orderStatus={data.order_status} action="This is action"/>
+                <OrderTodo action={todoValue}/>
 
                 <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-center">
@@ -535,7 +548,7 @@ export default function InquiryDetails({session, routeParam}) {
                         isLoading={isLoading}
                         closeModal={() => setSendPaymentDocsModal(false)}
                         acceptance={sendPaymentDocsModalHandle}
-                        couriers={courierOptions}
+                        couriers={couriers}
                         errorInfo={errorInfo}
                     />
                 }
@@ -545,7 +558,7 @@ export default function InquiryDetails({session, routeParam}) {
                         isLoading={isLoading}
                         closeModal={() => setSendUpdatedPaymentDocsModal(false)}
                         acceptance={sendUpdatedPaymentDocsModalHandle}
-                        couriers={courierOptions}
+                        couriers={couriers}
                         errorInfo={errorInfo}
                     />
                 }
@@ -575,11 +588,14 @@ InquiryDetails.layout = Admin;
 
 export async function getServerSideProps(context) {
     const session = await getSession(context)
+    const loadCouriers = await axios.get('/courierlist')
+    const couriers = loadCouriers.data.data
 
     return {
         props: {
-            session: session,
+            session,
             routeParam: context.query,
+            couriers
         }
     }
 }

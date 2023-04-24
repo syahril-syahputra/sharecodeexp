@@ -7,6 +7,9 @@ import Link from "next/link";
 import WarningButton from "@/components/Interface/Buttons/WarningButton";
 import UploadAdditionalDocsModal from "@/components/Modal/Member/Company/UploadAdditinalDocs";
 import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
+
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -28,9 +31,9 @@ export default function MyCompany({session}) {
         )
         .then((response) => {
             let result = response.data.data
-            setCompanyData(result)
+            setCompanyData(result)            
         }).catch((error) => {
-            // console.log(error.response)
+            // console.log(error.response)            
         }).finally(() => {
             setIsLoading(false)
         })
@@ -40,8 +43,30 @@ export default function MyCompany({session}) {
   }, [])
 
   const [uploadAditionalDocsModal, setUploadAditionalDocsModal] = useState()
-  const handleUploadAditionalDocsModal = (file) => {
-    console.log(file)
+  const handleUploadAditionalDocsModal = async (file) => {
+    setIsLoading(true)
+    let formData = new FormData()
+    for(const index in file) {
+      formData.append('AddtionalDoc[]', file[index])
+    }
+    const request = await axios.post(`/master/company/RegistrationDocument/Additional`, formData,
+        {
+            headers: {
+              "Authorization" : `Bearer ${session.accessToken}`
+            }
+        }
+        )
+        .then((response) => {
+          console.log(response.data.data)
+          setUploadAditionalDocsModal(false)
+          toast.success(response.data.data, toastOptions)
+        }).catch((error) => {
+          console.log(error.response)
+          toast.warning("Something went wrong!", toastOptions)
+          toast.warning("Please upload again", toastOptions)
+        }).finally(() => {
+            setIsLoading(false)
+        })
   }
   return (
     <>
@@ -58,7 +83,7 @@ export default function MyCompany({session}) {
                   </h3>
               </div>
               <div className="px-4 my-2">
-                  <WarningButton onClick={() => setUploadAditionalDocsModal(true) } size="sm">
+                  <WarningButton className="mr-2" onClick={() => setUploadAditionalDocsModal(true) } size="sm">
                     <i className="mr-2 ml-1 fas fa-folder text-white"></i>
                     Upload Aditional Documents
                   </WarningButton>
@@ -82,13 +107,13 @@ export default function MyCompany({session}) {
             </div>
           }
 
-          {(companyData?.reason && companyData.is_confirmed == "pending") &&
-            <div className="bg-orange-400 p-2 text-white">
-                <h3 className={"ml-3 font-semibold text-lg"}>
+          {(companyData?.notification && companyData.is_confirmed == "pending") &&
+            <div className="p-2 text-orange-500 text-center">
+                <h3 className="italic ml-3 font-semibold text-lg">
                     Update Needed
                 </h3>
                 <h3 className={"ml-3 text-md"}>
-                    {companyData.reason}
+                    {companyData.notification}
                 </h3>
             </div>
           }
@@ -152,13 +177,15 @@ export default function MyCompany({session}) {
                         </SecondaryButton>
                       </Link>
                     </div>
+                    {session.user.userDetail.status_id == 1 && 
                     <div className="w-full lg:w-9/12 px-4">
-                      <Link target="_blank" href={publicDir + "/companies_CertificationofActivity/" + companyData.CertificationofActivity}>
+                      <Link href="/admin/member/company/mycompany/additionaldocs">
                         <SecondaryButton size="sm">
                           View Additional Documents
                         </SecondaryButton>
                       </Link>
                     </div>
+                    }
                   </div>
                 </div>
               </div>
@@ -177,6 +204,7 @@ export default function MyCompany({session}) {
 
       {uploadAditionalDocsModal &&
         <UploadAdditionalDocsModal
+          isLoading={isLoading}
           closeModal={() => setUploadAditionalDocsModal(false)}
           acceptance={handleUploadAditionalDocsModal}
         />

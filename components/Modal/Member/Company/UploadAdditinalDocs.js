@@ -63,6 +63,7 @@ export default function UploadAdditionalDocuments(props){
                     {/*footer*/}
                     <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200">
                     <button
+                        disabled={props.isLoading}
                         className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
                         onClick={() => props.closeModal()}
@@ -71,8 +72,12 @@ export default function UploadAdditionalDocuments(props){
                     </button>
 
                     <PrimaryButton
+                        disabled={props.isLoading}
                         className="font-bold uppercase "
                         onClick={() => props.acceptance(additionalDocs)}>
+                        {props.isLoading &&
+                            <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
+                        }
                         Submit
                     </PrimaryButton>
                     </div>

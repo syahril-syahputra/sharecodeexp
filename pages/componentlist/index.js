@@ -13,7 +13,10 @@ import NumberInput from "@/components/Interface/Form/NumberInput"
 import AreaInput from "@/components/Interface/Form/AreaInput"
 import SelectInput from "@/components/Interface/Form/SelectInput"
 
-import { useState } from "react"
+//base table
+import BaseTable from "@/components/Interface/Table/BaseTable"
+
+import { useRef, useState } from "react"
 
 export default function ComponentList() {
     const [isDisabled, setIsDisabled] = useState(false)
@@ -35,6 +38,34 @@ export default function ComponentList() {
         setCategory(input)
     }
 
+    const [isBusy, setIsBusy] = useState(true)
+    const tableHeader = useRef([
+        'First Name',
+        'Last Name',
+        'Age',
+        'Action'
+    ])
+    const tableData = useRef([
+        {
+            firstName: 'Kadek',
+            lastName: 'Cahya',
+            age: '25',
+            id: 1
+        },
+        {
+            firstName: 'John',
+            lastName: 'Doe',
+            age: '25',
+            id: 2
+        },
+        {
+            firstName: 'Emilia',
+            lastName: 'Clark',
+            age: '18',
+            id: 3
+        }
+    ])
+
     return (
         <div className="relative p-2 bg-white mb-20">
             <div className="text-center pb-10 mt-10">
@@ -53,6 +84,7 @@ export default function ComponentList() {
 
                 <div className="text-center pb-2">
                     <PrimaryButton 
+                        className="m-1"
                         disabled={isDisabled}
                         type="button"
                         size=""
@@ -62,31 +94,31 @@ export default function ComponentList() {
                         Primary
                     </PrimaryButton>
 
-                    <SecondaryButton size="" disabled={isDisabled}>Secondary</SecondaryButton>
-                    <SuccessButton size="" disabled={isDisabled}>Success</SuccessButton>
-                    <DangerButton size="" disabled={isDisabled}>Danger</DangerButton>
-                    <WarningButton size="" disabled={isDisabled}>Warning</WarningButton>
-                    <InfoButton size="" disabled={isDisabled}>Info</InfoButton>
-                    <LightButton size="" disabled={isDisabled}>Light</LightButton>
+                    <SecondaryButton className="m-1" size="" disabled={isDisabled}>Secondary</SecondaryButton>
+                    <SuccessButton className="m-1" size="" disabled={isDisabled}>Success</SuccessButton>
+                    <DangerButton className="m-1" size="" disabled={isDisabled}>Danger</DangerButton>
+                    <WarningButton className="m-1" size="" disabled={isDisabled}>Warning</WarningButton>
+                    <InfoButton className="m-1" size="" disabled={isDisabled}>Info</InfoButton>
+                    <LightButton className="m-1" size="" disabled={isDisabled}>Light</LightButton>
                 </div>
                 <div className="text-center pb-2">
-                    <PrimaryButton size="" disabled={isDisabled} outline><i className="fas fa-envelope mr-2"></i>Primary</PrimaryButton>
-                    <SecondaryButton size="" disabled={isDisabled} outline>Secondary</SecondaryButton>
-                    <SuccessButton size="" disabled={isDisabled} outline>Success</SuccessButton>
-                    <DangerButton size="" disabled={isDisabled} outline>Danger</DangerButton>
-                    <WarningButton size="" disabled={isDisabled} outline>Warning</WarningButton>
-                    <InfoButton size="" disabled={isDisabled} outline>Info</InfoButton>
-                    <LightButton size="" disabled={isDisabled} outline>Light</LightButton>
+                    <PrimaryButton className="m-1" size="" disabled={isDisabled} outline><i className="fas fa-envelope mr-2"></i>Primary</PrimaryButton>
+                    <SecondaryButton className="m-1" size="" disabled={isDisabled} outline>Secondary</SecondaryButton>
+                    <SuccessButton className="m-1" size="" disabled={isDisabled} outline>Success</SuccessButton>
+                    <DangerButton className="m-1" size="" disabled={isDisabled} outline>Danger</DangerButton>
+                    <WarningButton className="m-1" size="" disabled={isDisabled} outline>Warning</WarningButton>
+                    <InfoButton className="m-1" size="" disabled={isDisabled} outline>Info</InfoButton>
+                    <LightButton className="m-1" size="" disabled={isDisabled} outline>Light</LightButton>
                 </div>
                 <div className="text-center pb-2">
-                    <PrimaryButton size="sm" disabled={isDisabled} outline><i className="fas fa-envelope mr-2"></i>Primary</PrimaryButton>
-                    <PrimaryButton size="md" disabled={isDisabled} outline>Primary</PrimaryButton>
-                    <PrimaryButton size="lg" disabled={true} outline>Primary</PrimaryButton>
+                    <PrimaryButton className="m-1" size="sm" disabled={isDisabled} outline><i className="fas fa-envelope mr-2"></i>Primary</PrimaryButton>
+                    <PrimaryButton className="m-1" size="md" disabled={isDisabled} outline>Primary</PrimaryButton>
+                    <PrimaryButton className="m-1" size="lg" disabled={true} outline>Primary</PrimaryButton>
                 </div>
                 <div className="text-center pb-2">
-                    <PrimaryButton size="sm" disabled={true}><i className="fas fa-envelope mr-2"></i>Primary</PrimaryButton>
-                    <PrimaryButton size="md" disabled={isDisabled}>Primary</PrimaryButton>
-                    <PrimaryButton size="lg" disabled={isDisabled}>Primary</PrimaryButton>
+                    <PrimaryButton className="m-1" size="sm" disabled={true}><i className="fas fa-envelope mr-2"></i>Primary</PrimaryButton>
+                    <PrimaryButton className="m-1" size="md" disabled={isDisabled}>Primary</PrimaryButton>
+                    <PrimaryButton className="m-1" size="lg" disabled={isDisabled}>Primary</PrimaryButton>
                 </div>
 
             </div>
@@ -105,6 +137,7 @@ export default function ComponentList() {
                             value={enteredUser}
                             onChange={(input) => handleEnteredUser(input)}
                         />
+                        <PrimaryButton className="mt-2"><i className="fas fa-envelope mr-2"></i>Primary</PrimaryButton>
                     </div>
                     <div className="mb-5">
                         <TextInput
@@ -141,18 +174,92 @@ export default function ComponentList() {
                     </div>
                     <div className="mb-5">
                         <SelectInput
-                            searchable
-                            disabled    
+                            searchable                                
                             label="Categories"
                             name="categories"
                             value={category}
                             onChange={(input) => handleSelectInput(input)}
                         />
-                        
                     </div>
                 </div>
-
-                
+            </div>
+            <div className="text-center mx-auto w-1/2">
+                {/* <BaseTable header={tableHeader.current} >
+                    <div slot="headData">
+                        <th scope="col" className="px-6 py-3">
+                            First Name
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                            Last Name
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                            Age
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-right">
+                            Act
+                        </th>
+                    </div>
+                    <div slot="tableData">
+                        {tableData.current.map((item) => {
+                            return(
+                                <tr key={item.id} className="bg-white border-b hover:bg-gray-50">
+                                    <td scope="row" className="px-6 py-4 text-gray-900 whitespace-nowrap">
+                                        {item.firstName}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {item.lastName}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {item.age}
+                                    </td>
+                                    <td className="px-6 py-4 text-right">
+                                        {item.id}
+                                    </td>
+                                </tr>
+                            )
+                        })}
+                    </div>
+                </BaseTable> */}
+                <BaseTable                 
+                    header={
+                        <>
+                            <th scope="col" className="px-6 py-3">
+                                First Name
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Last Name
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Age
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-right">
+                                Act
+                            </th>
+                        </>
+                    }
+                    tableData={
+                        <>
+                            {tableData.current.map((item) => {
+                                return(
+                                    <tr key={item.id} className="bg-white border-b hover:bg-gray-50">
+                                        <td scope="row" className="px-6 py-4 text-gray-900 whitespace-nowrap">
+                                            {item.firstName}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            {item.lastName}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            {item.age}
+                                        </td>
+                                        <td className="px-6 py-4 text-right">
+                                            {item.id}
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                        </>
+                    }                    
+                />
             </div>
         </div> 
     )

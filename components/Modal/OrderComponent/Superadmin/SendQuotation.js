@@ -32,7 +32,7 @@ export default function SendQuotation(props){
                     {/*header*/}
                     <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200">
                     <h3 className="text-3xl font-semibold">
-                        Verify Inquiry
+                        Verify Inquiry & Quotation
                     </h3>
                     <button
                         className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"

@@ -16,6 +16,11 @@ export default function OrderTodo(props){
                         className="font-semibold text-sm text-white italic">
                         {props.action}
                     </h4>
+                    {!props.action &&
+                        <div className='mt-2'>
+                            <i className="fas fa-hourglass fa-spin text-white fa-xl"></i>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

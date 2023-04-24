@@ -16,7 +16,7 @@ export default function SelectInput(props){
                 options={categoriesOptions}
                 classNames={{
                     menuButton: () => (
-                        `text-left h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
+                        `text-left h-10 flex text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
                     ),
                     menu: "text-left absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
                     listItem: ({ isSelected }) => (

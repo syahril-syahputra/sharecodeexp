@@ -40,11 +40,11 @@ export default function Dashboard({session, company, message}) {
 
         {company.is_confirmed == "accepted" &&
           <div className="flex flex-wrap mt-4">
-            <div className="w-full xl:w-5/12 px-4">
-            </div>
-            <div className="w-full xl:w-7/12 mb-12 xl:mb-0 px-4">
-              {/* <NewInquiriesMember/> */}
-            </div>          
+            <div className="w-full px-4">
+              <div className="relative bg-white p-5 h-24 shadow-md">
+                Company Name & Company Logo
+              </div>
+            </div>        
           </div>
         }
 

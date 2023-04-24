@@ -6,7 +6,7 @@ export default function TextInput(props){
                 {props.label}
             </label>
             {(props.setIcon) &&
-                <span className="z-10 h-full leading-snug font-normal absolute text-center text-slate-300 absolute bg-transparent text-lg items-center justify-center w-8 pl-3 py-3">
+                <span className="z-10 h-full leading-snug font-normal absolute text-center text-slate-300 absolute bg-transparent text-lg items-center justify-center w-8 pl-3 py-2">
                     <i className={props.setIcon}></i>
                 </span>
             }
@@ -23,7 +23,7 @@ export default function TextInput(props){
                     ${props.errorMsg ? 'border-red-200' : 'border-gray-200'} 
                     ${props.className} 
                     ${props.setIcon && 'pl-10'} 
-                    shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}/>
+                    shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border py-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}/>
             {props.errorMsg &&
                 <ErrorInput errors={props.errorMsg}/>
             }

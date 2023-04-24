@@ -121,63 +121,54 @@ export default function CompanyList({session, routeParam}) {
   }
 
   const [showSendEmailModal, setShowSendEmailModal] = useState(false)
-  const handleSendEmail = async (email, subject, messages) => {
-    setShowSendEmailModal(false)
-    // setIsLoading(true)
-    alert("not ready yet :(")
-    console.log(email, subject, messages)
-    // const request = await axios.post(`admin/companies/${routeParam.companyid}/pending`, 
-    // {
-    //   id: routeParam.companyid,
-    //   subject: subject,
-    //   messages: messages
-    // },
-    // {
-    //   headers: {
-    //     "Authorization" : `Bearer ${session.accessToken}`
-    //   }
-    // })
-    // .then(() => {
-    //   toast.success("Company set to pending")
-    // })
-    // .catch((error) => {
-    //   console.log(error)
-    //   toast.error("Something went wrong")
-    // })
-    // .finally(() => {
-    //   getData()
-    // })
+  const handleSendEmail = async (messages) => {
+    setIsLoading(true)
+    const request = await axios.post(`/admin/companies/${routeParam.companyid}/RequestAdditional`, 
+    {
+      notification: messages
+    },
+    {
+      headers: {
+        "Authorization" : `Bearer ${session.accessToken}`
+      }
+    })
+    .then((response) => {
+      toast.success(response.data.data)
+      setShowSendEmailModal(false)
+    })
+    .catch((error) => {
+      console.log(error)
+      toast.error("Something went wrong")
+    })
+    .finally(() => {
+      getData()
+      setIsLoading(false)
+    })
   }
 
   const [showUpdateImageModal, setShowUpdateImageModal] = useState()
   const handleUpdateImage = async (image) => {
-    console.log(image)
-    // setIsLoading(true)
-    alert("not ready yet :(")
+    setIsLoading(true)
     let formData = new FormData();
-    formData.append("image", image);
+    formData.append("company_img", image);
     formData.append("id", routeParam.companyid)
-    // const request = await axios.post(`admin/companies/${routeParam.companyid}/pending`, 
-    // {
-    //   id: routeParam.companyid,
-    //   subject: subject,
-    //   messages: messages
-    // },
-    // {
-    //   headers: {
-    //     "Authorization" : `Bearer ${session.accessToken}`
-    //   }
-    // })
-    // .then(() => {
-    //   toast.success("Company set to pending")
-    // })
-    // .catch((error) => {
-    //   console.log(error)
-    //   toast.error("Something went wrong")
-    // })
-    // .finally(() => {
-    //   getData()
-    // })
+    const request = await axios.post(`admin/companies/${routeParam.companyid}/updateImage`, formData,
+    {
+      headers: {
+        "Authorization" : `Bearer ${session.accessToken}`
+      }
+    })
+    .then(() => {
+      toast.success("Company logo has been updated")
+      setShowUpdateImageModal(false)
+    })
+    .catch((error) => {
+      console.log(error)
+      toast.error("Something went wrong")
+    })
+    .finally(() => {
+      getData()
+    })
   }
 
 
@@ -284,7 +275,7 @@ export default function CompanyList({session, routeParam}) {
                       </Link>
                     </div>
                     <div className="w-full lg:w-9/12 px-4">
-                      <Link target="_blank" href={publicDir + "/companies_CertificationofActivity/" + companyData.CertificationofActivity}>
+                      <Link href={`/admin/superadmin/registry/additionaldocs/${routeParam.companyid}`}>
                         <SecondaryButton size="sm">
                           View Additional Documents
                         </SecondaryButton>

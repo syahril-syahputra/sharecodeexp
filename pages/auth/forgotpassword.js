@@ -71,7 +71,7 @@ export default function ForgotPassword() {
                                     <div className="mx-auto mt-5 mb-10">
                                         <SecondaryButton 
                                             type="submit"
-                                            className="w-full md:w-8/12"
+                                            className="w-full md:w-8/12 font-bold uppercase"
                                             disabled={isLoading}
                                         >                                            
                                             {isLoading && 

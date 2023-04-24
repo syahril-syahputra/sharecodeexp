@@ -6,15 +6,28 @@ import axios from "@/lib/axios";
 
 export default function SellComponents(){
   const router = useRouter()
-
   const session = useSession()
-  const [user, setUser] = useState({
-    accessToken: ''
-  })
-  useEffect(() => { setUser({accessToken: session.data?.accessToken}) }, [session])
 
-  //data search
-  const [isLoading, setIsLoading] = useState(true)
+  const [totalIncomingInquiry, setTotalIncomingInquiry] = useState(0)
+  const countIncomingInquiry = async () =>{
+    const response = await axios.get(`/seller/order/count`,
+      {
+        headers: {
+          "Authorization" : `Bearer ${session.data.accessToken}`
+        }
+      })
+      .then((response) => {
+        let result = response.data
+        setTotalIncomingInquiry(result.data)
+      }).catch((error) => {
+        // console.log(error.response)
+      }).finally(() => {
+        // setIsLoading(false)
+      })
+  }
+  useEffect(() => {
+    countIncomingInquiry()
+  }, [])
 
   return (
     <>
@@ -51,6 +64,9 @@ export default function SellComponents(){
             }>
               <i className="fas fa-box text-blueGray-400 mr-2 text-sm"></i>{" "}
               Incoming Inquiry 
+              <span className="ml-1 text-xs font-semibold inline-block py-1 px-2 uppercase text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
+                {totalIncomingInquiry}
+              </span>
           </Link>
         </li>
       </ul>

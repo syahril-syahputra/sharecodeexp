@@ -36,6 +36,7 @@ export default function InquiryDetails({session, routeParam}) {
             .then((response) => {
                 let result = response.data.data
                 setData(result)
+                loadTodoAction(result.order_status.id)
             }).catch((error) => {
                 // console.log(error.response)
             }).finally(() => {
@@ -45,6 +46,20 @@ export default function InquiryDetails({session, routeParam}) {
     useEffect(() => {
         loadData()
     }, [])
+
+    const [todoValue, setTodoValue] = useState()
+    const loadTodoAction = async (order_status_id) => {
+        const request = await axios.get(`/admin/notification/${order_status_id}`, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then((response) => {
+            console.log(response.data)
+            setTodoValue(response.data.data.message)
+        })
+    }
 
     const [errorInfo, setErrorInfo] = useState({})
     const [sendQuotationModal, setSendQuotationModal] = useState(false)
@@ -96,11 +111,10 @@ export default function InquiryDetails({session, routeParam}) {
     const [acceptPaymentDocumentModal, setAcceptPaymentDocumentModal] = useState(false)
     const handleAcceptPaymentDocumentModal = async (shipinfoforseller) => {
         setIsLoading(true)
-        let inputData = {
-            id: data.id,
-            shipinfoforseller: shipinfoforseller
-        }
-        const response = await axios.post(`/admin/orders/UpdateComplatePayment`, inputData, 
+        let formData = new FormData();
+        formData.append("shipinfoforseller", shipinfoforseller);
+        formData.append("id", data.id)
+        const response = await axios.post(`/admin/orders/UpdateComplatePayment`, formData, 
         {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -119,6 +133,7 @@ export default function InquiryDetails({session, routeParam}) {
 
     const [rejectPaymentDocumentModal, setRejectPaymentDocumentModal] = useState(false)
     const handleRejectPaymentDocumentModal = async (rejectionReason) => {
+        console.log(rejectionReason)
         setIsLoading(true)
         let inputData = {
             id: data.id,
@@ -167,14 +182,14 @@ export default function InquiryDetails({session, routeParam}) {
     }
 
     const [completeOrderModal, setCompleteOrderModal] = useState(false)
-    const handleCompleteOrderModal = async () => {
+    const handleCompleteOrderModal = async (sellerInvoice) => {
         setIsLoading(true)
         setErrorInfo({})
+        let formData = new FormData();
+        formData.append("PaymentProof", sellerInvoice);
+        formData.append("id", data.id)
 
-        let inputData = {
-            id: data.id,
-        }
-        const response = await axios.post(`/admin/orders/UpdateCompletedOrder`, inputData, 
+        const response = await axios.post(`/admin/orders/UpdateCompletedOrder`, formData, 
         {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -200,37 +215,6 @@ export default function InquiryDetails({session, routeParam}) {
             infoOrder: infoOrder
         }
         console.log(inputData)
-    }
-
-    const [sendInvoiceToSellerModal, setSendIvoiceToSellerModal] = useState(false)
-    const handleSendInvoiceCompleteOrderModal = async (invoice) => {
-        console.log(invoice)
-        // setIsLoading(true)
-        alert("not ready yet :(")
-        let formData = new FormData();
-        formData.append("invoice", invoice);
-
-        // setIsLoading(true)
-        // setErrorInfo({})
-
-        // let inputData = {
-        //     id: data.id,
-        // }
-        // const response = await axios.post(`/admin/orders/UpdateCompletedOrder`, inputData, 
-        // {
-        //     headers: {
-        //         "Authorization" : `Bearer ${session.accessToken}`
-        //     }
-        // })
-        // .then(() => {
-        //     toast.success("Order has been Completed", toastOptions)
-        //     setCompleteOrderModal(false)
-        //     loadData()
-        // }).catch((error) => {
-        //     console.log(error)
-        //     toast.error("Something went wrong", toastOptions)
-        //     setIsLoading(false)
-        // })
     }
 
     return (
@@ -272,7 +256,7 @@ export default function InquiryDetails({session, routeParam}) {
                 </div>
                 }
                 <OrderStatusStep orderStatus={data.order_status}/>
-                <OrderTodo orderStatus={data.order_status} action="This is action"/>
+                <OrderTodo action={todoValue}/>
                 
                 {/* Buyer Seller */}
                 <div className="px-4 py-3 border-0 bg-white">
@@ -502,9 +486,42 @@ export default function InquiryDetails({session, routeParam}) {
                                 Payment Receipt
                             </button>
                         }
-                        <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
-                            Shipment Info
-                        </button>                
+
+                        {data.shipinfoforseller ? 
+                            <Link target="_blank" href={publicDir + "/uploads/shipinfoforseller/" + data.shipinfoforseller}>
+                                <button className="m-2 py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
+                                    Shipment Info
+                                </button>
+                            </Link>
+                            : 
+                            <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
+                                Shipment Info
+                            </button>
+                        }
+
+                        {data.PaymentDocSeller ? 
+                            <Link target="_blank" href={publicDir + "/PaymentDocSeller/" + data.PaymentDocSeller}>
+                                <button className="m-2 py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
+                                    Seller's Payment Account
+                                </button>
+                            </Link>
+                            : 
+                            <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
+                                Seller's Payment Account
+                            </button>
+                        } 
+
+                        {data.PaymentProof ? 
+                            <Link target="_blank" href={publicDir + "/PaymentProof/" + data.PaymentProof}>
+                                <button className="m-2 py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
+                                    Seller's Invoice
+                                </button>
+                            </Link>
+                            : 
+                            <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
+                                Seller's Invoice
+                            </button>
+                        }            
                     </div>
                 </div>
 
@@ -572,15 +589,6 @@ export default function InquiryDetails({session, routeParam}) {
                             : <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
                                Set Tracker for Buyer
                             </button>
-                        }
-
-                        {data.order_status_id == 12 ?
-                            <button onClick={() => setSendIvoiceToSellerModal(true) } className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
-                               Send Invoice to Seller
-                            </button>
-                            : <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
-                               Send Invoice to Seller
-                            </button> 
                         }
 
                         {data.order_status_id == 12 ?
@@ -657,20 +665,12 @@ export default function InquiryDetails({session, routeParam}) {
                     />
                 }
 
-                {sendInvoiceToSellerModal &&
-                    <SendInvoiceToSellerModal
-                        isLoading={isLoading}
-                        closeModal={() => setSendIvoiceToSellerModal(false)}
-                        acceptance={handleSendInvoiceCompleteOrderModal}
-                        errorInfo={errorInfo}
-                    />
-                }
-
                 {completeOrderModal &&
                     <CompleteOrderModal
                         isLoading={isLoading}
                         closeModal={() => setCompleteOrderModal(false)}
                         acceptance={handleCompleteOrderModal}
+                        errorInfo={errorInfo}
                     />
                 }
 

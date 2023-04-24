@@ -4,7 +4,7 @@ import Link from "next/link";
 // components
 
 export default function PendingShipment(props) {
-  const data = props.data.slice(Math.max(props.data.length - 5, 1))
+  const data = props.data.slice(0, 5)
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg">
