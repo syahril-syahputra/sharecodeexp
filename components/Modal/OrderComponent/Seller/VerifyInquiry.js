@@ -91,7 +91,7 @@ export default function VerifyOrder(props){
                         <div className="flex flex-wrap mb-6">
                             <div className="w-1/2 px-3 mb-6">
                                 <InputForm
-                                    label="Avaliable Quantity"
+                                    label="Available Quantity"
                                     inputType="number"
                                     inputDataName="AvailableQuantity"
                                     value={inputData.AvailableQuantity}

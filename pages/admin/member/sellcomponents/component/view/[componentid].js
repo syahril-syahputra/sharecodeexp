@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "lib/axios";
@@ -37,7 +38,7 @@ export default function MyProduct({session, routeParam}) {
     }, [])
     return (
         <>
-            <div className="relative shadow">
+            <div className="relative shadow bg-white pb-10">
                 <div className="mb-0 px-4 py-3 border-0 bg-white">
                     <div className="flex justify-between">
                         <div className="px-4">
@@ -79,85 +80,107 @@ export default function MyProduct({session, routeParam}) {
                         </div>
                     </div>
                     
-                    
-                    <div className="relative overflow-x-auto">
-                        <table className="w-full text-sm text-left text-gray-500 bg-white">
-                            <thead className="text-xs text-gray-700 uppercase bg-gray-200">
-                                <tr>
-                                    <th scope="col" className="px-6 py-3">
-                                        Manufacturer Part Number
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Manufacturer
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Available Quantity
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        MOQ
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Country
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Description
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Date Code
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Category
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Sub-Category
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Packaging
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Status
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr className="bg-white border-b hover:bg-gray-50">
-                                    <td scope="row" className="text-sm px-6 py-4">
-                                        {data.ManufacturerNumber}
-                                    </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {data.Manufacture}
-                                    </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {data.AvailableQuantity}
-                                    </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {data.moq}
-                                    </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {data.country}
-                                    </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {data.Description}
-                                    </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {data.dateCode}
-                                    </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {data.subcategory?.category.name}
-                                    </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {data.subcategory?.name}
-                                    </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {data.packaging}
-                                    </td>
-                                    <td className="text-sm px-6 py-4 text-center">
-                                        <ComponentStatus status={data.status} title={`stock status ${data.status}`} label={data.status}/>
-                                    </td>
-                                </tr>
-                            </tbody>
+
+
+                    <div className="overflow-x-auto">
+                        <table className="w-50 text-sm text-left text-gray-500 bg-white">
+                            <tr className="text-black hover:bg-slate-100">
+                                <th scope="col" className="px-6 py-3">
+                                    Manufacturer Part Number
+                                </th>
+                                <td scope="row" className="text-sm px-6 py-4">
+                                    {data.ManufacturerNumber}
+                                </td>
+                            </tr>
+                            <tr className="text-black hover:bg-slate-100">
+                                <th scope="col" className="px-6 py-3">
+                                    Manufacturer
+                                </th>
+                                <td className="text-sm px-6 py-4">
+                                    {data.Manufacture}
+                                </td>
+                            </tr>
+                            <tr className="text-black hover:bg-slate-100">
+                                <th scope="col" className="px-6 py-3">
+                                    Available Quantity
+                                </th>
+                                <td className="text-sm px-6 py-4">
+                                    {data.AvailableQuantity}
+                                </td>
+                            </tr>
+                            <tr className="text-black hover:bg-slate-100">
+                                <th scope="col" className="px-6 py-3">
+                                    MOQ
+                                </th>
+                                <td className="text-sm px-6 py-4">
+                                    {data.moq}
+                                </td>
+                            </tr>
+                            <tr className="text-black hover:bg-slate-100">
+                                <th scope="col" className="px-6 py-3">
+                                    Country
+                                </th>
+                                <td className="text-sm px-6 py-4">
+                                    {data.country}
+                                </td>
+                            </tr>
+                            <tr className="text-black hover:bg-slate-100">
+                                <th scope="col" className="px-6 py-3">
+                                    Description
+                                </th>
+                                <td className="text-sm px-6 py-4">
+                                    {data.Description}
+                                </td>
+                            </tr>
+                            <tr className="text-black hover:bg-slate-100">
+                                <th scope="col" className="px-6 py-3">
+                                    Date Code
+                                </th>
+                                <td className="text-sm px-6 py-4">
+                                    {data.dateCode}
+                                </td>
+                            </tr>
+                            <tr className="text-black hover:bg-slate-100">
+                                <th scope="col" className="px-6 py-3">
+                                    Packaging
+                                </th>
+                                <td className="text-sm px-6 py-4">
+                                    {data.packaging}
+                                </td>
+                            </tr>
+                            <tr className="text-black hover:bg-slate-100">
+                                <th scope="col" className="px-6 py-3">
+                                    Category
+                                </th>
+                                <td className="text-sm px-6 py-4">
+                                    {data.subcategory?.category?.name}
+                                </td>
+                            </tr>
+                            <tr className="text-black hover:bg-slate-100">
+                                <th scope="col" className="px-6 py-3">
+                                    Sub-Category
+                                </th>
+                                <td className="text-sm px-6 py-4">
+                                    {data.subcategory?.name}
+                                </td>
+                            </tr>
+                            <tr className="text-black hover:bg-slate-100">
+                                <th scope="col" className="px-6 py-3">
+                                    Status
+                                </th>
+                                <td className="text-sm px-6 py-4">
+                                    <ComponentStatus status={data.status} title={`stock status ${data.status}`} label={data.status}/>
+                                </td>
+                            </tr>
+                            <tr className="text-black hover:bg-slate-100">
+                                <th scope="col" className="px-6 py-3">
+                                    Created at
+                                </th>
+                                <td className="text-sm px-6 py-4">
+                                    {moment(data.created_at).format('dddd, D MMMM YYYY')}
+                                </td>
+                            </tr>
                         </table>
-                        
                     </div>
 
                 </div>

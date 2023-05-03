@@ -64,7 +64,7 @@ export default function BulkInsert({session}) {
                   <Link target="_blank" href={publicDir + "/template/exepart_template.xlsx"}>
                     <button className="relative bg-blueGray-700 p-2 text-white mr-2">
                       <i className="mr-2 ml-1 fas fa-file text-white"></i>
-                      Download Bulk Template
+                      Download Product Template
                     </button>
                   </Link>
                   <Link href="/admin/member/sellcomponents/component/add" className="relative bg-blueGray-700 p-2 text-white">

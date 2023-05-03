@@ -1,5 +1,6 @@
 // components
 // import Pagination from "@/components/Shared/Component/Pagination";
+import BaseTable from "@/components/Interface/Table/BaseTable";
 
 export default function DatabaseStatistic(props) {
     const data = props.data
@@ -8,53 +9,52 @@ export default function DatabaseStatistic(props) {
 
     return (
         <>  
-            <div className="relative">
-                <div className="relative overflow-x-auto shadow">
-                    <table className={`w-full text-sm text-left text-gray-500 shadow-md ${props.customClass}`}>
-                        <thead className="text-xs text-gray-700 uppercase bg-gray-200">
-                            <tr>
-                                <th scope="col" className="px-6 py-3">
-                                    Total Member
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Total Completed Orders
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Total Sales Volume
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Total Stocks
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="text-xs text-gray-700 bg-white">
-                            {data.map((item, index) => {
-                                return(
-                                    <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                                        <td className="px-6 py-4">
-                                            
-                                        </td>
-                                        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                            
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-                {/* {metaData.total > 0 ? 
-                    <div className="mt-2">
-                        <h2>Showing {metaData.total <= 20 ? metaData.total : metaData.perPage } data from {metaData.total} data</h2>
-                    </div>
-                : null} */}
-            </div>
+            <BaseTable                 
+                header={
+                    <>
+                        <th scope="col" className="px-6 py-3">
+                            Manufacture Number
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                            Total Members
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                            Total Complete Orderss
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                            Total Sales Volume ($)
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                            Total Stock
+                        </th>
+                    </>
+                }
+                tableData={
+                    <>
+                        {props.items.map((item) => {
+                            return(
+                                <tr key={item.id} className="bg-white border-b hover:bg-gray-50">
+                                    <td scope="row" className="px-6 py-4 text-gray-900 whitespace-nowrap">
+                                        {item.ManufacturerNumber}
+                                    </td>
+                                    <td scope="row" className="px-6 py-4 text-gray-900 whitespace-nowrap">
+                                        {item.total_members}
+                                    </td>
+                                    <td scope="row" className="px-6 py-4 text-gray-900 whitespace-nowrap">
+                                        {item.total_completed_order}
+                                    </td>
+                                    <td scope="row" className="px-6 py-4 text-gray-900 whitespace-nowrap">
+                                        $ {item.total_sales_volume}
+                                    </td>
+                                    <td scope="row" className="px-6 py-4 text-gray-900 whitespace-nowrap">
+                                        {item.total_stock}
+                                    </td>
+                                </tr>
+                            )
+                        })}
+                    </>
+                }                    
+            />
 
             {props.isLoading &&<div>
                 <div className='text-center my-auto mt-10'>

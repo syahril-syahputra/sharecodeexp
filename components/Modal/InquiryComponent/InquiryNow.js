@@ -10,7 +10,7 @@ export default function Modal(props) {
               {/*header*/}
               <div className="flex items-start justify-between p-4 border-b border-solid border-blueGray-200 ">
                 <h3 className="text-3xl font-semibold">
-                  Inquiry Now
+                  Inquire Now
                 </h3>
                 <button
                   className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
@@ -41,7 +41,7 @@ export default function Modal(props) {
                   type="button"
                   onClick={() => props.acceptModal()}
                 >
-                  Yes, Inquiry Now
+                  Yes, Inquire Now
                 </button>
               </div>
             </div>

@@ -130,7 +130,7 @@ export default function ProductBar(){
                   : "text-blueGray-700 hover:text-blueGray-500")
               }>
                 <i className="fas fa-cart-shopping text-blueGray-400 mr-2 text-sm"></i>{" "}
-                Inquiry Now
+                Inquire Now
                 <span className="ml-5 text-xs font-semibold inline-block py-1 px-2 uppercase text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
                   {totalItem}
                 </span>

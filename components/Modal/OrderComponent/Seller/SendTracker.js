@@ -20,7 +20,7 @@ export default function SendTracker(props){
                     {/*header*/}
                     <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200">
                     <h3 className="text-3xl font-semibold">
-                        Send Tracker Information
+                       Send Invoice & Tracking Information
                     </h3>
                     <button
                         className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
@@ -48,7 +48,7 @@ export default function SendTracker(props){
                         </div>
                         <div className="w-full px-3 mb-6 md:mb-0">
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                Seller's Payment Account Information
+                                Payment Account & Invoice
                             </label>
                             <div className="p-5 border-dashed border-2 border-indigo-200">
                                 <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>

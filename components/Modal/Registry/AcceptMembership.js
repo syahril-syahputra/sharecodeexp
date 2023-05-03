@@ -24,7 +24,7 @@ export default function Modal(props) {
                 {/*body*/}
                 <div className="relative p-4 flex-auto">
                   <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                    Are you really want to accept <span className="text-blueGray-700 font-bold">{props.companyName}</span> to be a Member?
+                    Do you want to accept <span className="text-blueGray-700 font-bold">{props.companyName}</span> as a member?
                   </p>
                 </div>
                 {/*footer*/}

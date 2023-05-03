@@ -319,7 +319,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                                         Manufacturer
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3">
-                                        Avaliable Quantity
+                                        Available Quantity
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3 w-28">
                                         MOQ
@@ -449,9 +449,6 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                                 Payment Receipt
                             </button>
                         }
-                        {/* <button className="m-2 p-2 bg-indigo-900 border text-center text-white">
-                            Shipment Info
-                        </button> */}
                     </div>
                 </div>
 

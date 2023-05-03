@@ -163,7 +163,7 @@ export default function MyProduct({session}) {
                   <Link href="/admin/member/sellcomponents/component/bulkinsert">
                     <button className="relative bg-blueGray-700 p-2 text-white">
                       <i className="mr-2 ml-1 fas fa-file text-white"></i>
-                      Bulk Insert
+                      Insert Template
                     </button>
                   </Link>
               </div>

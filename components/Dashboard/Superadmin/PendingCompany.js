@@ -52,7 +52,7 @@ export default function PendingCompany(props) {
                       {item.country}
                     </td>
                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
-                      <Link href={`/admin/registry/company/${item.id}`}>                      
+                      <Link href={`/admin/superadmin/registry/company/${item.id}`}>                      
                         <button className="px-3 py-1 bg-blueGray-700 text-white">Review Docs</button>
                       </Link>
                     </td>

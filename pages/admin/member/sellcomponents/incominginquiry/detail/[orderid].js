@@ -188,7 +188,7 @@ export default function InquiryDetails({session, routeParam}) {
                                         Manufacturer
                                     </th>                                    
                                     <th scope="col" className="text-center px-6 py-3">
-                                        Avaliable Quantity
+                                        Available Quantity
                                     </th>
                                     <th scope="col" className="text-center px-6 py-3 w-28">
                                         MOQ
@@ -303,18 +303,6 @@ export default function InquiryDetails({session, routeParam}) {
                         {data.PaymentDocSeller ? 
                             <Link target="_blank" href={publicDir + "/PaymentDocSeller/" + data.PaymentDocSeller}>
                                 <button className="m-2 py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
-                                    Seller's Payment Account
-                                </button>
-                            </Link>
-                            : 
-                            <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
-                                Seller's Payment Account
-                            </button>
-                        } 
-
-                        {data.PaymentProof ? 
-                            <Link target="_blank" href={publicDir + "/PaymentProof/" + data.PaymentProof}>
-                                <button className="m-2 py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
                                     Seller's Invoice
                                 </button>
                             </Link>
@@ -323,33 +311,21 @@ export default function InquiryDetails({session, routeParam}) {
                                 Seller's Invoice
                             </button>
                         } 
+
+                        {data.PaymentProof ? 
+                            <Link target="_blank" href={publicDir + "/PaymentProof/" + data.PaymentProof}>
+                                <button className="m-2 py-2 px-4 bg-indigo-900 text-white hover:bg-indigo-800 hover:shadow-lg transition duration-300 ease-in-out">
+                                    Payment Receipt for Seller
+                                </button>
+                            </Link>
+                            : 
+                            <button disabled className="m-2 py-2 px-4 bg-indigo-400 text-white">
+                                Payment Receipt for Seller
+                            </button>
+                        } 
                                 
                     </div>
                 </div>
-
-                {data.shipinfoforseller && 
-                <>
-                    <div className="px-4 py-3 border-0 bg-slate-200 mb-5">
-                        <div className="flex justify-center">
-                            <div className=" text-center">
-                                <h4
-                                    className="font-semibold text-xl">
-                                    Shipment Info
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="px-4 py-3 border-0 bg-white">
-                        <div className="flex justify-center">
-                            <div className="px-3 mb-5">
-                                <div className="py-10 px-20 border mx-2 my-4">
-                                {data.shipinfoforseller}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </>
-                }
 
                 {data.trackingSeller && 
                 <div className="px-4 py-3 border-0 bg-slate-200 mb-5">
@@ -397,10 +373,10 @@ export default function InquiryDetails({session, routeParam}) {
 
                         {data.order_status_id == 8 ?
                             <button onClick={()=> setSendTrackerModal(true)} className="m-2 p-2 bg-orange-500 border text-lg text-center text-white">
-                                Send Tracker Information
+                                Send Invoice & Tracker
                             </button>
                             : <button disabled className="m-2 p-2 bg-orange-200 border text-lg text-center text-white">
-                                Send Tracker Information
+                                Send Invoice & Tracker
                             </button>
                         }
                     </div>
