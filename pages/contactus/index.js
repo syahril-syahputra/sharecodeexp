@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Router, useRouter } from 'next/router'
 import { PageSEO } from '@/components/Utils/SEO'
-import siteMetadata from '@/data/siteMetadata'
+import siteMetadata from '@/utils/siteMetadata'
 import axios from "lib/axios";
 
 //components

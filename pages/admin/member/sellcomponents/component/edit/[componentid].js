@@ -16,7 +16,7 @@ import { toastOptions } from "@/lib/toastOptions"
 import Admin from "layouts/Admin.js";
 
 //data
-import {categoriesOptions} from "data/optionData"
+import {categoriesOptions} from "@/utils/optionData"
 import { useRouter } from "next/router";
 
 export default function EditComponent({session, routeParam, packaginglist}) {

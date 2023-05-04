@@ -5,7 +5,7 @@ import Link from "next/link";
 import Select from 'react-tailwindcss-select';
 
 //data
-import {orderStatusesOptions} from "data/optionData"
+import {orderStatusesOptions} from "@/utils/optionData"
 
 export default function IncomingInquiry(props) {
     const data = props.data

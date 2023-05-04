@@ -20,7 +20,7 @@ export default function NumberInput(props){
                 className={`
                 ${props.errorMsg ? 'border-red-200' : 'border-gray-200'} 
                 ${props.className} 
-                shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border py-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}/>
+                shadow-sm placeholder-slate-300 appearance-none w-full bg-white text-gray-700 border py-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}/>
             {props.errorMsg &&
                 <ErrorInput errors={props.errorMsg}/>
             }

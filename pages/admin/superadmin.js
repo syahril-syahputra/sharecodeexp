@@ -1,7 +1,8 @@
 import React, {useState, useEffect }from "react";
 import { getSession } from "next-auth/react";
-import { signOut } from "next-auth/react"
 import axios from "@/lib/axios";
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
 
 // superadmin
 import PendingCompany from "@/components/Dashboard/Superadmin/PendingCompany"
@@ -11,26 +12,20 @@ import PendingShipment from "@/components/Dashboard/Superadmin/PendingShipment";
 import PendingPayment from "@/components/Dashboard/Superadmin/PendingPayment";
 import MemberStatistic from "@/components/Dashboard/Superadmin/MemberStatistic";
 
-// member
-import NewInquiriesMember from "@/components/Dashboard/Member/NewInquiries";
-
 // layout for page
 import Admin from "layouts/Admin.js";
 
-export default function Dashboard({session}) {
-  const [superadmin, setSuperadmin] = useState()
-  const [companyStatus, setCompanyStatus] = useState()
-
+export default function SuperadminDashboard({session, message}) {
   useEffect(() => {
-    setSuperadmin(session.user.userDetail.role_id == 1 ? true : false)
-    setCompanyStatus(session.user.isCompanyConfirmed)
+    if(!!message){
+      toast.warning(message, toastOptions)
+    }
   }, [])
-
   const [loadingPendingCompany, setLoadingPendingCompany] = useState()
   const [pendingCompany, setPendingCompany] = useState([])
   const loadPendingCompany = async () => {
     setLoadingPendingCompany(true)
-    const response = await axios.get(`/admin/companies?status=pending`,
+    const request = await axios.get(`/admin/companies?status=pending`,
         {
             headers: {
             "Authorization" : `Bearer ${session.accessToken}`
@@ -53,7 +48,7 @@ export default function Dashboard({session}) {
   const [newInquiries, setNewInquiries] = useState([])
   const loadNewInquiries = async () => {
     setLoadingNewInquiries(true)
-    const response = await axios.get(`/admin/orders/inquired`,
+    const request = await axios.get(`/admin/orders/inquired`,
         {
             headers: {
             "Authorization" : `Bearer ${session.accessToken}`
@@ -76,7 +71,7 @@ export default function Dashboard({session}) {
   const [activeOrders, setActiveOrders] = useState([])
   const loadActiveOrders = async () => {
     setLoadingActiveOrders(true)
-    const response = await axios.get(`/admin/orders/ongoing`,
+    const request = await axios.get(`/admin/orders/ongoing`,
         {
             headers: {
             "Authorization" : `Bearer ${session.accessToken}`
@@ -99,7 +94,7 @@ export default function Dashboard({session}) {
   const [pendingShipments, setPendingShipments] = useState([])
   const loadPendingShipments = async () => {
     setLoadingPendingShipments(true)
-    const response = await axios.get(`/admin/orders/preparing_shipment`,
+    const request = await axios.get(`/admin/orders/preparing_shipment`,
         {
             headers: {
             "Authorization" : `Bearer ${session.accessToken}`
@@ -122,7 +117,7 @@ export default function Dashboard({session}) {
   const [pendingPayments, setPendingPayments] = useState([])
   const loadPendingPayments = async () => {
     setLoadingPendingPayments(true)
-    const response = await axios.get(`/admin/orders/payment_verified`,
+    const request = await axios.get(`/admin/orders/payment_verified`,
         {
             headers: {
             "Authorization" : `Bearer ${session.accessToken}`
@@ -145,7 +140,7 @@ export default function Dashboard({session}) {
   const [memberStatistics, setMemberStatistics] = useState([])
   const loadMemberStatistics = async () => {
     setLoadingMemberStatistics(true)
-    const response = await axios.get(`/admin/visitor`,
+    const request = await axios.get(`/admin/visitor`,
         {
             headers: {
             "Authorization" : `Bearer ${session.accessToken}`
@@ -166,70 +161,71 @@ export default function Dashboard({session}) {
 
   return (
     <>
-      { superadmin && 
-        <>
-          <div className="flex flex-wrap mt-4">
-            <div className="w-full px-4">
-              <PendingCompany 
-                isLoading={loadingPendingCompany}
-                data={pendingCompany}
-              />
-            </div>         
-          </div>
-          <div className="flex flex-wrap mt-4">
-            <div className="w-full px-4">
-              <NewInquiries
-                isLoading={loadingNewInquiries}
-                data={newInquiries}
-              />
-            </div>         
-          </div>
-          <div className="flex flex-wrap mt-4">
-            <div className="w-full px-4">
-              <StatusUpdateOngoingOrder 
-                isLoading={loadingActiveOrders}
-                data={activeOrders}
-              />
-            </div>         
-          </div>
-          <div className="flex flex-wrap mt-4">
-            <div className="w-full px-4">
-              <PendingShipment 
-                isLoading={loadingPendingShipments}
-                data={pendingShipments}
-              />
-            </div>         
-          </div>
-          <div className="flex flex-wrap mt-4">
-            <div className="w-full px-4">
-              <PendingPayment
-                isLoading={loadingPendingPayments}
-                data={pendingPayments}
-              />
-            </div>         
-          </div>
-          <div className="flex flex-wrap mt-4">
-            <div className="w-full px-4">
-              <MemberStatistic 
-                isLoading={loadingMemberStatistics}
-                data={memberStatistics}
-              />
-            </div>         
-          </div>
-        </>
-      }
-  </>
+      <div className="flex flex-wrap mt-4">
+        <div className="w-full px-4">
+          <PendingCompany 
+            isLoading={loadingPendingCompany}
+            data={pendingCompany}
+          />
+        </div>         
+      </div>
+      <div className="flex flex-wrap mt-4">
+        <div className="w-full px-4">
+          <NewInquiries
+            isLoading={loadingNewInquiries}
+            data={newInquiries}
+          />
+        </div>         
+      </div>
+      <div className="flex flex-wrap mt-4">
+        <div className="w-full px-4">
+          <StatusUpdateOngoingOrder 
+            isLoading={loadingActiveOrders}
+            data={activeOrders}
+          />
+        </div>         
+      </div>
+      <div className="flex flex-wrap mt-4">
+        <div className="w-full px-4">
+          <PendingShipment 
+            isLoading={loadingPendingShipments}
+            data={pendingShipments}
+          />
+        </div>         
+      </div>
+      <div className="flex flex-wrap mt-4">
+        <div className="w-full px-4">
+          <PendingPayment
+            isLoading={loadingPendingPayments}
+            data={pendingPayments}
+          />
+        </div>         
+      </div>
+      <div className="flex flex-wrap mt-4">
+        <div className="w-full px-4">
+          <MemberStatistic 
+            isLoading={loadingMemberStatistics}
+            data={memberStatistics}
+          />
+        </div>         
+      </div>
+    </>
   )
 }
   
-
-Dashboard.layout = Admin;
+SuperadminDashboard.layout = Admin;
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+  let redirectedMessage = ''
+  if(!!context.query.redirect) {
+    redirectedMessage = 'Superadmin can not inquire any component!'
+  }
+
   return {
       props: {
-          session: session
+          session,
+          message: redirectedMessage
       }
   }
 }

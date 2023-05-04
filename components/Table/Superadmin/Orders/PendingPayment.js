@@ -5,7 +5,7 @@ import Link from "next/link";
 import Select from 'react-tailwindcss-select';
 
 //data
-import {orderStatusesOptions} from "data/optionData"
+import {orderStatusesOptions} from "@/utils/optionData"
 import Pagination from "@/components/Shared/Component/Pagination";
 
 export default function PendingPayment(props) {

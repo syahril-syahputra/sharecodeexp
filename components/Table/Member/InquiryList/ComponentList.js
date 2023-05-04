@@ -6,7 +6,7 @@ import Select from 'react-tailwindcss-select';
 import Pagination from "@/components/Shared/Component/Pagination";
 
 //data
-import {orderStatusesOptions} from "data/optionData"
+import {orderStatusesOptions} from "@/utils/optionData"
 
 export default function InquiryComponents(props) {
     const data = props.data

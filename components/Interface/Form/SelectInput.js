@@ -1,6 +1,5 @@
 import ErrorInput from './ErrorInput';
 import Select from 'react-tailwindcss-select';
-import {categoriesOptions} from "data/optionData"
 export default function SelectInput(props){
     return (
         <>
@@ -13,7 +12,7 @@ export default function SelectInput(props){
                 isDisabled={props.disabled || false}
                 value={props.value}
                 onChange={props.onChange}
-                options={categoriesOptions}
+                options={props.options}
                 classNames={{
                     menuButton: () => (
                         `text-left h-10 flex text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`

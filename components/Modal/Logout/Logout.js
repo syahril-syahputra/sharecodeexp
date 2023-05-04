@@ -39,6 +39,7 @@ export default function Logout(props){
                     </button>
 
                     <PrimaryButton
+                        className="uppercase"
                         isLoading={props.isLoading}
                         onClick={() => props.acceptance()}
                     >Yes, Logout</PrimaryButton>

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
 import { PageSEO } from '@/components/Utils/SEO'
-import siteMetadata from '@/data/siteMetadata'
+import siteMetadata from '@/utils/siteMetadata'
 import { useRouter } from "next/router";
 
 //components

@@ -1,13 +1,11 @@
 import React from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react"
 
 // components
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
 import LoginButton from "./LoginButton";
 
-export default function Navbar() {
-  const { session } = useSession()
+export default function Navbar(props) {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
   return (
     <>
@@ -37,12 +35,7 @@ export default function Navbar() {
             id="example-navbar-warning"
           >
             <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
-              {/* <li className="flex items-center">
-                <IndexDropdown />
-              </li> */}
-              {/* <li className="flex items-center"> */}
-                <LoginButton/>
-              {/* </li> */}
+              {!props.isLoginPage && <LoginButton/> }
             </ul>
           </div>
         </div>

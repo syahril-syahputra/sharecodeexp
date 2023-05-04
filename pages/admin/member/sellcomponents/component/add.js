@@ -16,7 +16,7 @@ import { toastOptions } from "@/lib/toastOptions"
 import Admin from "layouts/Admin.js";
 
 //data
-import {categoriesOptions} from "data/optionData"
+import {categoriesOptions} from "@/utils/optionData"
 
 export default function MyProduct({session}) {
   // const sessionData = useSession()

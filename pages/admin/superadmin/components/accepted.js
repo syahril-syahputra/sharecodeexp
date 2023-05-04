@@ -24,7 +24,7 @@ export default function Product({session, }) {
     })
     const searchData = async (srch, page=1) =>{
         setIsLoading(true)
-        const response = await axios.get(`/admin/product?page=${page}&status=approved`,
+        const request = await axios.get(`/admin/product?page=${page}&status=approved`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -43,7 +43,8 @@ export default function Product({session, }) {
                     prevPage: result.prev_page_url ? true : false
                 })
             }).catch((error) => {
-            // console.log(error.response)
+                console.log(error.response)
+                setData([])
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -72,7 +73,7 @@ export default function Product({session, }) {
                         placeholder="Search..."/>
                         <Link
                             href={`/product/search`}
-                            className="font-bold relative z-[2] bg-blueGray-700 active:bg-blueGray-600 px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:z-[3] focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
+                            className="relative z-[2] bg-blueGray-700 active:bg-blueGray-600 px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:z-[3] focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
                         >
                         Search
                     </Link>
