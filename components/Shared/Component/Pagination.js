@@ -45,7 +45,7 @@ export default function Pagination(props){
     }
 
     return (
-        <div className="flex justify-center mt-10 mx-auto justify-center">
+        <div className="flex mt-10 mx-auto justify-center">
             {links.map((item, index) => {
                 return setPaginationLabel(item, index)
             })}

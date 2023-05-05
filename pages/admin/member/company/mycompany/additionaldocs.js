@@ -42,38 +42,13 @@ export default function ShowAdditionalDocument({session}) {
 
   return (
     <>
-      <div className="relative">
-        <div className="mb-0 border-0 bg-white">
-          <div className="flex justify-between">
-              <div className="px-4">
-                  <h3
-                  className={
-                      "font-semibold text-lg text-blueGray-700 mt-2"
-                  }
-                  >
-                  Additional Documents
-                  </h3>
-              </div>
-              <div className="px-4 my-2">
-                  <Link href="/admin/member/company/mycompany">
-                    <LightButton size="sm">
-                      Back
-                    </LightButton>
-                  </Link>
-              </div>
-          </div>
-
-          <div className="mt-10 p-2">
-            
-          </div>
-
-          <AdditionalDocument
-            items={additionalDocs}
-          ></AdditionalDocument>
-
-        </div>
+      <div className="mb-10">
+        <AdditionalDocument
+          isLoading={isLoading}
+          title="Aditional Document"
+          items={additionalDocs}
+        ></AdditionalDocument>
       </div>
-
     </>
   );
 }

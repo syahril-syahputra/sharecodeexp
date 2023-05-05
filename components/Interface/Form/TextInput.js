@@ -16,6 +16,7 @@ export default function TextInput(props){
                 disabled={props.disabled || false}
                 value={props.value}
                 onChange={({target}) => props.onChange(target)}
+                onKeyDown={props.onKeyDown}
                 placeholder={props.placeholder || ""}
                 autoComplete="off" 
                 type={props.type || "text"}

@@ -90,7 +90,7 @@ export default function SendPaymentDocs(props){
                                 }
                                 autoComplete="off" 
                                 type="text"
-                                className="shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+                                className="shadow-sm placeholder-slate-300 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
                             {props.errorInfo?.addressBuyer &&
                                 <ErrorInput error={props.errorInfo?.addressBuyer}/>
                             }
@@ -144,7 +144,7 @@ export default function SendPaymentDocs(props){
                                 }
                                 autoComplete="off" 
                                 type="text"
-                                className="shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+                                className="shadow-sm placeholder-slate-300 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
                             {props.errorInfo?.AccountInformation &&
                                 <ErrorInput error={props.errorInfo?.AccountInformation}/>
                             }

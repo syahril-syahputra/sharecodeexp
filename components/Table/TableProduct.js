@@ -156,7 +156,7 @@ export default function TableProduct(props) {
                                             <div className="inline-flex">
                                                 <Link 
                                                     href={`/admin/product/myproduct/view/${item.ManufacturerNumber}`}
-                                                    className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">View</Link>
+                                                    className="mr-2 font-medium text-white bg-blueGray-700 p-2">View</Link>
                                                 {/* <button className="font-medium text-blue-600 text-white bg-red-400 p-2">Delete</button> */}
                                             </div>
                                             {/* <button onClick={() => inquiryItem(item)} className="font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry</button> */}
@@ -187,7 +187,7 @@ export default function TableProduct(props) {
             </div>}
             
 
-            <div className="flex justify-center mt-10 mx-auto justify-center">
+            <div className="flex mt-10 mx-auto justify-center">
                 {links.map((item, index) => {
                     return setPaginationLabel(item, index)
                 })}

@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-target-blank */
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import axios from "lib/axios";
 import Image from 'next/image';
 import { PageSEO } from '@/components/Utils/SEO'
@@ -16,7 +16,6 @@ import SelectInput from "@/components/Interface/Form/SelectInput";
 import AreaInput from "@/components/Interface/Form/AreaInput"
 
 import countryList from 'react-select-country-list';
-import { useRouter } from 'next/router';
 import ErrorNotification from '@/components/Interface/Notification/ErrorNotification';
 
 export default function Index() {
@@ -82,11 +81,11 @@ export default function Index() {
             formData.append(key, registrationInfo[key]);
         }
 
-        const response = await axios.post("/registration", formData, {
+        const request = await axios.post("/registration", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
-        }).then((response) => {
+        }).then(() => {
             setSuccesStatus(true)
             setErrorMessage(null)
             setErrorInfo(null)
@@ -125,7 +124,6 @@ export default function Index() {
         }
         fileReader.readAsDataURL(file)
     }
-
 
     //option
     //sector option
@@ -359,7 +357,9 @@ export default function Index() {
                                                 <AreaInput
                                                     label="Address"
                                                     name="company_address"
-                                                    requiredvalue={registrationInfo.company_address}
+                                                    required
+                                                    value={registrationInfo.company_address}
+                                                    errorMsg={errorInfo?.company_address}
                                                     onChange={(input) => handleStringValueChange(input)}
                                                 />
                                                 </div>

@@ -2,8 +2,6 @@ import Link from "next/link";
 import BaseTable from "@/components/Interface/Table/BaseTable"
 import HeaderTable from "@/components/Interface/Table/HeaderTable"
 import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
-import WarningButton from "@/components/Interface/Buttons/WarningButton";
-import DangerButton from "@/components/Interface/Buttons/DangerButton";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 
 export default function AdditionalDocument(props){
@@ -39,12 +37,6 @@ export default function AdditionalDocument(props){
                                                 <i className="fas fa-eye"></i>
                                             </SecondaryButton>
                                         </Link>
-                                        <WarningButton onClick={() => alert(':(')} size="sm" className="mr-1">
-                                            <i className="fas fa-pen"></i>
-                                        </WarningButton>
-                                        <DangerButton onClick={() => alert(':(')} size="sm">
-                                            <i className="fas fa-trash"></i>
-                                        </DangerButton>
                                     </td>
                                 </tr>
                             )

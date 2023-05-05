@@ -24,7 +24,7 @@ export default function Modal(props) {
                 {/*body*/}
                 <div className="relative p-4 flex-auto">
                   <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                     Do you want to approve <span className="text-blueGray-700 font-bold">{props.itemName}</span> as a registered component?
+                     Do you want to approve <span className="text-blueGray-700 font-bold">{props.itemName}</span> as a Registered Component?
                   </p>
                 </div>
                 {/*footer*/}

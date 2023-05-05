@@ -35,7 +35,7 @@ export default function Modal(props) {
                 {/*body*/}
                 <div className="relative p-4 flex-auto">
                   <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                    Are you really want to Reject <span className="text-blueGray-700 font-bold">{props.itemName}</span> to be a Component?
+                    Do you want to reject <span className="text-blueGray-700 font-bold">{props.itemName}</span> this Component?
                   </p>
                   <textarea 
                     value={rejectMessage}
@@ -46,7 +46,7 @@ export default function Modal(props) {
                     autoComplete="off" 
                     type="text"
                     placeholder="Write your reason here before rejecting"
-                    className="shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+                    className="shadow-sm placeholder-slate-300 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
                 </div>
                 {/*footer*/}
                 <div className="flex items-center justify-end p-4 border-t border-solid border-blueGray-200 ">

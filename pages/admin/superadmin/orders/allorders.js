@@ -71,30 +71,20 @@ export default function IncomingInquiry({session}) {
 
   return (
     <>
-      <div className="">
-        <div className="mb-10">
-          <MiniSearchBar searchItem={handleSearch}/>
-          {/* <ComponentList
-            title="Incoming Inquiry"
-            setPage={setPage}
-            isLoading={isLoading}
-            data={data}
-            links={links}
-            metaData={metaData}
-            statusChange={handleStatusChange}
-          ></ComponentList> */}
-
-          <OrderList
-            filterStatus={true}
-            title="Find by Status"
-            setPage={setPage}
-            isLoading={isLoading}
-            data={data}
-            links={links}
-            metaData={metaData}
-            statusChange={handleStatusChange}
-          ></OrderList>
+      <div className="mb-10">
+        <div className="mb-5 w-full lg:w-1/2">
+            <MiniSearchBar searchItem={handleSearch}/>
         </div>
+        <OrderList
+          filterStatus={true}
+          title="Find by Status"
+          setPage={setPage}
+          isLoading={isLoading}
+          data={data}
+          links={links}
+          metaData={metaData}
+          statusChange={handleStatusChange}
+        ></OrderList>
       </div>
     </>
   );
@@ -106,7 +96,7 @@ export async function getServerSideProps(context) {
   const session = await getSession(context)
   return {
       props: {
-          session: session
+          session
       }
   }
 }
