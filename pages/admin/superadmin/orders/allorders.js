@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
 import { getSession } from "next-auth/react";
-import Link from "next/link";
-
-// components
-import OrderList from "@/components/Table/Superadmin/Orders/OrderList"
-import ComponentList from "@/components/Table/Member/IncomingInquiry/ComponentsList"
-import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
-export default function IncomingInquiry({session}) {
+// components
+import OrderList from "@/components/Table/Superadmin/Orders/OrderList"
+import MiniSearchBar from "@/components/Shared/MiniSearchBar";
+
+export default function FindByStatusOrder({session}) {
   //data search
   const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState(true)
@@ -76,7 +74,7 @@ export default function IncomingInquiry({session}) {
             <MiniSearchBar searchItem={handleSearch}/>
         </div>
         <OrderList
-          filterStatus={true}
+          filterStatus
           title="Find by Status"
           setPage={setPage}
           isLoading={isLoading}
@@ -90,7 +88,7 @@ export default function IncomingInquiry({session}) {
   );
 }
 
-IncomingInquiry.layout = Admin;
+FindByStatusOrder.layout = Admin;
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)

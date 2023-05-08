@@ -11,10 +11,16 @@ import RejectComponent from "@/components/Modal/Component/RejectComponent"
 import PendingComponent from "@/components/Modal/Component/PendingComponent"
 import { toast } from 'react-toastify';
 import { toastOptions } from "@/lib/toastOptions"
-
+import DangerNotification from '@/components/Interface/Notification/DangerNotification';
+import WarningButton from "@/components/Interface/Buttons/WarningButton";
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
+import DangerButton from "@/components/Interface/Buttons/DangerButton";
 
 // layout for page
 import Admin from "layouts/Admin.js";
+import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper';
+import PageHeader from '@/components/Interface/Page/PageHeader';
+import LoadingState from '@/components/Interface/Loader/LoadingState';
 
 export default function ComponentDetails({session, routeParam}) {
     //data search
@@ -57,11 +63,11 @@ export default function ComponentDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Component Accepted")
+            toast.success("Component Accepted", toastOptions)
         })
         .catch((error) => {
             console.log(error)
-            toast.error("Something went wrong")
+            toast.error("Something went wrong", toastOptions)
         })
         .finally(() => {
             getData()
@@ -83,11 +89,11 @@ export default function ComponentDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Component Rejected")
+            toast.success("Component Rejected", toastOptions)
         })
         .catch((error) => {
             console.log(error)
-            toast.error("Something went wrong")
+            toast.error("Something went wrong", toastOptions)
         })
         .finally(() => {
             getData()
@@ -108,88 +114,112 @@ export default function ComponentDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Component set to pending")
+            toast.success("Component set to pending", toastOptions)
         })
         .catch((error) => {
             console.log(error)
-            toast.error("Something went wrong")
+            toast.error("Something went wrong", toastOptions)
         })
         .finally(() => {
             getData()
         })
     }
 
-
     return (
-        <>
-            <div className="relative shadow bg-white pb-10">
-                <div className="mb-0 px-4 py-3 border-0 bg-white">
-                    <div className="flex justify-between">
-                        <div className="px-4">
-                            <h3
-                            className={
-                                "font-semibold text-lg text-blueGray-700"
-                            }
+        <PrimaryWrapper>
+            <PageHeader
+                leftTop={
+                    <h3
+                        className={
+                            "font-semibold text-lg text-blueGray-700"
+                    }>
+                    Company Component Details
+                    </h3>
+                }
+                rightTop={
+                    <>
+                        {(component.status == "pending" || component.status == "rejected") && 
+                            <PrimaryButton
+                                size="sm"
+                                className="mr-2"
+                                onClick={() => setShowAcceptModal(true)}
                             >
-                            Company Product 
-                            </h3>
-                        </div>
-                        <div className="px-4 mt-2">
-                            {(component.status == "pending" || component.status == "rejected") && 
-                            <button onClick={() => setShowAcceptModal(true) } className="relative bg-blue-500 p-2 text-white mr-2">
                                 <i className="mr-2 ml-1 fas fa-check text-white"></i>
                                 Accept
-                            </button>
-                            }
-                            {(component.status == "approved" || component.status == "rejected") && 
-                            <button onClick={() => setShowPendingModal(true) } className="relative bg-orange-500 p-2 text-white mr-2">
+                            </PrimaryButton>
+                        }
+                        {(component.status == "approved" || component.status == "rejected") && 
+                            <WarningButton 
+                                size="sm"
+                                className="mr-2"
+                                onClick={() => setShowPendingModal(true)}
+                            >
                                 <i className="mr-2 ml-1 fas fa-clock text-white"></i>
                                 Pending
-                            </button>
-                            }
-                            {(component.status == "approved" || component.status == "pending") &&
-                            <button onClick={() => setShowRejectModal(true) } className="relative bg-red-500 p-2 text-white mr-2">
-                                <i className="mr-2 ml-1 fas fa-times text-white"></i>
-                                Reject
-                            </button>
-                            }
+                            </WarningButton>
+                        }
+                        {(component.status == "approved" || component.status == "pending") &&
+                        <DangerButton
+                            size="sm"
+                            className="mr-2"
+                            onClick={() => setShowRejectModal(true)}
+                        >
+                            <i className="mr-2 ml-1 fas fa-times text-white"></i>
+                            Reject
+                        </DangerButton>
+                        }
 
-                            {!!routeParam.componentid && 
-                                <Link href={`/admin/superadmin/components/edit/${routeParam.componentid}`}>
-                                    <button className="relative bg-orange-500 p-2 text-white">
-                                        <i className="mr-2 ml-1 fas fa-pen text-white"></i>
-                                        Edit Product
-                                    </button>
-                                </Link>
-                            }
-                        </div>
-                    </div>
-                </div>
-
-                {component.reason && 
-                <div className="bg-red-400 p-2 text-white">
-                    <h3 className={"ml-3 font-semibold text-lg"}>
-                        Component is being rejected :
-                    </h3>
-                    <h3 className={"ml-3 text-md"}>
-                        {component.reason}
-                    </h3>
-                </div>
+                        {!!routeParam.componentid && !isLoading &&
+                            <Link href={`/admin/superadmin/components/edit/${routeParam.componentid}`}>
+                                <WarningButton
+                                    size="sm"
+                                >
+                                    <i className="mr-2 ml-1 fas fa-pen text-white"></i>
+                                    Edit Component
+                                </WarningButton>
+                            </Link>
+                        }
+                    </>
                 }
-                <div className="">
-                    <div className="flex flex-wrap w-full bg-white">
+            ></PageHeader>
+
+            {component.reason && 
+                <DangerNotification 
+                    message={`Component is rejected`}
+                    detail={component.reason}
+                />
+            }
+
+            {/* main content */}
+            {!isLoading ? 
+                <>
+                    {/* component image */}
+                    <div className="w-full">
                         <div className="px-3 mb-6 md:mb-0 text-center">
-                            <div className="p-24 border mx-2 my-4">{routeParam.componentid}</div>
+                            <div className="p-24 border mx-2 my-4">product image {routeParam.componentid}</div>
                         </div>
                     </div>
-                    
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-auto pb-10">
                         <table className="w-50 text-sm text-left text-gray-500 bg-white">
+                            <tr className="text-black hover:bg-slate-100">
+                                <th scope="col" className="px-6 py-3">
+                                    Company
+                                </th>
+                                <td scope="row" className="text-sm px-6 py-4">
+                                    :
+                                </td>
+                                <td className="text-sm px-2 py-4">
+                                    
+                                </td>
+                            </tr>
                             <tr className="text-black hover:bg-slate-100">
                                 <th scope="col" className="px-6 py-3">
                                     Manufacturer Part Number
                                 </th>
                                 <td scope="row" className="text-sm px-6 py-4">
+                                    :
+                                </td>
+                                <td className="text-sm px-2 py-4">
                                     {component.ManufacturerNumber}
                                 </td>
                             </tr>
@@ -197,7 +227,10 @@ export default function ComponentDetails({session, routeParam}) {
                                 <th scope="col" className="px-6 py-3">
                                     Manufacturer
                                 </th>
-                                <td className="text-sm px-6 py-4">
+                                <td scope="row" className="text-sm px-6 py-4">
+                                    :
+                                </td>
+                                <td className="text-sm px-2 py-4">
                                     {component.Manufacture}
                                 </td>
                             </tr>
@@ -205,7 +238,10 @@ export default function ComponentDetails({session, routeParam}) {
                                 <th scope="col" className="px-6 py-3">
                                     Available Quantity
                                 </th>
-                                <td className="text-sm px-6 py-4">
+                                <td scope="row" className="text-sm px-6 py-4">
+                                    :
+                                </td>
+                                <td className="text-sm px-2 py-4">
                                     {component.AvailableQuantity}
                                 </td>
                             </tr>
@@ -213,7 +249,10 @@ export default function ComponentDetails({session, routeParam}) {
                                 <th scope="col" className="px-6 py-3">
                                     MOQ
                                 </th>
-                                <td className="text-sm px-6 py-4">
+                                <td scope="row" className="text-sm px-6 py-4">
+                                    :
+                                </td>
+                                <td className="text-sm px-2 py-4">
                                     {component.moq}
                                 </td>
                             </tr>
@@ -221,7 +260,10 @@ export default function ComponentDetails({session, routeParam}) {
                                 <th scope="col" className="px-6 py-3">
                                     Country
                                 </th>
-                                <td className="text-sm px-6 py-4">
+                                <td scope="row" className="text-sm px-6 py-4">
+                                    :
+                                </td>
+                                <td className="text-sm px-2 py-4">
                                     {component.country}
                                 </td>
                             </tr>
@@ -229,7 +271,10 @@ export default function ComponentDetails({session, routeParam}) {
                                 <th scope="col" className="px-6 py-3">
                                     Description
                                 </th>
-                                <td className="text-sm px-6 py-4">
+                                <td scope="row" className="text-sm px-6 py-4">
+                                    :
+                                </td>
+                                <td className="text-sm px-2 py-4">
                                     {component.Description}
                                 </td>
                             </tr>
@@ -237,7 +282,10 @@ export default function ComponentDetails({session, routeParam}) {
                                 <th scope="col" className="px-6 py-3">
                                     Date Code
                                 </th>
-                                <td className="text-sm px-6 py-4">
+                                <td scope="row" className="text-sm px-6 py-4">
+                                    :
+                                </td>
+                                <td className="text-sm px-2 py-4">
                                     {component.dateCode}
                                 </td>
                             </tr>
@@ -245,7 +293,10 @@ export default function ComponentDetails({session, routeParam}) {
                                 <th scope="col" className="px-6 py-3">
                                     Packaging
                                 </th>
-                                <td className="text-sm px-6 py-4">
+                                <td scope="row" className="text-sm px-6 py-4">
+                                    :
+                                </td>
+                                <td className="text-sm px-2 py-4">
                                     {component.packaging}
                                 </td>
                             </tr>
@@ -253,7 +304,10 @@ export default function ComponentDetails({session, routeParam}) {
                                 <th scope="col" className="px-6 py-3">
                                     Category
                                 </th>
-                                <td className="text-sm px-6 py-4">
+                                <td scope="row" className="text-sm px-6 py-4">
+                                    :
+                                </td>
+                                <td className="text-sm px-2 py-4">
                                     {component.subcategory?.category?.name}
                                 </td>
                             </tr>
@@ -261,7 +315,10 @@ export default function ComponentDetails({session, routeParam}) {
                                 <th scope="col" className="px-6 py-3">
                                     Sub-Category
                                 </th>
-                                <td className="text-sm px-6 py-4">
+                                <td scope="row" className="text-sm px-6 py-4">
+                                    :
+                                </td>
+                                <td className="text-sm px-2 py-4">
                                     {component.subcategory?.name}
                                 </td>
                             </tr>
@@ -269,7 +326,10 @@ export default function ComponentDetails({session, routeParam}) {
                                 <th scope="col" className="px-6 py-3">
                                     Status
                                 </th>
-                                <td className="text-sm px-6 py-4">
+                                <td scope="row" className="text-sm px-6 py-4">
+                                    :
+                                </td>
+                                <td className="text-sm px-2 py-4">
                                     <ComponentStatus status={component.status} title={`stock status ${component.status}`} label={component.status}/>
                                 </td>
                             </tr>
@@ -277,7 +337,10 @@ export default function ComponentDetails({session, routeParam}) {
                                 <th scope="col" className="px-6 py-3">
                                     Created at
                                 </th>
-                                <td className="text-sm px-6 py-4">
+                                <td scope="row" className="text-sm px-6 py-4">
+                                    :
+                                </td>
+                                <td className="text-sm px-2 py-4">
                                     {moment(component.created_at).format('dddd, D MMMM YYYY')}
                                 </td>
                             </tr>
@@ -308,9 +371,11 @@ export default function ComponentDetails({session, routeParam}) {
                         />
                     ) : null}
 
-                </div>
-            </div>
-        </>
+                </>
+                : 
+                <LoadingState className={"pb-40"}/>
+            }
+        </PrimaryWrapper>
     );
 }
 
@@ -320,7 +385,7 @@ export async function getServerSideProps(context) {
 const session = await getSession(context)
     return {
         props: {
-            session: session,
+            session,
             routeParam: context.query
         }
     }

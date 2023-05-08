@@ -13,7 +13,6 @@ import MetaData from "@/components/Interface/Table/MetaData";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 
 export default function CompanyList(props) {
-    const tableType = props.tableType
     const data = props.data
     const links = props.links
     const metaData = props.metaData
@@ -23,17 +22,6 @@ export default function CompanyList(props) {
             <PrimaryWrapper>
                 <HeaderTable
                     title={props.title}
-                    action={
-                        props.filterStatus && 
-                        <div className="w-64">
-                            <SelectInput
-                                name="status"
-                                value={status}
-                                options={orderStatuses}
-                                onChange={handleStatusChange}
-                                />
-                        </div>
-                    }
                 />
                 <BaseTable  
                     isBusy={props.isLoading}

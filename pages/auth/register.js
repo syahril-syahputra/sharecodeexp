@@ -16,7 +16,8 @@ import SelectInput from "@/components/Interface/Form/SelectInput";
 import AreaInput from "@/components/Interface/Form/AreaInput"
 
 import countryList from 'react-select-country-list';
-import ErrorNotification from '@/components/Interface/Notification/ErrorNotification';
+import DangerNotification from '@/components/Interface/Notification/DangerNotification';
+import CountrySelector from '@/components/Shared/CountrySelector';
 
 export default function Index() {
     const [isAgreeTerm, setIsAgreeTerm] = useState(false)
@@ -167,7 +168,7 @@ export default function Index() {
                                     <form onSubmit={handleSubmit} className='pb-20'>
                                         <h2 className="font-semibold text-2xl text-center">Registration</h2>
                                         {errorMessage &&
-                                            <ErrorNotification 
+                                            <DangerNotification 
                                                 message={errorMessage}
                                                 onCloseNotification={() => setErrorMessage(null)}
                                             />
@@ -341,14 +342,11 @@ export default function Index() {
                                                     /> 
                                                 </div>
                                                 <div className="w-full md:w-1/2 px-3">
-                                                    <SelectInput
-                                                        searchable                                
-                                                        label="Country"
-                                                        name="company_country"
+                                                    <CountrySelector
+                                                        name="country"
                                                         value={country}
-                                                        options={countries}
-                                                        errorMsg={errorInfo?.company_country}
-                                                        onChange={countryHandleChange}
+                                                        countryHandleChange={countryHandleChange}
+                                                        errorMsg={errorInfo.country}
                                                     />
                                                 </div>
                                             </div>

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
 import { getSession } from "next-auth/react";
-import Link from "next/link";
+
+// layout for page
+import Admin from "layouts/Admin.js";
 
 // components
 import RejectedOrder from "@/components/Table/Superadmin/Orders/RejectedOrder"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
-// layout for page
-import Admin from "layouts/Admin.js";
 
 export default function RejectedOrders({session}) {
   //data search
@@ -70,19 +70,19 @@ export default function RejectedOrders({session}) {
 
   return (
     <>
-      <div className="">
-        <div className="mb-10">
-          <MiniSearchBar searchItem={handleSearch}/>
-          <RejectedOrder
-            filterStatus={false}
-            title="Rejected Orders"
-            setPage={setPage}
-            isLoading={isLoading}
-            data={data}
-            links={links}
-            metaData={metaData}
-          ></RejectedOrder>
+      <div className="mb-10">
+        <div className="mb-5 w-full lg:w-1/2">
+            <MiniSearchBar searchItem={handleSearch}/>
         </div>
+        <RejectedOrder
+          filterStatus={false}
+          title="Rejected Orders"
+          setPage={setPage}
+          isLoading={isLoading}
+          data={data}
+          links={links}
+          metaData={metaData}
+        ></RejectedOrder>
       </div>
     </>
   );

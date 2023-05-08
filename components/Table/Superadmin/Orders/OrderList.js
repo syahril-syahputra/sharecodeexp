@@ -68,7 +68,7 @@ export default function IncomingInquiry(props) {
                                 Status
                             </th>
                             <th scope="col" className="px-6 py-3 text-right">
-                                *
+                                Act.
                             </th>
                         </>
                     }
@@ -112,7 +112,7 @@ export default function IncomingInquiry(props) {
                             )
                         })}
                         {!props.isLoading && metaData.total === 0 &&
-                            <NoData colSpan={11}/>
+                            <NoData colSpan={8}/>
                         }
                     </>
                     }                

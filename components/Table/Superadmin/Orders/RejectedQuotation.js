@@ -9,7 +9,7 @@ import MetaData from "@/components/Interface/Table/MetaData";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 
-export default function RejectedOrder(props) {
+export default function RejectedQuotation(props) {
     const data = props.data
     const links = props.links
     const metaData = props.metaData

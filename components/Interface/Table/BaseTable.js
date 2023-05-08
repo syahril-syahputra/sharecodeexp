@@ -1,3 +1,5 @@
+import LoadingState from "../Loader/LoadingState";
+
 export default function BaseTable({header, tableData, isBusy}){
     return (
         <div className="text-center w-full mx-auto">
@@ -16,9 +18,7 @@ export default function BaseTable({header, tableData, isBusy}){
                     
                 </table>
                 {isBusy &&
-                    <div className=''>
-                        <i className="my-8 fas fa-hourglass fa-spin text-blueGray-500 fa-2xl"></i>
-                    </div>
+                    <LoadingState/>
                 }
             </div>
         </div>
