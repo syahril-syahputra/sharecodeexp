@@ -16,6 +16,9 @@ import SelectInput from "@/components/Interface/Form/SelectInput"
 //base table
 import BaseTable from "@/components/Interface/Table/BaseTable"
 
+//utils
+import {categoriesOptions} from "@/utils/optionData"
+
 import { useRef, useState } from "react"
 
 export default function ComponentList() {
@@ -69,16 +72,13 @@ export default function ComponentList() {
     return (
         <div className="relative p-2 bg-white mb-20">
             <div className="text-center pb-10 mt-10">
-                <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2 uppercase">
+                <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2 uppercase">
                     <p>Components List</p>
                 </h3>
-                {/* <h3 className="text-md font-semibold leading-normal mb-2 text-blue-700 mb-2">
-                    <i>Please  before accesing this URL</i>
-                </h3> */}
             </div>
 
             <div className="text-center pb-10 mt-10">
-                <h3 className="text-xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2 uppercase">
+                <h3 className="text-xl font-semibold leading-normal text-blueGray-700 mb-2 uppercase">
                     <p>button</p>
                 </h3>
 
@@ -124,7 +124,7 @@ export default function ComponentList() {
             </div>
 
             <div className="text-center pb-10 mt-10">
-                <h3 className="text-xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2 uppercase">
+                <h3 className="text-xl font-semibold leading-normal text-blueGray-700 mb-2 uppercase">
                     <p>Input Field</p>
                 </h3>
 
@@ -175,52 +175,27 @@ export default function ComponentList() {
                     <div className="mb-5">
                         <SelectInput
                             searchable                                
+                            label="Searchable Categories"
+                            name="categories"
+                            value={category}
+                            options={categoriesOptions}
+                            onChange={(input) => handleSelectInput(input)}
+                        />
+                    </div>
+                    <div className="mb-5">
+                        <SelectInput
                             label="Categories"
                             name="categories"
                             value={category}
+                            options={categoriesOptions}
                             onChange={(input) => handleSelectInput(input)}
                         />
                     </div>
                 </div>
             </div>
             <div className="text-center mx-auto w-1/2">
-                {/* <BaseTable header={tableHeader.current} >
-                    <div slot="headData">
-                        <th scope="col" className="px-6 py-3">
-                            First Name
-                        </th>
-                        <th scope="col" className="px-6 py-3">
-                            Last Name
-                        </th>
-                        <th scope="col" className="px-6 py-3">
-                            Age
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-right">
-                            Act
-                        </th>
-                    </div>
-                    <div slot="tableData">
-                        {tableData.current.map((item) => {
-                            return(
-                                <tr key={item.id} className="bg-white border-b hover:bg-gray-50">
-                                    <td scope="row" className="px-6 py-4 text-gray-900 whitespace-nowrap">
-                                        {item.firstName}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {item.lastName}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {item.age}
-                                    </td>
-                                    <td className="px-6 py-4 text-right">
-                                        {item.id}
-                                    </td>
-                                </tr>
-                            )
-                        })}
-                    </div>
-                </BaseTable> */}
-                <BaseTable                 
+                <BaseTable  
+                    isBusy               
                     header={
                         <>
                             <th scope="col" className="px-6 py-3">

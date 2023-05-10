@@ -5,17 +5,25 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 import { SessionProvider, useSession } from 'next-auth/react';
+import { Roboto } from '@next/font/google'
+
+const roboto = Roboto({
+  weight: '400',
+  subsets: ['latin'],
+})
 
 export default function App({ Component, pageProps }) {
 
   const Layout = Component.layout || (({ children }) => <>{children}</>);
 
   return (
-    <SessionProvider session={pageProps.session}>
-      <Layout>
-        <Component {...pageProps} />
-        <ToastContainer/>
-      </Layout>
-    </SessionProvider>
+    <main className={roboto.className}>
+      <SessionProvider session={pageProps.session}>
+        <Layout>
+          <Component {...pageProps} />
+          <ToastContainer/>
+        </Layout>
+      </SessionProvider>
+    </main>
   )
 }

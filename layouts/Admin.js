@@ -10,7 +10,7 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 import HeaderStats from "components/Headers/HeaderStats.js";
 import FooterAdmin from "components/Footers/FooterAdmin.js";
 import { PageSEO } from "@/components/Utils/SEO";
-import siteMetadata from '@/data/siteMetadata'
+import siteMetadata from '@/utils/siteMetadata'
 import axios from "@/lib/axios";
 
 //hooks
@@ -22,10 +22,10 @@ export default function Admin({ children }) {
     return (
       <div className="relative p-2 bg-white">
             <div className="text-center pb-10 mt-10">
-              <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2 uppercase">
+              <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2 uppercase">
                 <p>unauthenticated</p>
               </h3>
-              <h3 className="text-md font-semibold leading-normal mb-2 text-blue-700 mb-2">
+              <h3 className="text-md font-semibold leading-normal text-blue-700 mb-2">
                 <i>Please <Link href="/auth/login" className="text-blueGray-700 underline">login</Link> before accesing this URL</i>
               </h3>
             </div>

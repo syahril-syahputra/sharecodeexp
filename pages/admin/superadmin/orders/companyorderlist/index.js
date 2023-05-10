@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
 import { getSession } from "next-auth/react";
-import Link from "next/link";
 
 // components
 import CompaniesBasedOrder from "@/components/Table/Superadmin/Orders/CompaniesBasedOrder"
@@ -70,9 +69,10 @@ export default function ActiveOrders({session}) {
 
   return (
     <>
-      <div className="">
         <div className="mb-10">
-          <MiniSearchBar searchItem={handleSearch}/>
+          <div className="mb-5 w-full lg:w-1/2">
+              <MiniSearchBar searchItem={handleSearch}/>
+          </div>
           <CompaniesBasedOrder
             filterStatus={false}
             title="Company Based Order List"
@@ -83,7 +83,6 @@ export default function ActiveOrders({session}) {
             metaData={metaData}
           ></CompaniesBasedOrder>
         </div>
-      </div>
     </>
   );
 }

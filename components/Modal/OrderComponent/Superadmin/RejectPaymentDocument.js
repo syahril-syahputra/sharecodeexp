@@ -1,12 +1,61 @@
 import { useState } from "react"
 import ErrorInput from '@/components/Shared/ErrorInput';
 import RejectButton from "@/components/Buttons/RejectButton";
+import { BaseModalMedium } from "@/components/Interface/Modal/BaseModal";
+import DangerButton from "@/components/Interface/Buttons/DangerButton";
+import LightButton from "@/components/Interface/Buttons/LightButton";
+import AreaInput from "@/components/Interface/Form/AreaInput";
 export default function RejectPaymentDocument(props){
     const [rejectionReason, setRejectionReason] = useState('')
 
     const handleRejection = () => {
         props.acceptance(rejectionReason)
     }
+
+    return (
+        <BaseModalMedium
+            title="Reject Payment"
+            onClick={() => props.closeModal()}
+            body={
+                <div className="">
+                    <p className="text-blueGray-500 text-lg leading-relaxed">
+                        Do you agree to <span className="text-blueGray-700 font-bold">Reject</span> this Payment?
+                    </p>
+                    <AreaInput
+                        name="reason"
+                        required
+                        rows={8}
+                        placeholder="Write your reason here before rejecting"
+                        value={rejectionReason}
+                        errorMsg={props.errorInfo?.reason}
+                        onChange={(input) => setRejectionReason(input.value)}
+                    /> 
+                </div>
+            }
+            action={
+                <>
+                    <LightButton
+                        disabled={props.isLoading}
+                        className="font-bold uppercase mr-2"
+                        onClick={() => props.closeModal()}
+                        >
+                        No, Close
+                    </LightButton>
+
+                    <DangerButton
+                        disabled={props.isLoading || !rejectionReason}
+                        className="font-bold uppercase"
+                        onClick={handleRejection}>
+                        {props.isLoading &&
+                            <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
+                        }
+                        Yes, Reject Payment
+                    </DangerButton>
+                </>
+            }
+        ></BaseModalMedium>
+    )
+
     return (
         <>
             <div
@@ -49,7 +98,7 @@ export default function RejectPaymentDocument(props){
                                 }
                                 autoComplete="off" 
                                 type="text"
-                                className="shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+                                className="shadow-sm placeholder-slate-300 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
                             {props.errorInfo?.reason &&
                                 <ErrorInput error={props.errorInfo?.reason}/>
                             }

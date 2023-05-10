@@ -3,34 +3,38 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
 import { PageSEO } from '@/components/Utils/SEO'
-import siteMetadata from '@/data/siteMetadata'
+import siteMetadata from '@/utils/siteMetadata'
+import { useRouter } from "next/router";
 
 //components
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
-import { useRouter } from "next/router";
+import TextInput from "@/components/Interface/Form/TextInput";
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 
-export default function Index() {
+export default function Login() {
     const router = useRouter();
     const {status} = useSession()
     if(status == 'authenticated'){
         router.replace("/")
     }
     
-    const [userInfo, setUserInfo] = useState({email: '', password: ''})
     const [isLoading, setIsLoading] = useState(false)
     const [errMessage, setErrMessage] = useState({
         error: ' ',
         status: ''
     })
+    const [showPassword, setShowPassword] = useState(false)
+    const [enteredEmail, setEnteredEmail] = useState('')
+    const [enteredPassword, setEnteredPassword] = useState('')
     const handleSubmit = async (e) => {
         e.preventDefault()
         setErrMessage({error: ' ', status: ''})
         setIsLoading(true)
-        const res = await signIn('credentials', {
-            email: userInfo.email,
-            password: userInfo.password,
+        const request = await signIn('credentials', {
+            email: enteredEmail,
+            password: enteredPassword,
             redirect: false
         }).then((res) => {
             if (res?.error) {
@@ -46,74 +50,70 @@ export default function Index() {
 
     return (
         <>
-            <PageSEO title="Exepart - Login Page" description={siteMetadata.description} />
-            <IndexNavbar fixed />
-            <section className="mt-20 md:mt-20 pb-40 relative bg-white">
+            <PageSEO title="Exepart - Login" description={siteMetadata.description} />
+            <IndexNavbar fixed isLoginPage/>
+            <section className="relative bg-white pb-36 overflow-hidden h-3/6 bg-gradient-to-b from-indigo-50 via-white">
                 <div className="container mx-auto">
                     <div className="mt-36">
-                        <div className="px-5 pt-5 pb-4">
+                        <div className="px-5 pt-5 pb-5">
                             <ImageLogo
-                                size={300}
+                                size={250}
                             />
                         </div>
                         <div className="justify-center text-center flex flex-wrap mb-20">
-                            <div className="w-full md:w-6/12 px-12 md:px-4 shadow-md p-5">
+                            <div className="w-full md:w-4/12 md:shadow-md p-5 bg-white">
                                 <form onSubmit={handleSubmit}>
-                                    <h2 className="font-semibold text-4xl">Sign In</h2>
-                                    <div className="mt-5 p-1 h-10">
+                                    <h2 className="font-semibold text-2xl">Sign in to EXEpart</h2>
+                                    <div className="p-1 h-10">
                                         <p className="text-red-500 text-lg italic">{errMessage.error}</p>
                                     </div>
-                                    <div className="text-center items-stretch mb-3 mt-6">
-                                        <span className="z-10 h-full leading-snug font-normal absolute text-center text-slate-300 absolute bg-transparent text-lg items-center justify-center w-8 pl-3 py-3">
-                                            <i className="fas fa-user mt-2"></i>
-                                        </span>
-                                        <input 
-                                            value={userInfo.email} 
-                                            onChange={({target}) => 
-                                                setUserInfo({...userInfo, email:target.value})
-                                            }
-                                            type="text" 
-                                            placeholder="email" 
-                                            className="md:w-8/12 shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-4 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 pl-10"/>
+                                    <div className="text-center items-stretch mb-3">
+                                        <TextInput
+                                            className="w-full md:w-11/12"
+                                            required
+                                            name="email"
+                                            placeholder="email"
+                                            setIcon="fas fa-user"
+                                            value={enteredEmail}
+                                            onChange={(input) => setEnteredEmail(input.value)}
+                                        />                                        
                                     </div> 
-                                    <div className="text-center items-stretch mb-3 mt-2">
-                                        <span className="z-10 h-full leading-snug font-normal absolute text-center text-slate-300 absolute bg-transparent text-lg items-center justify-center w-8 pl-3 py-3">
-                                            <i className="fas fa-lock mt-2"></i>
-                                        </span>
-                                        <input 
-                                            value={userInfo.password} 
-                                            onChange={({target}) => 
-                                                setUserInfo({...userInfo, password:target.value})
+                                    <div className="relative mt-2 rounded-md shadow-sm">
+                                        <TextInput
+                                                className="w-full md:w-11/12"
+                                                required
+                                                type={showPassword ? 'text' : 'password'}
+                                                name="password"
+                                                placeholder="password"
+                                                setIcon="fas fa-lock"
+                                                value={enteredPassword}
+                                                onChange={(input) => setEnteredPassword(input.value)}
+                                            /> 
+                                        <div className="absolute inset-y-0 right-8 flex items-center cursor-pointer" onClick={() => setShowPassword(prev => !prev)}>
+                                            {showPassword ?  
+                                                <i className="fas fa-eye-slash text-slate-500"></i> :
+                                                <i className="fas fa-eye text-slate-500"></i>
                                             }
-                                            type="password" 
-                                            placeholder="password" 
-                                            className="md:w-8/12 shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-4 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 pl-10"/>
+                                        </div>
                                     </div>
-                                    <div className="text-center mt-10">
-                                        <p className="text-blueGray-400 hover:text-blueGray-700"><Link href="/auth/forgotpassword">Forgot Password</Link></p>
+                                    <div className="text-right items-stretch mb-5 md:px-5">
+                                        {/* <p className="text-blueGray-400 hover:text-blueGray-700"><Link href="/auth/forgotpassword">Forgot Password</Link></p> */}
+                                        <p className="text-blueGray-400 hover:text-blueGray-700" onClick={() => alert(':(')}>Forgot Password</p>
                                     </div>
-                                    <div className="text-center mb-6">
-                                        {!isLoading && 
-                                            <button
-                                                type="submit"
-                                                className="w-full md:w-8/12 mt-4 text-white font-bold px-6 py-4 outline-none focus:outline-none mr-1 mb-1 bg-indigo-900 active:bg-indigo-800 uppercase text-sm shadow hover:shadow-lg"
-                                            >
+                                    <div className="text-center mt-2">
+                                        <PrimaryButton
+                                            disabled={isLoading}
+                                            type="submit"
+                                            className="w-full md:w-11/12 font-bold uppercase"
+                                        >
+                                            {isLoading &&
+                                                <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
+                                            }
                                             Login
-                                            </button>
-                                        }
-                                        {isLoading && 
-                                            <button
-                                                disabled
-                                                type="submit"
-                                                className="w-full md:w-8/12 mt-4 text-white font-bold px-6 py-4 outline-none mr-1 mb-1 bg-indigo-400 uppercase text-sm"
-                                            >
-                                                <i className="fas fa-circle-notch fa-spin"></i>
-                                            </button>
-                                        }
-                                        
+                                        </PrimaryButton>                                    
                                     </div>
                                 </form>
-                                <div className="relative flex py-5 items-center w-full md:w-8/12 mx-auto">
+                                <div className="relative flex mt-5 items-center w-full md:w-10/12 mx-auto">
                                     <div className="flex-grow border-t border-blueGray-700"></div>
                                     <div className="flex-shrink mx-4"><p className="text-blueGray-400">Or</p></div>
                                     <div className="flex-grow border-t border-blueGray-700"></div>

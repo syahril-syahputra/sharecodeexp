@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
 import { getSession } from "next-auth/react";
-import Link from "next/link";
+
+// layout for page
+import Admin from "layouts/Admin.js";
 
 // components
 import CompletedShipment from "@/components/Table/Superadmin/Orders/CompletedShipment"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
-// layout for page
-import Admin from "layouts/Admin.js";
-
-export default function ActiveOrders({session}) {
+export default function CompleteShipment({session}) {
   //data search
   const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState(true)
@@ -62,30 +61,30 @@ export default function ActiveOrders({session}) {
 
   return (
     <>
-      <div className="">
-        <div className="mb-10">
-          <MiniSearchBar searchItem={handleSearch}/>
-          <CompletedShipment
-            title="Completed Shipments"
-            setPage={setPage}
-            isLoading={isLoading}
-            data={data}
-            links={links}
-            metaData={metaData}
-          ></CompletedShipment>
+      <div className="mb-10">
+        <div className="mb-5 w-full lg:w-1/2">
+            <MiniSearchBar searchItem={handleSearch}/>
         </div>
+        <CompletedShipment
+          title="Completed Shipments"
+          setPage={setPage}
+          isLoading={isLoading}
+          data={data}
+          links={links}
+          metaData={metaData}
+        ></CompletedShipment>
       </div>
     </>
   );
 }
 
-ActiveOrders.layout = Admin;
+CompleteShipment.layout = Admin;
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
   return {
       props: {
-          session: session
+          session
       }
   }
 }

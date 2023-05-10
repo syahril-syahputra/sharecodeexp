@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
 import { getSession } from "next-auth/react";
-import Link from "next/link";
+
+// layout for page
+import Admin from "layouts/Admin.js";
 
 // components
 import PendingPayment from "@/components/Table/Superadmin/Orders/PendingPayment"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
-
-// layout for page
-import Admin from "layouts/Admin.js";
 
 export default function ActiveOrders({session}) {
   //data search
@@ -62,19 +61,19 @@ export default function ActiveOrders({session}) {
 
   return (
     <>
-      <div className="">
-        <div className="mb-10">
-          <MiniSearchBar searchItem={handleSearch}/>
-          <PendingPayment
-            filterStatus={false}
-            title="Pending Payments"
-            setPage={setPage}
-            isLoading={isLoading}
-            data={data}
-            links={links}
-            metaData={metaData}
-          ></PendingPayment>
+      <div className="mb-10">
+        <div className="mb-5 w-full lg:w-1/2">
+            <MiniSearchBar searchItem={handleSearch}/>
         </div>
+        <PendingPayment
+          filterStatus={false}
+          title="Pending Payments"
+          setPage={setPage}
+          isLoading={isLoading}
+          data={data}
+          links={links}
+          metaData={metaData}
+        ></PendingPayment>
       </div>
     </>
   );

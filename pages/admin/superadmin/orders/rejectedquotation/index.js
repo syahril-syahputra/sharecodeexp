@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
 import { getSession } from "next-auth/react";
-import Link from "next/link";
-
-// components
-import RejectedOrder from "@/components/Table/Superadmin/Orders/RejectedOrder"
-import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
 // layout for page
 import Admin from "layouts/Admin.js";
+
+// components
+import RejectedQuotationList from "@/components/Table/Superadmin/Orders/RejectedQuotation"
+import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
 export default function RejectedQuotation({session}) {
   //data search
@@ -23,7 +22,7 @@ export default function RejectedQuotation({session}) {
   })
   const searchData = async (page=1) =>{
       setIsLoading(true)
-      const response = await axios.get(`/admin/orders/rejected?page=${page}&status=${orderStatus}&search=${search}`,
+      const response = await axios.get(`/admin/orders/rejected?page=${page}&search=${search}`,
           {
             headers: {
               "Authorization" : `Bearer ${session.accessToken}`
@@ -55,14 +54,6 @@ export default function RejectedQuotation({session}) {
     searchData()
   }, [])
 
-  const [orderStatus, setOrderStatuses] = useState("Inquiry")
-  const handleStatusChange = (status) => {
-    setOrderStatuses(status.value)
-  }
-  useEffect(() => {
-    searchData()
-  }, [orderStatus])
-
   const handleSearch = (item) =>{
     setSearch(item)
     searchData()
@@ -70,19 +61,19 @@ export default function RejectedQuotation({session}) {
 
   return (
     <>
-      <div className="">
-        <div className="mb-10">
-          <MiniSearchBar searchItem={handleSearch}/>
-          <RejectedOrder
-            filterStatus={false}
-            title="Rejected Quotations"
-            setPage={setPage}
-            isLoading={isLoading}
-            data={data}
-            links={links}
-            metaData={metaData}
-          ></RejectedOrder>
+      <div className="mb-10">
+        <div className="mb-5 w-full lg:w-1/2">
+            <MiniSearchBar searchItem={handleSearch}/>
         </div>
+        <RejectedQuotationList
+          filterStatus={false}
+          title="Rejected Quotations"
+          setPage={setPage}
+          isLoading={isLoading}
+          data={data}
+          links={links}
+          metaData={metaData}
+        ></RejectedQuotationList>
       </div>
     </>
   );

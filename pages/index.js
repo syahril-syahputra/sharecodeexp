@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Router, useRouter } from 'next/router'
 import { PageSEO } from '@/components/Utils/SEO'
-import siteMetadata from '@/data/siteMetadata'
+import siteMetadata from '@/utils/siteMetadata'
 import axios from "lib/axios";
 import Image from "next/image"
 
@@ -111,7 +111,7 @@ export default function Index() {
 
             <div className="w-full px-12 md:px-4 ml-auto mr-auto">
               <div className="text-center items-stretch mb-3 mt-3">
-                <span className="z-10 h-full leading-snug font-normal absolute text-center text-slate-300 absolute bg-transparent text-lg items-center justify-center w-8 pl-3 py-3">
+                <span className="z-10 h-full leading-snug font-normal text-center text-slate-300 absolute bg-transparent text-lg items-center justify-center w-8 pl-3 py-3">
                   <i className="fas fa-search mt-2"></i>
                 </span>
                 <input
@@ -120,7 +120,7 @@ export default function Index() {
                   onKeyDown={searchComponent}
                   type="text" 
                   placeholder="Search for the components" 
-                  className="border-0 md:w-8/12 px-3 py-4 placeholder-slate-300 text-slate-600 relative bg-white bg-white text-base shadow outline-grey focus:outline-none focus:ring w-full pl-10"/>
+                  className="border-0 md:w-8/12 px-3 py-4 placeholder-slate-300 text-slate-600 relative  bg-white text-base shadow outline-grey focus:outline-none focus:ring w-full pl-10"/>
               </div>  
               <div className="text-center">
                 {suggestion && suggestion.length > 0 &&

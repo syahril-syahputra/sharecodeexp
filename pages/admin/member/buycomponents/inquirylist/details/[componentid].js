@@ -202,6 +202,17 @@ AddToInquiryList.layout = Admin;
 
 export async function getServerSideProps(context) {
     const session = await getSession(context)
+    if(session.user.userDetail.role_id == 1){
+        return {
+            redirect: {
+              permanent: false,
+              destination: '/admin/superadmin?redirect=true',
+            },
+            props: {}
+          };
+    }
+
+
     const loadCompany = await axios.get(`/company`, {
         headers: {
         "Authorization" : `Bearer ${session.accessToken}`

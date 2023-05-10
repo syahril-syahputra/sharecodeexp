@@ -16,7 +16,7 @@ export default function InputForm(props){
                 placeholder={props.placeholder}
                 autoComplete="off" 
                 type={props.inputType ? props.inputType : "text"}
-                className={`${props.errorMsg ? 'border-red-200' : 'border-gray-200'} shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}/>
+                className={`${props.errorMsg ? 'border-red-200' : 'border-gray-200'} shadow-sm placeholder-slate-300appearance-none w-full bg-white text-gray-700 border py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}/>
             {props.errorMsg &&
                 <ErrorInput error={props.errorMsg}/>
             }

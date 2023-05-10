@@ -1,80 +1,55 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
-import ErrorInput from '@/components/Shared/ErrorInput';
+import AreaInput from "@/components/Interface/Form/AreaInput"
+import LightButton from "@/components/Interface/Buttons/LightButton";
+import { BaseModalMedium } from "@/components/Interface/Modal/BaseModal";
+
 export default function Modal(props) {
-    const [messages, setMessages] = useState('Please send additional document to complete your registration')
+  const [messages, setMessages] = useState('Please send additional document to complete your registration')
 
-    const handleSend = () => {
-        props.acceptModal(messages)
-    }
+  const handleSend = () => {
+      props.acceptModal(messages)
+  }
 
-    return (
-        <>
-          <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-          >
-            <div className="relative w-full h-full max-w-lg md:h-auto">
-              {/*content*/}
-              <div className="border-0  shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                {/*header*/}
-                <div className="flex items-start justify-between p-4 border-b border-solid border-blueGray-200">
-                  <h3 className="text-3xl font-semibold">
-                    Send Email
-                  </h3>
-                  <button
-                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => props.setShowModal(false)}
-                  >
-                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                      ×
-                    </span>
-                  </button>
-                </div>
-                {/*body*/}
-                <form className=""> 
-                  <div className="relative p-3 flex-auto">
-                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                      Messages
-                    </label>
-                    <textarea 
-                      value={messages}
-                      onChange={({target}) => 
-                        setMessages(target.value)
-                      }
-                      autoComplete="off" 
-                      type="text"
-                      placeholder="Write your reason here before rejecting"
-                      className="shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
-                      {props.errorInfo?.messages &&
-                        <ErrorInput error={props.errorInfo?.messages}/>
-                      }
-                  </div>
-                </form>
-                
-                {/*footer*/}
-                <div className="flex items-center justify-end p-4 border-t border-solid border-blueGray-200 ">
-                  <button
-                    className="text-blueGray-700 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={() => props.setShowModal(false)}
-                  >
-                    Close
-                  </button>
-
-                    <PrimaryButton
-                        disabled={props.isLoading}
-                        className="font-bold uppercase "
-                        onClick={handleSend}>
-                        {props.isLoading &&
-                            <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
-                        }
-                        Send
-                    </PrimaryButton>
-                </div>
-              </div>
-            </div>
+  return (
+    <>
+      <BaseModalMedium
+        title="Send Email"
+        onClick={() => props.setShowModal(false)}
+        body={
+          <div className="">
+            <AreaInput
+                label="Message"
+                name="message"
+                required
+                rows={8}
+                value={messages}
+                errorMsg={props.errorInfo?.messages}
+                onChange={(input) => setMessages(input.value)}
+            />
           </div>
-          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
-    )
+        }
+        action={
+          <>
+            <LightButton
+              className="font-bold uppercase mr-2"
+              onClick={() => props.setShowModal(false)}
+            >
+              Close
+            </LightButton>
+
+            <PrimaryButton
+                disabled={props.isLoading}
+                className="font-bold uppercase"
+                onClick={handleSend}>
+                {props.isLoading &&
+                    <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
+                }
+                Send
+            </PrimaryButton>
+          </>
+        }
+      />
+    </>
+  )
 }

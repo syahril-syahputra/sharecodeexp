@@ -9,8 +9,9 @@ import UnfoundComponent from "@/components/Table/Superadmin/Statistics/UnfoundCo
 
 // layout for page
 import Admin from "layouts/Admin.js";
+import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
-export default function Product({session, }) {
+export default function UnfoundComponents({session, }) {
     //data search
     const [search, setSearch] = useState('')
     const [isLoading, setIsLoading] = useState(false)
@@ -55,12 +56,20 @@ export default function Product({session, }) {
         loadData()
     }, [])
 
+    const handleSearch = (item) =>{
+        setSearch(item)
+        loadData()
+    }
+
 
     return (
         <>
-            <div className="relative">            
+            <div className="mb-10">
+                <div className="mb-5 w-full lg:w-1/2">
+                    <MiniSearchBar searchItem={handleSearch}/>
+                </div>           
                 <UnfoundComponent 
-                    title={"Unfound Components"}
+                    title="Unfound Components"
                     setPage={setPage}
                     isLoading={isLoading}
                     data={data}
@@ -72,13 +81,13 @@ export default function Product({session, }) {
     );
 }
 
-Product.layout = Admin;
+UnfoundComponents.layout = Admin;
 
 export async function getServerSideProps(context) {
     const session = await getSession(context)
     return {
         props: {
-            session: session
+            session
         }
     }
 }

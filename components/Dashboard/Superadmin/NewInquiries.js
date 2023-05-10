@@ -1,7 +1,12 @@
 import moment from 'moment';
 import React from "react";
 import Link from "next/link";
+
 // components
+import BaseTable from "@/components/Interface/Table/BaseTable";
+import HeaderTable from "@/components/Interface/Table/HeaderTable";
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
+import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
 
 export default function NewInquiries(props) {
   const data = props.data.slice(0, 5)
@@ -9,78 +14,65 @@ export default function NewInquiries(props) {
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg">
-        <div className="mb-0 px-4 py-3 border-0">
-          <div className="flex flex-wrap items-center">
-            <div className="relative w-full px-4 max-w-full flex-grow flex-1">
-              <h3 className="font-semibold text-base text-blueGray-700">
-                New Inquiries
-              </h3>
-            </div>
-            <div className="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
-              <Link href="/admin/superadmin/orders/allorders">
-                <button
-                  className="bg-indigo-500 text-white active:bg-indigo-600 text-xs font-bold uppercase px-3 py-1 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                  type="button"
-                >
-                  See all
-                </button>
-              </Link>
-            </div>
-          </div>
-        </div>
-        <div className="block w-full overflow-x-auto">
-          {/* Projects table */}
-          <table className="items-center w-full bg-transparent border-collapse">
-            <thead>
-              <tr>
-                <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+        <HeaderTable
+          title="New Inquiries"
+          action={
+            <Link href="/admin/superadmin/orders/allorders">
+              <PrimaryButton
+                size="sm">
+                See all
+              </PrimaryButton>
+            </Link>
+          }
+        />
+        <BaseTable                 
+          header={
+              <>
+                <th className="px-6 py-3 text-left">
                   Company Name
                 </th>
-                <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                <th className="px-6 py-3 text-left">
                   Country
                 </th>
-                <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                <th className="px-6 py-3 text-left">
                   Order
                 </th>
-                <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                <th className="px-6 py-3 text-left">
                   Inquiries Date
                 </th>
-                <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px"></th>
-              </tr>
-            </thead>
-            <tbody>
+                <th className="px-6 py-3 text-right min-w-140-px">*</th>
+              </>
+          }
+          tableData={
+            <>
               {data.map((item, index) => {
                 return (
                   <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                    <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
+                    <th className="px-6 align-middle p-2 text-left">
                       {item.buyer?.name}
                     </th>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    <td className="px-6 align-middle p-2">
                       {item.buyer?.country}
                     </td>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    <td className="px-6 align-middle p-2">
                       {item.companies_products?.ManufacturerNumber}
                     </td>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                    <td className="px-6 align-middle p-2">
                       {moment(item.created_at).format('dddd, D MMMM YYYY')}
                     </td>
-                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
-                      <Link href={`/admin/superadmin/orders/details/${item.id}`}>
-                        <button className="px-3 py-1 bg-blueGray-700 text-white">View</button>
+                    <td className="px-6 align-middle p-2 text-right">
+                      <Link href={`/admin/superadmin/orders/details/${item.id}`}>                  
+                        <SecondaryButton size="sm">View</SecondaryButton>
                       </Link>
                     </td>
                   </tr>
                 )
               })}
-            </tbody>
-          </table>
-        </div>
+            </>
+          }    
+          isBusy={props.isLoading}              
+        />
       </div>
-      {props.isLoading &&<div>
-          <div className='text-center my-auto mt-10'>
-              <i className="fas fa-circle-notch fa-spin text-blueGray-700 my-auto mx-10 fa-2xl"></i>
-          </div>
-      </div>}
     </>
   );
 }

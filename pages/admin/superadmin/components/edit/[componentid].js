@@ -1,22 +1,28 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "lib/axios";
 import { getSession } from "next-auth/react";
-
-// components
-import InputForm from "@/components/Shared/InputForm";
-import CountrySelector from "@/components/Shared/CountrySelector";
-import Select from 'react-tailwindcss-select';
-import ErrorInput from '@/components/Shared/ErrorInput';
-import { toast } from 'react-toastify';
-import { toastOptions } from "@/lib/toastOptions"
-
+import { useRouter } from "next/router";
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
-//data
-import { useRouter } from "next/router";
+// components
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
+import LightButton from "@/components/Interface/Buttons/LightButton";
+import PageHeader from "@/components/Interface/Page/PageHeader";
+import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
+import InputForm from "@/components/Shared/InputForm";
+import CountrySelector from "@/components/Shared/CountrySelector";
+import Select from 'react-tailwindcss-select';
+import ErrorInput from '@/components/Shared/ErrorInput';
+import DangerNotification from "@/components/Interface/Notification/DangerNotification";
+import TextInput from "@/components/Interface/Form/TextInput";
+import NumberInput from "@/components/Interface/Form/NumberInput";
+import SelectInput from "@/components/Interface/Form/SelectInput";
+import AreaInput from "@/components/Interface/Form/AreaInput";
+import WarningButton from "@/components/Interface/Buttons/WarningButton";
 
 export default function EditComponent({session, routeParam, packaginglist}) {
     // update data
@@ -32,14 +38,12 @@ export default function EditComponent({session, routeParam, packaginglist}) {
         dateCode: '',
         status: '',
         subcategory_id: ''
-        // category: 'A',
-        // subcategory: 'sub-A',
       });
     const [errorInfo, setErrorInfo] = useState({})
     const [errorMessage, setErrorMessage] = useState(null)
     const [succesMessage, setSuccesMessage] = useState(null)
-    const setDataHandler = (item, inputName) => {
-        setInputData({...inputData, [inputName]:item.value})
+    const setDataHandler = (input) => {
+        setInputData({...inputData, [input.name]:input.value})
     }
 
     //country handle
@@ -84,7 +88,6 @@ export default function EditComponent({session, routeParam, packaginglist}) {
             setInputData({...inputData, packaging:value.value})
         }
     };
-
 
     //option  
     //categories option
@@ -184,250 +187,194 @@ export default function EditComponent({session, routeParam, packaginglist}) {
 
 
     return (
-        <>
-            <div className="relative shadow">
-                <div className="mb-0 px-4 py-3 border-0 bg-white">
-                    <div className="flex justify-between">
-                        <div className="px-4">
-                            <h3
-                            className={
-                                "font-semibold text-lg text-blueGray-700"
-                            }
-                            >
-                            Edit Product 
-                            </h3>
-                        </div>
-                        <div className="px-4 mt-2">
-                            <Link href={`/admin/superadmin/components/details/${routeParam.componentid}`} className="relative bg-blueGray-700 p-2 text-white">
-                                {/* <i className="mr-2 ml-1 fas fa-pen text-white"></i> */}
-                                Back</Link>
-                        </div>
-                    </div>
-                </div>
+        <PrimaryWrapper>
+            <PageHeader
+                leftTop={
+                    <h3
+                        className={
+                            "font-semibold text-lg text-blueGray-700"
+                    }>
+                    Edit Company's Component
+                    </h3>
+                }
+                rightTop={
+                    <Link href={`/admin/superadmin/components/details/${routeParam.componentid}`}>
+                        <LightButton 
+                            size="sm" 
+                            className="mr-2">
+                            <i className="mr-2 ml-1 fas fa-arrow-left"></i>
+                            Back
+                        </LightButton>
+                    </Link>
+                }
+            ></PageHeader>
 
+            {errorMessage && 
+                <DangerNotification 
+                    message={errorMessage}
+                />
+            }
 
-                <div className="">
-                    <div className="flex flex-wrap w-full bg-white">
-                        <div className="px-3 mb-6 md:mb-0 text-center">
-                            <div className="p-24 border mx-2 my-4">{routeParam.componentid}</div>
-                        </div>
-                    </div>
-                </div>
-                <div className="mb-0 px-4 py-3 border-0 bg-white">
-                    <div className="px-3 w-full lg:w-1/2">
-                        {errorMessage &&
-                        <div  className="w-50">
-                            <div className="text-white px-6 py-4 border-0 relative mb-4 mt-5 bg-red-500">
-                                <span className="text-xl inline-block mr-5 align-middle">
-                                    <i className="fas fa-bell"></i>
-                                </span>
-                                <span className="inline-block align-middle mr-8">
-                                    <b className="capitalize">{errorMessage}</b>
-                                </span>
-                            </div>
-                        </div>
-                        }
-                        {succesMessage &&
-                        <div  className="w-50">
-                            <div className="text-white px-6 py-4 border-0 relative mb-4 mt-5 bg-emerald-500">
-                                <span className="text-xl inline-block mr-5 align-middle">
-                                    <i className="fas fa-bell"></i>
-                                </span>
-                                <span className="inline-block align-middle mr-8">
-                                    <b className="capitalize">{succesMessage}</b>
-                                </span>
-                            </div>
-                        </div>
-                        }
-                    </div>
-                    <form onSubmit={handleSubmit}>
-                        <div className="w-full lg:w-1/2 px-3 mb-6">
-                            <InputForm
-                            label="Manufacturer Part Number"
-                            inputDataName="ManufacturerNumber"
-                            value={inputData.ManufacturerNumber}
-                            setData={setDataHandler}
-                            errorMsg={errorInfo.ManufacturerNumber}
-                            />
-                        </div>
-                        <div className="w-full lg:w-1/2 px-3 mb-6">
-                            <InputForm
-                            label="Manufacturer"
-                            inputDataName="Manufacture"
-                            value={inputData.Manufacture}
-                            setData={setDataHandler}
-                            errorMsg={errorInfo.Manufacture}
-                            />
-                        </div>
-                        <div className="w-full lg:w-1/2 px-3 mb-6">
-                            <InputForm
-                            isDisabled={isLoading}
-                            inputType="number"
-                            label="Available Quantity"
-                            inputDataName="AvailableQuantity"
-                            value={inputData.AvailableQuantity}
-                            setData={setDataHandler}
-                            errorMsg={errorInfo.AvailableQuantity}
-                            />
-                        </div>
-                        <div className="w-full lg:w-1/2 px-3 mb-6">
-                            <InputForm
-                            label="MOQ"
-                            inputType="number"
-                            inputDataName="moq"
-                            value={inputData.moq}
-                            setData={setDataHandler}
-                            errorMsg={errorInfo.moq}
-                            />
-                        </div>
-                        <div className="w-full lg:w-1/2 px-3 mb-6">
-                            <CountrySelector
-                                setInisiate
-                                label="Country"
-                                inputDataName="country"
-                                value={inputData.country}
-                                countryHandleChange={countryHandleChange}
-                                errorMsg={errorInfo.country}
-                            />
-                        </div>
-                        <div className="w-full lg:w-1/2 px-3 mb-6">
-                            <InputForm
-                            label="Description"
-                            inputDataName="Description"
-                            value={inputData.Description}
-                            setData={setDataHandler}
-                            errorMsg={errorInfo.Description}
-                            />
-                        </div>
-                        <div className="w-full lg:w-1/2 px-3 mb-6">
-                            <InputForm
-                            label="Date Code"
-                            inputDataName="dateCode"
-                            value={inputData.dateCode}
-                            setData={setDataHandler}
-                            errorMsg={errorInfo.dateCode}
-                            />
-                        </div>
-                        <div className="w-full lg:w-1/2 px-3 mb-6">
-                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                Packaging
-                            </label>
-                            <Select 
-                                name="packaging"
-                                value={packaging}
-                                onChange={handlePackagingChange}
-                                options={packagings}
-                                classNames={{
-                                    menuButton: () => (
-                                        `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
-                                    ),
-                                    menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
-                                    listItem: ({ isSelected }) => (
-                                        `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
-                                            isSelected
-                                                ? `text-white bg-blue-500`
-                                                : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
-                                        }`
-                                    ),
-                                    searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
-                                }}
-                                />
-                            {errorInfo.packaging &&
-                                <ErrorInput error={errorInfo.packaging}/>
-                            }
-                            { packaging?.value == "other" && 
-                                <InputForm
-                                    inputDataName="packaging"
-                                    value={inputData.packaging}
-                                    setData={setDataHandler}
-                                    errorMsg={errorInfo.packaging}
-                                />
-                            }
-                        </div>
-                        <div className="w-full lg:w-1/2 px-3 mb-6">
-                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                Category
-                            </label>
-                            <Select 
-                                name="category"
-                                value={category}
-                                onChange={handleCategoryChange}
-                                options={categories}
-                                classNames={{
-                                    menuButton: () => (
-                                        `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
-                                    ),
-                                    menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
-                                    listItem: ({ isSelected }) => (
-                                        `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
-                                            isSelected
-                                                ? `text-white bg-blue-500`
-                                                : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
-                                        }`
-                                    ),
-                                    searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
-                                }}
-                                />
-                            {errorInfo.category &&
-                                <ErrorInput error={errorInfo.category}/>
-                            }
-                        </div>
-                        <div className="w-full lg:w-1/2 px-3 mb-6">
-                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                Sub-Category
-                            </label>
-                            <Select 
-                                name="subcategory_id"
-                                value={subcategory}
-                                onChange={handleSubCategoryChange}
-                                options={subcategories}
-                                classNames={{
-                                    menuButton: () => (
-                                        `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
-                                    ),
-                                    menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
-                                    listItem: ({ isSelected }) => (
-                                        `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
-                                            isSelected
-                                                ? `text-white bg-blue-500`
-                                                : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
-                                        }`
-                                    ),
-                                    searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
-                                }}
-                                />
-                            {errorInfo.subcategory_id &&
-                                <ErrorInput error={errorInfo.subcategory_id}/>
-                            }
-                        </div> 
-                        <div className="w-full lg:w-1/2 px-3 mb-6 mt-20">
-                            <div className="mb-6">
-                                {!isLoading && 
-                                    <button
-                                        type="submit"
-
-                                        className="w-1/2 text-white font-bold px-6 py-4 outline-none focus:outline-none mr-1 mb-1 bg-orange-500 active:bg-orange-400 uppercase text-sm shadow hover:shadow-lg"
-                                    >
-                                    Update
-                                    </button>
-                                }
-                                {isLoading && 
-                                    <button
-                                        disabled
-                                        type="submit"
-                                        className="w-1/2 text-white font-bold px-6 py-4 outline-none mr-1 mb-1 bg-orange-200 uppercase text-sm shadow"
-                                    >
-                                        <i className="fas fa-circle-notch fa-spin"></i>
-                                    </button>
-                                }
-                            </div>
-                        </div>
-
-                        
-                    </form>
+            {/* component image */}
+            <div className="w-full mb-6">
+                <div className="px-3 md:mb-0 text-center">
+                    <div className="p-24 border mx-2 my-4">product image {routeParam.componentid}</div>
                 </div>
             </div>
-        </>
+
+            <form className="ml-2" onSubmit={handleSubmit}>
+                <div className="w-full lg:w-1/2 px-3 mb-6">
+                    <TextInput
+                        label="Manufacturer Part Number"
+                        className="w-full"
+                        disabled={isLoading}
+                        required
+                        name="ManufacturerNumber"
+                        value={inputData.ManufacturerNumber}
+                        errorMsg={errorInfo?.ManufacturerNumber}
+                        onChange={(input) => setDataHandler(input)}
+                    /> 
+                </div>
+                <div className="w-full lg:w-1/2 px-3 mb-6">
+                    <TextInput
+                        label="Manufacturer"
+                        className="w-full"
+                        disabled={isLoading}
+                        required
+                        name="Manufacture"
+                        value={inputData.Manufacture}
+                        errorMsg={errorInfo?.Manufacture}
+                        onChange={(input) => setDataHandler(input)}
+                    /> 
+                </div>
+                <div className="w-full lg:w-1/2 px-3 mb-6">
+                    <NumberInput
+                        label="Available Quantity"
+                        className="w-full"
+                        disabled={isLoading}
+                        required
+                        name="AvailableQuantity"
+                        value={inputData.AvailableQuantity}
+                        errorMsg={errorInfo?.AvailableQuantity}
+                        onChange={(input) => setDataHandler(input)}
+                    />
+                </div>
+                <div className="w-full lg:w-1/2 px-3 mb-6">
+                    <NumberInput
+                        label="MOQ"
+                        className="w-full"
+                        disabled={isLoading}
+                        required
+                        name="moq"
+                        value={inputData.moq}
+                        errorMsg={errorInfo?.moq}
+                        onChange={(input) => setDataHandler(input)}
+                    />
+                </div>
+                <div className="w-full lg:w-1/2 px-3 mb-6">
+                    <CountrySelector
+                        setInisiate
+                        disabled={isLoading}
+                        label="Country"
+                        name="country"
+                        value={inputData.country}
+                        countryHandleChange={countryHandleChange}
+                        errorMsg={errorInfo.country}
+                    />
+                </div>
+                <div className="w-full lg:w-1/2 px-3 mb-6">
+                    <AreaInput 
+                        label="Description"
+                        name="Description"
+                        disabled={isLoading}
+                        required
+                        rows={4}
+                        value={inputData.Description}
+                        errorMsg={errorInfo.Description}
+                        onChange={(input) => setDataHandler(input)}
+                    />
+                </div>
+                <div className="w-full lg:w-1/2 px-3 mb-6">
+                    <TextInput
+                        label="Date Code"
+                        className="w-full"
+                        disabled={isLoading}
+                        required
+                        name="dateCode"
+                        value={inputData.dateCode}
+                        errorMsg={errorInfo?.dateCode}
+                        onChange={(input) => setDataHandler(input)}
+                    /> 
+                </div>
+                <div className="w-full lg:w-1/2 px-3 mb-6">
+                    <SelectInput
+                        disabled={isLoading}                              
+                        label="Packaging"
+                        name="packaging"
+                        value={packaging}
+                        options={packagings}
+                        errorMsg={errorInfo?.packaging}
+                        onChange={handlePackagingChange}
+                    />
+                    { packaging?.value == "other" && 
+                        <div className='mt-2'>
+                            <TextInput
+                                className="w-full"
+                                disabled={isLoading}
+                                required
+                                name="packaging"
+                                value={inputData.packaging}
+                                errorMsg={errorInfo?.packaging}
+                                onChange={(input) => setDataHandler(input)}
+                            /> 
+                        </div>
+                    }
+                </div>
+                <div className="w-full lg:w-1/2 px-3 mb-6">
+                    <SelectInput
+                        disabled={isLoading}                              
+                        label="Category"
+                        name="category"
+                        value={category}
+                        options={categories}
+                        errorMsg={errorInfo?.category}
+                        onChange={handleCategoryChange}
+                    />
+                </div>
+                <div className="w-full lg:w-1/2 px-3 mb-16">
+                    <SelectInput
+                        disabled={isLoading}                              
+                        label="Sub-Category"
+                        name="subcategory_id"
+                        value={subcategory}
+                        options={subcategories}
+                        errorMsg={errorInfo?.subcategory_id}
+                        onChange={handleSubCategoryChange}
+                    />
+                </div> 
+                <div className="w-full lg:w-1/2 px-3 mb-6">
+                    <Link href={`/admin/superadmin/components/details/${routeParam.componentid}`}>
+                        <LightButton
+                            className="w-full font-bold uppercase mb-2"
+                            disabled={isLoading}
+                        >
+                            Cancel
+                        </LightButton>
+                    </Link>
+                    <WarningButton
+                        className="w-full font-bold uppercase"
+                        disabled={isLoading}
+                        type="submit"
+                    >
+                        {isLoading &&
+                            <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
+                        }
+                        Update
+                    </WarningButton>
+                </div>  
+            </form>
+
+        </PrimaryWrapper>
     );
 }
 
@@ -440,9 +387,9 @@ export async function getServerSideProps(context) {
 
     return {
         props: {
-            session: session,
+            session,
             routeParam: context.query,
-            packaginglist: packaginglist
+            packaginglist
         }
     }
 }

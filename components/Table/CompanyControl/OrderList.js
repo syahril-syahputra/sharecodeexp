@@ -117,7 +117,7 @@ export default function OrderCompany(props) {
                                 </td>
                                 <td className="px-6 py-4 text-right">
                                     <div className="inline-flex">
-                                        <button onClick={() => setShowModal(true)} className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Change Status</button>
+                                        <button onClick={() => setShowModal(true)} className="mr-2 font-medium text-blue-600 bg-blueGray-700 p-2">Change Status</button>
                                     </div>
                                 </td>
                             </tr>

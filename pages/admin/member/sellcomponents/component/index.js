@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
 import { getSession } from "next-auth/react";
-import Link from "next/link";
+
+// layout for page
+import Admin from "layouts/Admin.js";
 
 // components
 import ComponentList from "@/components/Table/Member/Components/ComponentsList"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
-
-// layout for page
-import Admin from "layouts/Admin.js";
 
 export default function MyProduct({session}) {
   //data search
@@ -55,21 +54,25 @@ export default function MyProduct({session}) {
     searchData(search)
   }, [])
 
+  const handleSearch = (item) =>{
+    setSearch(item)
+    searchData()
+  }
+
   return (
     <>
-      <div className="">
-        <div className="mb-10">
-          <MiniSearchBar/>
-          <ComponentList
-            title="Component List"
-            setPage={setPage}
-            isLoading={isLoading}
-            data={data}
-            links={links}
-            metaData={metaData}
-            addProduct
-          ></ComponentList>
+      <div className="mb-10">
+        <div className="mb-5 w-full lg:w-1/2">
+            <MiniSearchBar searchItem={handleSearch}/>
         </div>
+        <ComponentList
+          title="Component List"
+          setPage={setPage}
+          isLoading={isLoading}
+          data={data}
+          links={links}
+          metaData={metaData}
+        ></ComponentList>
       </div>
     </>
   );
@@ -81,7 +84,7 @@ export async function getServerSideProps(context) {
   const session = await getSession(context)
   return {
       props: {
-          session: session
+          session
       }
   }
 }

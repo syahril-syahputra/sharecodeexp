@@ -5,7 +5,7 @@ import Link from "next/link";
 
 // components
 import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep";
-import OrderTodo from "@/components/Shared/Order/OrderTodo"
+import OrderTodo from "@/components/Shared/Order/OrderStatus"
 import AcceptQuotationModal from "@/components/Modal/OrderComponent/Buyer/AcceptQuotation"
 import RejectQuotationModal from "@/components/Modal/OrderComponent/Buyer/RejectQuotation"
 import SendPaymentDocsModal from "@/components/Modal/OrderComponent/Buyer/SendPaymentDocs"

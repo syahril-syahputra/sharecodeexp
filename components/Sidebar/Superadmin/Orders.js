@@ -16,9 +16,24 @@ export default function Orders(){
             {/* Navigation */}
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
                 <li className="items-center">
+                    <Link href="/admin/superadmin/orders/allorders"
+                    className={
+                        "text-xs uppercase py-2 font-bold block " +
+                        (router.pathname.indexOf("/admin/superadmin/orders/allorders") !== -1
+                        ? "text-lightBlue-500 hover:text-lightBlue-600"
+                        : "text-blueGray-700 hover:text-blueGray-500")
+                    }>
+                        <i className="fas fa-file text-blueGray-400 mr-2 text-sm"></i>{" "}
+                        Find By Status
+                    </Link>
+                </li>
+            </ul>
+            
+            <ul className="md:flex-col md:min-w-full flex flex-col list-none">
+                <li className="items-center">
                     <Link href="/admin/superadmin/orders/activeorders"
                     className={
-                        "text-xs uppercase py-3 font-bold block " +
+                        "text-xs uppercase py-2 font-bold block " +
                         (router.pathname.indexOf("/admin/superadmin/orders/activeorders") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
@@ -33,7 +48,7 @@ export default function Orders(){
                 <li className="items-center">
                     <Link href="/admin/superadmin/orders/completedorders"
                     className={
-                        "text-xs uppercase py-3 font-bold block " +
+                        "text-xs uppercase py-2 font-bold block " +
                         (router.pathname.indexOf("/admin/superadmin/orders/completedorders") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
@@ -48,7 +63,7 @@ export default function Orders(){
                 <li className="items-center">
                     <Link href="/admin/superadmin/orders/rejectedquotation"
                     className={
-                        "text-xs uppercase py-3 font-bold block " +
+                        "text-xs uppercase py-2 font-bold block " +
                         (router.pathname.indexOf("/admin/superadmin/orders/rejectedquotation") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
@@ -63,7 +78,7 @@ export default function Orders(){
                 <li className="items-center">
                     <Link href="/admin/superadmin/orders/rejectedorders"
                     className={
-                        "text-xs uppercase py-3 font-bold block " +
+                        "text-xs uppercase py-2 font-bold block " +
                         (router.pathname.indexOf("/admin/superadmin/orders/rejectedorders") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
@@ -78,7 +93,7 @@ export default function Orders(){
                 <li className="items-center">
                     <Link href="/admin/superadmin/orders/cancelledorders"
                     className={
-                        "text-xs uppercase py-3 font-bold block " +
+                        "text-xs uppercase py-2 font-bold block " +
                         (router.pathname.indexOf("/admin/superadmin/orders/cancelledorders") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
@@ -93,7 +108,7 @@ export default function Orders(){
                 <li className="items-center">
                     <Link href="/admin/superadmin/orders/companyorderlist"
                     className={
-                        "text-xs uppercase py-3 font-bold block " +
+                        "text-xs uppercase py-2 font-bold block " +
                         (router.pathname.indexOf("/admin/superadmin/orders/companyorderlist") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
@@ -108,7 +123,7 @@ export default function Orders(){
                 <li className="items-center">
                     <Link href="/admin/superadmin/orders/pendingpayment"
                     className={
-                        "text-xs uppercase py-3 font-bold block " +
+                        "text-xs uppercase py-2 font-bold block " +
                         (router.pathname.indexOf("/admin/superadmin/orders/pendingpayment") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
@@ -123,7 +138,7 @@ export default function Orders(){
                 <li className="items-center">
                     <Link href="/admin/superadmin/orders/pendingshipment"
                     className={
-                        "text-xs uppercase py-3 font-bold block " +
+                        "text-xs uppercase py-2 font-bold block " +
                         (router.pathname.indexOf("/admin/superadmin/orders/pendingshipment") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
@@ -138,7 +153,7 @@ export default function Orders(){
                 <li className="items-center">
                     <Link href="/admin/superadmin/orders/completedshipment"
                     className={
-                        "text-xs uppercase py-3 font-bold block " +
+                        "text-xs uppercase py-2 font-bold block " +
                         (router.pathname.indexOf("/admin/superadmin/orders/completedshipment") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
@@ -147,22 +162,7 @@ export default function Orders(){
                         Completed Shipments
                     </Link>
                 </li>
-            </ul>
-
-            <ul className="md:flex-col md:min-w-full flex flex-col list-none">
-                <li className="items-center">
-                    <Link href="/admin/superadmin/orders/allorders"
-                    className={
-                        "text-xs uppercase py-3 font-bold block " +
-                        (router.pathname.indexOf("/admin/superadmin/orders/allorders") !== -1
-                        ? "text-lightBlue-500 hover:text-lightBlue-600"
-                        : "text-blueGray-700 hover:text-blueGray-500")
-                    }>
-                        <i className="fas fa-file text-blueGray-400 mr-2 text-sm"></i>{" "}
-                        Find By Status
-                    </Link>
-                </li>
-            </ul>
+            </ul>            
 
         </>
     )

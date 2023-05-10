@@ -124,7 +124,7 @@ export default function MyCompany({session}) {
                 <img className="object-contain mb-3 h-40 mx-auto" 
                   alt={companyData.name}
                   src={publicDir + "/companies_images/" + companyData.img}/>
-                <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
+                <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2">
                   {companyData.name}
                   {companyData.is_confirmed == "pending" && <i title="Member Pending" className="mr-2 ml-1 fas fa-clock text-orange-500"></i>}
                   {companyData.is_confirmed == "accepted" && <i title="Member Accepted" className="mr-2 ml-1 fas fa-circle-check text-blue-700"></i>}

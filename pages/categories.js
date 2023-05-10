@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState, useEffect } from "react";
 import { PageSEO } from '@/components/Utils/SEO'
-import siteMetadata from '@/data/siteMetadata'
+import siteMetadata from '@/utils/siteMetadata'
 import axios from "lib/axios";
 
 //components

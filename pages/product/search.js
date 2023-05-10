@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Link from "next/link";
 import { Router, useRouter } from 'next/router'
 import { PageSEO } from '@/components/Utils/SEO'
-import siteMetadata from '@/data/siteMetadata'
+import siteMetadata from '@/utils/siteMetadata'
 
 //components
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
@@ -85,7 +85,7 @@ export default function Index() {
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
       <IndexNavbar fixed />
-      <section className="pb-40 relative bg-blueGray-100">
+      <section className="relative bg-white pb-36 overflow-hidden h-3/6 bg-gradient-to-b from-indigo-50 via-white">
         <div className="container mx-auto mt-10">
           <div className="flex flex-wrap">
             <div className="w-full mt-16">
@@ -102,7 +102,7 @@ export default function Index() {
               placeholder="Search for the components"/>
             <Link
               href={`/product/search?q=${search}`}
-              className="font-bold relative z-[2] bg-blueGray-700 active:bg-blueGray-600 px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:z-[3] focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
+              className="relative z-[2] bg-blueGray-700 active:bg-blueGray-600 px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:z-[3] focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
               >
               Search
             </Link>
@@ -130,7 +130,7 @@ export default function Index() {
               <i className="ml-2 fas fa-circle-notch fa-spin"></i>
             }
           </div>
-          <div className="">
+          <div className="bg-white mb-14">
             <TableComponent
               setPage={setPage}
               isLoading={isLoading}

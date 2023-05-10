@@ -70,9 +70,10 @@ export default function ActiveOrders({session}) {
 
   return (
     <>
-      <div className="">
         <div className="mb-10">
-          <MiniSearchBar searchItem={handleSearch}/>
+          <div className="mb-5 w-full lg:w-1/2">
+              <MiniSearchBar searchItem={handleSearch}/>
+          </div>
           <OrderList
             filterStatus={false}
             title="Active Orders"
@@ -83,7 +84,6 @@ export default function ActiveOrders({session}) {
             metaData={metaData}
           ></OrderList>
         </div>
-      </div>
     </>
   );
 }
