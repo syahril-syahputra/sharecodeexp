@@ -8,6 +8,7 @@ import DatabaseStatistic from "@/components/Table/Superadmin/Statistics/Database
 
 // layout for page
 import Admin from "layouts/Admin.js";
+import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
 export default function Product({session}) {
     //data search
@@ -53,31 +54,25 @@ export default function Product({session}) {
         loadData(search)
     }, [])
 
+    const handleSearch = (item) =>{
+        setSearch(item)
+        loadData()
+    }
 
     return (
         <>
-            <div className="relative">
-                <div className="mb-0 py-3 border-0 bg-white">
-                    <div className="flex justify-between">
-                        <div className="px-4">
-                            <h3
-                            className={
-                                "font-semibold text-lg text-blueGray-700"
-                            }
-                            >
-                                Database Statistics
-                            </h3>
-                        </div>
-                        <div className="px-4 my-2">
-                        </div>
-                    </div>
-                </div>
-                
-                <DatabaseStatistic
+            <div className="mb-10">
+                <div className="mb-5 w-full lg:w-1/2">
+                    <MiniSearchBar searchItem={handleSearch}/>
+                </div> 
+                <DatabaseStatistic 
+                    title="Database Statistic"
+                    // setPage={setPage}
                     isLoading={isLoading}
-                    items={data}
+                    data={data}
+                    // links={links}
+                    // metaData={metaData}
                 />
-                
             </div>
         </>
     );

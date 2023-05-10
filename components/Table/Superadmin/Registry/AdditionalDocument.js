@@ -3,6 +3,7 @@ import BaseTable from "@/components/Interface/Table/BaseTable"
 import HeaderTable from "@/components/Interface/Table/HeaderTable"
 import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
+import NoData from "@/components/Interface/Table/NoData";
 
 export default function AdditionalDocument(props){
     const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -41,6 +42,9 @@ export default function AdditionalDocument(props){
                                 </tr>
                             )
                         })}
+                        {!props.isLoading && props.items.length === 0 &&
+                            <NoData colSpan={2}/>
+                        }
                     </>
             }                    
         />

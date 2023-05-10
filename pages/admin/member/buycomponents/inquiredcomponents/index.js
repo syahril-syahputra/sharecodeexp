@@ -1,20 +1,18 @@
 import React, {useState, useEffect} from "react";
-import Link from "next/link";
 import { getSession } from "next-auth/react";
 import axios from "@/lib/axios";
 
 // components
-import UnfoundComponent from "@/components/Table/Superadmin/Statistics/UnfoundComponent";
-
+import MiniSearchBar from "@/components/Shared/MiniSearchBar";
+import ComponentList from "@/components/Table/Member/InquiredComponent/ComponentList"
 
 // layout for page
 import Admin from "layouts/Admin.js";
-import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
-export default function UnfoundComponents({session, }) {
+export default function InquiryNow({session}) {
     //data search
     const [search, setSearch] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [links, setLinks] = useState([])
     const [metaData, setMetaData] = useState({
@@ -22,17 +20,17 @@ export default function UnfoundComponents({session, }) {
         perPage: 0,
         lastPage: 0
     })
-    const loadData = async (page=1) =>{
+    const searchData = async (page=1) =>{
         setIsLoading(true)
-        const response = await axios.get(`/search?unfound=20&page=${page}`,
+        const response = await axios.get(`/buyer/order/${orderStatus}?page=${page}&search=${search}`,
             {
-                headers: {
+            headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
-                }
+            }
             })
             .then((response) => {
+                // console.log(response)
                 let result = response.data.data
-                console.log(result)
                 setData(result.data)
                 setLinks(result.links)
                 setMetaData({
@@ -44,44 +42,52 @@ export default function UnfoundComponents({session, }) {
                     prevPage: result.prev_page_url ? true : false
                 })
             }).catch((error) => {
-            // console.log(error.response)
+                // console.log(error.response)
             }).finally(() => {
                 setIsLoading(false)
             })
     }
     const setPage = (item) => {
-        loadData(item)
+        searchData(item)
     }
     useEffect(() => {
-        loadData()
+        searchData()
     }, [])
+
+    const [orderStatus, setOrderStatuses] = useState("all")
+    const handleStatusChange = (status) => {
+        setOrderStatuses(status.value)
+    }
+    useEffect(() => {
+        searchData()
+    }, [orderStatus])
 
     const handleSearch = (item) =>{
         setSearch(item)
-        loadData()
+        searchData()
     }
-
 
     return (
         <>
+          <div className="">
             <div className="mb-10">
-                <div className="mb-5 w-full lg:w-1/2">
-                    <MiniSearchBar searchItem={handleSearch}/>
-                </div>           
-                <UnfoundComponent 
-                    title="Unfound Components"
-                    setPage={setPage}
-                    isLoading={isLoading}
-                    data={data}
-                    links={links}
-                    metaData={metaData}
-                />
+              <MiniSearchBar searchItem={handleSearch}/>
+              <ComponentList
+                title="Inquired Components"
+                setPage={setPage}
+                isLoading={isLoading}
+                data={data}
+                links={links}
+                metaData={metaData}
+                statusChange={handleStatusChange}
+              ></ComponentList>
             </div>
+          </div>
         </>
-    );
-}
-
-UnfoundComponents.layout = Admin;
+      );
+    }
+    
+InquiryNow.layout = Admin;
 
 export async function getServerSideProps(context) {
     const session = await getSession(context)

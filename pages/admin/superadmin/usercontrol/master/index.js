@@ -9,6 +9,7 @@ import MasterList from "@/components/Table/Superadmin/UserControl/MasterList"
 // layout for page
 import Admin from "layouts/Admin.js";
 import { useRouter } from "next/router";
+import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
 export default function MasterUser({session}) {
     const router = useRouter()
@@ -57,36 +58,24 @@ export default function MasterUser({session}) {
         loadData(search)
     }, [])
 
-    const viewHandler = (itemId) => {
-        router.push(`/admin/superadmin/usercontrol/master/view/${itemId}`)
+    const handleSearch = (item) =>{
+        setSearch(item)
+        loadData()
     }
 
   return (
     <>
         <div className="relative">
-            <div className="mb-0 px-4 py-3 border-0 bg-white">
-                <div className="flex justify-between">
-                    <div className="px-4">
-                        <h3
-                        className={
-                            "font-semibold text-lg text-blueGray-700"
-                        }
-                        >
-                            Master Users
-                        </h3>
-                    </div>
-                    <div className="px-4 my-2">
-
-                    </div>
-                </div>
-            </div>
+            <div className="mb-5 w-full lg:w-1/2">
+                <MiniSearchBar searchItem={handleSearch}/>
+            </div> 
             <MasterList 
+                title="Master Users"
                 setPage={setPage}
                 isLoading={isLoading}
                 data={data}
                 links={links}
                 metaData={metaData}
-                viewHandler={viewHandler}
             />
         </div>
     </>

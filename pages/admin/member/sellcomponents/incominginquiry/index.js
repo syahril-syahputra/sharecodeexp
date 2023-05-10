@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
 import { getSession } from "next-auth/react";
-import Link from "next/link";
-
-// components
-import ComponentList from "@/components/Table/Member/IncomingInquiry/ComponentsList"
-import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
 // layout for page
 import Admin from "layouts/Admin.js";
+
+// components
+import OrderList from "@/components/Table/Member/IncomingInquiry/OrderList"
+import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
 export default function IncomingInquiry({session}) {
   //data search
@@ -70,19 +69,19 @@ export default function IncomingInquiry({session}) {
 
   return (
     <>
-      <div className="">
-        <div className="mb-10">
-          <MiniSearchBar searchItem={handleSearch}/>
-          <ComponentList
-            title="Incoming Inquiry"
-            setPage={setPage}
-            isLoading={isLoading}
-            data={data}
-            links={links}
-            metaData={metaData}
-            statusChange={handleStatusChange}
-          ></ComponentList>
+      <div className="mb-10">
+        <div className="mb-5 w-full lg:w-1/2">
+            <MiniSearchBar searchItem={handleSearch}/>
         </div>
+        <OrderList
+          title="Incoming Inquiry"
+          setPage={setPage}
+          isLoading={isLoading}
+          data={data}
+          links={links}
+          metaData={metaData}
+          statusChange={handleStatusChange}
+        ></OrderList>
       </div>
     </>
   );

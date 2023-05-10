@@ -131,7 +131,7 @@ export default function ProductBar(){
               }>
                 <i className="fas fa-cart-shopping text-blueGray-400 mr-2 text-sm"></i>{" "}
                 Inquire Now
-                <span className="ml-5 text-xs font-semibold inline-block py-1 px-2 uppercase text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
+                <span className="ml-5 text-xs font-semibold inline-block py-1 px-2 text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
                   {totalItem}
                 </span>
             </Link>

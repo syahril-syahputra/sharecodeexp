@@ -3,56 +3,15 @@ import Link from "next/link";
 
 // components
 import Select from 'react-tailwindcss-select';
+import Pagination from "@/components/Shared/Component/Pagination";
 
 //data
 import {orderStatusesOptions} from "@/utils/optionData"
 
-export default function IncomingInquiry(props) {
+export default function InquiryComponents(props) {
     const data = props.data
     const links = props.links
     const metaData = props.metaData
-
-    const setPaginationLabel = (item, index) => {
-        if(item.label === "&laquo; Previous") {
-            return (
-                <button 
-                    disabled={!metaData.prevPage}
-                    onClick={() => props.setPage(metaData.currentPage - 1)}
-                    key={index} 
-                    className={`
-                        ${!metaData.prevPage ? 'border border-solid border-blueGray-400' : 'border border-solid border-blueGray-500 text-blueGray-700'}
-                        text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative`}
-                >
-                    <i className={`${!metaData.prevPage ? 'text-blueGray-400' : 'text-blueGray-700'} fas fa-angle-left my-auto mx-10 fa-xl`}></i>
-                </button>
-            )
-        }
-
-        if(item.label === "Next &raquo;") {
-                return (
-                    <button 
-                        disabled={!metaData.nextPage}
-                        onClick={() => props.setPage(metaData.currentPage + 1)}
-                        key={index} 
-                        className={`
-                            ${!metaData.nextPage ? 'border border-solid border-blueGray-400' : 'border border-solid border-blueGray-500 text-blueGray-700'}
-                            text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative`}
-                    >
-                        <i className={`${!metaData.nextPage ? 'text-blueGray-400' : 'text-blueGray-700'} fas fa-angle-right my-auto mx-10 fa-xl`}></i>
-                    </button>
-                )
-            }
-
-        return(
-            <button 
-                onClick={() => props.setPage(item.label)}
-                key={index} 
-                className={`${item.active ? 'bg-blueGray-700 text-white' : 'border border-solid border-blueGray-500 text-blueGray-700'} text-xs font-semibold flex w-8 h-8 mx-1 p-0 items-center justify-center leading-tight relative`}
-            >
-                {item.label}
-            </button>
-        )
-    }
 
     const [orderStatuses, setOrderStatuses] = useState(orderStatusesOptions)
     const [status, setStatus] = useState({value: 'all', label: 'All Status'});
@@ -65,33 +24,35 @@ export default function IncomingInquiry(props) {
             <div className="relative">
                 <div className="px-4 py-3 border-0 bg-white">
                     <div className="flex justify-between">
-                        <div className="">
+                        <div className="mt-2">
                             <h3
                                 className="font-semibold text-lg text-blueGray-700">
                                 {props.title}
                             </h3>
                         </div>
                         <div className="px-4 flex-initial w-64">
-                            <Select 
-                                name="status"
-                                value={status}
-                                onChange={handleStatusChange}
-                                options={orderStatuses}
-                                classNames={{
-                                    menuButton: () => (
-                                        `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
-                                    ),
-                                    menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
-                                    listItem: ({ isSelected }) => (
-                                        `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
-                                            isSelected
-                                                ? `text-white bg-blue-500`
-                                                : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
-                                        }`
-                                    ),
-                                    searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
-                                }}
-                            />
+                            {/* <div className="w-full px-3"> */}
+                                <Select 
+                                    name="status"
+                                    value={status}
+                                    onChange={handleStatusChange}
+                                    options={orderStatuses}
+                                    classNames={{
+                                        menuButton: () => (
+                                            `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
+                                        ),
+                                        menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
+                                        listItem: ({ isSelected }) => (
+                                            `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
+                                                isSelected
+                                                    ? `text-white bg-blue-500`
+                                                    : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
+                                            }`
+                                        ),
+                                        searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
+                                    }}
+                                    />
+                            {/* </div> */}
                         </div>
                     </div>
                 </div>
@@ -109,13 +70,16 @@ export default function IncomingInquiry(props) {
                                     Country
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    AQ
+                                    Packaging
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Available Quantity
                                 </th>
                                 <th scope="col" className="px-6 py-3">
                                     MOQ
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Incoming Inquiry QTY
+                                    Order QTY
                                 </th>
                                 <th scope="col" className="px-6 py-3">
                                     Status
@@ -139,6 +103,9 @@ export default function IncomingInquiry(props) {
                                             {item.companies_products.country}
                                         </td>
                                         <td className="text-sm px-6 py-4">
+                                            {item.companies_products.packaging}
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
                                             {item.companies_products.AvailableQuantity}
                                         </td>
                                         <td className="text-sm px-6 py-4">
@@ -148,13 +115,13 @@ export default function IncomingInquiry(props) {
                                             {item.qty}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.order_status.name}
+                                            {item.order_status?.name}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
                                                 <Link 
-                                                    href={`/admin/member/sellcomponents/incominginquiry/detail/${item.id}`}
-                                                    className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">View</Link>
+                                                    href={`/admin/member/buycomponents/inquirylist/detail/${item.id}`}
+                                                    className="mr-2 font-medium text-white bg-blueGray-700 p-2">View</Link>
                                                 {/* <button className="font-medium text-blue-600 text-white bg-red-400 p-2">Delete</button> */}
                                             </div>
                                         </td>
@@ -182,12 +149,14 @@ export default function IncomingInquiry(props) {
                     <i className="fas fa-circle-notch fa-spin text-blueGray-700 my-auto mx-10 fa-2xl"></i>
                 </div>
             </div>}
+
+            <Pagination 
+                links={links}
+                metaData={metaData}
+                setPage={props.setPage}
+            />
             
-            <div className="flex justify-center mt-10 mx-auto justify-center">
-                {links.map((item, index) => {
-                    return setPaginationLabel(item, index)
-                })}
-            </div>
+
         </>
     );
 }

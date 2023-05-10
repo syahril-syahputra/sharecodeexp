@@ -4,7 +4,7 @@ import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 export default function AcceptComponent(props) {
   return (
     <BaseModalMedium
-      title="Accept Component"
+      title="Approve Component"
       onClick={() => props.setShowModal(false)}
       body={
         <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
@@ -27,7 +27,7 @@ export default function AcceptComponent(props) {
               {props.isLoading &&
                   <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
               }
-              Yes, Accept
+              Yes, Approve
           </PrimaryButton>
         </>
       }

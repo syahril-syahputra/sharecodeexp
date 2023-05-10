@@ -1,17 +1,17 @@
+import DangerButton from "@/components/Interface/Buttons/DangerButton";
 import LightButton from "@/components/Interface/Buttons/LightButton";
-import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import { BaseModalMedium } from "@/components/Interface/Modal/BaseModal";
 
-export default function InquireNow(props) {
+export default function DeleteInquire(props) {
 
   return (
     <BaseModalMedium
-      title="Inquire Now"
+      title="Delete Inquire"
       onClick={() => props.setShowModal(false)}
       body={
         <>
           <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-            Inquiry component <span className="text-blueGray-700 font-bold">{props.title}</span> by <span className="text-blueGray-700 font-bold">{props.orderQuantity}</span> qty(s)?
+            Do you want to remove Manufacturer Part Number <span className="text-blueGray-700 font-bold">{props.title}</span> from your list?
           </p>
         </>
       }
@@ -24,7 +24,7 @@ export default function InquireNow(props) {
           >
             No, Close
           </LightButton>
-          <PrimaryButton
+          <DangerButton
             disabled={props.isLoading}
             className="font-bold uppercase"
             onClick={() => props.acceptModal()}
@@ -32,8 +32,8 @@ export default function InquireNow(props) {
             {props.isLoading &&
                 <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
             }
-            Yes, Inquire Now
-          </PrimaryButton>
+            Yes, Remove
+          </DangerButton>
         </>
       }
     ></BaseModalMedium>

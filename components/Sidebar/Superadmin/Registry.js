@@ -18,7 +18,7 @@ export default function Registry(){
                 <li className="items-center">
                     <Link href="/admin/superadmin/registry/pendingcompany"
                     className={
-                        "text-xs uppercase py-3 font-bold block " +
+                        "text-xs uppercase py-1 font-bold block " +
                         (router.pathname.indexOf("/admin/superadmin/registry/pendingcompany") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
@@ -33,7 +33,7 @@ export default function Registry(){
                 <li className="items-center">
                     <Link href="/admin/superadmin/registry/approvedcompany"
                     className={
-                        "text-xs uppercase py-3 font-bold block " +
+                        "text-xs uppercase py-1 font-bold block " +
                         (router.pathname.indexOf("/admin/superadmin/registry/approvedcompany") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
@@ -48,7 +48,7 @@ export default function Registry(){
                 <li className="items-center">
                     <Link href="/admin/superadmin/registry/rejectedcompany"
                     className={
-                        "text-xs uppercase py-3 font-bold block " +
+                        "text-xs uppercase py-1 font-bold block " +
                         (router.pathname.indexOf("/admin/superadmin/registry/rejectedcompany") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")

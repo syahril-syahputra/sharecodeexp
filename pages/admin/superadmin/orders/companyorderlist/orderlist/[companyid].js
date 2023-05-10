@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
 import { getSession } from "next-auth/react";
-import Link from "next/link";
+
+// layout for page
+import Admin from "layouts/Admin.js";
 
 // components
 import CompaniesBasedOrderChild from "@/components/Table/Superadmin/Orders/CompaniesBasedOrderChild"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
-
-// layout for page
-import Admin from "layouts/Admin.js";
 
 export default function ActiveOrders({session, routeParam}) {
   //data search
@@ -23,7 +22,7 @@ export default function ActiveOrders({session, routeParam}) {
   })
   const searchData = async (page=1) =>{
       setIsLoading(true)
-      const response = await axios.get(`/admin/orders/order_completed?page=${page}&status=${orderStatus}&search=${search}`,
+      const response = await axios.get(`/admin/orders/order_completed?page=${page}&search=${search}`,
           {
             headers: {
               "Authorization" : `Bearer ${session.accessToken}`
@@ -55,14 +54,6 @@ export default function ActiveOrders({session, routeParam}) {
     searchData()
   }, [])
 
-  const [orderStatus, setOrderStatuses] = useState("Inquiry")
-  const handleStatusChange = (status) => {
-    setOrderStatuses(status.value)
-  }
-  useEffect(() => {
-    searchData()
-  }, [orderStatus])
-
   const handleSearch = (item) =>{
     setSearch(item)
     searchData()
@@ -70,19 +61,18 @@ export default function ActiveOrders({session, routeParam}) {
 
   return (
     <>
-      <div className="">
-        <div className="mb-10">
-          <MiniSearchBar searchItem={handleSearch}/>
-          <CompaniesBasedOrderChild
-            filterStatus={false}
-            title={`${routeParam.companyid}'s Order List`}
-            setPage={setPage}
-            isLoading={isLoading}
-            data={data}
-            links={links}
-            metaData={metaData}
-          ></CompaniesBasedOrderChild>
+      <div className="mb-10">
+        <div className="mb-5 w-full lg:w-1/2">
+            <MiniSearchBar searchItem={handleSearch}/>
         </div>
+        <CompaniesBasedOrderChild
+          title={`${routeParam.companyid}'s Order List`}
+          setPage={setPage}
+          isLoading={isLoading}
+          data={data}
+          links={links}
+          metaData={metaData}
+        ></CompaniesBasedOrderChild>
       </div>
     </>
   );

@@ -20,7 +20,7 @@ export default function SettingsBar(props){
               <li className="items-center">
                 <Link href="/admin/member/company/mycompany"
                   className={
-                    "text-xs uppercase py-3 font-bold block " +
+                    "text-xs uppercase py-2 font-bold block " +
                     (router.pathname.indexOf("/admin/member/company/mycompany") !== -1
                       ? "text-lightBlue-500 hover:text-lightBlue-600"
                       : "text-blueGray-700 hover:text-blueGray-500")
@@ -37,7 +37,7 @@ export default function SettingsBar(props){
               <li className="items-center">
                 <Link href="/admin/settings/masteraccount"
                   className={
-                    "text-xs uppercase py-3 font-bold block " +
+                    "text-xs uppercase py-2 font-bold block " +
                     (router.pathname.indexOf("/admin/settings/masteraccount") !== -1
                       ? "text-lightBlue-500 hover:text-lightBlue-600"
                       : "text-blueGray-700 hover:text-blueGray-500")
@@ -53,7 +53,7 @@ export default function SettingsBar(props){
               <li className="items-center">
                 <Link href="/admin/settings/account"
                   className={
-                    "text-xs uppercase py-3 font-bold block " +
+                    "text-xs uppercase py-2 font-bold block " +
                     (router.pathname.indexOf("/admin/settings/account") !== -1
                       ? "text-lightBlue-500 hover:text-lightBlue-600"
                       : "text-blueGray-700 hover:text-blueGray-500")

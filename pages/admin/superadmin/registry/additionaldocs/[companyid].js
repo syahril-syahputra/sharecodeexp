@@ -45,7 +45,7 @@ export default function MemberAdditionalDocument({session, routeParam}) {
       <div className="mb-10">
         <AdditionalDocument
           isLoading={isLoading}
-          title="Aditional Document"
+          title={`${routeParam.companyid}'s Additional Documents`}
           items={additionalDocs}
         ></AdditionalDocument>
       </div>

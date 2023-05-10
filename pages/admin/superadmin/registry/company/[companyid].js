@@ -24,6 +24,7 @@ import LightButton from "@/components/Interface/Buttons/LightButton";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import DangerButton from "@/components/Interface/Buttons/DangerButton";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
+import {CompanyStatusesIcon, CompanyStatusesText} from "@/components/Shared/Company/Statuses";
 
 
 export default function CompanyDetail({session, routeParam}) {
@@ -260,13 +261,9 @@ export default function CompanyDetail({session, routeParam}) {
             </WarningButton>
             <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2">
               {companyData.name}
-              {companyData.is_confirmed == "pending" && <i title="Member Pending" className="mr-2 ml-1 fas fa-clock text-orange-500"></i>}
-              {companyData.is_confirmed == "accepted" && <i title="Member Accepted" className="mr-2 ml-1 fas fa-circle-check text-blue-700"></i>}
-              {companyData.is_confirmed == "rejected" && <i title="Member Rejected" className="mr-2 ml-1 fas fa-circle-xmark text-red-700"></i>}
+              <CompanyStatusesIcon status={companyData.is_confirmed}/>
             </h3>
-            {companyData.is_confirmed == "pending" && <i className="text-orange-500">Member Status is Pending</i>}
-            {companyData.is_confirmed == "accepted" && <i className="text-blue-700">Member Status is Accepted</i>}
-            {companyData.is_confirmed == "rejected" && <i className="text-red-700">Member Status is Rejected</i>}
+              <CompanyStatusesText status={companyData.is_confirmed}/>
             <div>
               {companyData.is_confirmed == "rejected" && <i className="text-red-700">"{companyData.reason}"</i>}
             </div>

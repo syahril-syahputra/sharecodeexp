@@ -43,7 +43,7 @@ export default function SellComponents(){
         <li className="items-center">
           <Link href="/admin/member/sellcomponents/component"
             className={
-              "text-xs uppercase py-3 font-bold block " +
+              "text-xs uppercase py-2 font-bold block " +
               (router.pathname.indexOf("/admin/member/sellcomponents/component") !== -1
                 ? "text-lightBlue-500 hover:text-lightBlue-600"
                 : "text-blueGray-700 hover:text-blueGray-500")
@@ -57,14 +57,14 @@ export default function SellComponents(){
         <li className="items-center">
           <Link href="/admin/member/sellcomponents/incominginquiry"
             className={
-              "text-xs uppercase py-3 font-bold block " +
+              "text-xs uppercase py-2 font-bold block " +
               (router.pathname.indexOf("/admin/member/sellcomponents/incominginquiry") !== -1
                 ? "text-lightBlue-500 hover:text-lightBlue-600"
                 : "text-blueGray-700 hover:text-blueGray-500")
             }>
               <i className="fas fa-box text-blueGray-400 mr-2 text-sm"></i>{" "}
               Incoming Inquiry 
-              <span className="ml-1 text-xs font-semibold inline-block py-1 px-2 uppercase text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
+              <span className="ml-1 text-xs font-semibold inline-block py-1 px-2 text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
                 {totalIncomingInquiry}
               </span>
           </Link>
