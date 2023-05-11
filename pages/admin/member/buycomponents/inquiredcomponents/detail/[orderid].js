@@ -17,6 +17,11 @@ import { toastOptions } from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";
+import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
+import PageHeader from "@/components/Interface/Page/PageHeader";
+import OrderStatus from "@/components/Shared/Order/OrderStatus";
+import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
+import WarningButton from "@/components/Interface/Buttons/WarningButton";
 
 export default function InquiryDetails({session, routeParam, couriers}) {
     const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -255,6 +260,310 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             setIsLoading(false)
         })
     }
+
+    return (
+        <>
+            <PrimaryWrapper>
+                <PageHeader
+                    leftTop={
+                        <h3
+                            className="font-semibold text-lg text-blueGray-700">
+                            Order Details
+                        </h3>
+                    }
+                    rightTop={
+                        <h3 className="font-semibold text-lg text-blueGray-700">
+                            Buyer
+                        </h3>
+                    }
+                ></PageHeader>
+                <OrderStatus 
+                    status={data.order_status?.name}
+                    action={todoValue}
+                />
+                {data.reason && 
+                    <div className="px-4 py-3 border-0 bg-red-400 mt-2">
+                        <div className="flex justify-center">
+                            <div className=" text-center">
+                                <h4
+                                    className="font-semibold text-sm text-white italic">
+                                    Rejection: {data.reason}
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <OrderStatusStep orderStatus={data.order_status}/>
+            </PrimaryWrapper>
+            
+            {/* tracker for seller */}
+            <PrimaryWrapper>
+                <div className="p-2 text-md uppercase border-b text-center">
+                    Tracker Number
+                </div>
+                <div className="pb-4 mt-2 lg:flex lg:justify-center px-4">
+                    {data.trackingBuyer ? data.trackingBuyer : 'No Data'}
+                </div>
+            </PrimaryWrapper>
+            
+            {/* product images */}
+            <PrimaryWrapper>
+                <div className="w-full">
+                    <div className="px-3 mb-6 md:mb-0 text-center">
+                        <div className="p-24 border mx-2 my-4">product image</div>
+                    </div>
+                </div>
+                <div className="text-center">
+                    <p>Product Description</p>
+                </div>
+                <div className="text-center mb-10">
+                    <p>{data.companies_products?.Description}</p>
+                </div>
+                {/*  table component */}
+                <div className="overflow-x-auto mb-5 flex justify-center">
+                    <table className="w-50 text-sm text-left text-gray-500 bg-white border">
+                        <thead className="text-xs text-gray-700 uppercase bg-gray-200">
+                            <tr>
+                                <th scope="col" className="text-center px-6 py-3 w-28">
+                                    Manufacturer Part Number
+                                </th>
+                                <th scope="col" className="text-center px-6 py-3 w-28">
+                                    Manufacturer
+                                </th>   
+                                <th scope="col" className="text-center px-6 py-3">
+                                    Available Quantity
+                                </th>
+                                <th scope="col" className="text-center px-6 py-3 w-28">
+                                    MOQ
+                                </th>
+                                <th scope="col" className="text-center px-6 py-3 w-28">
+                                    Country
+                                </th>
+                                <th scope="col" className="text-center px-6 py-3 w-28">
+                                    Packaging
+                                </th>
+                                <th scope="col" className="text-center px-6 py-3 w-28">
+                                    Category
+                                </th>
+                                <th scope="col" className="text-center px-6 py-3 w-28">
+                                    Sub-Category
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="bg-white hover:bg-gray-50">
+                                <td scope="row" className="text-center text-sm px-6 py-4">
+                                    {data.companies_products?.ManufacturerNumber}
+                                </td>
+                                <td className="text-center text-sm px-6 py-4">
+                                    {data.companies_products?.Manufacture}
+                                </td>
+                                <td className="text-center text-sm px-6 py-4">
+                                    {data.companies_products?.AvailableQuantity}
+                                </td>
+                                <td className="text-center text-sm px-6 py-4">
+                                    {data.companies_products?.moq}
+                                </td>
+                                <td className="text-center text-sm px-6 py-4">
+                                    {data.companies_products?.country}
+                                </td>
+                                <td className="text-center text-sm px-6 py-4">
+                                    {data.companies_products?.packaging}
+                                </td>
+                                <td className="text-center text-sm px-6 py-4">
+                                    {data.companies_products?.subcategory?.name}
+                                </td>
+                                <td className="text-center text-sm px-6 py-4">
+                                    {data.companies_products?.subcategory?.category?.name}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {/* table order information */}
+                <div className="overflow-x-auto mb-10 flex justify-center">
+                    <table className="w-50 text-sm text-left text-gray-500 bg-white border">
+                        <thead className="text-xs text-white uppercase bg-blue-500">
+                            <tr>
+                                <th scope="col" className="text-center px-6 py-3">
+                                    Order Quantity
+                                </th>
+                                <th scope="col" className="text-center px-6 py-3">
+                                    Date Code
+                                </th>
+                                <th scope="col" className="text-center px-6 py-3">
+                                    Price (per item) / Total
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="bg-white hover:bg-gray-50">
+                                <td className="text-center text-sm px-6 py-4">
+                                    {data.qty}
+                                </td>
+                                <td className="text-center text-sm px-6 py-4">
+                                    {data.companies_products?.dateCode}
+                                </td>
+                                <td className="text-center text-sm px-6 py-4">
+                                    ${data.price_profite} / ${parseFloat(data.price_profite) * parseFloat(data.qty)}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </PrimaryWrapper>
+
+            {/* documents */}
+            <PrimaryWrapper>
+                <div className="p-2 text-md uppercase border-b text-center">
+                    Documents
+                </div>
+                <div className="pb-4 mt-2 lg:flex lg:justify-center px-4">
+                    <div className="mx-1 my-1">
+                        <Link target="_blank" href={publicDir + "/uploads/proforma_doc/" + data.proforma_doc}>
+                            <SecondaryButton className="md:w-full sm:w-full" disabled={data.proforma_doc ? false : true} size="sm">
+                                Proforma Invoice
+                            </SecondaryButton>
+                        </Link>
+                    </div>    
+                    <div className="mx-1 my-1">
+                        <Link target="_blank" href={publicDir + "/uploads/proforma_doc/" + data.Payment_doc}>
+                            <SecondaryButton className="md:w-full sm:w-full" disabled={data.Payment_doc ? false : true} size="sm">
+                                Payment Receipt
+                            </SecondaryButton>
+                        </Link>
+                    </div>      
+                </div>
+            </PrimaryWrapper>
+
+            {/* action */}
+            <PrimaryWrapper>
+                <div className="p-2 text-md uppercase border-b text-center">
+                    Actions
+                </div>
+                <div className="pb-4 mt-2 lg:flex lg:justify-center px-4">
+                    <div className="mx-1 my-1">
+                        <WarningButton 
+                            className="md:w-full sm:w-full" 
+                            // disabled={data.order_status_id == 3 ? false : true} 
+                            size="sm"
+                            onClick={() => setAcceptQuotationModal(true) }
+                        >
+                            Accept Quotation
+                        </WarningButton>
+                    </div>
+                    <div className="mx-1 my-1">
+                        <WarningButton 
+                            className="md:w-full sm:w-full" 
+                            // disabled={data.order_status_id == 3 ? false : true} 
+                            size="sm"
+                            onClick={() => setRejectQuotationModal(true) }
+                        >
+                            Reject Quotation
+                        </WarningButton>
+                    </div>
+                    <div className="mx-1 my-1">
+                        <WarningButton 
+                            className="md:w-full sm:w-full" 
+                            // disabled={data.order_status_id == 6 ? false : true} 
+                            size="sm"
+                            onClick={() => setSendPaymentDocsModal(true) }
+                        >
+                            Send Payment Receipt
+                        </WarningButton>
+                    </div> 
+                    <div className="mx-1 my-1">
+                        <WarningButton 
+                            className="md:w-full sm:w-full" 
+                            // disabled={data.order_status_id == 15 ? false : true} 
+                            size="sm"
+                            onClick={() => setSendUpdatedPaymentDocsModal(true) }
+                        >
+                            Update Payment Receipt
+                        </WarningButton>
+                    </div>  
+                    <div className="mx-1 my-1">
+                        <WarningButton 
+                            className="md:w-full sm:w-full" 
+                            // disabled={data.order_status_id == 10 ? false : true} 
+                            size="sm"
+                            onClick={() => setAcceptOrderModal(true) }
+                        >
+                            Accept Order
+                        </WarningButton>
+                    </div>   
+                    <div className="mx-1 my-1">
+                        <WarningButton 
+                            className="md:w-full sm:w-full" 
+                            // disabled={data.order_status_id == 10 ? false : true} 
+                            size="sm"
+                            onClick={() => setRejectOrderModal(true) }
+                        >
+                            Reject Order
+                        </WarningButton>
+                    </div>        
+                </div>
+            </PrimaryWrapper>
+
+            {/* modal */}
+            <>
+                {acceptQuotationModal && 
+                    <AcceptQuotationModal
+                        isLoading={isLoading}
+                        closeModal={() => setAcceptQuotationModal(false)}
+                        acceptance={acceptQuotationModalHandle}
+                    />
+                }
+
+                {rejectQuotationModal && 
+                    <RejectQuotationModal
+                        isLoading={isLoading}
+                        rejectionReason={rejectionReason}
+                        closeModal={() => setRejectQuotationModal(false)}
+                        acceptance={rejectQuotationModalHandle}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                {sendPaymentDocsModal && 
+                    <SendPaymentDocsModal
+                        isLoading={isLoading}
+                        closeModal={() => setSendPaymentDocsModal(false)}
+                        acceptance={sendPaymentDocsModalHandle}
+                        couriers={couriers}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                {sendUpdatedPaymentDocsModal && 
+                    <SendUpdatedPaymentDocsModal
+                        isLoading={isLoading}
+                        closeModal={() => setSendUpdatedPaymentDocsModal(false)}
+                        acceptance={sendUpdatedPaymentDocsModalHandle}
+                        couriers={couriers}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                {acceptOrderModal && 
+                    <AcceptOrderModal
+                        isLoading={isLoading}
+                        closeModal={() => setAcceptOrderModal(false)}
+                        acceptance={acceptOrderModalHandle}
+                    />
+                }
+
+                {rejectOrderModal && 
+                    <RejectOrderModal
+                        isLoading={isLoading}
+                        closeModal={() => setRejectOrderModal(false)}
+                        acceptance={rejectOrderModalHandle}
+                        errorInfo={errorInfo}
+                    />
+                }
+            </>
+        </>
+    )
 
     return (
         <>
