@@ -69,20 +69,20 @@ export default function InquiryNow({session}) {
 
     return (
         <>
-          <div className="">
             <div className="mb-10">
-              <MiniSearchBar searchItem={handleSearch}/>
-              <ComponentList
-                title="Inquired Components"
-                setPage={setPage}
-                isLoading={isLoading}
-                data={data}
-                links={links}
-                metaData={metaData}
-                statusChange={handleStatusChange}
-              ></ComponentList>
+                <div className="mb-5 w-full lg:w-1/2">
+                    <MiniSearchBar searchItem={handleSearch}/>
+                </div>
+                <ComponentList
+                    title="Inquired Components"
+                    setPage={setPage}
+                    isLoading={isLoading}
+                    data={data}
+                    links={links}
+                    metaData={metaData}
+                    statusChange={handleStatusChange}
+                ></ComponentList>
             </div>
-          </div>
         </>
       );
     }

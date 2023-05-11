@@ -8,7 +8,6 @@ import Admin from "layouts/Admin.js";
 
 // components
 import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep"
-import OrderTodo from "@/components/Shared/Order/OrderStatus"
 import { toast } from 'react-toastify';
 import { toastOptions } from "@/lib/toastOptions"
 import VerifyInquiryModal from "@/components/Modal/OrderComponent/Seller/VerifyInquiry"

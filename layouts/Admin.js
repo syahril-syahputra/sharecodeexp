@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { useSession } from "next-auth/react"
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { signOut } from "next-auth/react"
 
 // components
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
@@ -11,7 +9,6 @@ import HeaderStats from "components/Headers/HeaderStats.js";
 import FooterAdmin from "components/Footers/FooterAdmin.js";
 import { PageSEO } from "@/components/Utils/SEO";
 import siteMetadata from '@/utils/siteMetadata'
-import axios from "@/lib/axios";
 
 //hooks
 import useCompany from '@/hooks/useCompany'
@@ -21,15 +18,15 @@ export default function Admin({ children }) {
   if (session.status == 'unauthenticated') {
     return (
       <div className="relative p-2 bg-white">
-            <div className="text-center pb-10 mt-10">
-              <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2 uppercase">
-                <p>unauthenticated</p>
-              </h3>
-              <h3 className="text-md font-semibold leading-normal text-blue-700 mb-2">
-                <i>Please <Link href="/auth/login" className="text-blueGray-700 underline">login</Link> before accesing this URL</i>
-              </h3>
-            </div>
-          </div> 
+        <div className="text-center pb-10 mt-10">
+          <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2 uppercase">
+            <p>unauthenticated</p>
+          </h3>
+          <h3 className="text-md font-semibold leading-normal text-blue-700 mb-2">
+            <i>Please <Link href="/auth/login" className="text-blueGray-700 underline">login</Link> before accesing this URL</i>
+          </h3>
+        </div>
+      </div> 
     );
   }
 

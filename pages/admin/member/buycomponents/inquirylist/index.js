@@ -11,7 +11,6 @@ import DeleteInquireModal from "@/components/Modal/InquiryComponent/DeleteInquir
 import { toast } from 'react-toastify';
 import { toastOptions } from "@/lib/toastOptions"
 
-
 // layout for page
 import Admin from "layouts/Admin.js";
 
@@ -71,6 +70,7 @@ export default function InquiryList({session}) {
 
     const [showEditQuantityModal, setShowEditQuantityModal] = useState(false)
     const handleEdit = (listId, qty, itemValue) => {
+        setErrorInfo({})
         setOrderQuantity(qty)
         setListid(listId)
         setItemSingleValue(itemValue)
@@ -103,6 +103,7 @@ export default function InquiryList({session}) {
 
     const [showInquiryNowModal, setShowInquiryNowModal] = useState(false)
     const handleInquiryNow = (listId, qty, itemValue) => {
+        setErrorInfo({})
         setListid(listId)
         setOrderQuantity(qty)
         setItemSingleValue(itemValue)
@@ -134,6 +135,7 @@ export default function InquiryList({session}) {
 
     const [showDeleteInquireModal, setShowDeleteInquireModal] = useState(false)
     const handleDeleteInquire = (listId, itemValue) => {
+        setErrorInfo({})
         setListid(listId)
         setItemSingleValue(itemValue)
         setShowDeleteInquireModal(true)

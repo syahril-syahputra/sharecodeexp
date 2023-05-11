@@ -106,7 +106,7 @@ export default function RejectQuotation(props){
 
                     {rejectionReason &&
                         <RejectButton
-                            buttonTitle="Reject Quotaion"
+                            buttonTitle="Reject Quotation"
                             isLoading={props.isLoading}
                             onClick={handleRejection}
                         />
@@ -114,7 +114,7 @@ export default function RejectQuotation(props){
 
                     {!!rejectionReason == false &&
                         <RejectButton
-                            buttonTitle="Reject Quotaion"
+                            buttonTitle="Reject Quotation"
                             isLoading={true}
                             onClick={handleRejection}
                         />
