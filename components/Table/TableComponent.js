@@ -17,7 +17,7 @@ export default function TableComponent(props){
         if(status === 'unauthenticated'){
             setShowModal(true)
         } else {
-            router.push(`/admin/member/buycomponents/inquirynow/details/${item}`)
+            router.push(`/admin/member/buycomponents/inquirylist/details/${item}`)
         }
     }
 
@@ -116,7 +116,7 @@ export default function TableComponent(props){
                                         {item.country}
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                        <button onClick={() => inquiryItem(item.id)} className="font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry</button>
+                                        <button onClick={() => inquiryItem(item.id)} className="font-medium text-white bg-blueGray-700 p-2">Inquiry</button>
                                     </td>
                                 </tr>
                             )
@@ -133,7 +133,7 @@ export default function TableComponent(props){
                 </div>
             </div>}
 
-            <div className="flex justify-center mt-10 mx-auto justify-center">
+            <div className="flex mt-10 mx-auto justify-center">
                 {links.map((item, index) => {
                     return setPaginationLabel(item, index)
                 })}
