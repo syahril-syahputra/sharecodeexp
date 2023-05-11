@@ -445,7 +445,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                     <div className="mx-1 my-1">
                         <WarningButton 
                             className="md:w-full sm:w-full" 
-                            // disabled={data.order_status_id == 3 ? false : true} 
+                            disabled={data.order_status_id == 3 ? false : true} 
                             size="sm"
                             onClick={() => setAcceptQuotationModal(true) }
                         >
@@ -455,7 +455,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                     <div className="mx-1 my-1">
                         <WarningButton 
                             className="md:w-full sm:w-full" 
-                            // disabled={data.order_status_id == 3 ? false : true} 
+                            disabled={data.order_status_id == 3 ? false : true} 
                             size="sm"
                             onClick={() => setRejectQuotationModal(true) }
                         >
@@ -465,7 +465,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                     <div className="mx-1 my-1">
                         <WarningButton 
                             className="md:w-full sm:w-full" 
-                            // disabled={data.order_status_id == 6 ? false : true} 
+                            disabled={data.order_status_id == 6 ? false : true} 
                             size="sm"
                             onClick={() => setSendPaymentDocsModal(true) }
                         >
@@ -475,7 +475,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                     <div className="mx-1 my-1">
                         <WarningButton 
                             className="md:w-full sm:w-full" 
-                            // disabled={data.order_status_id == 15 ? false : true} 
+                            disabled={data.order_status_id == 15 ? false : true} 
                             size="sm"
                             onClick={() => setSendUpdatedPaymentDocsModal(true) }
                         >
@@ -485,7 +485,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                     <div className="mx-1 my-1">
                         <WarningButton 
                             className="md:w-full sm:w-full" 
-                            // disabled={data.order_status_id == 10 ? false : true} 
+                            disabled={data.order_status_id == 10 ? false : true} 
                             size="sm"
                             onClick={() => setAcceptOrderModal(true) }
                         >
@@ -495,7 +495,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                     <div className="mx-1 my-1">
                         <WarningButton 
                             className="md:w-full sm:w-full" 
-                            // disabled={data.order_status_id == 10 ? false : true} 
+                            disabled={data.order_status_id == 10 ? false : true} 
                             size="sm"
                             onClick={() => setRejectOrderModal(true) }
                         >
