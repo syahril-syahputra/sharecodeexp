@@ -62,9 +62,6 @@ export default function VerifyOrder(props){
             body={
                 <>
                     <div className=""> 
-                        <div className="mb-5">
-                            <p>Quotation Expiration Date : {"dd/mm/yy"}</p>
-                        </div>
                         <div className="flex flex-wrap mb-6">
                             <div className="w-1/2 pr-4">
                                 <TextInput
