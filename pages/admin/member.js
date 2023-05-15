@@ -70,9 +70,9 @@ export async function getServerSideProps(context) {
     };
   }
   const loadCompany = await axios.get(`/company`, {
-      headers: {
-      "Authorization" : `Bearer ${session.accessToken}`
-      }
+    headers: {
+    "Authorization" : `Bearer ${session.accessToken}`
+    }
   })
   const company = loadCompany.data.data
 

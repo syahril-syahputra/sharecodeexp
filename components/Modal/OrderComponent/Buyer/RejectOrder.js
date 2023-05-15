@@ -1,6 +1,4 @@
 import { useState } from "react";
-import RejectButton from "@/components/Buttons/RejectButton"
-import ErrorInput from '@/components/Shared/ErrorInput';
 import { BaseModalMedium } from "@/components/Interface/Modal/BaseModal";
 import LightButton from "@/components/Interface/Buttons/LightButton";
 import DangerButton from "@/components/Interface/Buttons/DangerButton";

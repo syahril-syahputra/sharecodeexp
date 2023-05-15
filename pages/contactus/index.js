@@ -10,7 +10,7 @@ import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import InputForm from "@/components/Shared/InputForm";
 import ErrorInput from '@/components/Shared/ErrorInput';
-import SubmitButton from '@/components/Buttons/SubmitButton'
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 
 export default function Index() {
   const [isLoading, setIsloading] = useState(false)
@@ -119,24 +119,21 @@ export default function Index() {
                           onChange={({target}) => setEnteredMessagesHandler(target)}
                           autoComplete="off" 
                           type="text"
-                          className="shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+                          className="shadow-sm placeholder-slate-300 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
                       {errorInfo.messages &&
                           <ErrorInput error={errorInfo.messages}/>
                       }
                     </div>
-                    <SubmitButton
+                    <PrimaryButton
                         buttonType={"submit"}
                         buttonTitle="Send Messages"
                         isLoading={isLoading}
-                    />
-                    {/* <button type="submit" className="text-white font-bold px-10 py-3 outline-none focus:outline-none mr-1 mb-1 bg-indigo-900 active:bg-indigo-600 uppercase text-sm shadow hover:shadow-lg">Send message</button> */}
+                    />                   
                 </form>
             </div>
           </section>
         </div>
       </section>
-
-
       <Footer />
     </>
   );

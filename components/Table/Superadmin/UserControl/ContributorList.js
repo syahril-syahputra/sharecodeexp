@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import Link from "next/link";
 
 // components
-import ChangeStatus from "@/components/Modal/CompanyControl/ChangeStatus"
 import Pagination from "@/components/Shared/Component/Pagination";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 import HeaderTable from "@/components/Interface/Table/HeaderTable";
@@ -12,7 +11,7 @@ import NoData from "@/components/Interface/Table/NoData";
 import MetaData from "@/components/Interface/Table/MetaData";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 
-export default function CompanyList(props) {
+export default function VendorList(props) {
     return (
         <>
             <PrimaryWrapper>
@@ -24,20 +23,14 @@ export default function CompanyList(props) {
                     header={
                         <>
                             <th scope="col" className="px-6 py-3">
-                                Master User Name
+                                Name
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 Email
                             </th>
-                            <th scope="col" className="px-6 py-3">
-                                Company
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Sector
-                            </th>
-                            {/* <th scope="col" className="px-6 py-3 text-right">
+                            <th scope="col" className="px-6 py-3 text-right">
                                 Act.
-                            </th> */}
+                            </th>
                         </>
                     }
                     tableData={
@@ -51,13 +44,7 @@ export default function CompanyList(props) {
                                         <td className="px-6 py-4">
                                             {item.email}
                                         </td>
-                                        <td className="px-6 py-4">
-                                            {item.company.name}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            {item.company.sector}
-                                        </td>
-                                        {/* <td className="text-sm px-6 py-4 text-right">
+                                        <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
                                                 <Link href={`/admin/superadmin/usercontrol/master/view/${item.id}`}>
                                                     <PrimaryButton
@@ -65,7 +52,7 @@ export default function CompanyList(props) {
                                                     >View</PrimaryButton>
                                                 </Link>
                                             </div>
-                                        </td> */}
+                                        </td>
                                     </tr>
                                 )
                             })}

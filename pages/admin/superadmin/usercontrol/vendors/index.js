@@ -4,14 +4,14 @@ import { getSession } from "next-auth/react";
 import axios from "@/lib/axios";
 
 // components
-import MasterList from "@/components/Table/Superadmin/UserControl/MasterList" 
+import VendorList from "@/components/Table/Superadmin/UserControl/VendorList" 
 
 // layout for page
 import Admin from "layouts/Admin.js";
 import { useRouter } from "next/router";
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
-export default function MasterUser({session}) {
+export default function VendorLists({session}) {
     const router = useRouter()
 
     //data search
@@ -34,7 +34,6 @@ export default function MasterUser({session}) {
             })
             .then((response) => {
                 let result = response.data.data
-                console.log(result)
                 setData(result.data)
                 setLinks(result.links)
                 setMetaData({
@@ -69,8 +68,8 @@ export default function MasterUser({session}) {
             <div className="mb-5 w-full lg:w-1/2">
                 <MiniSearchBar searchItem={handleSearch}/>
             </div> 
-            <MasterList 
-                title="Master Users"
+            <VendorList 
+                title="Vendor Users"
                 setPage={setPage}
                 isLoading={isLoading}
                 data={data}
@@ -82,7 +81,7 @@ export default function MasterUser({session}) {
   );
 }
 
-MasterUser.layout = Admin;
+VendorLists.layout = Admin;
 
 export async function getServerSideProps(context) {
     const session = await getSession(context)

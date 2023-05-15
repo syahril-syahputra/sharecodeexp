@@ -1,5 +1,4 @@
 import { useState } from "react"
-import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import TextInput from "@/components/Interface/Form/TextInput"
 import ErrorInput from '@/components/Shared/ErrorInput';
 import { BaseModalLarge } from "@/components/Interface/Modal/BaseModal";
@@ -8,7 +7,6 @@ import SelectInput from "@/components/Interface/Form/SelectInput";
 import LightButton from "@/components/Interface/Buttons/LightButton";
 import WarningButton from "@/components/Interface/Buttons/WarningButton";
 export default function SendUpdatedPaymentDocs(props){
-    const [couriers, setCouriers] = useState(props.couriers)
     const [paymentDocs, setPaymentDocs] = useState()
     const [buyerShipmentAddress, setBuyerShipmentAddress] = useState('')
     const [buyerAccountInformation, setBuyerAccountInformation] = useState()

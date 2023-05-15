@@ -1,6 +1,4 @@
 import { useState } from "react"
-import InputForm from "@/components/Shared/InputForm";
-import AcceptButton from "@/components/Buttons/AcceptButton";
 import { BaseModalMedium } from "@/components/Interface/Modal/BaseModal";
 import TextInput from "@/components/Interface/Form/TextInput";
 import LightButton from "@/components/Interface/Buttons/LightButton";

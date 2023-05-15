@@ -1,10 +1,8 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState } from "react";
-import Link from "next/link";
-import { getSession } from "next-auth/react";
 import { PageSEO } from '@/components/Utils/SEO'
 import siteMetadata from '@/utils/siteMetadata'
-import { useRouter } from "next/router";
+import axios from "lib/axios";
 
 //components
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
@@ -14,23 +12,46 @@ import Footer from "components/Footers/Footer.js";
 import TextInput from "@/components/Interface/Form/TextInput";
 import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
 
-export default function ResetPassword() {
-    const router = useRouter();
+export default function ResetPassword(props) {
+    const [showPassword, setShowPassword] = useState(false)
+    const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
 
     const [enteredPassword, setEnteredPassword] = useState('')
     const [enteredPasswordConfirmation, setEnteredPasswordConfirmation] = useState('')
     const [isLoading, setIsLoading] = useState(false)
-    const [errMessage, setErrMessage] = useState({})
+    const [errInfo, setErrInfo] = useState({})
+    const [errMessage, setErrMessage] = useState('')
     const [succesMessage, setSuccesMessage] = useState('')
     const handleSubmit = async (e) => {
         e.preventDefault()
         setIsLoading(true)
-        setSuccesMessage('Your password has been reset')
+        setErrInfo({})
+        setErrMessage('')
+        setSuccesMessage('')
+        const request = await axios.post("/reset-password", 
+        {
+            token: props.resetpasswordtoken,
+            password: enteredPassword,
+            password_confirmation: enteredPasswordConfirmation
+        },
+        {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(() => {
+            setSuccesMessage('Your password has been reset')
+        }).catch((error) => {
+            console.log(error)
+            setErrInfo(error.data.data)
+            setErrMessage("Something went wrong")
+        }).finally(() => {
+            setIsLoading(false)
+        })  
     }
 
     return (
         <>
-            <PageSEO title="Exepart - Login Page" description={siteMetadata.description} />
+            <PageSEO title="Exepart - Reset Password Page" description={siteMetadata.description} />
             <IndexNavbar fixed />
             <section className="mt-20 md:mt-20 pb-40 relative bg-white">
                 <div className="container mx-auto">
@@ -41,80 +62,94 @@ export default function ResetPassword() {
                             />
                         </div>
                         <div className="justify-center text-center flex flex-wrap mb-20">
-                            <div className="w-full md:w-6/12 px-12 md:px-4 shadow-md p-5">
+                            <div className="w-full lg:w-4/12 md:shadow-md p-5 bg-white">
                                 <form onSubmit={handleSubmit}>
-                                    <h2 className="font-semibold text-4xl">Reset Password</h2>
-                                    {succesMessage &&
-                                        <div className="mx-auto md:w-8/12">
-                                            <div className="text-left text-white px-6 py-4 border-0 relative mb-4 mt-5 bg-emerald-500">
-                                                <span className="text-xl inline-block mr-5 align-middle">
-                                                    <i className="fas fa-bell"></i>
-                                                </span>
-                                                <span className="inline-block align-middle mr-8">
-                                                    <b className="capitalize">{succesMessage}</b>
-                                                </span>
-                                            </div>
+                                    <h2 className="font-semibold text-2xl mb-4">Reset Password</h2>
+                                    {errMessage && 
+                                        <div className= "p-1">
+                                            <p className="text-red-500 text-lg italic">{errMessage}</p>
                                         </div>
                                     }
-                                    <div className="mx-auto mt-5">
+                                    {succesMessage && 
+                                        <div className="p-1">
+                                            <p className="text-blue-500 text-lg italic">{succesMessage}</p>
+                                        </div>
+                                    }
+                                    <div className="relative">
                                         <TextInput
-                                            setIcon="fas fa-key mt-1"
-                                            className="w-full md:w-8/12"
-                                            type="password" 
-                                            disabled={isLoading}
+                                            className="w-full"
+                                            required
+                                            type={showPassword ? 'text' : 'password'}
+                                            name="password"
+                                            placeholder="password"
+                                            setIcon="fas fa-lock"
                                             value={enteredPassword}
-                                            placeholder="new password" 
-                                            onChange={(input) => setEnteredEmail(input.value)}
-                                        />
+                                            onChange={(input) => setEnteredPassword(input.value)}
+                                            errorMsg={errInfo?.password}
+                                        /> 
+                                        <div className="absolute inset-y-3 right-4 flex items-start cursor-pointer" onClick={() => setShowPassword(prev => !prev)}>
+                                            {showPassword ?  
+                                                <i className="fas fa-eye-slash text-slate-500"></i> :
+                                                <i className="fas fa-eye text-slate-500"></i>
+                                            }
+                                        </div>
                                     </div>
-                                    <div className="mx-auto mt-5">
+                                    <div className="relative mt-2">
                                         <TextInput
-                                            setIcon="fas fa-key mt-1"
-                                            className="w-full md:w-8/12"
-                                            type="password" 
-                                            disabled={isLoading}
+                                            className="w-full"
+                                            required
+                                            type={showPasswordConfirmation ? 'text' : 'password'}
+                                            name="password_confirmation"
+                                            placeholder="password confirmation"
+                                            setIcon="fas fa-lock"
                                             value={enteredPasswordConfirmation}
-                                            placeholder="password confirmation" 
-                                            onChange={(input) => setEnteredEmail(input.value)}
-                                        />
+                                            onChange={(input) => setEnteredPasswordConfirmation(input.value)}
+                                            errorMsg={errInfo?.password_confirmation}
+                                        /> 
+                                        <div className="absolute inset-y-3 right-4 flex items-start cursor-pointer" onClick={() => setShowPasswordConfirmation(prev => !prev)}>
+                                            {showPasswordConfirmation ?  
+                                                <i className="fas fa-eye-slash text-slate-500"></i> :
+                                                <i className="fas fa-eye text-slate-500"></i>
+                                            }
+                                        </div>
                                     </div>
-                                    <div className="mx-auto mt-5 mb-10">
-                                        <SecondaryButton 
-                                            type="submit"
-                                            className="w-full md:w-8/12 font-bold uppercase"
+                                    <div className="text-center mt-6">
+                                        <SecondaryButton
                                             disabled={isLoading}
-                                        >                                            
-                                            {isLoading && 
-                                                <>  
-                                                    <i className="fas fa-hourglass fa-spin mr-2"></i>
-                                                    Reset Password
-                                                </>
+                                            type="submit"
+                                            className="w-full font-bold uppercase"
+                                        >
+                                            {isLoading &&
+                                                <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                                             }
-                                            {!isLoading && 
-                                                <>
-                                                    Reset Password
-                                                </>
-                                            }
-                                        
-                                        </SecondaryButton>
+                                            Reset
+                                        </SecondaryButton>                                    
                                     </div>
-                                </form>
+                                </form>                             
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-            <Footer />
+            <Footer />                              
         </>
     );
 }
 
 export async function getServerSideProps(context) {
-    const session = await getSession(context)
-  
-    return {
-        props: {
-            session: session
+    const token = context.params
+    const checkValidityToken = true
+    // const checkValidityToken = await axios.post(`/validate-token`, {token: token.resetpasswordtoken})
+    
+    if(checkValidityToken) {
+        return {
+            props: context.params
         }
     }
+    return {
+        redirect: {
+            permanent: false,
+            destination: "/auth/forgotpassword?redirect=true",
+        }
+    };
   }
