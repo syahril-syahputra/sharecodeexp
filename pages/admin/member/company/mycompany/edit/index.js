@@ -3,21 +3,24 @@ import axios from "lib/axios"
 import { getSession } from "next-auth/react";
 import Link from "next/link";
 import Image from 'next/image';
-import Select from 'react-tailwindcss-select';
 import ErrorInput from '@/components/Shared/ErrorInput';
 import { useRouter } from "next/router";
 
 // components
-import InputForm from "@/components/Shared/InputForm";
 import CountrySelector from "@/components/Shared/CountrySelector";
 import { toast } from 'react-toastify';
 import { toastOptions } from "@/lib/toastOptions"
 
-
-//data
-
 // layout for page
 import Admin from "layouts/Admin.js";
+import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
+import PageHeader from "@/components/Interface/Page/PageHeader";
+import LightButton from "@/components/Interface/Buttons/LightButton";
+import DangerNotification from "@/components/Interface/Notification/DangerNotification";
+import TextInput from "@/components/Interface/Form/TextInput";
+import SelectInput from "@/components/Interface/Form/SelectInput";
+import AreaInput from "@/components/Interface/Form/AreaInput";
+import WarningButton from "@/components/Interface/Buttons/WarningButton";
 
 export default function MyCompany({session, sectorlist}) {
     const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -52,7 +55,7 @@ export default function MyCompany({session, sectorlist}) {
                     setSector({value: 'other', label: 'Other'})
                 }
             }).catch((error) => {
-                console.log(1)
+                console.log(error)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -72,9 +75,8 @@ export default function MyCompany({session, sectorlist}) {
     });
     const [errorInfo, setErrorInfo] = useState({})
     const [errorMessage, setErrorMessage] = useState(null)
-    const [succesMessage, setSuccesMessage] = useState(null)
-    const setDataHandler = (item, inputName) => {
-        setInputData({...inputData, [inputName]:item.value})
+    const setDataHandler = (input) => {
+        setInputData({...inputData, [input.name]:input.value})
     }
 
     //country handle
@@ -82,17 +84,6 @@ export default function MyCompany({session, sectorlist}) {
     const countryHandleChange = (value) => {
         setInputData({...inputData, country:value.label})
         setCountry(value)
-    }
-
-    const [image, setImage] = useState(null)
-    const companyImageHandler = (e) =>{
-        let file = e.target.files[0]
-        const fileReader = new FileReader();
-        fileReader.onload = function(e){
-            setImage(e.target.result) 
-            setInputData({...inputData, img:e.target.result})
-        }
-        fileReader.readAsDataURL(file)
     }
 
     //option
@@ -110,31 +101,15 @@ export default function MyCompany({session, sectorlist}) {
 
     //update handler
     const router = useRouter()
-    const refdata = useRef()
     const handleSubmit = async (e) => {
         e.preventDefault()
         setIsLoading(true)
         setErrorInfo({})
         setErrorMessage(null)
-        setSuccesMessage(null)
-
-        
-        let datasend = inputData
-        if(inputData.RegistrationDocument) { 
-            datasend.RegistrationDocument = refdata?.current?.elements?.RegistrationDocument?.files[0]
-        }
-
-        if(inputData.CertificationofActivity) {
-            datasend.CertificationofActivity = refdata?.current?.elements?.CertificationofActivity?.files[0]
-        }
-
-        if(inputData.img) {
-            datasend.img = refdata?.current?.elements?.img?.files[0]
-        }
 
         let formData = new FormData();
-        for (const key in datasend) {
-            formData.append(key, datasend[key]);
+        for (const key in inputData) {
+            formData.append(key, inputData[key]);
         }
 
         const response = await axios.post(`/master/company/update`, formData, {
@@ -144,7 +119,7 @@ export default function MyCompany({session, sectorlist}) {
             })
             .then((response) => {
                 let result = response.data.data
-                router.replace('/admin/member/company/mycompany')
+                router.replace('/admin/member')
                 toast.success("Your company has been updated succefully", toastOptions)
             }).catch((error) => {
                 setErrorMessage("Please fill your form correctly")
@@ -152,292 +127,202 @@ export default function MyCompany({session, sectorlist}) {
                 setErrorInfo(error.data.data)
             }).finally(() => {
                 setIsLoading(false)
-                setImage(null)
             })
     }
 
-    return (
-    <>
-        <div className="relative">
-            <div className="mb-0 px-4 py-3 border-0 bg-white">
-                <div className="flex justify-between">
-                    <div className="px-4">
-                        <h3
-                        className={
-                            "font-semibold text-lg text-blueGray-700"
-                        }
-                        >
+    return(
+        <PrimaryWrapper>
+            <PageHeader
+                leftTop={
+                    <h3
+                        className="font-semibold text-lg text-blueGray-700"
+                    >
                         Edit My Company 
-                        </h3>
+                    </h3>
+                }
+                rightTop={
+                    <Link href="/admin/member/company/mycompany">
+                        <LightButton
+                            size="sm"
+                        >   
+                            <i className="mr-2 ml-1 fas fa-arrow-left"></i>
+                            Back
+                        </LightButton>
+                    </Link>
+                }
+            ></PageHeader>
+            {errorMessage &&
+                <DangerNotification 
+                    message={errorMessage}
+                />
+            }
+            <form onSubmit={handleSubmit} className="p-2">
+                <div className="flex flex-wrap mb-6">
+                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                        <TextInput
+                            label="Company Name"
+                            className="w-full"
+                            required
+                            name="name"
+                            value={inputData.name}
+                            errorMsg={errorInfo?.name}
+                            onChange={(input) => setDataHandler(input)}
+                        /> 
                     </div>
-                    <div className="px-4 mt-2">
-                        <Link href="/admin/member/company/mycompany" className="relative bg-blueGray-700 p-2 text-white">
-                            {/* <i className="mr-2 ml-1 fas fa-pen text-white"></i> */}
-                            Back</Link>
+                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                        <SelectInput
+                            searchable                                
+                            label="Sectors"
+                            name="sector"
+                            value={sector}
+                            options={sectors}
+                            errorMsg={errorInfo?.sector}
+                            onChange={handleSectorChange}
+                        />
+                        { sector?.value == "other" && 
+                            <div className='mt-2'>
+                                <TextInput
+                                    className="w-full"
+                                    required
+                                    name="sector"
+                                    value={inputData.sector}
+                                    errorMsg={errorInfo?.sector}
+                                    onChange={(input) => setDataHandler(input)}
+                                /> 
+                            </div>
+                        }
                     </div>
                 </div>
-            </div>
-            
-            <div className="mb-0 px-4 py-3 border-0 bg-white">
-                <div className="px-3 w-full lg:w-1/2">
-                    {errorMessage &&
-                    <div  className="w-50">
-                        <div className="text-white px-6 py-4 border-0 relative mb-4 mt-5 bg-red-500">
-                            <span className="text-xl inline-block mr-5 align-middle">
-                                <i className="fas fa-bell"></i>
-                            </span>
-                            <span className="inline-block align-middle mr-8">
-                                <b className="capitalize">{errorMessage}</b>
-                            </span>
-                        </div>
+                <div className="flex flex-wrap mb-6">
+                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                        <TextInput
+                            label="Phone"
+                            className="w-full"
+                            required
+                            name="phone"
+                            value={inputData.phone}
+                            errorMsg={errorInfo?.phone}
+                            onChange={(input) => setDataHandler(input)}
+                        /> 
                     </div>
-                    }
-                    {succesMessage &&
-                    <div  className="w-50">
-                        <div className="text-white px-6 py-4 border-0 relative mb-4 mt-5 bg-emerald-500">
-                            <span className="text-xl inline-block mr-5 align-middle">
-                                <i className="fas fa-bell"></i>
-                            </span>
-                            <span className="inline-block align-middle mr-8">
-                                <b className="capitalize">{succesMessage}</b>
-                            </span>
-                        </div>
+                    <div className="w-full md:w-1/2 px-3">
+                        <CountrySelector
+                            setInisiate
+                            label="Country"
+                            inputDataName="country"
+                            value={inputData.country}
+                            countryHandleChange={countryHandleChange}
+                            errorMsg={errorInfo.country}
+                        />
                     </div>
-                    }
                 </div>
-                <form onSubmit={handleSubmit} ref={refdata}>
+                <div className="flex flex-wrap mb-6">
+                    <div className="w-full  px-3 mb-6 md:mb-0">
+                        <AreaInput
+                            label="Address"
+                            name="address"
+                            required
+                            value={inputData.address}
+                            errorMsg={errorInfo?.address}
+                            onChange={(input) => setDataHandler(input)}
+                        />
+                    </div>
+                </div>
+                <div className="mt-8 mb-20">
+                    <div className="relative flex py-5 items-center w-full mx-auto">
+                        <div className="flex-grow border-t border-blueGray-700"></div>
+                        <div className="flex-shrink mx-4"><h2 className="font-semibold text-xl text-blueGray-500">Documents</h2></div>
+                        <div className="flex-grow border-t border-blueGray-700"></div>
+                    </div>
                     <div className="flex flex-wrap mb-6">
                         <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                Company Logo (Upload if only change)
+                                Company Registration Document (Upload if only change)
                             </label>
-                            <div className="p-10 border-dashed border-2 border-indigo-200">
+                            <div className="p-5 border-dashed border-2 border-indigo-200">
                                 <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>
                                     <div className='text-center my-auto'>
                                         <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
                                     </div>
                                     <div className="text-xs ">
-                                        <p>JPG, JPEG, PNG file size no more than 10MB</p>
+                                        <p>PDF file size no more than 10MB</p>
                                         <input 
                                             className="mt-3" 
                                             type="file"
-                                            name="img"
-                                            accept='.png, .jpeg, .jpg'
-                                            // onChange={({target}) => 
-                                            //     setRegistrationInfo({...registrationInfo, company_img:target.files[0]})
-                                            // }
-                                            onChange={companyImageHandler}
+                                            accept='.pdf'
+                                            name='RegistrationDocument'
+                                            onChange={({target}) => 
+                                                setInputData({...inputData, RegistrationDocument:target.files[0]})
+                                            }
                                         />
                                     </div>
                                 </div>
                             </div>
-                            {errorInfo.img &&
-                                <ErrorInput error={errorInfo.img}/>
+                            {errorInfo.RegistrationDocument &&
+                                <ErrorInput error={errorInfo.RegistrationDocument}/>
                             }
                         </div>
-                        {image &&<div className="w-full md:w-1/2 px-3">
+                        <div className="w-full md:w-1/2 px-3">
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                Result
+                                Certification of Activity (Upload if only change)
                             </label>
-                            <div className="p-2 border-dashed border-2 border-indigo-200">
-                                <div className='text-center grid gap-4 lg:grid-cols-1 md:grid-cols-1'>
-                                    <Image src={image}
-                                        alt="company_logo"
-                                        className="mx-auto"
-                                        height={180}
-                                        width={180}>
-                                    </Image>
-                                </div>
-                            </div>
-                        </div>}
-                    </div>
-                    <div className="flex flex-wrap mb-6">
-                        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <InputForm
-                                isDisabled={isLoading}
-                                label="Company Name"
-                                inputDataName="name"
-                                value={inputData.name}
-                                setData={setDataHandler}
-                                errorMsg={errorInfo.name}
-                            />
-                        </div>
-                        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                Sector
-                            </label>
-                            <Select 
-                                name="sector"
-                                value={sector}
-                                onChange={handleSectorChange}
-                                options={sectors}
-                                classNames={{
-                                    menuButton: () => (
-                                        `h-12 flex p-1 text-sm text-gray-500 border border-gray-300 shadow-sm transition-all duration-300 focus:outline-none`
-                                    ),
-                                    menu: "absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700",
-                                    listItem: ({ isSelected }) => (
-                                        `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
-                                            isSelected
-                                                ? `text-white bg-blue-500`
-                                                : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
-                                        }`
-                                    ),
-                                    searchBox: "rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500"
-                                }}
-                                />
-                            {errorInfo.sector &&
-                                <ErrorInput error={errorInfo.sector}/>
-                            }
-                            { sector?.value == "other" && 
-                            <InputForm
-                                inputDataName="sector"
-                                value={inputData.sector}
-                                setData={setDataHandler}
-                                errorMsg={errorInfo.sector}
-                            />
-                            }
-                        </div>
-                    </div>
-                    <div className="flex flex-wrap mb-6">
-                        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <InputForm
-                                isDisabled={isLoading}
-                                label="Phone"
-                                inputDataName="phone"
-                                value={inputData.phone}
-                                setData={setDataHandler}
-                                errorMsg={errorInfo.phone}
-                            />
-                        </div>
-                        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <CountrySelector
-                                setInisiate
-                                label="Country"
-                                inputDataName="country"
-                                value={inputData.country}
-                                countryHandleChange={countryHandleChange}
-                                errorMsg={errorInfo.country}
-                            />
-                        </div>
-                    </div>
-                    <div className="flex flex-wrap mb-6">
-                        <div className="w-full  px-3 mb-6 md:mb-0">
-                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                Address
-                            </label>
-                            <textarea 
-                                value={inputData.address}
-                                onChange={({target}) => 
-                                    setInputData({...inputData, address:target.value})
-                                }
-                                autoComplete="off" 
-                                type="text"
-                                className="shadow-sm placeholder-slate-300 text-slate-600 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
-                            {errorInfo.company_address &&
-                                <ErrorInput error={errorInfo.address}/>
-                            }
-                        </div>
-                    </div>
-
-                    <div className="mt-8">
-                        <div className="relative flex py-5 items-center w-full mx-auto">
-                            <div className="flex-shrink mr-4"><h2 className="font-semibold text-xl text-blueGray-500">Documents</h2></div>
-                            <div className="flex-grow border-t border-blueGray-700"></div>
-                        </div>
-                        <div className="flex flex-wrap mb-6">
-                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                    Company Registration Document (Upload if only change)
-                                </label>
-                                <div className="p-5 border-dashed border-2 border-indigo-200">
-                                    <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>
-                                        <div className='text-center my-auto'>
-                                            <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
-                                        </div>
-                                        <div className="text-xs ">
-                                            <p>PDF file size no more than 10MB</p>
-                                            <input 
-                                                className="mt-3" 
-                                                type="file"
-                                                accept='.pdf'
-                                                name='RegistrationDocument'
-                                                // onChange={({target}) => 
-                                                //     setRegistrationInfo({...registrationInfo, companyRequiredDocuments:target.files[0]})
-                                                // }
-                                                onChange={({target}) => 
-                                                    setInputData({...inputData, RegistrationDocument:target.files[0]})
-                                                }
-                                            />
-                                        </div>
+                            <div className="p-5 border-dashed border-2 border-indigo-200">
+                                <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>
+                                    <div className='text-center my-auto'>
+                                        <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
+                                    </div>
+                                    <div className="text-xs ">
+                                        <p>PDF file size no more than 10MB</p>
+                                        <input 
+                                            className="mt-3" 
+                                            type="file"
+                                            accept='.pdf'
+                                            name="CertificationofActivity"
+                                            onChange={({target}) => 
+                                                setInputData({...inputData, CertificationofActivity:target.files[0]})
+                                            }
+                                        />
                                     </div>
                                 </div>
-                                {errorInfo.RegistrationDocument &&
-                                    <ErrorInput error={errorInfo.RegistrationDocument}/>
-                                }
                             </div>
-                            <div className="w-full md:w-1/2 px-3">
-                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                                    Certification of Activity (Upload if only change)
-                                </label>
-                                <div className="p-5 border-dashed border-2 border-indigo-200">
-                                    <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>
-                                        <div className='text-center my-auto'>
-                                            <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
-                                        </div>
-                                        <div className="text-xs ">
-                                            <p>PDF file size no more than 10MB</p>
-                                            <input 
-                                                className="mt-3" 
-                                                type="file"
-                                                accept='.pdf'
-                                                name="CertificationofActivity"
-                                                onChange={({target}) => 
-                                                    setInputData({...inputData, CertificationofActivity:target.files[0]})
-                                                }
-                                                // onChange={companyReqDocsHandler}
-
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                {errorInfo.CertificationofActivity &&
-                                    <ErrorInput error={errorInfo.CertificationofActivity}/>
-                                }
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="w-full lg:w-1/2 px-3 mb-6 mt-20">
-                        <div className="mb-6">
-                            {!isLoading && 
-                                <button
-                                    type="submit"
-
-                                    className="w-1/2 text-white font-bold px-6 py-4 outline-none focus:outline-none mr-1 mb-1 bg-orange-500 active:bg-orange-400 uppercase text-sm shadow hover:shadow-lg"
-                                >
-                                Update
-                                </button>
-                            }
-                            {isLoading && 
-                                <button
-                                    disabled
-                                    type="submit"
-                                    className="w-1/2 text-white font-bold px-6 py-4 outline-none mr-1 mb-1 bg-orange-200 uppercase text-sm shadow"
-                                >
-                                    <i className="fas fa-circle-notch fa-spin"></i>
-                                </button>
+                            {errorInfo.CertificationofActivity &&
+                                <ErrorInput error={errorInfo.CertificationofActivity}/>
                             }
                         </div>
                     </div>
+                </div>
+                
+                <div className="text-center mb-10 w-1/2 mx-auto">
+                    <i className="text-light italic text-red-500">Note: Updating your Company causing your Member Status become pending.</i>
+                </div>
+                <div className="px-3 mb-6 flex">
+                    <div className="w-full pr-2">
+                        <Link href="/admin/member/company/mycompany">
+                            <LightButton
+                                className="w-full font-bold uppercase mb-2"
+                                disabled={isLoading}
+                            >
+                                Cancel
+                            </LightButton>
+                        </Link>
+                        </div>
+                        <div className="w-full">
+                        <WarningButton
+                            className="w-full font-bold uppercase"
+                            disabled={isLoading}
+                            type="submit"
+                        >
+                            {isLoading &&
+                                <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
+                            }
+                            Update
+                        </WarningButton>
+                    </div>
+                </div>
+            </form>
+        </PrimaryWrapper>
+    )
 
-                    
-                </form>
-            </div>
-
-        </div>
-    </>
-  );
 }
 
 MyCompany.layout = Admin;
@@ -449,9 +334,9 @@ export async function getServerSideProps(context) {
 
     return {
         props: {
-            session: session,
+            session,
             routeParam: context.query,
-            sectorlist: sectorlist
+            sectorlist
         }
     }
 }

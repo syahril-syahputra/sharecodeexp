@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
 import { getSession } from "next-auth/react";
 
-// components
-import TableAccount from "components/Table/Settings/TableAccount"
-
-// components
-
 // layout for page
 import Admin from "layouts/Admin.js";
 
-export default function Account({session}) {
+// components
+import UsersList from "components/Table/Member/Users/UsersList"
+import MiniSearchBar from "@/components/Shared/MiniSearchBar";
+import DeleteUserModal from "@/components/Modal/Member/User/DeleteUser";
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
+
+export default function Users({session}) {
 
   //data search
   const [isLoading, setIsLoading] = useState(true)
@@ -25,10 +27,10 @@ export default function Account({session}) {
           }
         )
         .then((response) => {
-          let result = response.data
-          setData(result.data)
+          let result = response.data.data
+          setData(result)
         }).catch((error) => {
-          // console.log(error.response)
+          setData([])
         }).finally(() => {
           setIsLoading(false)
         })
@@ -37,6 +39,13 @@ export default function Account({session}) {
     getData()
   }, [])
 
+  const [selectedUser, setSelectedUser] = useState()
+
+  const [showDeleteUserModal, setShowDeleteUserModal] = useState(false)
+  const openDeleteModalHandler = (item) => {
+    setSelectedUser(item)
+    setShowDeleteUserModal(true)
+  }
   const handleDeleteAccount = async (userId) => {
     setIsLoading(true)
     const response = await axios.delete(`/master/users/delete`, {
@@ -48,11 +57,13 @@ export default function Account({session}) {
         id: userId
       }
     })
-    .then((response) => {
-      console.log(response)
+    .then(() => {
+      toast.success("Your Inquire Component Successfully Deleted", toastOptions)
+      setShowDeleteUserModal(false)
       getData()
     }).catch((error) => {
       console.log(error)
+      toast.error("Something went wrong", toastOptions)
     }).finally(() => {
       setIsLoading(false)
     })
@@ -62,31 +73,47 @@ export default function Account({session}) {
     alert(`not ready yet :( ${id}`)
   }
 
-  return (
+  const handleSearch = (item) =>{
+    getData()
+  }
+
+  return(
     <>
       <div className="">
-
-        {/* <div className="w-full xl:w-8/12 mb-12 xl:mb-0 px-4"> */}
-          {/* <CardLineChart /> */}
-            <TableAccount
+          <div className="mb-5 w-full lg:w-1/2">
+              <MiniSearchBar searchItem={handleSearch}/>
+          </div>
+          <UsersList
+              title="Contributors"
               isLoading={isLoading}
               data={data}
-              deleteAccount={handleDeleteAccount}
+              deleteAccount={openDeleteModalHandler}
               editAccount={handleEditAccount}
-            ></TableAccount>
-        {/* </div> */}
+          ></UsersList>
       </div>
+
+      {/* modal */}
+      <>
+        {showDeleteUserModal ? (
+            <DeleteUserModal
+                isLoading={isLoading}
+                item={selectedUser}
+                setShowModal={setShowDeleteUserModal}
+                acceptModal={handleDeleteAccount}
+            />
+        ) : null}
+      </>
     </>
-  );
+  )
 }
 
-Account.layout = Admin;
+Users.layout = Admin;
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
   return {
       props: {
-          session: session
+          session
       }
   }
 }

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import BaseTable from "@/components/Interface/Table/BaseTable"
 import HeaderTable from "@/components/Interface/Table/HeaderTable"
-import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
 import WarningButton from "@/components/Interface/Buttons/WarningButton";
 import DangerButton from "@/components/Interface/Buttons/DangerButton";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 
 export default function AdditionalDocument(props){
     const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -35,23 +35,23 @@ export default function AdditionalDocument(props){
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <Link target="_blank" href={publicDir + "/registration/AddtionalDoc/" + item.name}>
-                                            <SecondaryButton size="sm" className="mr-1">
-                                                <i className="fas fa-eye"></i>
-                                            </SecondaryButton>
+                                            <PrimaryButton size="sm" className="mr-1">
+                                                View
+                                            </PrimaryButton>
                                         </Link>
-                                        <WarningButton onClick={() => alert(':(')} size="sm" className="mr-1">
-                                            <i className="fas fa-pen"></i>
+                                        <WarningButton onClick={() => props.editHandler(item)} size="sm" className="mr-1">
+                                            Edit
                                         </WarningButton>
-                                        <DangerButton onClick={() => alert(':(')} size="sm">
-                                            <i className="fas fa-trash"></i>
+                                        <DangerButton onClick={() => alert(':(')} size="sm" disabled>
+                                            Delete
                                         </DangerButton>
                                     </td>
                                 </tr>
                             )
                         })}
                     </>
-            }                    
-        />
+                }                    
+            />
         </PrimaryWrapper>
     )
 }

@@ -70,7 +70,7 @@ export default function ComponentTable(props){
                                         {item.dateCode}
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                        <button onClick={() => inquiryItem(item)} className="font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry</button>
+                                        <button onClick={() => inquiryItem(item)} className="font-medium text-white bg-blueGray-700 p-2">Inquiry</button>
                                     </td>
                                 </tr>
                             )

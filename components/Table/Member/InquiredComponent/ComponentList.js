@@ -119,7 +119,7 @@ export default function InquiryComponents(props) {
                                 )
                             })}
                             {!props.isLoading && props.metaData.total === 0 &&
-                                <NoData colSpan={8}/>
+                                <NoData colSpan={9}/>
                             }
                         </>
                     }

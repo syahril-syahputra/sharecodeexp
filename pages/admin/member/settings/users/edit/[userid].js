@@ -5,6 +5,8 @@ import { getSession } from "next-auth/react";
 
 // layout for page
 import Admin from "layouts/Admin.js";
+
+// components
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 import PageHeader from "@/components/Interface/Page/PageHeader";
 import LightButton from "@/components/Interface/Buttons/LightButton";
@@ -16,7 +18,7 @@ import { toastOptions } from "@/lib/toastOptions"
 import { useRouter } from "next/router";
 
 //data
-export default function EditMyAccount({session}) {
+export default function EditUser({session}) {
     //data search
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
@@ -74,8 +76,8 @@ export default function EditMyAccount({session}) {
         })
         .then((response) => {
             let result = response.data.data
-            toast.success("Your account has been updated succefully", toastOptions)
-            router.push("/admin/superadmin/usercontrol/admin");
+            toast.success("User account has been updated succefully", toastOptions)
+            router.push("/admin/member/setting/user");
         }).catch((error) => {
             toast.warning("Something went wrong", toastOptions)
             setErrorMessage("Please fill your form correctly")
@@ -198,13 +200,13 @@ export default function EditMyAccount({session}) {
     )
 }
 
-EditMyAccount.layout = Admin;
+EditUser.layout = Admin;
 
 export async function getServerSideProps(context) {
     const session = await getSession(context)
     return {
         props: {
-            session: session
+            session
         }
     }
 }

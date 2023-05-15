@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import { useSession } from "next-auth/react"
 import Link from "next/link";
 
@@ -48,7 +48,4 @@ export default function Admin({ children }) {
       </div>
     </>
   );
-
-  
-  
 }

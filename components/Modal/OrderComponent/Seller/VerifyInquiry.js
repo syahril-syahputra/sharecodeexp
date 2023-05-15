@@ -1,7 +1,4 @@
 import { useEffect, useState } from "react";
-import InputForm from "@/components/Shared/InputForm";
-import InputNumberForm from "@/components/Shared/InputNumberForm";
-import AcceptButton from "@/components/Buttons/AcceptButton"
 import { BaseModalLarge } from "@/components/Interface/Modal/BaseModal";
 import TextInput from "@/components/Interface/Form/TextInput";
 import NumberInput from "@/components/Interface/Form/NumberInput";

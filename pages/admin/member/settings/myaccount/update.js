@@ -22,7 +22,7 @@ export default function EditMyAccount({session}) {
     const [data, setData] = useState([])
     const loadData = async () =>{
         setIsLoading(true)
-        const response = await axios.get(`/admin/profile`,
+        const response = await axios.get(`/master`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -67,7 +67,7 @@ export default function EditMyAccount({session}) {
         setIsLoading(true)
         setErrorInfo({})
         setErrorMessage(null)
-        const response = await axios.post(`/admin/profile/update`, inputData, {
+        const response = await axios.post(`/master/update`, inputData, {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
             }
@@ -75,7 +75,7 @@ export default function EditMyAccount({session}) {
         .then((response) => {
             let result = response.data.data
             toast.success("Your account has been updated succefully", toastOptions)
-            router.push("/admin/superadmin/usercontrol/admin");
+            router.push("/admin/member/settings/myaccount");
         }).catch((error) => {
             toast.warning("Something went wrong", toastOptions)
             setErrorMessage("Please fill your form correctly")
@@ -94,7 +94,7 @@ export default function EditMyAccount({session}) {
                     </h3>
                 }
                 rightTop={
-                    <Link href={`/admin/superadmin/usercontrol/admin`}>
+                    <Link href={`/admin/member/settings/myaccount`}>
                         <LightButton size="sm">
                             <i className="mr-2 ml-1 fas fa-arrow-left"></i>
                             Back
