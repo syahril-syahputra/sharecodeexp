@@ -1,3 +1,4 @@
+import moment from "moment";
 import React, {useState, useEffect} from "react";
 import { getSession } from "next-auth/react";
 import axios from "@/lib/axios";
@@ -513,6 +514,12 @@ export default function OrderDetails({session, routeParam}) {
                 {data.price_profite &&
                     <div className="text-center mb-10 w-1/2 mx-auto">
                         <i className="text-light italic text-red-500">Note: Price is only for the product. The order type is Ex-works. The price you see on screen does not include logistical costs, customs, tax, insurance or any additional expenses that may occur.</i>
+                    </div>
+                }
+
+                {(data.quotation_expiration_date && data.order_status.id == 3) &&
+                    <div className="text-center mb-10 w-1/2 mx-auto">
+                        <span className="text-light text-slate-500">Quotation Exepiration Date: {moment(data.quotation_expiration_date).format('dddd, D MMMM YYYY')}</span>
                     </div>
                 }
             </PrimaryWrapper>

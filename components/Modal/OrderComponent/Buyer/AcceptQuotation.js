@@ -1,3 +1,4 @@
+import moment from "moment";
 import LightButton from "@/components/Interface/Buttons/LightButton"
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton"
 import { BaseModalMedium } from "@/components/Interface/Modal/BaseModal"
@@ -10,7 +11,7 @@ export default function VerifyOrder(props){
             body={
                 <>
                     <p className="text-blueGray-500 text-lg leading-relaxed italic">
-                        Quotation Expiration Date: <span className="text-blueGray-700 font-bold">{props.quotation_expiration_date}</span>
+                        Quotation Expiration Date: <span className="text-blueGray-700 font-bold">{moment(props.expirationDate).format('dddd, D MMMM YYYY')}</span>
                     </p>
                     <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
                         Do you agree to <span className="text-blueGray-700 font-bold">Accept</span> this Quotation?
