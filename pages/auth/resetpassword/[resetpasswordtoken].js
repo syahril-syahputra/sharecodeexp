@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { PageSEO } from '@/components/Utils/SEO'
 import siteMetadata from '@/utils/siteMetadata'
 import axios from "lib/axios";
+import Link from 'next/link'
 
 //components
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
@@ -40,6 +41,8 @@ export default function ResetPassword(props) {
             }
         }).then(() => {
             setSuccesMessage('Your password has been reset')
+            setEnteredPassword('')
+            setEnteredPasswordConfirmation('')
         }).catch((error) => {
             console.log(error)
             setErrInfo(error.data.data)
@@ -61,73 +64,80 @@ export default function ResetPassword(props) {
                                 size={300}
                             />
                         </div>
-                        <div className="justify-center text-center flex flex-wrap mb-20">
-                            <div className="w-full lg:w-4/12 md:shadow-md p-5 bg-white">
-                                <form onSubmit={handleSubmit}>
-                                    <h2 className="font-semibold text-2xl mb-4">Reset Password</h2>
-                                    {errMessage && 
-                                        <div className= "p-1">
-                                            <p className="text-red-500 text-lg italic">{errMessage}</p>
-                                        </div>
-                                    }
-                                    {succesMessage && 
-                                        <div className="p-1">
-                                            <p className="text-blue-500 text-lg italic">{succesMessage}</p>
-                                        </div>
-                                    }
-                                    <div className="relative">
-                                        <TextInput
-                                            className="w-full"
-                                            required
-                                            type={showPassword ? 'text' : 'password'}
-                                            name="password"
-                                            placeholder="password"
-                                            setIcon="fas fa-lock"
-                                            value={enteredPassword}
-                                            onChange={(input) => setEnteredPassword(input.value)}
-                                            errorMsg={errInfo?.password}
-                                        /> 
-                                        <div className="absolute inset-y-3 right-4 flex items-start cursor-pointer" onClick={() => setShowPassword(prev => !prev)}>
-                                            {showPassword ?  
-                                                <i className="fas fa-eye-slash text-slate-500"></i> :
-                                                <i className="fas fa-eye text-slate-500"></i>
-                                            }
-                                        </div>
+                        {succesMessage && 
+                            <div className="justify-center text-center flex flex-wrap mb-20">
+                                <div className="w-full lg:w-4/12 md:shadow-md p-5 bg-white">
+                                    <div className="p-1">
+                                        <p className="text-blue-500 text-lg italic">{succesMessage}</p>
+                                        <p className="text-slate-500 text-sm">Try to <Link href="/auth/login" className="text-blueGray-700 underline">login</Link> with your new password</p>
                                     </div>
-                                    <div className="relative mt-2">
-                                        <TextInput
-                                            className="w-full"
-                                            required
-                                            type={showPasswordConfirmation ? 'text' : 'password'}
-                                            name="password_confirmation"
-                                            placeholder="password confirmation"
-                                            setIcon="fas fa-lock"
-                                            value={enteredPasswordConfirmation}
-                                            onChange={(input) => setEnteredPasswordConfirmation(input.value)}
-                                            errorMsg={errInfo?.password_confirmation}
-                                        /> 
-                                        <div className="absolute inset-y-3 right-4 flex items-start cursor-pointer" onClick={() => setShowPasswordConfirmation(prev => !prev)}>
-                                            {showPasswordConfirmation ?  
-                                                <i className="fas fa-eye-slash text-slate-500"></i> :
-                                                <i className="fas fa-eye text-slate-500"></i>
-                                            }
-                                        </div>
-                                    </div>
-                                    <div className="text-center mt-6">
-                                        <SecondaryButton
-                                            disabled={isLoading}
-                                            type="submit"
-                                            className="w-full font-bold uppercase"
-                                        >
-                                            {isLoading &&
-                                                <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
-                                            }
-                                            Reset
-                                        </SecondaryButton>                                    
-                                    </div>
-                                </form>                             
+                                </div>
                             </div>
-                        </div>
+                        }
+                        {!succesMessage && 
+                            <div className="justify-center text-center flex flex-wrap mb-20">
+                                <div className="w-full lg:w-4/12 md:shadow-md p-5 bg-white">
+                                    <form onSubmit={handleSubmit}>
+                                        <h2 className="font-semibold text-2xl mb-4">Reset Password</h2>
+                                        {errMessage && 
+                                            <div className= "p-1">
+                                                <p className="text-red-500 text-lg italic">{errMessage}</p>
+                                            </div>
+                                        }
+                                        <div className="relative">
+                                            <TextInput
+                                                className="w-full"
+                                                required
+                                                type={showPassword ? 'text' : 'password'}
+                                                name="password"
+                                                placeholder="password"
+                                                setIcon="fas fa-lock"
+                                                value={enteredPassword}
+                                                onChange={(input) => setEnteredPassword(input.value)}
+                                                errorMsg={errInfo?.password}
+                                            /> 
+                                            <div className="absolute inset-y-3 right-4 flex items-start cursor-pointer" onClick={() => setShowPassword(prev => !prev)}>
+                                                {showPassword ?  
+                                                    <i className="fas fa-eye-slash text-slate-500"></i> :
+                                                    <i className="fas fa-eye text-slate-500"></i>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div className="relative mt-2">
+                                            <TextInput
+                                                className="w-full"
+                                                required
+                                                type={showPasswordConfirmation ? 'text' : 'password'}
+                                                name="password_confirmation"
+                                                placeholder="password confirmation"
+                                                setIcon="fas fa-lock"
+                                                value={enteredPasswordConfirmation}
+                                                onChange={(input) => setEnteredPasswordConfirmation(input.value)}
+                                                errorMsg={errInfo?.password_confirmation}
+                                            /> 
+                                            <div className="absolute inset-y-3 right-4 flex items-start cursor-pointer" onClick={() => setShowPasswordConfirmation(prev => !prev)}>
+                                                {showPasswordConfirmation ?  
+                                                    <i className="fas fa-eye-slash text-slate-500"></i> :
+                                                    <i className="fas fa-eye text-slate-500"></i>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div className="text-center mt-6">
+                                            <SecondaryButton
+                                                disabled={isLoading}
+                                                type="submit"
+                                                className="w-full font-bold uppercase"
+                                            >
+                                                {isLoading &&
+                                                    <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
+                                                }
+                                                Reset
+                                            </SecondaryButton>                                    
+                                        </div>
+                                    </form>                             
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </section>
@@ -138,10 +148,16 @@ export default function ResetPassword(props) {
 
 export async function getServerSideProps(context) {
     const token = context.params
-    const checkValidityToken = true
-    // const checkValidityToken = await axios.post(`/validate-token`, {token: token.resetpasswordtoken})
-    
-    if(checkValidityToken) {
+    let validityTokenResponse = null
+    const checkValidityToken = await axios.get(`/reset-password/${token.resetpasswordtoken}`)
+        .then((res) => {
+            validityTokenResponse = res.data.success
+        })
+        .catch((err) => {
+            validityTokenResponse = err.data.success
+        })
+
+    if(validityTokenResponse) {
         return {
             props: context.params
         }

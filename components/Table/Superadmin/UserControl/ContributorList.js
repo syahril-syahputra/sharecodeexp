@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import PropTypes from "prop-types";
 import Link from "next/link";
 
 // components
@@ -9,7 +8,9 @@ import HeaderTable from "@/components/Interface/Table/HeaderTable";
 import BaseTable from "@/components/Interface/Table/BaseTable";
 import NoData from "@/components/Interface/Table/NoData";
 import MetaData from "@/components/Interface/Table/MetaData";
-import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
+import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
+import WarningButton from "@/components/Interface/Buttons/WarningButton";
+import DangerButton from "@/components/Interface/Buttons/DangerButton";
 
 export default function VendorList(props) {
     return (
@@ -17,6 +18,14 @@ export default function VendorList(props) {
             <PrimaryWrapper>
                 <HeaderTable
                     title={props.title}
+                    action={
+                        <Link href={`/admin/superadmin/usercontrol/contributors/create`}>
+                            <SecondaryButton size="sm">
+                                <i className="mr-2 ml-1 fas fa-plus text-white"></i>
+                                Add Contributor
+                            </SecondaryButton>
+                        </Link>
+                    }
                 ></HeaderTable>
                 <BaseTable
                     isBusy={props.isLoading}
@@ -46,11 +55,16 @@ export default function VendorList(props) {
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
-                                                <Link href={`/admin/superadmin/usercontrol/master/view/${item.id}`}>
-                                                    <PrimaryButton
+                                                <Link href={`/admin/superadmin/usercontrol/contributors/edit/${item.id}`}>
+                                                    <WarningButton
                                                         size="sm"
-                                                    >View</PrimaryButton>
+                                                        className="mr-2"
+                                                    >Edit</WarningButton>
                                                 </Link>
+                                                <DangerButton
+                                                    onClick={() => props.onDelete(item)}
+                                                    size="sm"
+                                                >Delete</DangerButton>
                                             </div>
                                         </td>
                                     </tr>

@@ -82,20 +82,6 @@ export default function Sidebar(props) {
                 </div>
               </div>
             </div>
-            {/* Form */}
-            <form className="mt-6 mb-4 md:hidden">
-              <div className="mb-3 pt-0">
-                <input
-                  type="text"
-                  placeholder="Search"
-                  className="px-3 py-2 h-12 border border-solid  border-blueGray-500 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-base leading-snug shadow-none outline-none focus:outline-none w-full font-normal"
-                />
-              </div>
-            </form>
-
-            {/* Divider */}
-            <hr className="my-4 md:min-w-full" />
-
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
               <li className="items-center">
                 <Link href="/admin/dashboard"

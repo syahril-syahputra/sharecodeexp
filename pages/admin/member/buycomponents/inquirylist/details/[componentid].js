@@ -58,7 +58,7 @@ export default function AddToInquiryList({session, routeParam}) {
         }
         })
         .then(() => {
-            router.push(`/admin/member/buycomponents/inquirynow`)
+            router.push(`/admin/member/buycomponents/inquirylist`)
             toast.success("Component has been added to list", toastOptions)
         }).catch((error) => {
             toast.error("Something went wrong", toastOptions)

@@ -1,15 +1,17 @@
 import React, {useState, useEffect} from "react";
 import { getSession } from "next-auth/react";
 import axios from "@/lib/axios";
+import { useRouter } from "next/router";
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
 // components
 import ContributorList from "@/components/Table/Superadmin/UserControl/ContributorList" 
-
-import { useRouter } from "next/router";
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
+import DeleteContributorModal from "@/components/Modal/Superadmin/UserControl/DeleteContributor";
 
 export default function Contributors({session}) {
     const router = useRouter()
@@ -26,7 +28,7 @@ export default function Contributors({session}) {
     })
     const loadData = async (srch, page=1) =>{
         setIsLoading(true)
-        const response = await axios.get(`/admin/members?page=${page}`,
+        const response = await axios.get(`/admin/contributors?page=${page}`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -62,23 +64,62 @@ export default function Contributors({session}) {
         loadData()
     }
 
-  return (
-    <>
-        <div className="relative">
-            <div className="mb-5 w-full lg:w-1/2">
-                <MiniSearchBar searchItem={handleSearch}/>
-            </div> 
-            <ContributorList 
-                title="Contributor Users"
-                setPage={setPage}
-                isLoading={isLoading}
-                data={data}
-                links={links}
-                metaData={metaData}
-            />
-        </div>
-    </>
-  );
+    const [selectedContributor, setSelectedContributor] = useState({})
+
+    const [showDeleteContributorModal, setShowDeleteContributorModal] = useState(false)
+    const handleSelectedUser = (user) => {
+        setSelectedContributor(user)
+        setShowDeleteContributorModal(true)
+    }
+    const handleDeleteSelectedContributor = async (id) => {
+        setIsLoading(true)
+        const response = await axios.delete(`/admin/contributors/delete?id=${id}`,
+        {
+            headers: {
+            "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            loadData()
+            toast.success("Your contributors has been deleted succefully", toastOptions)
+            setShowDeleteContributorModal(false)
+        })
+        .catch((error) => {
+            console.log(error)
+            toast.error("Something went wrong", toastOptions)
+        })
+        .finally(() => {
+            setIsLoading(true)
+        })
+    }
+
+    return (
+        <>
+            <div className="relative">
+                <div className="mb-5 w-full lg:w-1/2">
+                    <MiniSearchBar searchItem={handleSearch}/>
+                </div> 
+                <ContributorList 
+                    title="Contributor Users"
+                    setPage={setPage}
+                    isLoading={isLoading}
+                    data={data}
+                    links={links}
+                    metaData={metaData}
+                    onDelete={handleSelectedUser}
+                />
+            </div>
+
+            {showDeleteContributorModal && 
+                <DeleteContributorModal
+                    isLoading={isLoading}
+                    contributor={selectedContributor}
+                    onShowModal={setShowDeleteContributorModal}
+                    onDelete={handleDeleteSelectedContributor}
+                ></DeleteContributorModal>
+            }
+        </>
+    );
 }
 
 Contributors.layout = Admin;

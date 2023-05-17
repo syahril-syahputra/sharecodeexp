@@ -30,6 +30,7 @@ export default function OrderDetails({session, routeParam}) {
     //data search
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
+    const [isOrderValid, setIsOrderValid] = useState(true)
     const loadData = async () =>{
         setIsLoading(true)
         const response = await axios.get(`/admin/orders/${routeParam.orderid}/data`,
@@ -42,8 +43,9 @@ export default function OrderDetails({session, routeParam}) {
                 let result = response.data.data
                 setData(result)
                 loadTodoAction(result.order_status.id)
-            }).catch((error) => {
-                // console.log(error.response)
+                setIsOrderValid(true)
+            }).catch(() => {
+                setIsOrderValid(false)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -61,7 +63,6 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then((response) => {
-            console.log(response.data)
             setTodoValue(response.data.data.message)
         })
     }
@@ -222,6 +223,39 @@ export default function OrderDetails({session, routeParam}) {
         console.log(inputData)
     }
 
+    if(!isOrderValid) {
+        return (
+            <>
+                <PrimaryWrapper>
+                    <PageHeader
+                        leftTop={
+                            <h3 className="font-semibold text-lg text-blueGray-700">
+                                Order Details
+                            </h3>
+                        }
+                        rightTop={
+                            <Link href={`/admin/superadmin/orders/allorders`}>
+                                <LightButton 
+                                    size="sm" 
+                                    className="mr-2">
+                                    <i className="mr-2 ml-1 fas fa-arrow-left"></i>
+                                    Back
+                                </LightButton>
+                            </Link>
+                        }
+                    ></PageHeader>
+                    <div className="h-64 px-4 py-3 border-0 mt-2">
+                        <div className="flex justify-center">
+                            <div className=" text-center">
+                                <h4 className="font-semibold text-xl italic">Your Order is Not Found</h4>
+                            </div>
+                        </div>
+                    </div>
+                </PrimaryWrapper>
+            </>
+        )
+    }
+    
     return (
         <>
             <PrimaryWrapper>
