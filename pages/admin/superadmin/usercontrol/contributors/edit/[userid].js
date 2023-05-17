@@ -122,7 +122,7 @@ export default function EditContributor({session, routerParam}) {
                             name="name"
                             value={inputData.name}
                             onChange={(input) => setDataHandler(input)}
-                            errorMsg={errorInfo.name}
+                            errorMsg={errorInfo?.name}
                         />
                     </div>
                     <div className="w-full lg:w-1/2 px-3 mb-6">
@@ -134,7 +134,7 @@ export default function EditContributor({session, routerParam}) {
                             name="email"
                             value={inputData.email}
                             onChange={(input) => setDataHandler(input)}
-                            errorMsg={errorInfo.email}
+                            errorMsg={errorInfo?.email}
                         />
                     </div>
                     <div className="w-full lg:w-1/2 px-3 mb-6">

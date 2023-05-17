@@ -133,9 +133,7 @@ export default function Sidebar(props) {
                 <Statistics/>
                 <MasterControl/>
               </>
-            : null }
-
-            
+            : null }            
 
           </div>
         </div>

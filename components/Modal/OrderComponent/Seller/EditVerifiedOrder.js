@@ -17,17 +17,17 @@ export default function EditVerifiedOrder(props){
     const [total, setTotal] = useState(0)
 
     const [errorInfo, setErrorInfo] = useState(props.errorInfo)
-    const setDataHandler = (item, inputName) => {
+    const setDataHandler = (input) => {
         setErrorInfo()
-        setInputData({...inputData, [inputName]:item.value})
+        setInputData({...inputData, [input.name]:input.value})
     }
 
     const [updatedMOQ, setUpdatedMOQ] = useState()
-    const setAQHandler = (item, inputName) => {
-        setInputData({...inputData, [inputName]:item.value})
+    const setAQHandler = (input) => {
+        setInputData({...inputData, [input.name]:input.value})
 
-        if(parseInt(item.value) < parseInt(inputData.moq)) {
-            setUpdatedMOQ(item.value)
+        if(parseInt(input.value) < parseInt(inputData.moq)) {
+            setUpdatedMOQ(input.value)
         } else {
             setUpdatedMOQ()
         }
@@ -60,9 +60,6 @@ export default function EditVerifiedOrder(props){
             body={
                 <>
                     <div className=""> 
-                        <div className="mb-5">
-                            <p>Quotation Expiration Date : {"dd/mm/yy"}</p>
-                        </div>
                         <div className="flex flex-wrap mb-6">
                             <div className="w-1/2 pr-4">
                                 <TextInput

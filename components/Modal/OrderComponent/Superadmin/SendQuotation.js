@@ -94,7 +94,7 @@ export default function SendQuotation(props){
                         <PrimaryButton
                             disabled={props.isLoading}
                             className="font-bold uppercase"
-                            onClick={() => props.acceptModal(inputData)}>
+                            onClick={() => props.acceptance(inputData)}>
                             {props.isLoading &&
                                 <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                             }

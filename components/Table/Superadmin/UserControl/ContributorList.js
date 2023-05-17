@@ -37,9 +37,11 @@ export default function VendorList(props) {
                             <th scope="col" className="px-6 py-3">
                                 Email
                             </th>
-                            <th scope="col" className="px-6 py-3 text-right">
-                                Act.
-                            </th>
+                            {props.enableAction && 
+                                <th scope="col" className="px-6 py-3 text-right">
+                                    Act.
+                                </th>
+                            }
                         </>
                     }
                     tableData={
@@ -53,20 +55,22 @@ export default function VendorList(props) {
                                         <td className="px-6 py-4">
                                             {item.email}
                                         </td>
-                                        <td className="text-sm px-6 py-4 text-right">
-                                            <div className="inline-flex">
-                                                <Link href={`/admin/superadmin/usercontrol/contributors/edit/${item.id}`}>
-                                                    <WarningButton
+                                        {props.enableAction && 
+                                            <td className="text-sm px-6 py-4 text-right">
+                                                <div className="inline-flex">
+                                                    <Link href={`/admin/superadmin/usercontrol/contributors/edit/${item.id}`}>
+                                                        <WarningButton
+                                                            size="sm"
+                                                            className="mr-2"
+                                                        >Edit</WarningButton>
+                                                    </Link>
+                                                    <DangerButton
+                                                        onClick={() => props.onDelete(item)}
                                                         size="sm"
-                                                        className="mr-2"
-                                                    >Edit</WarningButton>
-                                                </Link>
-                                                <DangerButton
-                                                    onClick={() => props.onDelete(item)}
-                                                    size="sm"
-                                                >Delete</DangerButton>
-                                            </div>
-                                        </td>
+                                                    >Delete</DangerButton>
+                                                </div>
+                                            </td>
+                                        }
                                     </tr>
                                 )
                             })}

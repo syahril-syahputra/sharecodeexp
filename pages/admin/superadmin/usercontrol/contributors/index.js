@@ -15,6 +15,7 @@ import DeleteContributorModal from "@/components/Modal/Superadmin/UserControl/De
 
 export default function Contributors({session}) {
     const router = useRouter()
+    const enableAction = session.user.userDetail.status_id == 1 ? true : false 
 
     //data search
     const [search, setSearch] = useState('')
@@ -106,6 +107,7 @@ export default function Contributors({session}) {
                     data={data}
                     links={links}
                     metaData={metaData}
+                    enableAction={enableAction}
                     onDelete={handleSelectedUser}
                 />
             </div>

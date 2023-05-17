@@ -60,7 +60,6 @@ export default function InquiryDetails({session, routeParam}) {
             }
         })
         .then((response) => {
-            console.log(response.data)
             setTodoValue(response.data.data.message)
         })
     }
