@@ -1,3 +1,4 @@
+import Link from "next/link";
 export default function NeedLogin(){
     return (
         <div className="relative p-2 bg-white">
