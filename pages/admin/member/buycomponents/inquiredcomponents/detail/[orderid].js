@@ -480,7 +480,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                     <div className="mx-1 my-1">
                         <WarningButton 
                             className="md:w-full sm:w-full" 
-                            // disabled={data.order_status_id == 3 ? false : true} 
+                            disabled={data.order_status_id == 3 ? false : true} 
                             size="sm"
                             onClick={() => setAcceptQuotationModal(true) }
                         >

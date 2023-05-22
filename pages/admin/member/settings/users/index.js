@@ -58,7 +58,7 @@ export default function Users({session}) {
       }
     })
     .then(() => {
-      toast.success("Your Inquire Component Successfully Deleted", toastOptions)
+      toast.success("Your Users Successfully Deleted", toastOptions)
       setShowDeleteUserModal(false)
       getData()
     }).catch((error) => {
