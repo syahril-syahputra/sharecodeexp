@@ -9,20 +9,26 @@ export default function MiniSearchBar(props){
             props.searchItem(search)
         }
     }
+    const onSubmit = (e) => {
+        e.preventDefault()
+        props.searchItem(search)
+    }
+
     return (
         <>
-            <div className="relative flex">
-                <TextInput
-                    placeholder="Find here..."
-                    onKeyDown={handleEnter}
-                    onChange={(input) => setSearch(input.value)}  
-                />
-                <SecondaryButton
-                    onClick={() => props.searchItem(search)}                  
-                >
-                    Search
-                </SecondaryButton>            
-            </div>
+            <form onSubmit={onSubmit}>
+                <div className="relative flex">
+                    <TextInput
+                        placeholder="Find here..."
+                        onChange={(input) => setSearch(input.value)}  
+                    />
+                    <SecondaryButton
+                        type="submit"                  
+                    >
+                        Search
+                    </SecondaryButton>            
+                </div>
+            </form>
         </>
     )
 }

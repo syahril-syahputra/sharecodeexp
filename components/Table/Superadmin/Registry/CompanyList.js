@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-
+import moment from "moment";
 // components
 import CompanyStatus from "./CompanyStatus";
 import Pagination from "@/components/Shared/Component/Pagination";
@@ -42,11 +42,14 @@ export default function CompanyList(props) {
                             <th scope="col" className="px-6 py-3">
                                 Phone
                             </th>
-                            <th scope="col" className="px-6 py-3">
+                            <th scope="col" className="px-6 py-3 w-36">
                                 Status
                             </th>
+                            <th scope="col" className="px-6 py-3 w-36">
+                                Registered At
+                            </th>
                             <th scope="col" className="px-6 py-3 text-right">
-                                *
+                                Act.
                             </th>
                         </>
                     }
@@ -72,6 +75,9 @@ export default function CompanyList(props) {
                                     </td>
                                     <td className="px-6 py-4">
                                         <CompanyStatus status={item.is_confirmed} title={`stock status ${item.is_confirmed}`} label={item.is_confirmed}/>
+                                    </td>
+                                    <td className="text-sm px-6 py-4">
+                                        {moment(item.created_at).format('dddd, D MMMM YYYY')}
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         {!props.isLoading && 

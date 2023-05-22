@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import moment from "moment";
 
 // components
 import Pagination from "@/components/Shared/Component/Pagination";
@@ -62,6 +63,9 @@ export default function ComponentList(props) {
                             <th scope="col" className="px-6 py-3">
                                 Packaging
                             </th>
+                            <th scope="col" className="px-6 py-3">
+                                Created At
+                            </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.
                             </th>
@@ -95,6 +99,9 @@ export default function ComponentList(props) {
                                         </td>
                                         <td className="text-sm px-6 py-2">
                                             {item.companies_products.packaging}
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
+                                            {moment(item.created_at).format('dddd, D MMMM YYYY')}
                                         </td>
                                         <td className="py-2 text-right w-32">
                                             <div className="inline-flex">

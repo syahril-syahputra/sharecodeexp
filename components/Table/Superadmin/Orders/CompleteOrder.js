@@ -1,5 +1,5 @@
 import Link from "next/link";
-
+import moment from "moment";
 //component
 import Pagination from "@/components/Shared/Component/Pagination";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
@@ -42,6 +42,9 @@ export default function CompleteOrder(props) {
                             <th scope="col" className="px-6 py-3">
                                 Order Amount ($) for Seller
                             </th>
+                            <th scope="col" className="px-6 py-3">
+                                Completed At
+                            </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.
                             </th>
@@ -69,6 +72,9 @@ export default function CompleteOrder(props) {
                                         </td>
                                         <td className="text-sm px-6 py-4">
                                             ${parseInt(item.qty) * parseFloat(item.price)}
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
+                                            no data
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">

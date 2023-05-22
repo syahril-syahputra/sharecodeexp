@@ -13,6 +13,7 @@ import Footer from "components/Footers/Footer.js";
 import MemberCard from "@/components/LandingPage/MemberCard";
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
 import CategoriesCard from "@/components/LandingPage/CategoriesCard";
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 
 export default function Index() {
   const router = useRouter()
@@ -146,11 +147,15 @@ export default function Index() {
               </div>
               <div className="text-center mt-8">
                 <Link
-                  href={!!search ? `/product/search?q=${search}`: ''}
-                  className="text-white font-bold px-10 py-3 outline-none focus:outline-none mr-1 mb-1 bg-indigo-900 active:bg-indigo-600 uppercase text-sm shadow hover:shadow-lg"
+                  href={!!search ? `/product/search?q=${search}`: ''}              
                 >
-                  Search
-                </Link>
+                  <div className="w-full">
+                    <PrimaryButton
+                      className="uppercase font-bold w-6/12 md:w-4/12 lg:w-2/12">
+                      Search
+                    </PrimaryButton>
+                  </div>
+                </Link>                
               </div>
             </div>
           </div>

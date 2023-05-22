@@ -133,7 +133,31 @@ export default function Sidebar(props) {
                 <Statistics/>
                 <MasterControl/>
               </>
-            : null }            
+            : null }
+
+            <hr className="my-4 md:min-w-full" />
+            <ul className="md:flex-col md:min-w-full flex flex-col list-none">
+              <li className="items-center">
+                <Link href="/admin/myaccount"
+                    className={
+                      "text-xs uppercase py-3 font-bold block " +
+                      (router.pathname.indexOf("/admin/myaccount") !== -1
+                        ? "text-lightBlue-500 hover:text-lightBlue-600"
+                        : "text-blueGray-700 hover:text-blueGray-500")
+                    }
+                  >
+                    <i
+                      className={
+                        "fas fa-user mr-2 text-sm " +
+                        (router.pathname.indexOf("/admin/myaccount") !== -1
+                          ? "opacity-75"
+                          : "text-blueGray-400")
+                      }
+                    ></i>{" "}
+                    My Account
+                </Link>
+              </li>
+            </ul>            
 
           </div>
         </div>

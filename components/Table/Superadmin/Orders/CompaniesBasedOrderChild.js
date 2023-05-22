@@ -52,16 +52,16 @@ export default function CompaniesBasedOrder(props) {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td className="text-sm px-6 py-4">
-                                            dummy
+                                            {item.companies_products.ManufacturerNumber}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            dummy
+                                            {item.companies_products.Manufacture}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            dummy
+                                            {item.companies_products.ManufacturerNumber}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            dummy
+                                            {item.qty}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">

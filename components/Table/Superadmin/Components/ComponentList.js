@@ -1,7 +1,7 @@
 import React from "react";
-
+import moment from "moment";
 // components
-import ComponentStatus from "./ComponentStatus";
+import ComponentStatus from "@/components/Shared/Component/Statuses";
 import Pagination from "@/components/Shared/Component/Pagination";
 
 import BaseTable from "@/components/Interface/Table/BaseTable";
@@ -50,6 +50,9 @@ export default function ComponentList(props) {
                             <th scope="col" className="px-6 py-3">
                                 Status
                             </th>
+                            <th scope="col" className="px-6 py-3">
+                                Created At
+                            </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Action
                             </th>
@@ -80,9 +83,12 @@ export default function ComponentList(props) {
                                     </td>
                                     <td className="px-6 py-4">
                                         {item.packaging}
-                                    </td>
-                                    <td className="px-6 py-4 uppercase text-center">
+                                    </td>                                    
+                                    <td className="px-6 py-4 w-36">
                                         <ComponentStatus status={item.status} title={`stock status ${item.status}`} label={item.status}/>
+                                    </td>
+                                    <td className="text-sm px-6 py-4">
+                                        {moment(item.created_at).format('dddd, D MMMM YYYY')}
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="inline-flex">

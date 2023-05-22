@@ -48,21 +48,6 @@ export default function SettingsBar(props){
               </li>
             </ul>
             : null}
-
-            <ul className="md:flex-col md:min-w-full flex flex-col list-none">
-              <li className="items-center">
-                <Link href="/admin/member/settings/myaccount"
-                  className={
-                    "text-xs uppercase py-2 font-bold block " +
-                    (router.pathname.indexOf("/admin/member/settings/myaccount") !== -1
-                      ? "text-lightBlue-500 hover:text-lightBlue-600"
-                      : "text-blueGray-700 hover:text-blueGray-500")
-                  }>
-                    <i className="fas fa-user text-blueGray-400 mr-2 text-sm"></i>{" "}
-                    My Account
-                </Link>
-              </li>
-            </ul>
         </>
     )
 }

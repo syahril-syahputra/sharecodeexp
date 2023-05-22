@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import moment from "moment";
 
 // components
-import Select from 'react-tailwindcss-select';
 import Pagination from "@/components/Shared/Component/Pagination";
 
 //data
@@ -71,6 +71,9 @@ export default function InquiryComponents(props) {
                             <th scope="col" className="px-6 py-3">
                                 Status
                             </th>
+                            <th scope="col" className="px-6 py-3">
+                                Created At
+                            </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.
                             </th> 
@@ -104,6 +107,9 @@ export default function InquiryComponents(props) {
                                         </td>
                                         <td className="text-sm px-6 py-4">
                                             {item.order_status?.name}
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
+                                            {moment(item.created_at).format('dddd, D MMMM YYYY')}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
