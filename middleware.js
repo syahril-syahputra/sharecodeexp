@@ -1,35 +1,21 @@
-// import { withAuth } from "next-auth/middleware"
+import { getToken } from "next-auth/jwt"
+import { NextResponse } from "next/server"
 
-// More on how NextAuth.js middleware works: https://next-auth.js.org/configuration/nextjs#middleware
-// export default withAuth({
-//   callbacks: {
-//     authorized({ req, token }) {
-//       // `/admin` requires admin role
-//       if (req.nextUrl.pathname === "/admin") {
-//         return token?.userRole === "admin"
-//       }
-//       // `/me` only requires the user to be logged in
-//       console.log(1)
-//       return !!token
-//     },
-//   },
-// })
+export async  function middleware(request) {
+  const session = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
+  if(session){
+    if (request.nextUrl.pathname.startsWith('/admin/superadmin') && session.user.userDetail.role_id !=1 ) {
+      return NextResponse.redirect(new URL('/admin/member', request.url));
+    }
 
-// export const config = { matcher: ["/admin"] }
-
-
-import { withAuth } from "next-auth/middleware"
-
-export default withAuth(
-  // `withAuth` augments your `Request` with the user's token.
-  function middleware(req) {
-    console.log(req.nextauth.token)
-  },
-  {
-    callbacks: {
-      authorized: ({ token }) => token?.userRole === "admin",
-    },
+    if (request.nextUrl.pathname.startsWith('/admin/member') && session.user.userDetail.role_id !=2 ) {
+      return NextResponse.redirect(new URL('/admin/superadmin', request.url));
+    }
   }
-)
 
-export const config = { matcher: ["/admin"] }
+  // if(!session){
+  //   if (request.nextUrl.pathname.startsWith('/admin')) {
+  //     return NextResponse.redirect(new URL('/auth/login', request.url));
+  //   }
+  // }
+}

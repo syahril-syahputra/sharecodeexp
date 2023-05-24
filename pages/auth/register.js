@@ -175,13 +175,13 @@ export default function Index() {
                                         }
                                         <div className="mt-8">
                                             <div className="relative flex py-5 items-center w-full mx-auto">
-                                                <div className="flex-shrink mr-4"><h2 className="font-semibold text-xl text-blueGray-500">Master Account Information</h2></div>
+                                                <div className="flex-shrink mr-4"><h2 className="font-semibold text-xl text-blueGray-500">Main Account Information</h2></div>
                                                 <div className="flex-grow border-t border-blueGray-700"></div>
                                             </div>
                                             <div className="flex flex-wrap mb-6">
                                                 <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                                     <TextInput
-                                                        label="Master Name"
+                                                        label="Main Account Name"
                                                         className="w-full"
                                                         required
                                                         name="name"
@@ -192,7 +192,7 @@ export default function Index() {
                                                 </div>
                                                 <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                                     <TextInput
-                                                        label="Master Email"
+                                                        label="Main Account Email"
                                                         type="email"
                                                         className="w-full"
                                                         required
@@ -346,7 +346,7 @@ export default function Index() {
                                                         name="country"
                                                         value={country}
                                                         countryHandleChange={countryHandleChange}
-                                                        errorMsg={errorInfo.country}
+                                                        errorMsg={errorInfo?.country}
                                                     />
                                                 </div>
                                             </div>

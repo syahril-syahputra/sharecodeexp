@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import moment from 'moment';
 
 // components
 import ComponentStatus from "@/components/Shared/Component/Statuses";
@@ -80,8 +81,11 @@ export default function TableProduct(props) {
                             <th scope="col" className="px-6 py-3">
                                 Packaging
                             </th>
-                            <th scope="col" className="px-6 py-3">
+                            <th scope="col" className="px-6 py-3 w-36">
                                 Status
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Created At
                             </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.
@@ -114,8 +118,11 @@ export default function TableProduct(props) {
                                         <td className="text-sm px-6 py-4">
                                             {item.packaging}
                                         </td>
-                                        <td className="text-sm px-6 py-4 text-center">
+                                        <td className="text-sm px-6 py-4">
                                             <ComponentStatus status={item.status} title={`stock status ${item.status}`} label={item.status}/>
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
+                                            {moment(data.created_at).format('dddd, D MMMM YYYY')}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">

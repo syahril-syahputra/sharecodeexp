@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
 import { getSession } from "next-auth/react";
-import Link from "next/link";
+
+// layout for page
+import Admin from "layouts/Admin.js";
 
 // components
 import LightButton from "@/components/Interface/Buttons/LightButton";
 import AdditionalDocument from "@/components/Table/Member/Company/AdditionalDocument"
 import { toast } from 'react-toastify';
 import { toastOptions } from "@/lib/toastOptions"
-
-
-// layout for page
-import Admin from "layouts/Admin.js";
+import UpdateAdditionalDocsModal from "@/components/Modal/Member/Company/UpdateAdditionalDocs";
 
 export default function ShowAdditionalDocument({session}) {
   
@@ -40,6 +39,41 @@ export default function ShowAdditionalDocument({session}) {
       getData()
   }, [])
 
+
+  const [errorInfo, setErrorInfo] = useState()
+  const [showEditDocModal, setShowEditDocModal] = useState(false)
+  const [selectedDocument, setSelectedDocument] = useState({})
+  const editHandlerModal = (item) => {
+    setSelectedDocument(item)
+    setShowEditDocModal(true)
+  }
+
+  const editHandlerAction = async (data) => {
+    setIsLoading(true)
+    setErrorInfo({})
+    let formData = new FormData();
+    formData.append("AddtionalDoc", data.document);
+    formData.append("id", data.id);
+    const request = await axios.post(`master/company/RegistrationDocument/Additional/edit`, formData,
+    {
+      headers: {
+        "Authorization" : `Bearer ${session.accessToken}`
+      }
+    })
+    .then(() => {
+      toast.success("Additional Document has been updated", toastOptions)
+      setShowEditDocModal(false)
+      setSelectedDocument({})
+    })
+    .catch((error) => {
+      setErrorInfo(error.data.data)
+      toast.error("Something went wrong", toastOptions)
+    })
+    .finally(() => {
+      getData()
+    })
+  }
+
   return (
     <>
       <div className="mb-10">
@@ -47,8 +81,19 @@ export default function ShowAdditionalDocument({session}) {
           isLoading={isLoading}
           title="Aditional Document"
           items={additionalDocs}
+          editHandler={editHandlerModal}
         ></AdditionalDocument>
       </div>
+
+      {showEditDocModal && 
+        <UpdateAdditionalDocsModal
+          item={selectedDocument}
+          isLoading={isLoading}
+          errorInfo={errorInfo}
+          setShowModal={setShowEditDocModal}
+          submitHandler={editHandlerAction}
+        ></UpdateAdditionalDocsModal>
+      }
     </>
   );
 }

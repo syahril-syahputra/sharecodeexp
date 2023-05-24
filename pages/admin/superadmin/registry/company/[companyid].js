@@ -281,11 +281,11 @@ export default function CompanyDetail({session, routeParam}) {
             </div>
             <div className="mb-2 text-blueGray-600">
               <i className="fas fa-user mr-2 text-lg text-blueGray-400"></i>
-              Master Account - {companyData.master?.name}
+              Main Account - {companyData.master_user?.name}
             </div>
             <div className="mb-2 text-blueGray-600">
               <i className="fas fa-envelope mr-2 text-lg text-blueGray-400"></i>
-              Master Email - {companyData.master?.email}
+              Main Email - {companyData.master_user?.email}
             </div>
             
             <div className="mt-10 py-5 border-t border-blueGray-200 text-center">

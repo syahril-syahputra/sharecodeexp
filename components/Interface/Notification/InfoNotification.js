@@ -1,0 +1,21 @@
+export default function InfoNotification(props){
+    return (
+        <div className="shadow-md hover:shadow-lg transition-all flex justify-between items-center text-white p-4 space-x-4 bg-blue-100">
+            <span className="text-xl">
+                <i className="fas fa-bell text-black"></i>
+            </span>
+            <div className="text-sm font-normal w-full">
+                <span className="mb-1 text-sm font-semibold text-black">{props.message}</span>
+                {props.detail && 
+                    <div className="mb-2 text-sm font-normal text-black">{props.detail}</div>   
+                }
+            </div>
+            {props.onCloseNotification && 
+                <div className="inline-block cursor-pointer items-end" onClick={props.onCloseNotification}>
+                    <i className="fas fa-times"></i>
+                </div>
+            }
+        </div>
+    ) 
+
+}

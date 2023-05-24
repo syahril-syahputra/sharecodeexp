@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import { getSession } from "next-auth/react";
 import axios from "@/lib/axios";
+import GlobalContext from "@/store/global-context";
 
 // components
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
@@ -10,6 +11,7 @@ import InquiryNowModal from "@/components/Modal/InquiryComponent/InquiryNow"
 import DeleteInquireModal from "@/components/Modal/InquiryComponent/DeleteInquire";
 import { toast } from 'react-toastify';
 import { toastOptions } from "@/lib/toastOptions"
+
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -101,6 +103,9 @@ export default function InquiryList({session}) {
 
     }
 
+    //context
+    const {updateInquiryList, updateInquiredComponent} = useContext(GlobalContext)
+
     const [showInquiryNowModal, setShowInquiryNowModal] = useState(false)
     const handleInquiryNow = (listId, qty, itemValue) => {
         setErrorInfo({})
@@ -120,14 +125,16 @@ export default function InquiryList({session}) {
         }
         })
         .then(() => {
+            updateInquiredComponent(session.accessToken)
+            updateInquiryList(session.accessToken)
             toast.success("Component has been inquired", toastOptions)
             searchData()
             setShowInquiryNowModal(false)
             setOrderQuantity(0)
             setListid(0)
-        }).catch((error) => {
+        }).catch(() => {
             toast.error("Something went wrong", toastOptions)
-            setErrorInfo(error.data.data)
+            setErrorInfo()
             setIsLoading(false)
         })
 
@@ -152,6 +159,7 @@ export default function InquiryList({session}) {
           }
         })
         .then(() => {
+            updateInquiryList(session.accessToken)
             toast.success("Your Inquire Component Successfully Deleted", toastOptions)
             setShowDeleteInquireModal(false)
             searchData()

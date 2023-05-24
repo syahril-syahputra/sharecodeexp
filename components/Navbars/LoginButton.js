@@ -4,6 +4,7 @@ import Link from "next/link";
 import IndexUserDropdown from "components/Dropdowns/IndexUserDropdown.js";
 import UserPopover from "components/Shared/Popover/UserPopover"
 import LogoutModal from "@/components/Modal/Logout/Logout";
+import PrimaryButton from "../Interface/Buttons/PrimaryButton";
 
 export default function Component() {
     // const {data, status} = useSession();
@@ -51,18 +52,16 @@ export default function Component() {
     }
     return (
         <>
-            <li>
-                <button
-                    onClick={() => {
-                        signIn();
-                    }}
-                    className="bg-blue-900 text-white active:bg-blueGray-600 text-xs font-bold uppercase px-4 py-2 shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150"
-                    type="button"
-                    >
-                    <i className="fas fa-user mr-2"></i> 
-                    Sign In
-                </button>
-            </li>
+            <PrimaryButton
+                size="sm"
+                className="uppercase px-4"
+                onClick={() => {
+                    signIn();
+                }}
+            >
+                <i className="fas fa-user mr-2"></i> 
+                Sign In 
+            </PrimaryButton>
         </>
     )
 }

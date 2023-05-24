@@ -35,7 +35,7 @@ export default function AdditionalDocument(props){
                                     <td className="px-6 py-4 text-right">
                                         <Link target="_blank" href={publicDir + "/registration/AddtionalDoc/" + item.name}>
                                             <SecondaryButton size="sm" className="mr-1">
-                                                <i className="fas fa-eye"></i>
+                                                View
                                             </SecondaryButton>
                                         </Link>
                                     </td>

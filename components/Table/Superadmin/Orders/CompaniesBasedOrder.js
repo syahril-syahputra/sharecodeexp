@@ -10,7 +10,6 @@ import MetaData from "@/components/Interface/Table/MetaData";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 
 export default function CompaniesBasedOrder(props) {
-    const data = props.data
     const links = props.links
     const metaData = props.metaData
 
@@ -37,18 +36,18 @@ export default function CompaniesBasedOrder(props) {
                     }
                     tableData={
                         <>
-                            {data.map((item, index) => {
+                            {props.data.map((item, index) => {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td scope="row" className="text-sm px-6 py-4">
-                                            dummy
+                                            {item.name}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            dummy
+                                            {item.country}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
-                                                <Link href={`/admin/superadmin/orders/companyorderlist/orderlist/${item.id}`}>
+                                                <Link href={`${props.urlLink}/${item.id}`}>
                                                     <PrimaryButton
                                                         size="sm">
                                                         View

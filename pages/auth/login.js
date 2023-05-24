@@ -97,8 +97,8 @@ export default function Login() {
                                         </div>
                                     </div>
                                     <div className="text-right items-stretch mb-5 md:px-5">
-                                        {/* <p className="text-blueGray-400 hover:text-blueGray-700"><Link href="/auth/forgotpassword">Forgot Password</Link></p> */}
-                                        <p className="text-blueGray-400 hover:text-blueGray-700" onClick={() => alert(':(')}>Forgot Password</p>
+                                        <p className="text-blueGray-400 hover:text-blueGray-700"><Link href="/auth/forgotpassword">Forgot Password</Link></p>
+                                        {/* <p className="text-blueGray-400 hover:text-blueGray-700" onClick={() => alert(':(')}>Forgot Password</p> */}
                                     </div>
                                     <div className="text-center mt-2">
                                         <PrimaryButton

@@ -1,11 +1,7 @@
-import {useState} from "react";
 import Link from "next/link";
-
-// components
-import Select from 'react-tailwindcss-select';
+import moment from "moment";
 
 //data
-import {orderStatusesOptions} from "@/utils/optionData"
 import Pagination from "@/components/Shared/Component/Pagination";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 import HeaderTable from "@/components/Interface/Table/HeaderTable";
@@ -15,10 +11,6 @@ import MetaData from "@/components/Interface/Table/MetaData";
 import NoData from "@/components/Interface/Table/NoData";
 
 export default function PendingPayment(props) {
-    const data = props.data
-    const links = props.links
-    const metaData = props.metaData
-
     return (
         <>
             <PrimaryWrapper>
@@ -39,7 +31,7 @@ export default function PendingPayment(props) {
                                 PI Upload Date
                             </th>                               
                             <th scope="col" className="px-6 py-3">
-                                Pi Upload Time
+                                PI Upload Time (UTC 0)
                             </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.
@@ -58,10 +50,10 @@ export default function PendingPayment(props) {
                                             {item.id}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            
+                                            {item.piUploadedDate ? moment(item.piUploadedDate).format("dddd, D MMMM YYYY") : '-'}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            
+                                            {item.piUploadedDate ? moment(item.piUploadedDate).format("HH:mm:s") : '-'}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">

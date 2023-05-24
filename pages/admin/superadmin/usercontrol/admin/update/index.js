@@ -3,9 +3,6 @@ import Link from "next/link";
 import axios from "lib/axios";
 import { getSession } from "next-auth/react";
 
-// components
-import InputForm from "@/components/Shared/InputForm";
-
 // layout for page
 import Admin from "layouts/Admin.js";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
@@ -22,7 +19,6 @@ import { useRouter } from "next/router";
 export default function EditMyAccount({session}) {
     //data search
     const [isLoading, setIsLoading] = useState(true)
-    const [data, setData] = useState([])
     const loadData = async () =>{
         setIsLoading(true)
         const response = await axios.get(`/admin/profile`,

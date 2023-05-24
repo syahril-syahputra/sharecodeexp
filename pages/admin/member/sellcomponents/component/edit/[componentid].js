@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Image from 'next/image';
 import Link from "next/link";
 import axios from "lib/axios";
 import { getSession } from "next-auth/react";
@@ -34,7 +35,8 @@ export default function EditComponent({session, routeParam, packaginglist}) {
         Description: '',
         dateCode: '',
         status: '',
-        subcategory_id: ''
+        subcategory_id: '',
+        img: ''
       });
     const [errorInfo, setErrorInfo] = useState({})
     const [errorMessage, setErrorMessage] = useState(null)
@@ -55,7 +57,11 @@ export default function EditComponent({session, routeParam, packaginglist}) {
         setIsLoading(true)
         setErrorInfo({})
         setErrorMessage(null)
-        const response = await axios.post(`/companyproduct/${inputData.id}/update`, inputData, {
+        let formData = new FormData();
+        for (const key in inputData) {
+            formData.append(key, inputData[key]);
+        }
+        const response = await axios.post(`/companyproduct/${inputData.id}/update`, formData, {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
             }
@@ -179,6 +185,21 @@ export default function EditComponent({session, routeParam, packaginglist}) {
         getData()
     }, [])
 
+    const [image, setImage] = useState(null)
+    const componentImageHandler = (e) =>{
+        let file = e.target.files[0]
+        const fileReader = new FileReader();
+        fileReader.onload = function(e){
+            setImage(e.target.result) 
+            setInputData({...inputData, img:file})
+        }
+        if(file) {
+            fileReader.readAsDataURL(file)
+        } else {
+            setImage(null)
+        }        
+    }
+
     return (
         <PrimaryWrapper>
             <PageHeader
@@ -216,6 +237,47 @@ export default function EditComponent({session, routeParam, packaginglist}) {
             </div>
 
             <form className="ml-2" onSubmit={handleSubmit}>
+                <div className="flex flex-wrap mb-6">
+                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                            Component Image (Upload if only change)
+                        </label>
+                        <div className="p-10 border-dashed border-2 border-indigo-200">
+                            <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>
+                                <div className='text-center my-auto'>
+                                    <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
+                                </div>
+                                <div className="text-xs ">
+                                    <p>JPG, JPEG, PNG file size no more than 10MB</p>
+                                    <input 
+                                        className="mt-3" 
+                                        type="file"
+                                        name="img"
+                                        accept='.png, .jpeg, .jpg'
+                                        onChange={componentImageHandler}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        {errorInfo?.img &&
+                            <ErrorInput error={errorInfo?.img}/>
+                        }
+                    </div>
+                    {image &&<div className="w-full md:w-1/2 px-3">
+                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                            Result
+                        </label>
+                        <div className="p-2 border-dashed border-2 border-indigo-200">
+                            <div className='text-center grid gap-4 lg:grid-cols-1 md:grid-cols-1'>
+                                <Image src={image}
+                                    className="mx-auto"
+                                    height={180}
+                                    width={180}>
+                                </Image>
+                            </div>
+                        </div>
+                    </div>}
+                </div>
                 <div className="w-full lg:w-1/2 px-3 mb-6">
                     <TextInput
                         label="Manufacturer Part Number"

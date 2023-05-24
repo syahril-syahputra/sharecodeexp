@@ -1,53 +1,23 @@
 import Link from "next/link";
 import { useRouter } from "next/router"
 import { useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
-import axios from "@/lib/axios";
+import { useState, useEffect, useContext } from "react";
+import GlobalContext from "@/store/global-context";
 
 export default function BuyComponents(){
   const router = useRouter()
   const session = useSession()
 
-  const [totalItem, setTotalItem] = useState(0)
-  const countCart = async () =>{
-    const response = await axios.get(`/countWish`,
-      {
-        headers: {
-          "Authorization" : `Bearer ${session.data.accessToken}`
-        }
-      })
-      .then((response) => {
-        let result = response.data
-        setTotalItem(result.data)
-      }).catch((error) => {
-        // console.log(error.response)
-      }).finally(() => {
-        // setIsLoading(false)
-      })
-  }
-  useEffect(() => {
-    countCart()
-  }, [])
+  const {
+    inquiryList, 
+    updateInquiryList, 
+    inquiredComponent, 
+    updateInquiredComponent
+  } = useContext(GlobalContext)
 
-  const [totalInquiredItem, setTotalInquiredItem] = useState(0)
-  const countInquiredList = async () =>{
-    const response = await axios.get(`/buyer/order/count`,
-      {
-        headers: {
-          "Authorization" : `Bearer ${session.data.accessToken}`
-        }
-      })
-      .then((response) => {
-        let result = response.data
-        setTotalInquiredItem(result.data)
-      }).catch((error) => {
-        // console.log(error.response)
-      }).finally(() => {
-        // setIsLoading(false)
-      })
-  }
   useEffect(() => {
-    countInquiredList()
+    updateInquiryList(session.data.accessToken)
+    updateInquiredComponent(session.data.accessToken)
   }, [])
 
   return (
@@ -72,7 +42,7 @@ export default function BuyComponents(){
               <i className="fas fa-cart-shopping text-blueGray-400 mr-2 text-sm"></i>{" "}
               Inquiry List
               <span className="ml-1 text-xs font-semibold inline-block py-1 px-2 text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
-                {totalItem}
+                {inquiryList}
               </span>
           </Link>
 
@@ -90,7 +60,7 @@ export default function BuyComponents(){
               <i className="fas fa-truck text-blueGray-400 mr-1 text-sm"></i>{" "}
               Inquired Components 
               <span className="ml-1 text-xs font-semibold inline-block py-1 px-2 text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
-                {totalInquiredItem}
+                {inquiredComponent}
               </span>
           </Link>
         </li>

@@ -42,10 +42,9 @@ export default function SendQuotation(props){
                                 />
                             </div>
                         </div>
-                        {/* <div className="flex flex-wrap">
+                        <div className="flex flex-wrap">
                             <div className="w-1/2 px-3 mb-6">
                                 <TextInput
-                                    disabled
                                     label="Quotation Expiration date"
                                     required
                                     type="date"
@@ -55,7 +54,7 @@ export default function SendQuotation(props){
                                     onChange={(input) => setDataHandler(input)}
                                 />
                             </div>
-                        </div> */}
+                        </div>
                         <div className="flex flex-wrap mb-6">
                             <div className="w-1/2 px-3 mb-6">
                                 <NumberInput
@@ -95,7 +94,7 @@ export default function SendQuotation(props){
                         <PrimaryButton
                             disabled={props.isLoading}
                             className="font-bold uppercase"
-                            onClick={() => props.acceptModal(inputData)}>
+                            onClick={() => props.acceptance(inputData)}>
                             {props.isLoading &&
                                 <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                             }

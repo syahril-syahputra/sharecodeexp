@@ -1,5 +1,5 @@
 import Link from "next/link";
-
+import moment from "moment";
 //data
 import Pagination from "@/components/Shared/Component/Pagination";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
@@ -50,7 +50,7 @@ export default function IncomingInquiry(props) {
                                             {item.buyer?.country}
                                         </td>
                                         <td scope="row" className="text-sm px-6 py-4">
-                                            //
+                                            {item.OrderCancellationDate ? moment(item.OrderCancellationDate).format('dddd, D MMMM YYYY') : '-'}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">

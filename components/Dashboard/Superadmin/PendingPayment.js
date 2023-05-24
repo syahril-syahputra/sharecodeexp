@@ -34,7 +34,7 @@ export default function PendingPayment(props) {
                   Order
                 </th>
                 <th className="px-6 py-3 text-left">
-                  PI Upload Date & Time
+                  PI Upload Date & Time (UTC 0)
                 </th>
                 <th className="px-6 py-3 text-right min-w-140-px">*</th>
               </>
@@ -51,7 +51,7 @@ export default function PendingPayment(props) {
                       {item.companies_products?.ManufacturerNumber}
                     </td>
                     <td className="px-6 align-middle p-2">
-                      //
+                      {item.piUploadedDate ? moment(item.piUploadedDate).format('dddd, D MMMM YYYY | HH:mm:s') : '-'}
                     </td>
                     <td className="px-6 align-middle p-2 text-right">
                       <Link href={`/admin/superadmin/orders/details/${item.id}`}>

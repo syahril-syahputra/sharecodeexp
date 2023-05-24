@@ -1,5 +1,6 @@
 import {useState, useMemo} from "react";
 import Link from "next/link";
+import moment from "moment";
 
 //data
 import {orderStatusesOptions} from "@/utils/optionData"
@@ -41,6 +42,9 @@ export default function CompaniesBasedOrder(props) {
                             <th scope="col" className="px-6 py-3">
                                 Status
                             </th>
+                            <th scope="col" className="px-6 py-3">
+                                Created At
+                            </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.
                             </th>
@@ -52,16 +56,19 @@ export default function CompaniesBasedOrder(props) {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td className="text-sm px-6 py-4">
-                                            dummy
+                                            {item.companies_products.ManufacturerNumber}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            dummy
+                                            {item.companies_products.Manufacture}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            dummy
+                                            {item.qty}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            dummy
+                                            {item.order_status.name}
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
+                                            {item.created_at ? moment(item.created_at).format('dddd, D MMMM YYYY') : '-'}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">

@@ -1,3 +1,4 @@
+import moment from "moment";
 import React, {useState, useEffect} from "react";
 import { getSession } from "next-auth/react";
 import axios from "@/lib/axios";
@@ -30,6 +31,7 @@ export default function OrderDetails({session, routeParam}) {
     //data search
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
+    const [isOrderValid, setIsOrderValid] = useState(true)
     const loadData = async () =>{
         setIsLoading(true)
         const response = await axios.get(`/admin/orders/${routeParam.orderid}/data`,
@@ -42,8 +44,9 @@ export default function OrderDetails({session, routeParam}) {
                 let result = response.data.data
                 setData(result)
                 loadTodoAction(result.order_status.id)
-            }).catch((error) => {
-                // console.log(error.response)
+                setIsOrderValid(true)
+            }).catch(() => {
+                setIsOrderValid(false)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -61,7 +64,6 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then((response) => {
-            console.log(response.data)
             setTodoValue(response.data.data.message)
         })
     }
@@ -162,12 +164,13 @@ export default function OrderDetails({session, routeParam}) {
     }
 
     const [trackerNumberForBuyerModal, setTrackerNumberForBuyerModal] = useState(false)
-    const handleTrackerNumberForBuyerModal = async (buyerTracker) => {
+    const handleTrackerNumberForBuyerModal = async (buyerTracker, expectedShippingDateBuyer) => {
         setIsLoading(true)
         setErrorInfo({})
         let inputData = {
             id: data.id,
-            trackingBuyer: buyerTracker
+            trackingBuyer: buyerTracker,
+            expectedShippingDateBuyer: expectedShippingDateBuyer,
         }
         const response = await axios.post(`/admin/orders/UpdateOrderShiped`, inputData, 
         {
@@ -222,6 +225,39 @@ export default function OrderDetails({session, routeParam}) {
         console.log(inputData)
     }
 
+    if(!isOrderValid) {
+        return (
+            <>
+                <PrimaryWrapper>
+                    <PageHeader
+                        leftTop={
+                            <h3 className="font-semibold text-lg text-blueGray-700">
+                                Order Details
+                            </h3>
+                        }
+                        rightTop={
+                            <Link href={`/admin/superadmin/orders/allorders`}>
+                                <LightButton 
+                                    size="sm" 
+                                    className="mr-2">
+                                    <i className="mr-2 ml-1 fas fa-arrow-left"></i>
+                                    Back
+                                </LightButton>
+                            </Link>
+                        }
+                    ></PageHeader>
+                    <div className="h-64 px-4 py-3 border-0 mt-2">
+                        <div className="flex justify-center">
+                            <div className=" text-center">
+                                <h4 className="font-semibold text-xl italic">Your Order is Not Found</h4>
+                            </div>
+                        </div>
+                    </div>
+                </PrimaryWrapper>
+            </>
+        )
+    }
+    
     return (
         <>
             <PrimaryWrapper>
@@ -274,7 +310,7 @@ export default function OrderDetails({session, routeParam}) {
                             <table className="w-auto">
                                 <tbody>
                                     <tr>
-                                        <td className="pr-10">Company Name</td>
+                                        <td className="pr-16">Company Name</td>
                                         <td className="pr-2">:</td>
                                         <td className="">
                                             <Link href={`/admin/superadmin/registry/company/${data.buyer?.id}`} className="text-blueGray-700 underline">{data.buyer?.name}</Link>
@@ -291,6 +327,13 @@ export default function OrderDetails({session, routeParam}) {
                                         <td className="">:</td>
                                         <td className="">{data.trackingBuyer}</td>
                                     </tr>
+                                    <tr>
+                                        <td className="">Expected Shipment Date</td>
+                                        <td className="">:</td>
+                                        <td className="">
+                                            {data.expectedShippingDateBuyer ? moment(data.expectedShippingDateBuyer).format('dddd, D MMMM YYYY') : '-'}
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -305,7 +348,7 @@ export default function OrderDetails({session, routeParam}) {
                             <table className="w-auto">
                                 <tbody>
                                     <tr>
-                                        <td className="pr-10">Company Name</td>
+                                        <td className="pr-16">Company Name</td>
                                         <td className="pr-2">:</td>
                                         <td className="">
                                             <Link href={`/admin/superadmin/registry/company/${data.companies_products?.company?.id}`} className="text-blueGray-700 underline">{data.companies_products?.company?.name}</Link>
@@ -321,6 +364,13 @@ export default function OrderDetails({session, routeParam}) {
                                         <td className="">Seller's Tracker</td>
                                         <td className="">:</td>
                                         <td className="">{data.trackingSeller}</td>
+                                    </tr>
+                                    <tr>
+                                        <td className="">Expected Shipment Date</td>
+                                        <td className="">:</td>
+                                        <td className="">
+                                            {data.expectedShippingDateSeller ? moment(data.expectedShippingDateSeller).format('dddd, D MMMM YYYY') : '-'}
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -368,9 +418,17 @@ export default function OrderDetails({session, routeParam}) {
             {/* product images */}
             <PrimaryWrapper>
                 <div className="w-full">
-                    <div className="px-3 mb-6 md:mb-0 text-center">
-                        <div className="p-24 border mx-2 my-4">product image</div>
-                    </div>
+                    {data.companies_products?.img ? 
+                        <div className="p-16 border mx-2 my-4">
+                            <img className="object-contain mb-3 h-40 mx-auto" 
+                            alt={data.companies_products.ManufacturerNumber}
+                            src={publicDir + "/product_images/" + data.companies_products.img}/>
+                        </div>
+                    :
+                        <div className="px-3 mb-6 md:mb-0 text-center">
+                            <div className="p-24 border mx-2 my-4">product image {data.companies_products?.ManufacturerNumber}</div>
+                        </div>
+                    } 
                 </div>
                 <div className="text-center">
                     <p>Product Description</p>
@@ -439,6 +497,9 @@ export default function OrderDetails({session, routeParam}) {
                         </tbody>
                     </table>
                 </div>
+                <div className="text-center mt-5 mb-2 w-1/2 mx-auto">
+                    <span className="text-light text-slate-500">Order Created: {moment(data.created_at).format('dddd, D MMMM YYYY')}</span>
+                </div>
                 {/* table order information */}
                 <div className="overflow-x-auto mb-10 flex justify-center">
                     <table className="w-50 text-sm text-left text-gray-500 bg-white border">
@@ -479,6 +540,12 @@ export default function OrderDetails({session, routeParam}) {
                 {data.price_profite &&
                     <div className="text-center mb-10 w-1/2 mx-auto">
                         <i className="text-light italic text-red-500">Note: Price is only for the product. The order type is Ex-works. The price you see on screen does not include logistical costs, customs, tax, insurance or any additional expenses that may occur.</i>
+                    </div>
+                }
+
+                {(data.quotation_expiration_date && data.order_status.id == 3) &&
+                    <div className="text-center mb-10 w-1/2 mx-auto">
+                        <span className="text-light text-slate-500">Quotation Expiration Date: {moment(data.quotation_expiration_date).format('dddd, D MMMM YYYY')}</span>
                     </div>
                 }
             </PrimaryWrapper>
@@ -614,6 +681,63 @@ export default function OrderDetails({session, routeParam}) {
                         </WarningButton>
                     </div> */}
           
+                </div>
+            </PrimaryWrapper>
+
+            {/* date details  */}
+            <PrimaryWrapper>
+                <div className="p-2 text-md uppercase border-b text-center">
+                    Date Details
+                </div>
+                <div className="pb-4 mt-2 lg:flex lg:justify-between px-4">
+                    <div className="mx-1 my-1 text-center">
+                        <div className=" text-slate-500 text-sm">
+                            Order Created                        
+                        </div>
+                        <div className="text-xs">
+                            {data.created_at ? moment(data.created_at).format('dddd, D MMMM YYYY') : '-'}
+                        </div>
+                    </div>
+                    <div className="mx-1 my-1 text-center">
+                        <div className=" text-slate-500 text-sm">
+                            PI Uploaded                        
+                        </div>
+                        <div className="text-xs">
+                            {data.piUploadedDate ? moment(data.piUploadedDate).format('dddd, D MMMM YYYY') : '-'}
+                        </div>
+                    </div>
+                    <div className="mx-1 my-1 text-center">
+                        <div className=" text-slate-500 text-sm">
+                            Quotation Rejected                       
+                        </div>
+                        <div className="text-xs">
+                            {data.QuotationRejectedDate ? moment(data.QuotationRejectedDate).format('dddd, D MMMM YYYY') : '-'}
+                        </div>
+                    </div>
+                    <div className="mx-1 my-1 text-center">
+                        <div className=" text-slate-500 text-sm">
+                            Arrived                      
+                        </div>
+                        <div className="text-xs">
+                            {data.arrivalDate ? moment(data.arrivalDate).format('dddd, D MMMM YYYY') : '-'}
+                        </div>
+                    </div>
+                    <div className="mx-1 my-1 text-center">
+                        <div className=" text-slate-500 text-sm">
+                            Order Completed                
+                        </div>
+                        <div className="text-xs">
+                            {data.completedOrdersDate ? moment(data.completedOrdersDate).format('dddd, D MMMM YYYY') : '-'}
+                        </div>
+                    </div>
+                    <div className="mx-1 my-1 text-center">
+                        <div className=" text-slate-500 text-sm">
+                            Order Returned                
+                        </div>
+                        <div className="text-xs">
+                            {data.OrderReturnedDate ? moment(data.OrderReturnedDate).format('dddd, D MMMM YYYY') : '-'}
+                        </div>
+                    </div>                    
                 </div>
             </PrimaryWrapper>
             

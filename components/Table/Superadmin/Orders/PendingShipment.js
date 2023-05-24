@@ -1,4 +1,6 @@
 import Link from "next/link";
+import moment from "moment";
+
 //data
 import Pagination from "@/components/Shared/Component/Pagination";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
@@ -26,7 +28,7 @@ export default function PendingShipment(props) {
                                 Order Number
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Expected Shipment Date
+                                Expected Shipment Date (EXEPART)
                             </th>  
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.
@@ -45,7 +47,7 @@ export default function PendingShipment(props) {
                                             {item.id}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            //
+                                            {item.expectedShippingDateBuyer ? moment(item.expectedShippingDateBuyer).format("dddd, D MMMM YYYY") : '-'}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">

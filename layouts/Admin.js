@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import { useSession } from "next-auth/react"
 import Link from "next/link";
 
@@ -15,7 +15,7 @@ import useCompany from '@/hooks/useCompany'
 
 export default function Admin({ children }) {
   const session = useSession();
-  if (session.status == 'unauthenticated') {
+  if (!session.data) {
     return (
       <div className="relative p-2 bg-white">
         <div className="text-center pb-10 mt-10">
@@ -29,10 +29,7 @@ export default function Admin({ children }) {
       </div> 
     );
   }
-
   const company = useCompany(session.data.user.userDetail, session.data.accessToken)
-
-  // if unauth it should render a page showing user need login to access
   return (
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
@@ -41,14 +38,11 @@ export default function Admin({ children }) {
       <AdminNavbar />
         {/* Header */}
         <HeaderStats />
-        <div className="px-4 md:px-10 mx-auto w-full -m-24">
+        <div className="px-4 md:px-10 mx-auto w-full -m-24 h-full">
           {children}
           <FooterAdmin /> 
         </div>
       </div>
     </>
   );
-
-  
-  
 }
