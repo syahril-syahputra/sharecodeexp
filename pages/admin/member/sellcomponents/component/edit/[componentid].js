@@ -23,6 +23,7 @@ import AreaInput from "@/components/Interface/Form/AreaInput";
 import SelectInput from "@/components/Interface/Form/SelectInput";
 
 export default function EditComponent({session, routeParam, packaginglist}) {
+    const publicDir = process.env.NEXT_PUBLIC_DIR
     // update data
     const [inputData, setInputData] = useState({
         id: '',
@@ -139,6 +140,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
     };
 
     //data search
+    const [showImage, setShowImage] = useState()
     const [isLoading, setIsLoading] = useState(true)
     const getData = async () =>{
         setIsLoading(true)
@@ -163,6 +165,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                     dateCode: result.dateCode,
                     subcategory_id: result.subcategory.id
                 })
+                setShowImage(result.img)
 
                 //set packagings
                 let oldPackaging = packagings.find(item => item.value == result.packaging)
@@ -230,10 +233,18 @@ export default function EditComponent({session, routeParam, packaginglist}) {
             }
 
             {/* component image */}
-            <div className="w-full mb-6">
-                <div className="px-3 md:mb-0 text-center">
-                    <div className="p-24 border mx-2 my-4">product image {routeParam.componentid}</div>
-                </div>
+            <div className="w-full">
+                {showImage ? 
+                    <div className="p-16 border mx-2 my-4">
+                        <img className="object-contain mb-3 h-40 mx-auto" 
+                        alt={inputData.ManufacturerNumber}
+                        src={publicDir + "/product_images/" + showImage}/>
+                    </div>
+                :
+                    <div className="px-3 mb-6 md:mb-0 text-center">
+                        <div className="p-24 border mx-2 my-4">product image {inputData.ManufacturerNumber}</div>
+                    </div>
+                }                    
             </div>
 
             <form className="ml-2" onSubmit={handleSubmit}>

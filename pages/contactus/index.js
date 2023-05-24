@@ -11,6 +11,8 @@ import Footer from "components/Footers/Footer.js";
 import InputForm from "@/components/Shared/InputForm";
 import ErrorInput from '@/components/Shared/ErrorInput';
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
+import TextInput from "@/components/Interface/Form/TextInput";
+import AreaInput from "@/components/Interface/Form/AreaInput";
 
 export default function Index() {
   const [isLoading, setIsloading] = useState(false)
@@ -89,46 +91,49 @@ export default function Index() {
                         </div>
                     }
                     <div>
-                      <InputForm
-                        isRequired={true}
+                      <TextInput
+                        type="email"
+                        isLoading={isLoading}
+                        required
                         label="Your Email"
-                        inputType="text"
-                        inputDataName="enteredEmail"
                         value={enteredEmail}
-                        setData={setEnteredEmailHandler}
+                        name="enteredEmail"
+                        onChange={(input) => setEnteredEmailHandler(input)}
                         errorMsg={errorInfo.email}
-                      />
+                      ></TextInput>
                     </div>
                     <div>
-                      <InputForm
-                        isRequired={true}
+                    <TextInput
+                        isLoading={isLoading}
+                        required
                         label="Subject"
-                        inputDataName="enteredSubject"
                         value={enteredSubject}
-                        setData={setEnteredSubjectHandler}
+                        name="enteredSubject"
+                        onChange={(input) => setEnteredSubjectHandler(input)}
                         errorMsg={errorInfo.subject}
-                      />
+                      ></TextInput>
                     </div>
                     <div className="sm:col-span-2">
-                      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                          Your Message
-                      </label>
-                      <textarea 
-                          required
-                          value={enteredMessages}
-                          onChange={({target}) => setEnteredMessagesHandler(target)}
-                          autoComplete="off" 
-                          type="text"
-                          className="shadow-sm placeholder-slate-300 appearance-none w-full bg-white text-gray-700 border border-gray-200 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
-                      {errorInfo.messages &&
-                          <ErrorInput error={errorInfo.messages}/>
-                      }
+                      <AreaInput
+                        isLoading={isLoading}
+                        required
+                        label="Your Message"
+                        value={enteredMessages}
+                        name="enteredMessages"
+                        onChange={(input) => setEnteredMessagesHandler(input)}
+                        errorMsg={errorInfo.messages}
+                      ></AreaInput>
                     </div>
                     <PrimaryButton
-                        buttonType={"submit"}
-                        buttonTitle="Send Messages"
-                        isLoading={isLoading}
-                    />                   
+                        type="submit"
+                        className="w-64 uppercase font-bold"
+                        disabled={isLoading}
+                    >
+                      {isLoading &&
+                        <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
+                      }
+                      Submit
+                    </PrimaryButton>                   
                 </form>
             </div>
           </section>
