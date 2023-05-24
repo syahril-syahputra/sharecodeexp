@@ -1,5 +1,6 @@
 import {useState, useMemo} from "react";
 import Link from "next/link";
+import moment from "moment";
 
 //data
 import {orderStatusesOptions} from "@/utils/optionData"
@@ -41,6 +42,9 @@ export default function CompaniesBasedOrder(props) {
                             <th scope="col" className="px-6 py-3">
                                 Status
                             </th>
+                            <th scope="col" className="px-6 py-3">
+                                Created At
+                            </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.
                             </th>
@@ -58,10 +62,13 @@ export default function CompaniesBasedOrder(props) {
                                             {item.companies_products.Manufacture}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.companies_products.ManufacturerNumber}
+                                            {item.qty}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.qty}
+                                            {item.order_status.name}
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
+                                            {item.created_at ? moment(item.created_at).format('dddd, D MMMM YYYY') : '-'}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">

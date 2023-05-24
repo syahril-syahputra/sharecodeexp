@@ -74,7 +74,7 @@ export default function CompleteOrder(props) {
                                             ${parseInt(item.qty) * parseFloat(item.price)}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            no data
+                                            {item.completedOrdersDate ? moment(item.completedOrdersDate).format('dddd, D MMMM YYYY') : '-'}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">

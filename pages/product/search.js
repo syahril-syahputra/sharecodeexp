@@ -1,15 +1,18 @@
 import React, {useEffect, useState} from "react";
 import Link from "next/link";
-import { Router, useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { PageSEO } from '@/components/Utils/SEO'
 import siteMetadata from '@/utils/siteMetadata'
+import axios from "lib/axios";
 
 //components
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
-import TableComponent from "@/components/Table/TableComponent";
-import axios from "lib/axios";
-// import axios from "axios";
+// import TableComponent from "@/components/Table/TableComponent";
+import TableComponent from "@/components/Table/Public/Component";
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
+import MiniSearchBar from "@/components/Shared/MiniSearchBar";
+import TextInput from "@/components/Interface/Form/TextInput";
 
 export default function Index() {
   const router = useRouter()
@@ -92,34 +95,37 @@ export default function Index() {
               <h2 className="font-semibold text-4xl">Search Components</h2>
             </div>
           </div>
-          <div className="relative mb-4 flex md:w-1/2 w-full flex-wrap items-stretch mt-4">
-            <input
-              type="text"
-              value={search} 
-              onChange={({target}) => setSearch(target.value)}
-              onKeyDown={searchComponent}
-              className="shadow relative m-0 block w-[1px] min-w-0 placeholder-slate-300 flex-auto border-0 bg-transparent px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out focus:z-[3] focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none"
-              placeholder="Search for the components"/>
-            <Link
-              href={`/product/search?q=${search}`}
-              className="relative z-[2] bg-blueGray-700 active:bg-blueGray-600 px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:z-[3] focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
-              >
-              Search
-            </Link>
+
+          <div className="mb-2 w-full lg:w-1/2 mt-4">
+            <div className="relative flex">
+              <TextInput
+                value={search} 
+                onChange={(input) => setSearch(input.value)}
+                onKeyDown={searchComponent}
+                placeholder="Search for the components"
+              ></TextInput>
+              <Link href={`/product/search?q=${search}`}>
+                <PrimaryButton
+                  className="uppercase"
+                >
+                  Search
+                </PrimaryButton>
+              </Link>
+            </div>
           </div>
 
           <div>
             {suggestion && suggestion.length > 0 &&
               <div>
                 {isSuggestionLoading && 
-                  <div className="text-blueGray-700">
+                  <div className="text-slate-500">
                     Suggestion : 
                     <i className="ml-2 fas fa-circle-notch fa-spin"></i>
                   </div>
                 }
                 {!isSuggestionLoading && 
-                  <div className="">Suggestion : {suggestion.map(name => (  
-                    <Link key={name} href={`/product/search?q=${name}`} className="mx-1 underline">  
+                  <div className="text-slate-500">Suggestion : {suggestion.map(name => (  
+                    <Link key={name} href={`/product/search?q=${name}`} className="mx-1 underline text-blue-500">  
                       {name}  
                     </Link>  
                   ))}</div>
@@ -130,14 +136,14 @@ export default function Index() {
               <i className="ml-2 fas fa-circle-notch fa-spin"></i>
             }
           </div>
-          <div className="bg-white mb-14">
+
+          <div className="bg-white mb-14 mt-10">
             <TableComponent
               setPage={setPage}
               isLoading={isLoading}
               data={data}
               links={links}
               metaData={metaData}
-              customClass="shadow"
             />
           </div>
         </div>

@@ -26,7 +26,7 @@ export default function VendorLists({session}) {
     })
     const loadData = async (srch, page=1) =>{
         setIsLoading(true)
-        const response = await axios.get(`/admin/users?page=${page}`,
+        const response = await axios.get(`/admin/vendors?page=${page}`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`

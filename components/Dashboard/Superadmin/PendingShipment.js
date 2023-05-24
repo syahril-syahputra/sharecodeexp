@@ -10,6 +10,7 @@ import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
 
 export default function PendingShipment(props) {
   const data = props.data.slice(0, 5)
+  console.log(data)
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg">
@@ -34,7 +35,7 @@ export default function PendingShipment(props) {
                   Order
                 </th>
                 <th className="px-6 py-3  text-left">
-                  Expected Shipment Date
+                  Expected Shipment Date (EXEPART)
                 </th>
                 <th className="px-6 py-3 text-right min-w-140-px">*</th>
               </>
@@ -51,7 +52,7 @@ export default function PendingShipment(props) {
                       {item.companies_products?.ManufacturerNumber}
                     </td>
                     <td className="px-6 align-middle p-2">
-                      //
+                      {item.expectedShippingDateBuyer ? moment(item.expectedShippingDateBuyer).format('dddd, D MMMM YYYY') : '-'}
                     </td>
                     <td className="px-6 align-middle p-2 text-right">
                       <Link href={`/admin/superadmin/orders/details/${item.id}`}>

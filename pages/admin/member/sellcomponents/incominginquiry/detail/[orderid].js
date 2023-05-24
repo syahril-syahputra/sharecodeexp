@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import { getSession } from "next-auth/react";
 import axios from "@/lib/axios";
 import Link from "next/link";
+import moment from "moment";
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -108,13 +109,14 @@ export default function InquiryDetails({session, routeParam}) {
     }
 
     const [sendTrackerModal, setSendTrackerModal] = useState(false)
-    const sendTrackerModalHandle = async (sellerTracker, paymentAccount) => {
+    const sendTrackerModalHandle = async (sellerTracker, paymentAccount, expectedShippingDateSeller) => {
         setIsLoading(true)
         setErrorInfo({})
 
         let formData = new FormData();
         formData.append("PaymentDocSeller", paymentAccount);
         formData.append("trackingSeller", sellerTracker);
+        formData.append("expectedShippingDateSeller", expectedShippingDateSeller);
         formData.append("id", data.id)  
         const response = await axios.post(`/seller/UpdateToPreparingShipment`, formData, 
         {
@@ -203,21 +205,43 @@ export default function InquiryDetails({session, routeParam}) {
             </PrimaryWrapper>
             
             {/* tracker for seller */}
-            <PrimaryWrapper>
-                <div className="p-2 text-md uppercase border-b text-center">
-                    Tracker Number
+            <div className="lg:flex lg:justify-around">
+                <div className="w-full lg:w-1/2 mr-4">
+                    <PrimaryWrapper>
+                        <div className="m-2 p-2 text-md uppercase border-b text-center">
+                            Tracker Number
+                        </div>
+                        <div className="pb-4 mt-2 lg:flex lg:justify-center px-4">
+                            {data.trackingSeller ? data.trackingSeller : 'No Data'}
+                        </div>
+                    </PrimaryWrapper>
                 </div>
-                <div className="pb-4 mt-2 lg:flex lg:justify-center px-4">
-                    {data.trackingSeller ? data.trackingSeller : 'No Data'}
-                </div>
-            </PrimaryWrapper>
+                <div className="w-full lg:w-1/2">
+                    <PrimaryWrapper>
+                        <div className="m-2 p-2 text-md uppercase border-b text-center">
+                            Expected Shipment Date
+                        </div>
+                        <div className="pb-4 mt-2 lg:flex lg:justify-center px-4">
+                            {data.expectedShippingDateSeller ? moment(data.expectedShippingDateSeller).format('dddd, D MMMM YYYY') : 'No Data'}
+                        </div>
+                    </PrimaryWrapper>
+                </div>                
+            </div>
 
             {/* product images */}
             <PrimaryWrapper>
                 <div className="w-full">
-                    <div className="px-3 mb-6 md:mb-0 text-center">
-                        <div className="p-24 border mx-2 my-4">product image</div>
-                    </div>
+                    {data.companies_products?.img ? 
+                        <div className="p-16 border mx-2 my-4">
+                            <img className="object-contain mb-3 h-40 mx-auto" 
+                            alt={data.companies_products.ManufacturerNumber}
+                            src={publicDir + "/product_images/" + data.companies_products.img}/>
+                        </div>
+                    :
+                        <div className="px-3 mb-6 md:mb-0 text-center">
+                            <div className="p-24 border mx-2 my-4">product image {data.companies_products?.ManufacturerNumber}</div>
+                        </div>
+                    } 
                 </div>
                 <div className="text-center">
                     <p>Product Description</p>
@@ -285,6 +309,9 @@ export default function InquiryDetails({session, routeParam}) {
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                <div className="text-center mt-5 mb-2 w-1/2 mx-auto">
+                    <span className="text-light text-slate-500">Order Created: {moment(data.created_at).format('dddd, D MMMM YYYY')}</span>
                 </div>
                 {/* table order information */}
                 <div className="overflow-x-auto mb-10 flex justify-center">

@@ -6,10 +6,11 @@ import LightButton from "@/components/Interface/Buttons/LightButton";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 export default function SendTracker(props){
     const [sellerTracker, setSellerTracker] = useState('')
+    const [expectedShippingDateSeller, setExpectedShippingDateSeller] = useState('')
     const [paymentAccount, setPaymentAccount] = useState()
 
     const handleSubmit = () => {
-        props.acceptance(sellerTracker, paymentAccount)
+        props.acceptance(sellerTracker, paymentAccount, expectedShippingDateSeller)
     }
     return (
         <BaseModalLarge
@@ -26,6 +27,16 @@ export default function SendTracker(props){
                                     value={sellerTracker}
                                     onChange={(input) => setSellerTracker(input.value)}
                                     errorMsg={props.errorInfo?.trackingSeller}
+                                />
+                            </div>
+                            <div className="w-1/2 px-3">
+                                <TextInput
+                                    type="date"
+                                    label="Expected Shipment Date"
+                                    name="expectedShippingDateSeller"
+                                    value={expectedShippingDateSeller}
+                                    onChange={(input) => setExpectedShippingDateSeller(input.value)}
+                                    errorMsg={props.errorInfo?.expectedShippingDateSeller}
                                 />
                             </div>
                         </div>

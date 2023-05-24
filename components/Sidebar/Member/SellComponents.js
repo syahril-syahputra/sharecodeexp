@@ -1,32 +1,15 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useContext} from "react";
 import { useRouter } from "next/router"
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import axios from "@/lib/axios";
+import GlobalContext from "@/store/global-context";
 
 export default function SellComponents(){
   const router = useRouter()
   const session = useSession()
-
-  const [totalIncomingInquiry, setTotalIncomingInquiry] = useState(0)
-  const countIncomingInquiry = async () =>{
-    const response = await axios.get(`/seller/order/count`,
-      {
-        headers: {
-          "Authorization" : `Bearer ${session.data.accessToken}`
-        }
-      })
-      .then((response) => {
-        let result = response.data
-        setTotalIncomingInquiry(result.data)
-      }).catch((error) => {
-        // console.log(error.response)
-      }).finally(() => {
-        // setIsLoading(false)
-      })
-  }
+  const {incomingInquiry, updateIncomingInquiry} = useContext(GlobalContext)
   useEffect(() => {
-    countIncomingInquiry()
+    updateIncomingInquiry(session.data.accessToken)
   }, [])
 
   return (
@@ -65,7 +48,7 @@ export default function SellComponents(){
               <i className="fas fa-box text-blueGray-400 mr-2 text-sm"></i>{" "}
               Incoming Inquiry 
               <span className="ml-1 text-xs font-semibold inline-block py-1 px-2 text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
-                {totalIncomingInquiry}
+                {incomingInquiry}
               </span>
           </Link>
         </li>

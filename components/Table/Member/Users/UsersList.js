@@ -57,13 +57,14 @@ export default function UsersList(props){
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="inline-flex">
-                                            <WarningButton
-                                                size="sm"
-                                                className="mr-2"
-                                                onClick={() => props.editAccount(item)}
-                                            >
+                                            <Link href={`/admin/member/settings/users/edit/${item.id}`}>
+                                                <WarningButton
+                                                    size="sm"
+                                                    className="mr-2"
+                                                >
                                                 Edit
                                             </WarningButton>
+                                            </Link>
                                             <DangerButton
                                                 size="sm"
                                                 onClick={() => props.deleteAccount(item)}

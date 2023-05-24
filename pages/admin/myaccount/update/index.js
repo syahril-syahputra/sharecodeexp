@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import axios from "lib/axios";
 import { getSession } from "next-auth/react";
+import GlobalContext from "@/store/global-context";
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -60,6 +61,7 @@ export default function EditMyAccount({session}) {
         setInputData({...inputData, [input.name]:input.value})
     }
 
+    const { loadUsername } = useContext(GlobalContext)
     const router = useRouter()
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -73,6 +75,7 @@ export default function EditMyAccount({session}) {
         })
         .then((response) => {
             let result = response.data.data
+            loadUsername(session.accessToken)
             toast.success("Your account has been updated succefully", toastOptions)
             router.push("/admin/myaccount");
         }).catch((error) => {

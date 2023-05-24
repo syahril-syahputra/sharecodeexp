@@ -5,8 +5,10 @@ import LightButton from "@/components/Interface/Buttons/LightButton";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 export default function VerifyOrder(props){
     const [buyerTracker, setBuyerTracker] = useState('')
-    const setDataHandler = (item, inputName) => {
-        setBuyerTracker(item.value)
+    const [expectedShippingDateBuyer, setExpectedShippingDateBuyer] = useState('')
+
+    const handleSubmit = () => {
+        props.acceptance(buyerTracker, expectedShippingDateBuyer)
     }
 
     return (
@@ -14,16 +16,28 @@ export default function VerifyOrder(props){
             title="Provide Tracking Information"
             onClick={() => props.closeModal()}
             body={
-                <>
-                    <TextInput
-                        label="Tracker Number"
-                        name="buyerTracker"
-                        value={buyerTracker}
-                        onChange={(input) => setBuyerTracker(input.value)}
-                        errorMsg={props.errorInfo?.trackingBuyer}
-                    ></TextInput>
-                    <p className="mt-2 italic text-blueGray-500 text-sm leading-relaxed">
-                       This tracker will be send to the buyer.
+                <>  
+                    <div className="mb-4">
+                        <TextInput
+                            label="Tracker Number"
+                            name="buyerTracker"
+                            value={buyerTracker}
+                            onChange={(input) => setBuyerTracker(input.value)}
+                            errorMsg={props.errorInfo?.trackingBuyer}
+                        ></TextInput>
+                    </div>
+                    <div>
+                        <TextInput
+                            type="date"
+                            label="Expected Shipment Date"
+                            name="expectedShippingDateBuyer"
+                            value={expectedShippingDateBuyer}
+                            onChange={(input) => setExpectedShippingDateBuyer(input.value)}
+                            errorMsg={props.errorInfo?.expectedShippingDateBuyer}
+                        />
+                    </div>
+                    <p className="mt-8 italic text-blueGray-500 text-sm leading-relaxed">
+                        Note: This Tracker and Expected Shipment Date will be send to the buyer.
                     </p>
                 </>
             }   
@@ -39,7 +53,7 @@ export default function VerifyOrder(props){
                     <PrimaryButton
                         disabled={props.isLoading}
                         className="font-bold uppercase"
-                        onClick={() => props.acceptance(buyerTracker)}>
+                        onClick={handleSubmit}>
                         {props.isLoading &&
                             <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                         }

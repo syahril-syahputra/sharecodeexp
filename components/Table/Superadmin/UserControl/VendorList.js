@@ -9,6 +9,8 @@ import HeaderTable from "@/components/Interface/Table/HeaderTable";
 import BaseTable from "@/components/Interface/Table/BaseTable";
 import NoData from "@/components/Interface/Table/NoData";
 import MetaData from "@/components/Interface/Table/MetaData";
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
+import WarningButton from "@/components/Interface/Buttons/WarningButton";
 
 export default function VendorList(props) {
     return (
@@ -33,9 +35,9 @@ export default function VendorList(props) {
                             <th scope="col" className="px-6 py-3">
                                 Sector
                             </th>
-                            {/* <th scope="col" className="px-6 py-3 text-right">
+                            <th scope="col" className="px-6 py-3 text-right">
                                 Act.
-                            </th> */}
+                            </th>
                         </>
                     }
                     tableData={
@@ -55,15 +57,15 @@ export default function VendorList(props) {
                                         <td className="px-6 py-4">
                                             {item.company.sector}
                                         </td>
-                                        {/* <td className="text-sm px-6 py-4 text-right">
+                                        <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
-                                                <Link href={`/admin/superadmin/usercontrol/master/view/${item.id}`}>
-                                                    <PrimaryButton
+                                                <Link href={`/admin/superadmin/usercontrol/vendors/update/${item.id}`}>
+                                                    <WarningButton
                                                         size="sm"
-                                                    >View</PrimaryButton>
+                                                    >Edit</WarningButton>
                                                 </Link>
                                             </div>
-                                        </td> */}
+                                        </td>
                                     </tr>
                                 )
                             })}

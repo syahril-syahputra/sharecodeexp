@@ -1,4 +1,5 @@
 import Link from "next/link";
+import moment from "moment";
 //data
 import Pagination from "@/components/Shared/Component/Pagination";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
@@ -26,10 +27,10 @@ export default function CompletedShipment(props) {
                                 Order Number
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Tracking for Buyer
+                                Tracker for Buyer
                             </th>  
                             <th scope="col" className="px-6 py-3">
-                                Tracking from Seller
+                                Tracker from Seller
                             </th>  
                             <th scope="col" className="px-6 py-3">
                                 Arrival Date
@@ -57,7 +58,7 @@ export default function CompletedShipment(props) {
                                             {item.trackingSeller}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            
+                                            {item.arrivalDate ? moment(item.arrivalDate).format("dddd, D MMMM YYYY") : '-'}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">

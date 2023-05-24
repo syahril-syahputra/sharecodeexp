@@ -3,6 +3,7 @@ import '@/styles/tailwind.css'
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import GlobalProvider from '../store/GlobalProvider';
 
 import { SessionProvider, useSession } from 'next-auth/react';
 import { Roboto } from '@next/font/google'
@@ -19,10 +20,12 @@ export default function App({ Component, pageProps }) {
   return (
     <main className={roboto.className}>
       <SessionProvider session={pageProps.session}>
-        <Layout>
-          <Component {...pageProps} />
-          <ToastContainer/>
-        </Layout>
+        <GlobalProvider>
+          <Layout>
+            <Component {...pageProps} />
+            <ToastContainer/>
+          </Layout>
+        </GlobalProvider>
       </SessionProvider>
     </main>
   )

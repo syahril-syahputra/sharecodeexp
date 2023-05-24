@@ -1,8 +1,7 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import { useSession, signOut } from "next-auth/react"
 
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
-import UserPopover from "components/Shared/Popover/UserPopover"
 import LogoutModal from "@/components/Modal/Logout/Logout";
 
 export default function Navbar() {
