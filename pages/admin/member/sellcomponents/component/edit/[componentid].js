@@ -69,7 +69,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
             })
             .then(() => {
                 router.push(`/admin/member/sellcomponents/component/view/${routeParam.componentid}`)
-                toast.success("Your product has been updated succefully", toastOptions)
+                toast.success("Your component have been updated successfully", toastOptions)
             }).catch((error) => {
                 console.log(error.data.data)
                 toast.error("Something went wrong", toastOptions)

@@ -24,6 +24,7 @@ import LoadingState from '@/components/Interface/Loader/LoadingState';
 
 export default function ComponentDetails({session, routeParam}) {
     //data search
+    const publicDir = process.env.NEXT_PUBLIC_DIR
     const [isLoading, setIsLoading] = useState(true)
     const [component, setComponent] = useState({})
     const getData = async () => {
@@ -195,9 +196,17 @@ export default function ComponentDetails({session, routeParam}) {
                 <>
                     {/* component image */}
                     <div className="w-full">
-                        <div className="px-3 mb-6 md:mb-0 text-center">
-                            <div className="p-24 border mx-2 my-4">product image {routeParam.componentid}</div>
-                        </div>
+                        {component.img ? 
+                            <div className="p-16 border mx-2 my-4">
+                                <img className="object-contain mb-3 h-40 mx-auto" 
+                                alt={component.ManufacturerNumber}
+                                src={publicDir + "/product_images/" + component.img}/>
+                            </div>
+                        :
+                            <div className="px-3 mb-6 md:mb-0 text-center">
+                                <div className="p-24 border mx-2 my-4">product image {component.ManufacturerNumber}</div>
+                            </div>
+                        }                    
                     </div>
                     <div className="overflow-x-auto pb-10">
                         <table className="w-50 text-sm text-left text-gray-500 bg-white">

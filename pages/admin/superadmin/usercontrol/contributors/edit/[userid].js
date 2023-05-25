@@ -75,7 +75,7 @@ export default function EditContributor({session, routerParam}) {
         })
         .then(() => {
             router.push("/admin/superadmin/usercontrol/contributors");
-            toast.success("Your contributors has been updated succefully", toastOptions)
+            toast.success("Your contributor have been updated successfully", toastOptions)
         }).catch((error) => {
             toast.error("Something went wrong", toastOptions)
             setErrorMessage("Please fill your form correctly")
