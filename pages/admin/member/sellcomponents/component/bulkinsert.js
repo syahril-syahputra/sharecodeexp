@@ -39,7 +39,7 @@ export default function BulkInsert({session}) {
       .then((response) => {
         let result = response.data.data
         router.replace('/admin/member/sellcomponents/component/pending')
-        toast.success("Your components has been added succefully", toastOptions)
+        toast.success("Your components have been added successfully", toastOptions)
       }).catch((error) => {
         setErrorMessage("Please fill the form correctly")
         console.log(error)

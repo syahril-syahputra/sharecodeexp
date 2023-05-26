@@ -46,7 +46,7 @@ export default function CreateContributor({session}){
         })
         .then(() => {
             router.push("/admin/superadmin/usercontrol/contributors");
-            toast.success("Your contributors has been created succefully", toastOptions)
+            toast.success("Your contributor have been created successfully", toastOptions)
         }).catch((error) => {
             toast.error("Something went wrong", toastOptions)
             setErrorMessage("Please fill your form correctly")

@@ -120,7 +120,7 @@ export default function MyCompany({session, sectorlist}) {
             .then((response) => {
                 let result = response.data.data
                 router.replace('/admin/member')
-                toast.success("Your company has been updated succefully", toastOptions)
+                toast.success("Your company have been updated successfully", toastOptions)
             }).catch((error) => {
                 setErrorMessage("Please fill your form correctly")
                 toast.error("Something went wrong", toastOptions)

@@ -82,7 +82,7 @@ export default function Contributors({session}) {
         })
         .then(() => {
             loadData()
-            toast.success("Your contributors has been deleted succefully", toastOptions)
+            toast.success("Your contributor have been deleted successfully", toastOptions)
             setShowDeleteContributorModal(false)
         })
         .catch((error) => {
