@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-export default function Modal(props) {
+export default function NeedLogin(props) {
     const router = useRouter()
 
     return (

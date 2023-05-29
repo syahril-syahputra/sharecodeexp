@@ -89,41 +89,6 @@ export default function OrderCompany(props) {
                                 </th>
                             </tr>
                         </thead>
-                        {/* <tbody className="text-xs text-gray-700 bg-white">
-                            {data.map((item, index) => {
-                                return(
-                                    <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                                        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                            {item.companies_products[0].country}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            {item.companies_products[0].AvailableQuantity}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            {item.companies_products[0].moq}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            {item.companies_products[0].ManufacturerNumber}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            {item.companies_products[0].Description}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            {item.companies_products[0].dateCode}
-                                        </td>
-                                        <td className="px-6 py-4 uppercase">
-                                            {item.companies_products[0].status}
-                                        </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="inline-flex">
-                                                <button className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Edit</button>
-                                                <button className="font-medium text-blue-600 text-white bg-red-400 p-2">Delete</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody> */}
                         <tbody className="text-xs text-gray-700 bg-white">
                             <tr className="bg-white border-b hover:bg-gray-50">
                                 <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
@@ -152,7 +117,7 @@ export default function OrderCompany(props) {
                                 </td>
                                 <td className="px-6 py-4 text-right">
                                     <div className="inline-flex">
-                                        <button onClick={() => setShowModal(true)} className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Change Status</button>
+                                        <button onClick={() => setShowModal(true)} className="mr-2 font-medium text-blue-600 bg-blueGray-700 p-2">Change Status</button>
                                     </div>
                                 </td>
                             </tr>

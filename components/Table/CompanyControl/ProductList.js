@@ -4,8 +4,10 @@ import Link from "next/link";
 
 // components
 import ChangeStatus from "@/components/Modal/CompanyControl/ChangeStatus"
+import ItemStatuses from "@/components/Shared/ItemStatuses";
 
 export default function TableProduct(props) {
+    const tableType = props.tableType
     const data = props.data
     const links = props.links
     const metaData = props.metaData
@@ -52,6 +54,7 @@ export default function TableProduct(props) {
         )
     }
 
+
     const [showModal, setShowModal] = useState(false);
     return (
         <>  
@@ -60,113 +63,139 @@ export default function TableProduct(props) {
                     <table className={`w-full text-sm text-left text-gray-500 shadow-md ${props.customClass}`}>
                         <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                             <tr>
-                                <th scope="col" className="px-6 py-3 text-center">
-                                    Country
+                            <th scope="col" className="px-6 py-3">
+                                    Manufacturer Part Number
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-center">
-                                    Company
+                                <th scope="col" className="px-6 py-3">
+                                    Manufacturer
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-center">
+                                <th scope="col" className="px-6 py-3">
                                     Available Quantity
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-center">
+                                <th scope="col" className="px-6 py-3">
                                     MOQ
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-center">
-                                    Manufacturer Number
+                                <th scope="col" className="px-6 py-3">
+                                    Country
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-center">
+                                <th scope="col" className="px-6 py-3">
                                     Description
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-center">
+                                <th scope="col" className="px-6 py-3">
                                     Date Code
                                 </th>
-                                <th scope="col" className="px-6 py-3 text-center">
+                                <th scope="col" className="px-6 py-3">
+                                    Package
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Packaging
+                                </th>
+                                <th scope="col" className="px-6 py-3">
                                     Status
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-center">
-                                    *
+                                    Action
                                 </th>
                             </tr>
                         </thead>
-                        {/* <tbody className="text-xs text-gray-700 bg-white">
+                        <tbody className="text-xs text-gray-700 bg-white">
                             {data.map((item, index) => {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                            {item.companies_products[0].country}
+                                            {item.ManufacturerNumber}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item.companies_products[0].AvailableQuantity}
+                                            {item.Manufacture}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item.companies_products[0].moq}
+                                            {item.AvailableQuantity}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item.companies_products[0].ManufacturerNumber}
+                                            {item.moq}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item.companies_products[0].Description}
+                                            {item.country}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item.companies_products[0].dateCode}
+                                            {item.Description}
                                         </td>
-                                        <td className="px-6 py-4 uppercase">
-                                            {item.companies_products[0].status}
+                                        <td className="px-6 py-4">
+                                            {item.dateCode}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            {item.package}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            {item.packaging}
+                                        </td>
+                                        <td className="px-6 py-4 uppercase text-center">
+                                            <ItemStatuses status={item.status_id} title={`stock status ${item.status_id}`} label={item.status_id}/>
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <div className="inline-flex">
-                                                <button className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Edit</button>
-                                                <button className="font-medium text-blue-600 text-white bg-red-400 p-2">Delete</button>
-                                            </div>
+                                            {!props.isLoading && 
+                                                <div className="inline-flex">
+                                                    <button onClick={()=> props.viewHandler(item.id)} className="font-medium text-blue-600 text-white bg-indigo-500 hover:bg-indigo-600 p-2">View</button>
+
+                                                    {/* {tableType == "accepted" && 
+                                                        <>
+                                                            <button className="font-medium text-blue-600 text-white bg-indigo-500 p-2">View</button>
+                                                        </>
+                                                    } */}
+
+                                                    {tableType == "pending" && 
+                                                        <>
+                                                            <button onClick={()=> props.acceptHandler(item.id)} className="font-medium text-blue-600 text-white bg-indigo-500 hover:bg-indigo-600 p-2">Accept</button>
+                                                            <button onClick={()=> props.rejectHandler(item.id)} className="font-medium text-blue-600 text-white bg-indigo-500 hover:bg-indigo-600 p-2">Reject</button>
+                                                        </>
+                                                    }
+
+                                                    {tableType == "rejected" && 
+                                                        <>
+                                                            <button onClick={()=> props.acceptHandler(item.id)} className="font-medium text-blue-600 text-white bg-indigo-500 hover:bg-indigo-600 p-2">Accept</button>
+                                                            <button onClick={()=> props.pendingHandler(item.id)} className="font-medium text-blue-600 text-white bg-indigo-500 hover:bg-indigo-600 p-2">Pending</button>
+                                                        </>
+                                                    }
+                                                </div>
+                                            }
+                                            {props.isLoading &&<div>
+                                                <div className='text-center my-auto'>
+                                                    <i className="fas fa-circle-notch fa-spin text-blue-600 my-auto mx-10 fa-2xl"></i>
+                                                </div>
+                                            </div>}
                                         </td>
                                     </tr>
                                 )
                             })}
-                        </tbody> */}
-                        <tbody className="text-xs text-gray-700 bg-white">
-                            <tr className="bg-white border-b hover:bg-gray-50">
-                                <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                    A
-                                </td>
-                                <td className="px-6 py-4">
-                                    A
-                                </td>
-                                <td className="px-6 py-4">
-                                    A
-                                </td>
-                                <td className="px-6 py-4">
-                                    A
-                                </td>
-                                <td className="px-6 py-4">
-                                   A
-                                </td>
-                                <td className="px-6 py-4">
-                                   A
-                                </td>
-                                <td className="px-6 py-4">
-                                    A
-                                </td>
-                                <td className="px-6 py-4 uppercase">
-                                    A
-                                </td>
-                                <td className="px-6 py-4 text-right">
-                                    <div className="inline-flex">
-                                        <button onClick={() => setShowModal(true)} className="mr-2 font-medium text-blue-600 text-white bg-blueGray-700 p-2">Change Status</button>
-                                    </div>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
+                {metaData.total > 0 ? 
+                    <div className="mt-2">
+                        <h2>Showing {metaData.total <= 20 ? metaData.total : metaData.perPage } data from {metaData.total} data</h2>
+                    </div>
+                : null}
             </div>
 
 
-            {showModal ? (
+            {/* {showModal ? (
                 <ChangeStatus
                     setShowModal={setShowModal}
                 />
-            ) : null}
+            ) : null} */}
+
+            {props.isLoading &&<div>
+                <div className='text-center my-auto mt-10'>
+                    <i className="fas fa-circle-notch fa-spin text-blueGray-700 my-auto mx-10 fa-2xl"></i>
+                </div>
+            </div>}
+            
+
+            <div className="flex justify-center mt-10 mx-auto justify-center">
+                {links.map((item, index) => {
+                    return setPaginationLabel(item, index)
+                })}
+            </div>
         </>
     );
 }

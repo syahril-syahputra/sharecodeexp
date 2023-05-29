@@ -1,27 +1,34 @@
 import React, {useState, useEffect} from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession } from "next-auth/react";
 
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
 
-//
-import CompanyControl from "./CompanyControl";
-import ProductBar from "./Product";
 import SettingsBar from "./Settings";
 
-export default function Sidebar() {
-  const [collapseShow, setCollapseShow] = React.useState("hidden");
-  const router = useRouter()
+//superadmin
+import Registry from "./Superadmin/Registry";
+import Orders from "./Superadmin/Orders";
+import Statistics from "./Superadmin/Statistics";
+import Components from "./Superadmin/Components";
+import MasterControl from "./Superadmin/MasterControl"
 
+//member
+import MemberSellComponents from "./Member/SellComponents";
+import MemberBuyComponents from "./Member/BuyComponents";
+
+
+export default function Sidebar(props) {
   const session = useSession()
   const [userDetail, setUserDetail] = useState()
-  const [companyStatus, setCompanyStatus] = useState()
   useEffect(() => { 
     setUserDetail(session.data?.user.userDetail) 
-    setCompanyStatus(session.data?.user.isCompanyConfirmed) 
   }, [session])
+
+  const [collapseShow, setCollapseShow] = React.useState("hidden");
+  const router = useRouter()
 
   return (
     <>
@@ -75,20 +82,6 @@ export default function Sidebar() {
                 </div>
               </div>
             </div>
-            {/* Form */}
-            <form className="mt-6 mb-4 md:hidden">
-              <div className="mb-3 pt-0">
-                <input
-                  type="text"
-                  placeholder="Search"
-                  className="border-0 px-3 py-2 h-12 border border-solid  border-blueGray-500 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-base leading-snug shadow-none outline-none focus:outline-none w-full font-normal"
-                />
-              </div>
-            </form>
-
-            {/* Divider */}
-            <hr className="my-4 md:min-w-full" />
-
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
               <li className="items-center">
                 <Link href="/admin/dashboard"
@@ -111,18 +104,60 @@ export default function Sidebar() {
                 </Link>
               </li>
             </ul>
-
-            {companyStatus == "true" ? 
-                <ProductBar/>
+            {(!props.company?.is_confirmed && userDetail?.role_id == 2)&& 
+              <div>
+                <div className='text-center my-auto mt-10 mb-10'>
+                    <i className="fas fa-circle-notch fa-spin text-blueGray-700 my-auto mx-10 fa-2xl"></i>
+                </div>
+            </div>
+            }
+            {props.company?.is_confirmed == "accepted" && userDetail?.role_id == 2? 
+              <>
+                <MemberSellComponents/>
+                <MemberBuyComponents/>
+              </>
               : null }
 
+            {userDetail?.role_id == 2 &&
               <SettingsBar
+                companyStatus={props.company?.is_confirmed}
                 statusId={userDetail?.status_id}
               />
+            }
 
             {userDetail?.role_id == 1 ? 
-              <CompanyControl/>
+              <>
+                <Registry/>
+                <Components/>
+                <Orders/>
+                <Statistics/>
+                <MasterControl/>
+              </>
             : null }
+
+            <hr className="my-4 md:min-w-full" />
+            <ul className="md:flex-col md:min-w-full flex flex-col list-none">
+              <li className="items-center">
+                <Link href="/admin/myaccount"
+                    className={
+                      "text-xs uppercase py-3 font-bold block " +
+                      (router.pathname.indexOf("/admin/myaccount") !== -1
+                        ? "text-lightBlue-500 hover:text-lightBlue-600"
+                        : "text-blueGray-700 hover:text-blueGray-500")
+                    }
+                  >
+                    <i
+                      className={
+                        "fas fa-user mr-2 text-sm " +
+                        (router.pathname.indexOf("/admin/myaccount") !== -1
+                          ? "opacity-75"
+                          : "text-blueGray-400")
+                      }
+                    ></i>{" "}
+                    My Account
+                </Link>
+              </li>
+            </ul>            
 
           </div>
         </div>

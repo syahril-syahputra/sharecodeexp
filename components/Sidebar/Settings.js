@@ -16,12 +16,12 @@ export default function SettingsBar(props){
             {/* Navigation */}
 
             {statusId == 1 ? 
-            <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
+            <ul className="md:flex-col md:min-w-full flex flex-col list-none">
               <li className="items-center">
-                <Link href="/admin/settings/mycompany"
+                <Link href="/admin/member/company/mycompany"
                   className={
-                    "text-xs uppercase py-3 font-bold block " +
-                    (router.pathname.indexOf("/admin/settings/mycompany") !== -1
+                    "text-xs uppercase py-2 font-bold block " +
+                    (router.pathname.indexOf("/admin/member/company/mycompany") !== -1
                       ? "text-lightBlue-500 hover:text-lightBlue-600"
                       : "text-blueGray-700 hover:text-blueGray-500")
                   }>
@@ -30,39 +30,24 @@ export default function SettingsBar(props){
                 </Link>
               </li>
             </ul>
-            : null}
+             : null} 
 
-            {statusId == 1 ? 
-            <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
+            {statusId == 1 && props.companyStatus == 'accepted' ? 
+            <ul className="md:flex-col md:min-w-full flex flex-col list-none">
               <li className="items-center">
-                <Link href="/admin/settings/masteraccount"
+                <Link href="/admin/member/settings/users"
                   className={
-                    "text-xs uppercase py-3 font-bold block " +
-                    (router.pathname.indexOf("/admin/settings/masteraccount") !== -1
+                    "text-xs uppercase py-2 font-bold block " +
+                    (router.pathname.indexOf("/admin/member/settings/users") !== -1
                       ? "text-lightBlue-500 hover:text-lightBlue-600"
                       : "text-blueGray-700 hover:text-blueGray-500")
                   }>
-                    <i className="fas fa-user text-blueGray-400 mr-2 text-sm"></i>{" "}
-                    Master Account
+                    <i className="fas fa-users text-blueGray-400 mr-2 text-sm"></i>{" "}
+                    Contributors
                 </Link> 
               </li>
             </ul>
             : null}
-
-            <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
-              <li className="items-center">
-                <Link href="/admin/settings/account"
-                  className={
-                    "text-xs uppercase py-3 font-bold block " +
-                    (router.pathname.indexOf("/admin/settings/account") !== -1
-                      ? "text-lightBlue-500 hover:text-lightBlue-600"
-                      : "text-blueGray-700 hover:text-blueGray-500")
-                  }>
-                    <i className="fas fa-user text-blueGray-400 mr-2 text-sm"></i>{" "}
-                    My Account
-                </Link>
-              </li>
-            </ul>
         </>
     )
 }

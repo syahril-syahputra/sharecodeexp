@@ -1,0 +1,82 @@
+import { useState } from "react"
+import { BaseModalMedium } from "@/components/Interface/Modal/BaseModal"
+import SelectInput from "@/components/Interface/Form/SelectInput";
+import TextInput from "@/components/Interface/Form/TextInput";
+import LightButton from "@/components/Interface/Buttons/LightButton";
+import DangerButton from "@/components/Interface/Buttons/DangerButton";
+export default function RejectQuotation(props){
+    const [rejectionReason, setRejectionReason] = useState()
+    const handleRejectionChange = (value) => {
+        setRejectionData('')
+        setRejectionReason(value)
+        if(value.value != 'other') {
+            setRejectionData(value.value)
+        }
+    }
+
+    const [rejectionData, setRejectionData] = useState()
+    const handleRejection = () => {
+        props.acceptance(rejectionData)
+    }
+
+    const setDataHandler = (item) => {
+        setRejectionData(item.value)
+    }
+
+    return (
+        <BaseModalMedium
+            title="Reject Quotation"
+            onClick={() => props.closeModal()}
+            body={
+                <>
+                    <p className="mb-4 text-blueGray-500 text-lg leading-relaxed">
+                        Do you agree to <span className="text-blueGray-700 font-bold">Reject</span> this Quotation? Select the reason bellow to continue rejecting.
+                    </p>
+                    <div className="w-full mb-6">
+                        <SelectInput
+                            disabled={props.isLoading}                              
+                            label="Rejection Reason"
+                            name="reason"
+                            value={rejectionReason}
+                            options={props.rejectionReason}
+                            errorMsg={props.errorInfo?.reason}
+                            onChange={handleRejectionChange}
+                        />
+                        { rejectionReason?.value == "other" && 
+                            <div className='mt-2'>
+                                <TextInput
+                                    disabled={props.isLoading}
+                                    required
+                                    name="rejectionData"
+                                    value={rejectionData}
+                                    onChange={(input) => setRejectionData(input.value)}
+                                /> 
+                            </div>
+                        }
+                    </div>
+                </>
+            }
+            action={
+                <>
+                    <LightButton
+                        className="font-bold uppercase mr-2"
+                        onClick={() => props.closeModal()}
+                    >
+                        No, Close
+                    </LightButton>
+
+                    <DangerButton
+                        disabled={props.isLoading || !rejectionData}
+                        className="font-bold uppercase"
+                        onClick={handleRejection}
+                    >
+                        {props.isLoading &&
+                            <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
+                        }
+                        Yes, Reject
+                    </DangerButton>
+                </>
+            }
+        ></BaseModalMedium>
+    )
+}

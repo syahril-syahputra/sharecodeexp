@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router";
 
@@ -17,7 +17,7 @@ export default function TableComponent(props){
         if(status === 'unauthenticated'){
             setShowModal(true)
         } else {
-            router.push(`/admin/product/mycart/${item}`)
+            router.push(`/admin/member/buycomponents/inquirylist/details/${item}`)
         }
     }
 
@@ -70,25 +70,25 @@ export default function TableComponent(props){
                 <table className={`w-full text-sm text-left text-gray-500 shadow-md ${props.customClass}`}>
                     <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                         <tr>
-                            <th scope="col" className="px-6 py-3 text-center">
-                                Country
+                            <th scope="col" className="px-6 py-3">
+                                Part Number
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
-                                Available Quantity
+                            <th scope="col" className="px-6 py-3">
+                                Manufacturer
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
-                                MOQ
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-center">
-                                Manufacturer Number
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-center">
+                            <th scope="col" className="px-6 py-3">
                                 Description
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
-                                Date Code
+                            <th scope="col" className="px-6 py-3">
+                                Available Stocks
                             </th>
-                            <th scope="col" className="px-6 py-3 text-center">
+                            <th scope="col" className="px-6 py-3">
+                                MOQ
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Country
+                            </th>
+                            <th scope="col" className="px-6 py-3">
                                 *
                             </th>
                         </tr>
@@ -98,8 +98,14 @@ export default function TableComponent(props){
                             return(
                                 <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                        {item.country}
+                                        {item.ManufacturerNumber}
                                     </th>
+                                    <td className="px-6 py-4">
+                                        {item.Manufacture}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {item.Description}
+                                    </td>
                                     <td className="px-6 py-4">
                                         {item.AvailableQuantity}
                                     </td>
@@ -107,16 +113,10 @@ export default function TableComponent(props){
                                         {item.moq}
                                     </td>
                                     <td className="px-6 py-4">
-                                        {item.ManufacturerNumber}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {item.Description}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {item.dateCode}
+                                        {item.country}
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                        <button onClick={() => inquiryItem(item.id)} className="font-medium text-blue-600 text-white bg-blueGray-700 p-2">Inquiry</button>
+                                        <button onClick={() => inquiryItem(item.id)} className="font-medium text-white bg-blueGray-700 p-2">Inquiry</button>
                                     </td>
                                 </tr>
                             )
@@ -124,7 +124,7 @@ export default function TableComponent(props){
                     </tbody>
                 </table>
                 <div className="mt-2">
-                    <h2>Showing {metaData.perPage} data from {metaData.total} data</h2>
+                    <h2>Showing {metaData.total <= 20 ? metaData.total : metaData.perPage } data from {metaData.total} data</h2>
                 </div>
             </div>
             {props.isLoading &&<div>
@@ -133,7 +133,7 @@ export default function TableComponent(props){
                 </div>
             </div>}
 
-            <div className="flex justify-center mt-10 mx-auto justify-center">
+            <div className="flex mt-10 mx-auto justify-center">
                 {links.map((item, index) => {
                     return setPaginationLabel(item, index)
                 })}
