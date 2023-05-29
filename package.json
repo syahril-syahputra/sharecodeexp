@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild":"next-sitemap",
     "start": "next start",
     "lint": "next lint",
     "export": "next export"
@@ -23,6 +24,7 @@
     "multer": "^1.4.5-lts.1",
     "next": "13.1.6",
     "next-auth": "^4.19.2",
+    "next-sitemap": "^4.0.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-popper": "^2.3.0",

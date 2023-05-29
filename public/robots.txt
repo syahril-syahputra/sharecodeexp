@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.exepart.com
+
+# Sitemaps
+Sitemap: https://www.exepart.com/sitemap.xml
