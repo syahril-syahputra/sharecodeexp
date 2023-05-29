@@ -1,6 +1,6 @@
 // pages/server-sitemap-index.xml/index.tsx
 import { getServerSideSitemapIndexLegacy } from 'next-sitemap'
-import { getServerSideProps } from 'next'
+// import { getServerSideProps } from 'next'
 import axios from "lib/axios";
 
 const siteUrl = "https://exepart.com";
