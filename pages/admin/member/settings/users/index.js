@@ -69,10 +69,6 @@ export default function Users({session}) {
     })
   }
 
-  const handleEditAccount = (id) => {
-    alert(`not ready yet :( ${id}`)
-  }
-
   const handleSearch = (item) =>{
     getData()
   }
@@ -88,7 +84,6 @@ export default function Users({session}) {
               isLoading={isLoading}
               data={data}
               deleteAccount={openDeleteModalHandler}
-              editAccount={handleEditAccount}
           ></UsersList>
       </div>
 

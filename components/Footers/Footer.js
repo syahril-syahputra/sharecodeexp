@@ -45,15 +45,15 @@ export default function Footer() {
                       >
                         Terms of Use
                       </Link>
-                    </li>
+                    </li>  
                     <li>
                       <Link
                         className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
-                        href={PublicUrl.conditionOfSale}
+                        href={PublicUrl.cookiePolicy}
                       >
-                        Condition of Sale
+                        Cookie Policy
                       </Link>
-                    </li>
+                    </li>                  
                     <li>
                       <Link
                         className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
@@ -65,17 +65,17 @@ export default function Footer() {
                     <li>
                       <Link
                         className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
-                        href={PublicUrl.conditionOfExport}
+                        href={PublicUrl.conditionOfSale}
                       >
-                        Terms and Condition of Export
+                        Terms and Condition of Sale
                       </Link>
                     </li>
                     <li>
                       <Link
                         className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
-                        href={PublicUrl.cookiePolicy}
+                        href={PublicUrl.conditionOfExport}
                       >
-                        Cookie Policy
+                        Terms and Condition of Export
                       </Link>
                     </li>
                     <li>

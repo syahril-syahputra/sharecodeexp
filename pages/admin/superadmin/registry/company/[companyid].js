@@ -251,14 +251,15 @@ export default function CompanyDetail({session, routeParam}) {
               <i className="mr-2 fas fa-image text-white"></i>
               Update Image
             </WarningButton>
-            <WarningButton
+            {/* <WarningButton
               size="sm"
               className="mb-2"
               onClick={() => alert(':(') }
+              disabled
             >
               <i className="mr-2 fas fa-pen text-white"></i>
               Update Company
-            </WarningButton>
+            </WarningButton> */}
             <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2">
               {companyData.name}
               <CompanyStatusesIcon status={companyData.is_confirmed}/>

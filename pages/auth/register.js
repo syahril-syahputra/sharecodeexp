@@ -457,7 +457,7 @@ export default function Index() {
                                                         </div>
                                                     }
                                                     <input id="policy" type="checkbox" checked={isAgreeTermCondtionOfExport} onChange={handleisAgreeTermCondtionOfExport} className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"/>
-                                                    <label htmlFor="policy" className="ml-2 text-sm font-medium text-gray-900">I agree with the <Link target="_blank" href={PublicUrl.conditionOfExport} className="text-blue-600 hover:underline">Term and Conditions of Export</Link>.</label>
+                                                    <label htmlFor="policy" className="ml-2 text-sm font-medium text-gray-900">I agree with the <Link target="_blank" href={PublicUrl.conditionOfExport} className="text-blue-600 hover:underline">Terms and Conditions of Export</Link>.</label>
                                                 </div>
                                             </div>
                                         </div>
