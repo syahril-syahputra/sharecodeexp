@@ -67,7 +67,7 @@ export default function Footer() {
                         className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
                         href={PublicUrl.conditionOfSale}
                       >
-                        Terms and Condition of Sale
+                        Terms and Conditions of Sale
                       </Link>
                     </li>
                     <li>
@@ -75,7 +75,7 @@ export default function Footer() {
                         className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
                         href={PublicUrl.conditionOfExport}
                       >
-                        Terms and Condition of Export
+                        Terms and Conditions of Export
                       </Link>
                     </li>
                     <li>
