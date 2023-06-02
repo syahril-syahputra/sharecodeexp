@@ -16,7 +16,7 @@ export default function Index() {
         <div className="container mx-auto mt-36 px-5">
           <div className="justify-center text-center flex flex-wrap mb-10">
             <div className="w-full md:px-4">
-              <h1 className="font-semibold text-4xl text-indigo-900">Exhibit A. Terms of Use</h1>
+              <h1 className="font-semibold text-4xl text-indigo-900">Terms of Use</h1>
             </div>
           </div>
           <div className="mb-10">
