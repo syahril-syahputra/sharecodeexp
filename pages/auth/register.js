@@ -18,12 +18,14 @@ import AreaInput from "@/components/Interface/Form/AreaInput"
 import countryList from 'react-select-country-list';
 import DangerNotification from '@/components/Interface/Notification/DangerNotification';
 import CountrySelector from '@/components/Shared/CountrySelector';
+import { PublicUrl } from '@/route/route-url';
 
 export default function Index() {
-    const [isAgreeTerm, setIsAgreeTerm] = useState(false)
-    const [isAgreeTermMessage, setIsAgreeTermMessage] = useState('')
-    const [isAgreePolicy, setIsAgreePolicy] = useState(false)
-    const [isAgreePolicyMessage, setIsAgreePolicyMessage] = useState('')
+    const [isAgreeTermCondtionOfSale, setIsAgreeTermCondtionOfSale] = useState(false)
+    const [isAgreeTermCondtionOfSaleMessage, setIsAgreeTermCondtionOfSaleMessage] = useState('')
+    const [isAgreeTermCondtionOfExport, setIsAgreeTermCondtionOfExport] = useState(false)
+    const [isAgreeTermCondtionOfExportMessage, setIsAgreeTermCondtionOfExportMessage] = useState('')
+    
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmationPassword, setShowConfirmationPassword] = useState(false)
     const [registrationInfo, setRegistrationInfo] = useState(
@@ -65,12 +67,12 @@ export default function Index() {
     const [isLoading, setIsLoading] = useState(false)
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if(!isAgreeTerm){
-            setIsAgreeTermMessage('Please agreed the Term and Conditions before continue.')
+        if(!isAgreeTermCondtionOfSale){
+            setIsAgreeTermCondtionOfSaleMessage('Please agreed the Term and Conditions of Sale before continue.')
             return
         }
-        if(!isAgreePolicy){
-            setIsAgreePolicyMessage('Please agreed the Privacy Policy bellow before continue.')
+        if(!isAgreeTermCondtionOfExport){
+            setIsAgreeTermCondtionOfExportMessage('Please agreed the Term and Conditions of Export before continue.')
             return
         }
         setErrorMessage(null)
@@ -99,19 +101,19 @@ export default function Index() {
 
     }
 
-    const handleIsAgreeTerm = () => {
-        setIsAgreeTerm(prev => !prev)
+    const handleisAgreeTermCondtionOfSale= () => {
+        setIsAgreeTermCondtionOfSale(prev => !prev)
 
-        if(!isAgreeTerm){
-            setIsAgreeTermMessage()
+        if(!isAgreeTermCondtionOfSale){
+            setIsAgreeTermCondtionOfSaleMessage()
         }
     }
 
-    const handleIsAgreePolicy = () => {
-        setIsAgreePolicy(prev => !prev)
+    const handleisAgreeTermCondtionOfExport = () => {
+        setIsAgreeTermCondtionOfExport(prev => !prev)
 
-        if(!isAgreePolicy){
-            setIsAgreePolicyMessage()
+        if(!isAgreeTermCondtionOfExport){
+            setIsAgreeTermCondtionOfExportMessage()
         }
     }
 
@@ -216,7 +218,7 @@ export default function Index() {
                                                             errorMsg={errorInfo?.password}
                                                             onChange={(input) => handleStringValueChange(input)}
                                                         /> 
-                                                        <div className="absolute inset-y-0 right-4 top-6 flex items-center cursor-pointer" onClick={() => setShowPassword(prev => !prev)}>
+                                                        <div className="absolute inset-y-0 right-4 top-9 flex items-start cursor-pointer" onClick={() => setShowPassword(prev => !prev)}>
                                                             {showPassword ?  
                                                                 <i className="fas fa-eye-slash text-slate-500"></i> :
                                                                 <i className="fas fa-eye text-slate-500"></i>
@@ -236,7 +238,7 @@ export default function Index() {
                                                             errorMsg={errorInfo?.password_confirmation}
                                                             onChange={(input) => handleStringValueChange(input)}
                                                         /> 
-                                                        <div className="absolute inset-y-0 right-4 top-6 flex items-center cursor-pointer" onClick={() => setShowConfirmationPassword(prev => !prev)}>
+                                                        <div className="absolute inset-y-0 right-4 top-9 flex items-start cursor-pointer" onClick={() => setShowConfirmationPassword(prev => !prev)}>
                                                             {showConfirmationPassword ?  
                                                                 <i className="fas fa-eye-slash text-slate-500"></i> :
                                                                 <i className="fas fa-eye text-slate-500"></i>
@@ -430,32 +432,32 @@ export default function Index() {
                                         <div className="text-center mb-6 mt-20">
                                             <div className='text-center'>
                                                 <div className="w-full">
-                                                    {isAgreeTermMessage &&
+                                                    {isAgreeTermCondtionOfSaleMessage &&
                                                         <div>
                                                             <span className=" inline-block mr-2 align-middle">
                                                                 <i className="text-red-500 fas fa-bell"></i>
                                                             </span>
                                                             <span className="font-light text-sm">
-                                                                <i className="text-red-500 capitalize">{isAgreeTermMessage}</i>
+                                                                <i className="text-red-500 capitalize">{isAgreeTermCondtionOfSaleMessage}</i>
                                                             </span>
                                                         </div>
                                                     }
-                                                    <input id="term" type="checkbox" checked={isAgreeTerm} onChange={handleIsAgreeTerm} className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"/>
-                                                    <label htmlFor="term" className="ml-2 text-sm font-medium text-gray-900">I agree with the <Link target="_blank" href="/termsandconditions" className="text-blue-600 hover:underline">Terms and Conditions</Link>.</label>
+                                                    <input id="term" type="checkbox" checked={isAgreeTermCondtionOfSale} onChange={handleisAgreeTermCondtionOfSale} className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"/>
+                                                    <label htmlFor="term" className="ml-2 text-sm font-medium text-gray-900">I agree with the <Link target="_blank" href={PublicUrl.conditionOfSale} className="text-blue-600 hover:underline">Terms and Conditions of Sale</Link>.</label>
                                                 </div>
                                                 <div className="w-full">
-                                                    {isAgreePolicyMessage &&
+                                                    {isAgreeTermCondtionOfExportMessage &&
                                                         <div>
                                                             <span className=" inline-block mr-2 align-middle">
                                                                 <i className="text-red-500 fas fa-bell"></i>
                                                             </span>
                                                             <span className="font-light text-sm">
-                                                                <i className="text-red-500 capitalize">{isAgreePolicyMessage}</i>
+                                                                <i className="text-red-500 capitalize">{isAgreeTermCondtionOfExportMessage}</i>
                                                             </span>
                                                         </div>
                                                     }
-                                                    <input id="policy" type="checkbox" checked={isAgreePolicy} onChange={handleIsAgreePolicy} className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"/>
-                                                    <label htmlFor="policy" className="ml-2 text-sm font-medium text-gray-900">I agree with the <Link target="_blank" href="/privacypolicy" className="text-blue-600 hover:underline">Privacy Policy</Link>.</label>
+                                                    <input id="policy" type="checkbox" checked={isAgreeTermCondtionOfExport} onChange={handleisAgreeTermCondtionOfExport} className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"/>
+                                                    <label htmlFor="policy" className="ml-2 text-sm font-medium text-gray-900">I agree with the <Link target="_blank" href={PublicUrl.conditionOfExport} className="text-blue-600 hover:underline">Terms and Conditions of Export</Link>.</label>
                                                 </div>
                                             </div>
                                         </div>

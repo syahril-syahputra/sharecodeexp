@@ -170,7 +170,7 @@ export default function ComponentDetails({session, routeParam}) {
                         </DangerButton>
                         }
 
-                        {!!routeParam.componentid && !isLoading &&
+                        {/* {!!routeParam.componentid && !isLoading &&
                             <Link href={`/admin/superadmin/components/edit/${routeParam.componentid}`}>
                                 <WarningButton
                                     size="sm"
@@ -179,7 +179,7 @@ export default function ComponentDetails({session, routeParam}) {
                                     Edit Component
                                 </WarningButton>
                             </Link>
-                        }
+                        } */}
                     </>
                 }
             ></PageHeader>

@@ -42,9 +42,9 @@ export default function AdditionalDocument(props){
                                         <WarningButton onClick={() => props.editHandler(item)} size="sm" className="mr-1">
                                             Edit
                                         </WarningButton>
-                                        <DangerButton onClick={() => alert(':(')} size="sm" disabled>
+                                        {/* <DangerButton onClick={() => alert(':(')} size="sm" disabled>
                                             Delete
-                                        </DangerButton>
+                                        </DangerButton> */}
                                     </td>
                                 </tr>
                             )

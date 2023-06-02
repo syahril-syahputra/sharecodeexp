@@ -1,6 +1,9 @@
 import React from "react";
 import Image from "next/image";
 
+import { PublicUrl } from "@/route/route-url";
+import Link from "next/link";
+
 export default function Footer() {
   return (
     <>
@@ -27,37 +30,61 @@ export default function Footer() {
             </div>
             <div className="w-full lg:w-6/12 px-4">
               <div className="flex flex-wrap items-top mb-6">
-                <div className="w-full lg:w-4/12 px-4 ml-auto">
+                <div className="w-full lg:w-6/12 px-4 ml-auto">
 
                 </div>
-                <div className="w-full lg:w-4/12 px-4">
+                <div className="w-full lg:w-4/12">
                   <span className="block uppercase text-white text-sm font-semibold mb-2">
                     Resources
                   </span>
                   <ul className="list-unstyled">
                     <li>
-                      <a
+                      <Link
                         className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
-                        href="/termsandconditions"
+                        href={PublicUrl.termOfUse}
                       >
-                        Terms & Conditions
-                      </a>
-                    </li>
+                        Terms of Use
+                      </Link>
+                    </li>  
                     <li>
-                      <a
+                      <Link
                         className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
-                        href="/privacypolicy"
+                        href={PublicUrl.cookiePolicy}
+                      >
+                        Cookie Policy
+                      </Link>
+                    </li>                  
+                    <li>
+                      <Link
+                        className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
+                        href={PublicUrl.privacyPolicy}
                       >
                         Privacy Policy
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a
+                      <Link
                         className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
-                        href="/contactus"
+                        href={PublicUrl.conditionOfSale}
+                      >
+                        Terms and Condition of Sale
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
+                        href={PublicUrl.conditionOfExport}
+                      >
+                        Terms and Condition of Export
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className="text-slate-400 hover:text-white font-semibold block pb-2 text-sm"
+                        href={PublicUrl.contactUs}
                       >
                         Contact Us
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </div>
