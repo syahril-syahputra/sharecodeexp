@@ -15,10 +15,6 @@ import NoData from "@/components/Interface/Table/NoData";
 import MetaData from "@/components/Interface/Table/MetaData";
 
 export default function ComponentList(props) {
-    const data = props.data
-    const links = props.links
-    const metaData = props.metaData
-
     return (
         <>
             <PrimaryWrapper>
@@ -73,7 +69,7 @@ export default function ComponentList(props) {
                     }
                     tableData={
                         <>
-                            {data.map((item, index) => {
+                            {props.data.map((item, index) => {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td scope="row" className="text-sm px-6 py-2">
@@ -132,7 +128,7 @@ export default function ComponentList(props) {
                                 )
                             })}
                             {!props.isLoading && props.metaData.total === 0 &&
-                                <NoData colSpan={9}/>
+                                <NoData colSpan={10}/>
                             }
                         </>
                     }

@@ -77,11 +77,11 @@ export default function InquiryDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Order has been verified", toastOptions)
+            toast.success("Inquired Component has been verified", toastOptions)
             setVerifyInquiryModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not verified Inquired Component", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -98,18 +98,18 @@ export default function InquiryDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Order has been verified", toastOptions)
+            toast.success("Inquired Component has been verified", toastOptions)
             setEditVerifiedOrderModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not verified Inquired Component", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
     }
 
     const [sendTrackerModal, setSendTrackerModal] = useState(false)
-    const sendTrackerModalHandle = async (sellerTracker, paymentAccount, expectedShippingDateSeller) => {
+    const sendTrackerModalHandle = async (sellerTracker, paymentAccount, expectedShippingDateSeller, shippingInformation) => {
         setIsLoading(true)
         setErrorInfo({})
 
@@ -117,6 +117,7 @@ export default function InquiryDetails({session, routeParam}) {
         formData.append("PaymentDocSeller", paymentAccount);
         formData.append("trackingSeller", sellerTracker);
         formData.append("expectedShippingDateSeller", expectedShippingDateSeller);
+        formData.append("shipping_information", shippingInformation);
         formData.append("id", data.id)  
         const response = await axios.post(`/seller/UpdateToPreparingShipment`, formData, 
         {
@@ -188,19 +189,6 @@ export default function InquiryDetails({session, routeParam}) {
                     status={data.order_status?.name}
                     action={todoValue}
                 />
-
-                {data.reason && 
-                    <div className="px-4 py-3 border-0 bg-red-400 mt-2">
-                        <div className="flex justify-center">
-                            <div className=" text-center">
-                                <h4
-                                    className="font-semibold text-sm text-white italic">
-                                    Rejection: {data.reason}
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-                }
                 <OrderStatusStep orderStatus={data.order_status}/>
             </PrimaryWrapper>
             
@@ -338,7 +326,7 @@ export default function InquiryDetails({session, routeParam}) {
                                     {data.companies_products?.dateCode}
                                 </td>
                                 <td className="text-center text-sm px-6 py-4">
-                                    ${data.price} / ${parseFloat(data.price) * parseInt(data.qty)}
+                                    ${data.price} / ${data.price ? (parseFloat(data.price) * parseInt(data.qty)) : ''}
                                 </td>
                             </tr>
                         </tbody>

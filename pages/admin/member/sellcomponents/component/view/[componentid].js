@@ -68,7 +68,7 @@ export default function MyProduct({session, routeParam}) {
                     </>
                 }
             ></PageHeader>
-            {data.reason && 
+            {data.reason && data.status == 'rejected' &&
                 <DangerNotification 
                     message={`Component is rejected`}
                     detail={data.reason}
@@ -88,7 +88,7 @@ export default function MyProduct({session, routeParam}) {
                             </div>
                         :
                             <div className="px-3 mb-6 md:mb-0 text-center">
-                                <div className="p-24 border mx-2 my-4">product image {routeParam.componentid}</div>
+                                <div className="p-24 border mx-2 my-4">product image {data.ManufacturerNumber}</div>
                             </div>
                         }                    
                     </div>

@@ -14,7 +14,6 @@ const GlobalProvider = props => {
         .then((response) => {       
             setIncomingInquiry(response.data.data)
         }).catch(() => {
-            newIncomingInquiry = 0
             setIncomingInquiry(0)
         })
 

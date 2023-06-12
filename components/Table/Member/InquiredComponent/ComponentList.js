@@ -16,10 +16,6 @@ import MetaData from "@/components/Interface/Table/MetaData";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 
 export default function InquiryComponents(props) {
-    const data = props.data
-    const links = props.links
-    const metaData = props.metaData
-
     const orderStatuses = useMemo(() => orderStatusesOptions, [])
     const [status, setStatus] = useState({value: 'all', label: 'All Status'});
     const handleStatusChange = value => {
@@ -125,7 +121,7 @@ export default function InquiryComponents(props) {
                                 )
                             })}
                             {!props.isLoading && props.metaData.total === 0 &&
-                                <NoData colSpan={9}/>
+                                <NoData colSpan={10}/>
                             }
                         </>
                     }

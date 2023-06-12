@@ -21,6 +21,7 @@ import Admin from "layouts/Admin.js";
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper';
 import PageHeader from '@/components/Interface/Page/PageHeader';
 import LoadingState from '@/components/Interface/Loader/LoadingState';
+import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses';
 
 export default function ComponentDetails({session, routeParam}) {
     //data search
@@ -64,11 +65,11 @@ export default function ComponentDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Component Accepted", toastOptions)
+            toast.success("Component has been accepted", toastOptions)
         })
         .catch((error) => {
             console.log(error)
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not accept the component", toastOptions)
         })
         .finally(() => {
             getData()
@@ -90,11 +91,11 @@ export default function ComponentDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Component Rejected", toastOptions)
+            toast.success("Component has been rejected", toastOptions)
         })
         .catch((error) => {
             console.log(error)
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not reject the component", toastOptions)
         })
         .finally(() => {
             getData()
@@ -115,11 +116,11 @@ export default function ComponentDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Component set to pending", toastOptions)
+            toast.success("Component has been set to pending", toastOptions)
         })
         .catch((error) => {
             console.log(error)
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not set component to pending", toastOptions)
         })
         .finally(() => {
             getData()
@@ -184,7 +185,7 @@ export default function ComponentDetails({session, routeParam}) {
                 }
             ></PageHeader>
 
-            {component.reason && 
+            {component.reason && component.status == 'rejected' &&
                 <DangerNotification 
                     message={`Component is rejected`}
                     detail={component.reason}
@@ -219,7 +220,8 @@ export default function ComponentDetails({session, routeParam}) {
                                         :
                                     </td>
                                     <td className="text-sm px-2 py-4">
-                                        
+                                        <Link href={`/admin/superadmin/registry/company/${component.company?.id}`} className="text-blueGray-700 underline">{component.company?.name}</Link>
+                                        <CompanyStatusesIcon status={component.company?.is_confirmed}/>   
                                     </td>
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">

@@ -12,13 +12,17 @@ import siteMetadata from '@/utils/siteMetadata'
 
 //hooks
 import useCompany from '@/hooks/useCompany'
+import ImageLogo from "@/components/ImageLogo/ImageLogo";
 
 export default function Admin({ children }) {
   const session = useSession();
   if (!session.data) {
     return (
       <div className="relative p-2 bg-white">
-        <div className="text-center pb-10 mt-10">
+        <div className="text-center pb-10 mt-20">
+          <div className="mt-10 mb-10">
+            <ImageLogo size={200}/>
+          </div>
           <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2 uppercase">
             <p>unauthenticated</p>
           </h3>

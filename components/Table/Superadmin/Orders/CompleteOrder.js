@@ -90,7 +90,7 @@ export default function CompleteOrder(props) {
                                 )
                             })}
                             {!props.isLoading && metaData.total === 0 &&
-                                <NoData colSpan={7}/>
+                                <NoData colSpan={8}/>
                             }
                         </>
                     }
