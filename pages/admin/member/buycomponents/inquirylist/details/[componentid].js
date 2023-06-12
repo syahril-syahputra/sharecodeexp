@@ -107,7 +107,7 @@ export default function AddToInquiryList({session, routeParam}) {
                             </div>
                         :
                             <div className="px-3 mb-6 md:mb-0 text-center">
-                                <div className="p-24 border mx-2 my-4">product image {routeParam.componentid}</div>
+                                <div className="p-24 border mx-2 my-4">product image {data.ManufacturerNumber}</div>
                             </div>
                         } 
                     </div>

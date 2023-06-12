@@ -20,7 +20,7 @@ export default function CompleteOrder(props){
                     </p>
                     <div className="w-full mt-5">
                         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                            Upload Invoice for Seller
+                            Send Payment Receipt for Seller
                         </label>
                         <div className="p-5 border-dashed border-2 border-indigo-200">
                             <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>

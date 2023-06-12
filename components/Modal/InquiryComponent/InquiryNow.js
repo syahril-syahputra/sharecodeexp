@@ -11,7 +11,7 @@ export default function InquireNow(props) {
       body={
         <>
           <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-            Inquiry component <span className="text-blueGray-700 font-bold">{props.title}</span> by <span className="text-blueGray-700 font-bold">{props.orderQuantity}</span> qty(s)?
+            Inquire component <span className="text-blueGray-700 font-bold">{props.title}</span> by <span className="text-blueGray-700 font-bold">{props.orderQuantity}</span> qty(s)?
           </p>
         </>
       }

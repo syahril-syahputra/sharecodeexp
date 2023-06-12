@@ -317,7 +317,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                     status={data.order_status?.name}
                     action={todoValue}
                 />
-                {data.reason && 
+                {data.reason && data.order_status_id == 4 &&
                     <div className="px-4 py-3 border-0 bg-red-400 mt-2">
                         <div className="flex justify-center">
                             <div className=" text-center">
@@ -466,7 +466,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                                     {data.companies_products?.dateCode}
                                 </td>
                                 <td className="text-center text-sm px-6 py-4">
-                                    ${data.price_profite} / ${parseFloat(data.price_profite) * parseFloat(data.qty)}
+                                    ${data.price_profite} / ${data.price_profite ? (parseFloat(data.price_profite) * parseFloat(data.qty)) : ''}
                                 </td>
                             </tr>
                         </tbody>

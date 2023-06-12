@@ -48,7 +48,7 @@ export default function InquiryList({session}) {
                     prevPage: result.prev_page_url ? true : false
                 })
             }).catch((error) => {
-                // console.log(error.response)
+                toast.error('Something went wrong. Can not load Inquiry List', toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })

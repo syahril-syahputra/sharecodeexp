@@ -64,7 +64,7 @@ export default function MemberStatistic(props) {
                                 )
                             })}
                             {!props.isLoading && props.data.length === 0 &&
-                                <NoData colSpan={5}/>
+                                <NoData colSpan={6}/>
                             }
                         </>
                     }

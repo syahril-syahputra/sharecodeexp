@@ -25,6 +25,8 @@ import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import DangerButton from "@/components/Interface/Buttons/DangerButton";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 import {CompanyStatusesIcon, CompanyStatusesText} from "@/components/Shared/Company/Statuses";
+import { useRouter } from "next/router";
+import RemoveCompany from "@/components/Modal/Registry/RemoveCompany";
 
 
 export default function CompanyDetail({session, routeParam}) {
@@ -65,11 +67,11 @@ export default function CompanyDetail({session, routeParam}) {
       }
     })
     .then(() => {
-      toast.success("Company Accepted", toastOptions)
+      toast.success("Company has been accepted successfully", toastOptions)
     })
     .catch((error) => {
       console.log(error)
-      toast.error("Something went wrong", toastOptions)
+      toast.error("Something went wrong. Can not accept company", toastOptions)
     })
     .finally(() => {
       getData()
@@ -91,11 +93,11 @@ export default function CompanyDetail({session, routeParam}) {
       }
     })
     .then(() => {
-      toast.success("Company Rejected", toastOptions)
+      toast.success("Company has been rejected successfully", toastOptions)
     })
     .catch((error) => {
       console.log(error)
-      toast.error("Something went wrong", toastOptions)
+      toast.error("Something went wrong. Can not reject company status", toastOptions)
     })
     .finally(() => {
       getData()
@@ -117,11 +119,11 @@ export default function CompanyDetail({session, routeParam}) {
       }
     })
     .then(() => {
-      toast.success("Company set to pending", toastOptions)
+      toast.success("Company has been set to pending", toastOptions)
     })
     .catch((error) => {
       console.log(error)
-      toast.error("Something went wrong", toastOptions)
+      toast.error("Something went wrong. Can not set company to pending", toastOptions)
     })
     .finally(() => {
       getData()
@@ -146,7 +148,7 @@ export default function CompanyDetail({session, routeParam}) {
     })
     .catch((error) => {
       console.log(error)
-      toast.error("Something went wrong", toastOptions)
+      toast.error("Something went wrong. Can not request additional document", toastOptions)
     })
     .finally(() => {
       getData()
@@ -172,7 +174,29 @@ export default function CompanyDetail({session, routeParam}) {
     })
     .catch((error) => {
       console.log(error)
-      toast.error("Something went wrong", toastOptions)
+      toast.error("Something went wrong. Can not update comapany's logo", toastOptions)
+    })
+    .finally(() => {
+      getData()
+    })
+  }
+
+  const router = useRouter()
+  const [showRemoveCompanyModal, setShowRemoveCompanyModal] = useState()
+  const handleRemoveCompany = async () => {
+    setIsLoading(true)
+    const request = await axios.delete(`/admin/companies/${routeParam.companyid}/delete`,
+    {
+      headers: {
+        "Authorization" : `Bearer ${session.accessToken}`
+      }
+    })
+    .then(() => {
+      toast.success("Company has been deleted", toastOptions)
+      router.push(`/admin/superadmin/registry/approvedcompany`)
+    })
+    .catch((error) => {
+      toast.error("Something went wrong. Can not delete comapany", toastOptions)
     })
     .finally(() => {
       getData()
@@ -314,6 +338,20 @@ export default function CompanyDetail({session, routeParam}) {
                 </div>
               </div>
             </div>
+
+            <div className="mt-10 py-5 border-t border-blueGray-200 text-center">
+              <h2 className="text-red-500">
+                DANGER ZONE
+              </h2>
+              <div className="flex flex-wrap justify-center mt-5">
+                <div className="w-full lg:w-9/12 px-4">
+                  <DangerButton size="sm" className="font-bold" onClick={() => setShowRemoveCompanyModal(true) }>
+                    <i className="mr-2 fas fa-times text-white"></i>
+                    DELETE COMPANY
+                  </DangerButton>
+                </div>              
+              </div>
+            </div>
           </div>
         </>
         : 
@@ -359,6 +397,15 @@ export default function CompanyDetail({session, routeParam}) {
             setShowModal={setShowPendingModal}
             companyName={companyData.name}
             acceptModal={handlePendingCompany}
+        />
+      ) : null}
+
+      {showRemoveCompanyModal ? (
+        <RemoveCompany
+          isLoading={isLoading}
+          setShowModal={setShowRemoveCompanyModal}
+          companyName={companyData.name}
+          acceptModal={handleRemoveCompany}
         />
       ) : null}
 

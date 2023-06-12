@@ -11,6 +11,7 @@ import Admin from "layouts/Admin.js";
 import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep";
 import OrderStatus from "@/components/Shared/Order/OrderStatus";
 import SendQuotationModal from "@/components/Modal/OrderComponent/Superadmin/SendQuotation"
+import EditRejectedQuotationModal from "@/components/Modal/OrderComponent/Superadmin/EditRejectedQuotation";
 import SendOrderToInquireModal from "@/components/Modal/OrderComponent/Superadmin/SendOrderToInquire"
 import SendProformaInvoiceModal from "@/components/Modal/OrderComponent/Superadmin/SendProformaInvoice"
 import AcceptPaymentDocumentModal from "@/components/Modal/OrderComponent/Superadmin/AcceptPaymentDocument"
@@ -80,11 +81,32 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Quotation has been set", toastOptions)
+            toast.success("Quotation has been sent", toastOptions)
             setSendQuotationModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not send quotation", toastOptions)
+            setErrorInfo(error.data.data)
+            setIsLoading(false)
+        })
+    }
+
+    const [editRejectedQuotationModal, setEditRejectedQuotationModal] = useState(false)
+    const handleEditRejectedQuotationModal = async (inputData) => {
+        setIsLoading(true)
+        setErrorInfo({})
+        const response = await axios.post(`/admin/orders/EditQuotedApproval`, inputData, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Quotation has been edited and sent", toastOptions)
+            setEditRejectedQuotationModal(false)
+            loadData()
+        }).catch((error) => {
+            toast.error("Something went wrong. Can not edit quotation", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -105,11 +127,11 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Proforma has been sent", toastOptions)
+            toast.success("Proforma Invoice has been sent", toastOptions)
             setSendProformaInvoiceModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not send Proforma Invoice", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -132,7 +154,7 @@ export default function OrderDetails({session, routeParam}) {
             setAcceptPaymentDocumentModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not accept the payment", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -157,7 +179,7 @@ export default function OrderDetails({session, routeParam}) {
             setRejectPaymentDocumentModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not reject the payment", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -183,7 +205,7 @@ export default function OrderDetails({session, routeParam}) {
             setTrackerNumberForBuyerModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not send tracker", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -209,7 +231,7 @@ export default function OrderDetails({session, routeParam}) {
             loadData()
         }).catch((error) => {
             console.log(error)
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not complete the order", toastOptions)
             setIsLoading(false)
         })
     }
@@ -283,8 +305,7 @@ export default function OrderDetails({session, routeParam}) {
                     status={data.order_status?.name}
                     action={todoValue}
                 />
-
-                {data.reason && 
+                {data.reason && data.order_status_id == 4 &&
                     <div className="px-4 py-3 border-0 bg-red-400 mt-2">
                         <div className="flex justify-center">
                             <div className=" text-center">
@@ -380,7 +401,7 @@ export default function OrderDetails({session, routeParam}) {
                 
             </div>
 
-            {/* shipment info */}
+            {/* buyer shipment info */}
             <PrimaryWrapper>
                 <div className="p-4">
                     <div className="p-2 text-md uppercase border-b text-center">
@@ -411,6 +432,21 @@ export default function OrderDetails({session, routeParam}) {
                             Buyer's Address
                         </div>
                         <div className="text-center text-sm">{data.addressBuyer ? data.addressBuyer : 'No Data'}</div>
+                    </div>
+                </div>
+            </PrimaryWrapper>
+
+            {/* seller shipment info */}
+            <PrimaryWrapper>
+                <div className="p-4">
+                    <div className="p-2 text-md uppercase border-b text-center">
+                        Seller's Shipment Info
+                    </div>
+                    <div className="mt-2">
+                        <div className="text-center">
+                            Seller's Address
+                        </div>
+                        <div className="text-center text-sm">{data.shipping_information ? data.shipping_information : 'No Data'}</div>
                     </div>
                 </div>
             </PrimaryWrapper>
@@ -528,10 +564,10 @@ export default function OrderDetails({session, routeParam}) {
                                     {data.companies_products?.dateCode}
                                 </td>
                                 <td className="text-center text-sm px-6 py-4">
-                                    ${data.price} / ${parseFloat(data.price) * parseInt(data.qty) }
+                                    ${data.price} / ${data.price ? (parseFloat(data.price) * parseInt(data.qty)) : '' }
                                 </td>
                                 <td className="text-center text-sm px-6 py-4">
-                                    ${data.price_profite} / ${parseFloat(data.price_profite) * parseInt(data.qty) }
+                                    ${data.price_profite} / ${data.price_profite ? (parseFloat(data.price_profite) * parseInt(data.qty)) : '' }
                                 </td>
                             </tr>
                         </tbody>
@@ -600,16 +636,30 @@ export default function OrderDetails({session, routeParam}) {
                     Actions
                 </div>
                 <div className="pb-4 mt-2 lg:flex lg:justify-center px-4">
-                    <div className="mx-1 my-1">
-                        <WarningButton 
-                            className="md:w-full sm:w-full" 
-                            disabled={data.order_status_id == 2 ? false : true} 
-                            size="sm"
-                            onClick={() => setSendQuotationModal(true) }
-                        >
-                            Send Quotation
-                        </WarningButton>
-                    </div>
+                    {data.order_status_id != 4 && 
+                        <div className="mx-1 my-1">
+                            <WarningButton 
+                                className="md:w-full sm:w-full" 
+                                disabled={data.order_status_id == 2 ? false : true} 
+                                size="sm"
+                                onClick={() => setSendQuotationModal(true) }
+                            >
+                                Send Quotation
+                            </WarningButton>
+                        </div>
+                    }
+                    {data.order_status_id == 4 && 
+                        <div className="mx-1 my-1">
+                            <WarningButton 
+                                className="md:w-full sm:w-full" 
+                                disabled={data.order_status_id == 4 ? false : true} 
+                                size="sm"
+                                onClick={() => setEditRejectedQuotationModal(true) }
+                            >
+                                Edit Rejected Quotation
+                            </WarningButton>
+                        </div>
+                    }
                     {/* <div className="mx-1 my-1">
                         <WarningButton 
                             className="md:w-full sm:w-full" 
@@ -750,6 +800,17 @@ export default function OrderDetails({session, routeParam}) {
                         orderQty={data.qty}
                         closeModal={() => setSendQuotationModal(false)}
                         acceptance={handleSendQuotationModal}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                {editRejectedQuotationModal &&
+                    <EditRejectedQuotationModal
+                        isLoading={isLoading}
+                        orderId={data.id}
+                        orderQty={data.qty}
+                        closeModal={() => setEditRejectedQuotationModal(false)}
+                        acceptance={handleEditRejectedQuotationModal}
                         errorInfo={errorInfo}
                     />
                 }

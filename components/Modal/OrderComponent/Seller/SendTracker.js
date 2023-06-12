@@ -4,13 +4,15 @@ import { BaseModalLarge } from "@/components/Interface/Modal/BaseModal";
 import TextInput from "@/components/Interface/Form/TextInput";
 import LightButton from "@/components/Interface/Buttons/LightButton";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
+import AreaInput from "@/components/Interface/Form/AreaInput";
 export default function SendTracker(props){
     const [sellerTracker, setSellerTracker] = useState('')
     const [expectedShippingDateSeller, setExpectedShippingDateSeller] = useState('')
     const [paymentAccount, setPaymentAccount] = useState()
+    const [shippingInformation, setshippingInformation] = useState('')
 
     const handleSubmit = () => {
-        props.acceptance(sellerTracker, paymentAccount, expectedShippingDateSeller)
+        props.acceptance(sellerTracker, paymentAccount, expectedShippingDateSeller, shippingInformation)
     }
     return (
         <BaseModalLarge
@@ -38,6 +40,19 @@ export default function SendTracker(props){
                                     onChange={(input) => setExpectedShippingDateSeller(input.value)}
                                     errorMsg={props.errorInfo?.expectedShippingDateSeller}
                                 />
+                            </div>                            
+                        </div>
+                        <div className="flex flex-wrap mb-6">
+                            <div className="w-1/2 px-3">
+                                <AreaInput
+                                    label="Seller's Shipment Address"
+                                    value={shippingInformation}
+                                    rows={5}
+                                    onChange={(input) => 
+                                        setshippingInformation(input.value)
+                                    }
+                                    errorMsg={props.errorInfo?.shipping_information}
+                                ></AreaInput>
                             </div>
                         </div>
                         <div className="w-full px-3 mb-6 md:mb-0">
