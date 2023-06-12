@@ -19,6 +19,10 @@ const authOptions = {
                     }
                 })
                 const user = await res.json()
+                if(!res.ok) {
+                    throw new Error(user.message)
+                }
+
                 if (res.ok && user) {
                     return {
                         name: user.data.user.name,
@@ -27,10 +31,6 @@ const authOptions = {
                         isCompanyConfirmed: user.data.is_confirmed
                     }
                 } 
-
-                if(user.data) {
-                    throw new Error(user.data)
-                }
 
                 return null
             }

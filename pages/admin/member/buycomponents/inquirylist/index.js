@@ -132,8 +132,8 @@ export default function InquiryList({session}) {
             setShowInquiryNowModal(false)
             setOrderQuantity(0)
             setListid(0)
-        }).catch(() => {
-            toast.error("Something went wrong", toastOptions)
+        }).catch((error) => {
+            toast.error(`Something went wrong. ${error.data.message}`, toastOptions)
             setErrorInfo()
             setIsLoading(false)
         })

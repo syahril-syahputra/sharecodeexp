@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 //comp
 import NeedLoginModal from "@/components/Modal/NeedLogin"
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
-import HeaderTable from "@/components/Interface/Table/HeaderTable";
 import BaseTable from "@/components/Interface/Table/BaseTable";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import NoData from "@/components/Interface/Table/NoData";
@@ -50,7 +49,7 @@ export default function TableComponent(props){
                             <th scope="col" className="px-6 py-3">
                                 Country
                             </th>
-                            <th scope="col" className="px-6 py-3">
+                            <th scope="col" className="px-6 py-3 text-right">
                                 Act.
                             </th>
                         </>
