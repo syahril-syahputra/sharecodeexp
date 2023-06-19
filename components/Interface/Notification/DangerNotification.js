@@ -1,6 +1,6 @@
 export default function DangerNotification(props){
     return (
-        <div className="mb-5 shadow-md hover:shadow-lg transition-all flex justify-between items-center text-white p-4 space-x-4 bg-red-500">
+        <div className="shadow-md hover:shadow-lg transition-all flex justify-between items-center text-white p-4 space-x-4 bg-red-500">
             <span className="text-xl">
                 <i className="fas fa-bell"></i>
             </span>

@@ -28,6 +28,7 @@ import {CompanyStatusesIcon, CompanyStatusesText} from "@/components/Shared/Comp
 import { useRouter } from "next/router";
 import RemoveCompany from "@/components/Modal/Registry/RemoveCompany";
 import InfoNotification from "@/components/Interface/Notification/InfoNotification";
+import DangerNotification from "@/components/Interface/Notification/DangerNotification";
 
 
 export default function CompanyDetail({session, routeParam}) {
@@ -175,7 +176,7 @@ export default function CompanyDetail({session, routeParam}) {
     })
     .catch((error) => {
       console.log(error)
-      toast.error("Something went wrong. Can not update comapany's logo", toastOptions)
+      toast.error("Something went wrong. Can not update company's logo", toastOptions)
     })
     .finally(() => {
       getData()
@@ -266,7 +267,6 @@ export default function CompanyDetail({session, routeParam}) {
             message="Your Company is Rejected"
             detail={companyData.reason}
           ></DangerNotification>
-          <span className="mb-4"/>
         </>
       }
       {(companyData?.reason && companyData.is_confirmed == "pending") &&
