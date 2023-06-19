@@ -19,6 +19,7 @@ import NumberInput from "@/components/Interface/Form/NumberInput";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import LoadingState from "@/components/Interface/Loader/LoadingState";
 import LightButton from "@/components/Interface/Buttons/LightButton";
+import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
 
 export default function AddToInquiryList({session, routeParam}) {
     const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -72,7 +73,7 @@ export default function AddToInquiryList({session, routeParam}) {
             router.push(`/admin/member/buycomponents/inquirylist`)
             toast.success("Component has been added to list", toastOptions)
         }).catch((error) => {
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not add data to Inquiry List.", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -87,12 +88,25 @@ export default function AddToInquiryList({session, routeParam}) {
                     </h3>
                 }
                 rightTop={
-                    <Link href="/product/search">
-                        <LightButton 
-                            size="sm">
-                            Search another component
-                        </LightButton>
-                    </Link>
+                    <>
+                        <Link target="_blank" href={publicDir + "/product_datasheet/" + data.datasheet}>
+                            <SecondaryButton
+                                size="sm"
+                                className="mr-2"
+                                disabled={data.datasheet ? false : true}
+                            >   
+                                <i className="mr-2 ml-1 fas fa-eye"></i>
+                                View Datasheet
+                            </SecondaryButton>
+                        </Link>
+                        <Link href="/product/search">
+                            <LightButton 
+                                size="sm">
+                                Search another component
+                            </LightButton>
+                        </Link>
+                    </>
+                    
                 }
             ></PageHeader>
 
@@ -277,6 +291,14 @@ AddToInquiryList.layout = Admin;
 
 export async function getServerSideProps(context) {
     const session = await getSession(context)
+    if(!session){
+        return {
+            redirect: {
+                destination: '/auth/login'
+            }
+        }
+    }
+    
     if(session.user.userDetail.role_id == 1){
         return {
             redirect: {

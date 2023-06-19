@@ -8,7 +8,6 @@ import axios from "lib/axios";
 //components
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
-// import TableComponent from "@/components/Table/TableComponent";
 import TableComponent from "@/components/Table/Public/Component";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";

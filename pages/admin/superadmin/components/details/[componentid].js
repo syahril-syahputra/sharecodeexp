@@ -22,6 +22,7 @@ import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper';
 import PageHeader from '@/components/Interface/Page/PageHeader';
 import LoadingState from '@/components/Interface/Loader/LoadingState';
 import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses';
+import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton';
 
 export default function ComponentDetails({session, routeParam}) {
     //data search
@@ -140,6 +141,16 @@ export default function ComponentDetails({session, routeParam}) {
                 }
                 rightTop={
                     <>
+                        <Link target="_blank" href={publicDir + "/product_datasheet/" + component.datasheet}>
+                            <SecondaryButton
+                                size="sm"
+                                className="mr-2"
+                                disabled={component.datasheet ? false : true}
+                            >   
+                                <i className="mr-2 ml-1 fas fa-eye"></i>
+                                View Datasheet
+                            </SecondaryButton>
+                        </Link>
                         {(component.status == "pending" || component.status == "rejected") && 
                             <PrimaryButton
                                 size="sm"

@@ -18,6 +18,29 @@ export default function MemberAdditionalDocument({session, routeParam}) {
   //data search
   const [isLoading, setIsLoading] = useState(true)
   const [additionalDocs, setAdditionalDocs] = useState([])
+  const [companyData, setCompanyData] = useState({})
+  useEffect(() => {
+    const getCompany = async () => {
+      setIsLoading(true)
+      const response = await axios.get(`admin/companies?id=${routeParam.companyid}`,
+        {
+            headers: {
+            "Authorization" : `Bearer ${session.accessToken}`
+            }
+        }
+        )
+        .then((response) => {
+            let result = response.data.data
+            setCompanyData(result)
+        }).catch((error) => {
+            // console.log(error.response)
+        }).finally(() => {
+            setIsLoading(false)
+        })
+    }  
+      getCompany()
+  }, [])
+
   const getData = async () =>{
     setIsLoading(true)
     const request = await axios.get(`/admin/companies/AdditionalDoc?company_id=${routeParam.companyid}`,
@@ -45,7 +68,7 @@ export default function MemberAdditionalDocument({session, routeParam}) {
       <div className="mb-10">
         <AdditionalDocument
           isLoading={isLoading}
-          title={`${routeParam.companyid}'s Additional Documents`}
+          title={`${companyData.name ? companyData.name : '...'}'s Additional Documents`}
           items={additionalDocs}
         ></AdditionalDocument>
       </div>

@@ -14,6 +14,7 @@ import PageHeader from '@/components/Interface/Page/PageHeader';
 import DangerNotification from '@/components/Interface/Notification/DangerNotification';
 import LoadingState from '@/components/Interface/Loader/LoadingState';
 import WarningButton from '@/components/Interface/Buttons/WarningButton';
+import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton';
 
 export default function MyProduct({session, routeParam}) {
     //data search
@@ -55,6 +56,16 @@ export default function MyProduct({session, routeParam}) {
                 }
                 rightTop={
                     <>
+                        <Link target="_blank" href={publicDir + "/product_datasheet/" + data.datasheet}>
+                            <SecondaryButton
+                                size="sm"
+                                className="mr-2"
+                                disabled={data.datasheet ? false : true}
+                            >   
+                                <i className="mr-2 ml-1 fas fa-eye"></i>
+                                View Datasheet
+                            </SecondaryButton>
+                        </Link>
                         {!!routeParam.componentid && 
                             <Link href={`/admin/member/sellcomponents/component/edit/${routeParam.componentid}`}>
                                 <WarningButton 
@@ -92,6 +103,7 @@ export default function MyProduct({session, routeParam}) {
                             </div>
                         }                    
                     </div>
+
                     <div className="overflow-x-auto pb-10">
                         <table className="w-50 text-sm text-left text-gray-500 bg-white">
                             <tbody>

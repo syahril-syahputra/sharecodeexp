@@ -1,31 +1,33 @@
 import LightButton from "@/components/Interface/Buttons/LightButton";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import { BaseModalMedium } from "@/components/Interface/Modal/BaseModal";
-export default function Logout(props){
+import { useRouter } from "next/router";
+export default function NeedLogin(props){
+    const router = useRouter()
     return (
         <>
             <BaseModalMedium
-                title="Logout"
-                onClick={() => props.closeModal()}
+                title="Login Required"
+                onClick={() => props.setShowModal(false)}
                 body={
                     <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                        Do you want to <span className="text-blueGray-700 font-bold">Logout</span>?
+                        To inquiry this component you should login, do you want to <span className="text-blueGray-700 font-bold">Login</span>?
                     </p>
                 }
                 action={
                     <>
                         <LightButton
                             className="uppercase mr-2 font-bold"
-                            onClick={() => props.closeModal()}
+                            onClick={() => props.setShowModal(false)}
                         >
-                            No, Stay
+                            No, Close
                         </LightButton>
 
                         <PrimaryButton
                             className="uppercase font-bold"
                             isLoading={props.isLoading}
-                            onClick={() => props.acceptance()}
-                        >Yes, Logout</PrimaryButton>
+                            onClick={() => router.push('/auth/login')}
+                        >Yes, Login</PrimaryButton>
                     </>
                 }
             />
