@@ -183,10 +183,10 @@ export default function MyCompany({session}) {
             <span className="mb-4"/>
           </>
         }
-        {(companyData?.notification && companyData.is_confirmed == "pending") &&
+        {(companyData?.reason && companyData.is_confirmed == "pending") &&
           <InfoNotification
             message="Update Needed"
-            detail={companyData.notification}
+            detail={companyData.reason}
           ></InfoNotification>
         }
 

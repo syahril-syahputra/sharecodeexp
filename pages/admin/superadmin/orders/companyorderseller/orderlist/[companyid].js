@@ -86,7 +86,7 @@ export default function ActiveOrders({session, routeParam}) {
             <MiniSearchBar searchItem={handleSearch}/>
         </div>
         <CompaniesBasedOrderChild
-          title={`${companyData.name}'s Order List (Seller)`}
+          title={`${companyData.name ? companyData.name : '...'}'s Order List (Seller)`}
           setPage={setPage}
           isLoading={isLoading}
           data={data}

@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/router";
 
 //comp
-import NeedLoginModal from "@/components/Modal/NeedLogin"
+import NeedLoginModal from "@/components/Modal/NeedLogin/NeedLogin"
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 import BaseTable from "@/components/Interface/Table/BaseTable";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
@@ -87,7 +87,7 @@ export default function TableComponent(props){
                                 )
                             })}
                             {!props.isLoading && props.metaData.total === 0 &&
-                                <NoData colSpan={7}/>
+                                <NoData colSpan={7}>Component not found</NoData>
                             }
                         </>
                     }

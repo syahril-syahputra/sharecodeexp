@@ -27,6 +27,7 @@ import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 import {CompanyStatusesIcon, CompanyStatusesText} from "@/components/Shared/Company/Statuses";
 import { useRouter } from "next/router";
 import RemoveCompany from "@/components/Modal/Registry/RemoveCompany";
+import InfoNotification from "@/components/Interface/Notification/InfoNotification";
 
 
 export default function CompanyDetail({session, routeParam}) {
@@ -259,6 +260,26 @@ export default function CompanyDetail({session, routeParam}) {
           </>
         }
       ></PageHeader>
+      {(companyData?.reason && companyData.is_confirmed == "rejected") &&
+        <>
+          <DangerNotification
+            message="Your Company is Rejected"
+            detail={companyData.reason}
+          ></DangerNotification>
+          <span className="mb-4"/>
+        </>
+      }
+      {(companyData?.reason && companyData.is_confirmed == "pending") &&
+        <InfoNotification
+          message="Update Needed"
+          detail={companyData.reason}
+        ></InfoNotification>
+      }
+      {companyData?.reason &&
+        <div className="m-4 text-xl text-center font-medium italic">
+          <h2>*This notification was sent for member</h2>
+        </div>
+      }
 
       {/* main content */}
       {!isLoading ? 
@@ -289,9 +310,9 @@ export default function CompanyDetail({session, routeParam}) {
               <CompanyStatusesIcon status={companyData.is_confirmed}/>
             </h3>
               <CompanyStatusesText status={companyData.is_confirmed}/>
-            <div>
+            {/* <div>
               {companyData.is_confirmed == "rejected" && <i className="text-red-700">"{companyData.reason}"</i>}
-            </div>
+            </div> */}
             <div className="text-sm leading-normal mt-2 text-blueGray-400 font-bold uppercase">
               <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{" "}
               {companyData.country}, {companyData.address}
@@ -338,6 +359,7 @@ export default function CompanyDetail({session, routeParam}) {
                 </div>
               </div>
             </div>
+            
 
             <div className="mt-10 py-5 border-t border-blueGray-200 text-center">
               <h2 className="text-red-500">
