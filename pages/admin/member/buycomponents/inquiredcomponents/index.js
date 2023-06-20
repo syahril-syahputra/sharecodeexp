@@ -29,7 +29,6 @@ export default function InquiryNow({session}) {
             }
             })
             .then((response) => {
-                console.log(response)
                 let result = response.data.data
                 setData(result.data)
                 setLinks(result.links)

@@ -164,8 +164,7 @@ export default function InquiryList({session}) {
             setShowDeleteInquireModal(false)
             searchData()
         }).catch((error) => {
-            console.log(error)
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not delete inquire component", toastOptions)
         }).finally(() => {
           setIsLoading(false)
         })

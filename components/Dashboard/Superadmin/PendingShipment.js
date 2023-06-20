@@ -7,10 +7,10 @@ import BaseTable from "@/components/Interface/Table/BaseTable";
 import HeaderTable from "@/components/Interface/Table/HeaderTable";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
+import NoData from '@/components/Interface/Table/NoData';
 
 export default function PendingShipment(props) {
   const data = props.data.slice(0, 5)
-  console.log(data)
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg">
@@ -37,7 +37,7 @@ export default function PendingShipment(props) {
                 <th className="px-6 py-3  text-left">
                   Expected Shipment Date (EXEPART)
                 </th>
-                <th className="px-6 py-3 text-right min-w-140-px">*</th>
+                <th className="px-6 py-3 text-right min-w-140-px">Act.</th>
               </>
           }
           tableData={
@@ -62,6 +62,9 @@ export default function PendingShipment(props) {
                   </tr>
                 )
               })}
+              {data.length === 0 &&
+                <NoData colSpan={4}/>
+            }
             </>
           }    
           isBusy={props.isLoading}              

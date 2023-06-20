@@ -6,10 +6,6 @@ export default function Modal(props) {
         props.acceptModal(rejectMessage)
     }
 
-    // const reasonHandle = (e) => {
-    //   console.log(e.target.value)
-    //   setRejectMessage()
-    // }
     return (
         <>
           <div

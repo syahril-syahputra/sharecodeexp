@@ -1,8 +1,7 @@
 export default function CompaniesGroup(props){
-  console.log(props)
     return (
         <div className="bg-white p-2 shadow">
-            <h3 className="text-2xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2">
+            <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
               {props.company.company_alphabet}
             </h3>
             <hr/>

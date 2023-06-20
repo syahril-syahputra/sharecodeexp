@@ -6,6 +6,8 @@ import axios from "@/lib/axios";
 // components
 import ComponentList from "@/components/Table/Superadmin/Components/ComponentList"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -43,8 +45,8 @@ export default function AcceptedComponent({session}) {
                     prevPage: result.prev_page_url ? true : false
                 })
             }).catch((error) => {
-                console.log(error.response)
                 setData([])
+                toast.error("Something went wrong. Can not load component", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })

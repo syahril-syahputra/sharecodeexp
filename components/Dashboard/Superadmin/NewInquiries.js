@@ -7,6 +7,7 @@ import BaseTable from "@/components/Interface/Table/BaseTable";
 import HeaderTable from "@/components/Interface/Table/HeaderTable";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
+import NoData from '@/components/Interface/Table/NoData';
 
 export default function NewInquiries(props) {
   const data = props.data.slice(0, 5)
@@ -40,7 +41,7 @@ export default function NewInquiries(props) {
                 <th className="px-6 py-3 text-left">
                   Inquiries Date
                 </th>
-                <th className="px-6 py-3 text-right min-w-140-px">*</th>
+                <th className="px-6 py-3 text-right min-w-140-px">Act.</th>
               </>
           }
           tableData={
@@ -68,6 +69,9 @@ export default function NewInquiries(props) {
                   </tr>
                 )
               })}
+              {data.length === 0 &&
+                <NoData colSpan={5}/>
+              }
             </>
           }    
           isBusy={props.isLoading}              

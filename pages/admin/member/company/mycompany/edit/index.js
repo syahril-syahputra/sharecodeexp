@@ -21,6 +21,8 @@ import TextInput from "@/components/Interface/Form/TextInput";
 import SelectInput from "@/components/Interface/Form/SelectInput";
 import AreaInput from "@/components/Interface/Form/AreaInput";
 import WarningButton from "@/components/Interface/Buttons/WarningButton";
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
 
 export default function MyCompany({session, sectorlist}) {
     const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -55,7 +57,7 @@ export default function MyCompany({session, sectorlist}) {
                     setSector({value: 'other', label: 'Other'})
                 }
             }).catch((error) => {
-                console.log(error)
+                toast.error("Something went wrong. Can not load company data", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })

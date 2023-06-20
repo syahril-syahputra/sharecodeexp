@@ -5,6 +5,8 @@ import { getSession } from "next-auth/react";
 // components
 import ComponentList from "@/components/Table/Member/Components/ComponentsList"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -42,7 +44,7 @@ export default function MyProduct({session}) {
           prevPage: result.prev_page_url ? true : false
         })
       }).catch((error) => {
-        // console.log(error.response)
+        toast.error("Something went wrong. Can not load component", toastOptions)
       }).finally(() => {
         setIsLoading(false)
       })

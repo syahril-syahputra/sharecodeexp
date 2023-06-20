@@ -49,7 +49,7 @@ export default function AddAccount({session}) {
         router.push('/admin/member/settings/users')
       }).catch((error) => {
         toast.error("Something went wrong", toastOptions)
-        setErrorMessage("Fill your form correctly")
+        setErrorMessage(error.data.message ? error.data.message :"Fill your form correctly")
         setErrorInfo(error.data.data)
       }).finally(() => {
         setIsLoading(false)
@@ -87,7 +87,7 @@ export default function AddAccount({session}) {
             name="name"
             value={inputData.name}
             onChange={(input) => setDataHandler(input)}
-            errorMsg={errorInfo.name}
+            errorMsg={errorInfo?.name}
           ></TextInput>
         </div>
         <div className="w-full lg:w-1/2 px-3 mb-6">
@@ -98,7 +98,7 @@ export default function AddAccount({session}) {
             type="email"
             value={inputData.email}
             onChange={(input) => setDataHandler(input)}
-            errorMsg={errorInfo.email}
+            errorMsg={errorInfo?.email}
           ></TextInput>
         </div>
         <div className="w-full lg:w-1/2 px-3 mb-6">
@@ -112,7 +112,7 @@ export default function AddAccount({session}) {
                   errorMsg={errorInfo?.password}
                   onChange={(input) => setDataHandler(input)}
               /> 
-              <div className="absolute inset-y-0 right-4 top-6 flex items-center cursor-pointer" onClick={() => setShowPassword(prev => !prev)}>
+              <div className="absolute inset-y-0 right-4 top-9 flex items-start cursor-pointer" onClick={() => setShowPassword(prev => !prev)}>
                   {showPassword ?  
                       <i className="fas fa-eye-slash text-slate-500"></i> :
                       <i className="fas fa-eye text-slate-500"></i>
@@ -131,7 +131,7 @@ export default function AddAccount({session}) {
                   errorMsg={errorInfo?.password_confirmation}
                   onChange={(input) => setDataHandler(input)}
               /> 
-              <div className="absolute inset-y-0 right-4 top-6 flex items-center cursor-pointer" onClick={() => setShowConfirmationPassword(prev => !prev)}>
+              <div className="absolute inset-y-0 right-4 top-9 flex items-start cursor-pointer" onClick={() => setShowConfirmationPassword(prev => !prev)}>
                   {showConfirmationPassword ?  
                       <i className="fas fa-eye-slash text-slate-500"></i> :
                       <i className="fas fa-eye text-slate-500"></i>

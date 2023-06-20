@@ -26,7 +26,6 @@ export default function Account({session}) {
             .then((response) => {
                 let result = response.data.data
                 setData(result)
-                console.log(response)
             }).catch((error) => {
             // console.log(error.response)
             }).finally(() => {

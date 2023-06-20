@@ -135,7 +135,6 @@ export default function EditComponent({session, routeParam, packaginglist}) {
     const handleSubCategoryChange = value => {
         setSubCategory(value);
         setInputData({...inputData, subcategory_id:value.value})
-        console.log(inputData)
     };
 
     //data search

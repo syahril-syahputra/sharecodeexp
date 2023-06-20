@@ -86,8 +86,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                 setAcceptQuotationModal(false)
                 loadData()
             }).catch((error) => {
-                console.log(error)
-                toast.error("Something went wrong", toastOptions)
+                toast.error("Something went wrong. Can not accept the quotation.", toastOptions)
                 setIsLoading(false)
             }).finally(() => {
                 setIsLoading(false)
@@ -104,7 +103,6 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                 let result = response.data
                 setRejectionReasons([...result.data, {value: 'other', label: 'Other'}])
             }).catch((error) => {
-                console.log(error)
                 toast.error("Failed to load rejection reason", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
@@ -131,8 +129,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             setRejectQuotationModal(false)
             loadData()
         }).catch((error) => {
-            console.log(error)
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not reject the quotation", toastOptions)
             setIsLoading(false)
         }).finally(() => {
             setIsLoading(false)
@@ -203,9 +200,8 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             setSendUpdatedPaymentDocsModal(false)
             loadData()
         }).catch((error) => {
-            console.log(error)
             setErrorInfo(error.data.data)
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not update payment", toastOptions)
             setIsLoading(false)
         }).finally(() => {
             setIsLoading(false)
@@ -229,8 +225,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             setAcceptOrderModal(false)
             loadData()
         }).catch((error) => {
-            console.log(error)
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not accept the order", toastOptions)
             setIsLoading(false)
         }).finally(() => {
             setIsLoading(false)
@@ -255,9 +250,8 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             setRejectOrderModal(false)
             loadData()
         }).catch((error) => {
-            console.log(error)
             setErrorInfo(error.data.data)
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not reject the order", toastOptions)
             setIsLoading(false)
         }).finally(() => {
             setIsLoading(false)

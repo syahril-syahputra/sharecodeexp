@@ -12,6 +12,8 @@ import Footer from "components/Footers/Footer.js";
 
 import TextInput from "@/components/Interface/Form/TextInput";
 import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
 
 export default function ResetPassword(props) {
     const [showPassword, setShowPassword] = useState(false)
@@ -44,7 +46,6 @@ export default function ResetPassword(props) {
             setEnteredPassword('')
             setEnteredPasswordConfirmation('')
         }).catch((error) => {
-            console.log(error)
             setErrInfo(error.data.data)
             setErrMessage("Something went wrong")
         }).finally(() => {

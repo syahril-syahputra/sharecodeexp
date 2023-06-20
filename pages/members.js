@@ -26,7 +26,7 @@ export default function Index() {
         setCompanies(result.data)
       })
       .catch((err) => {
-        console.log(err)
+        setCompanies([])
       })
       .finally(() => {
         setIsLoading(false)

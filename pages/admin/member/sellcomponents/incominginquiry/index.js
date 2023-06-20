@@ -8,6 +8,8 @@ import Admin from "layouts/Admin.js";
 // components
 import OrderList from "@/components/Table/Member/IncomingInquiry/OrderList"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
 
 export default function IncomingInquiry({session}) {
   //data search
@@ -42,7 +44,7 @@ export default function IncomingInquiry({session}) {
             prevPage: result.prev_page_url ? true : false
           })
         }).catch((error) => {
-            console.log(error.response)
+            toast.error("Something went wrong. Can not load incoming inquiry", toastOptions)
         }).finally(() => {
           setIsLoading(false)
         })

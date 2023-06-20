@@ -8,6 +8,8 @@ import Admin from "layouts/Admin.js";
 // components
 import ComponentList from "@/components/Table/Member/Components/ComponentsList"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
 
 export default function MyProduct({session}) {
   //data search
@@ -42,7 +44,8 @@ export default function MyProduct({session}) {
             prevPage: result.prev_page_url ? true : false
           })
         }).catch((error) => {
-            console.log(error.response)
+          setData([])
+          toast.error("Something went wrong. Can not load component", toastOptions)
         }).finally(() => {
           setIsLoading(false)
         })
