@@ -13,7 +13,6 @@ import Admin from "layouts/Admin.js";
 
 export default function MyProduct({session}) {
   //data search
-  const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
@@ -22,9 +21,11 @@ export default function MyProduct({session}) {
     perPage: 0,
     lastPage: 0
   })
-  const searchData = async (srch, page=1) =>{
+  const [search, setSearch] = useState('')
+  const searchData = async (searchParam='', page = 1) =>{
+    setSearch(searchParam)
     setIsLoading(true)
-    const response = await axios.get(`/companyproduct?page=${page}&status=pending`,
+    const response = await axios.get(`/companyproduct?page=${page}&status=pending&search=${searchParam}`,
         {
           headers: {
             "Authorization" : `Bearer ${session.accessToken}`
@@ -49,16 +50,15 @@ export default function MyProduct({session}) {
         setIsLoading(false)
       })
   }
-  const setPage = (item) => {
-    searchData(search, item)
+  const setPage = (pageNumber) => {
+    searchData(search, pageNumber)
   }
   useEffect(() => {
-    searchData(search)
+    searchData()
   }, [])
 
-  const handleSearch = (item) =>{
-    setSearch(item)
-    searchData()
+  const handleSearch = (searchResult) =>{
+    searchData(searchResult)
   }
 
   return (

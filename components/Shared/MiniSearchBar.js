@@ -1,32 +1,46 @@
 import { useState } from "react"
-import SecondaryButton from "../Interface/Buttons/SecondaryButton";
 import TextInput from "../Interface/Form/TextInput";
+import InfoButton from "../Interface/Buttons/InfoButton";
+import PrimaryButton from "../Interface/Buttons/PrimaryButton";
 
 export default function MiniSearchBar(props){
-    const [search, setSearch] = useState()
+    const [search, setSearch] = useState('')
     const handleEnter = (e) => {
         if (e.key === 'Enter' && !!search) {
             props.searchItem(search)
         }
     }
-    const onSubmit = (e) => {
-        e.preventDefault()
+    const onSubmit = () => {
         props.searchItem(search)
+    }
+
+    const onReset = () => {
+        setSearch('')
+        props.searchItem('')
     }
 
     return (
         <>
-            <form onSubmit={onSubmit}>
+            <form>
                 <div className="relative flex">
                     <TextInput
                         placeholder="Find here..."
+                        value={search}
                         onChange={(input) => setSearch(input.value)}  
                     />
-                    <SecondaryButton
-                        type="submit"                  
+                    <PrimaryButton
+                        type="button"
+                        className="mr-2"
+                        onClick={onSubmit}                  
                     >
                         Search
-                    </SecondaryButton>            
+                    </PrimaryButton>   
+                    <InfoButton
+                        type="button"
+                        onClick={onReset}                  
+                    >
+                        <i className="fas fa-refresh"></i>
+                    </InfoButton>          
                 </div>
             </form>
         </>

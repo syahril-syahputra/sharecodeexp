@@ -76,7 +76,7 @@ export default function Users({session}) {
     <>
       <div className="">
           <div className="mb-5 w-full lg:w-1/2">
-              <MiniSearchBar searchItem={handleSearch}/>
+              {/* <MiniSearchBar searchItem={handleSearch}/> */}
           </div>
           <UsersList
               title="Contributors"

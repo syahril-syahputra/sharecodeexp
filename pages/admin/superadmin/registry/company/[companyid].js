@@ -262,9 +262,6 @@ export default function CompanyDetail({session, routeParam}) {
             message="Your Company is Rejected"
             detail={companyData.reason}
           ></DangerNotification>
-          <div className="m-4 text-xl text-center font-medium italic">
-            <h2>*This notification was sent for member</h2>
-          </div>
         </>
       }
       {(companyData?.reason && companyData.is_confirmed == "pending") &&
@@ -272,11 +269,13 @@ export default function CompanyDetail({session, routeParam}) {
           <InfoNotification
             message="Update Needed"
             detail={companyData.reason}
-          ></InfoNotification>
-          <div className="m-4 text-xl text-center font-medium italic">
-            <h2>*This notification was sent for member</h2>
-          </div>
+          ></InfoNotification>          
         </>
+      }
+      {companyData?.reason && companyData.is_confirmed != "accepted" &&
+        <div className="m-4 text-xl text-center font-medium italic">
+          <h2>*This notification was sent for member</h2>
+        </div>
       }
 
       {/* main content */}

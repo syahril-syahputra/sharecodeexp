@@ -28,7 +28,7 @@ export const orderStatusesOptions = [
     {value: 'qoutation_approval', label: 'Quotation Approval'},
     {value: 'accepted', label: 'Quotation Accepted'},
     {value: 'rejected', label: 'Quotation Rejected'},
-    {value: 'proforma_send', label: 'Profoma Invoice Send'},
+    {value: 'proforma_send', label: 'Proforma Invoice Send'},
     {value: 'payment_verified', label: 'Payment Verification'},
     {value: 'payment_completed', label: 'Payment Completed'},
     {value: 'preparing_shipment', label: 'Preparing Shipment'},

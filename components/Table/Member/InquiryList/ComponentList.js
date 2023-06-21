@@ -140,11 +140,11 @@ export default function ComponentList(props) {
                     />
                 : null} 
             </PrimaryWrapper>
-            {/* <Pagination 
+            <Pagination 
                 links={props.links}
                 metaData={props.metaData}
                 setPage={props.setPage}
-            /> */}
+            />
         </>
     );
 }

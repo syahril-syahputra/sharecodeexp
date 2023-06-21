@@ -12,8 +12,9 @@ import { toast } from 'react-toastify';
 import { toastOptions } from "@/lib/toastOptions"
 
 export default function MyProduct({session}) {
+  console.log('load')
+
   //data search
-  const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
@@ -22,44 +23,45 @@ export default function MyProduct({session}) {
     perPage: 0,
     lastPage: 0
   })
-  const searchData = async (srch, page=1) =>{
-      setIsLoading(true)
-      const response = await axios.get(`/companyproduct?page=${page}&status=approved`,
-          {
-            headers: {
-              "Authorization" : `Bearer ${session.accessToken}`
-            }
-          }
-        )
-        .then((response) => {
-          let result = response.data.data
-          setData(result.data)
-          setLinks(result.links)
-          setMetaData({
-            total: result.total,
-            perPage: result.per_page,
-            lastPage: result.last_page,
-            currentPage: result.current_page,
-            nextPage: result.next_page_url ? true : false,
-            prevPage: result.prev_page_url ? true : false
-          })
-        }).catch((error) => {
-          setData([])
-          toast.error("Something went wrong. Can not load component", toastOptions)
-        }).finally(() => {
-          setIsLoading(false)
-        })
+
+  const [search, setSearch] = useState('')
+  async function searchData(searchParam='', page = 1) {
+    setSearch(searchParam)
+    setIsLoading(true);
+    const response = await axios.get(`/companyproduct?page=${page}&status=approved&search=${searchParam}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${session.accessToken}`
+        }
+      }
+    )
+      .then((response) => {
+        let result = response.data.data;
+        setData(result.data);
+        setLinks(result.links);
+        setMetaData({
+          total: result.total,
+          perPage: result.per_page,
+          lastPage: result.last_page,
+          currentPage: result.current_page,
+          nextPage: result.next_page_url ? true : false,
+          prevPage: result.prev_page_url ? true : false
+        });
+      }).catch((error) => {
+        setData([]);
+        toast.error("Something went wrong. Can not load component", toastOptions);
+      }).finally(() => {
+        setIsLoading(false);
+      });
   }
-  const setPage = (item) => {
-    searchData(search, item)
+  const setPage = (pageNumber) => {
+    searchData(search, pageNumber)
   }
   useEffect(() => {
-    searchData(search)
-  }, [])
-
-  const handleSearch = (item) =>{
-    setSearch(item)
     searchData()
+  }, [])
+  const handleSearch = (searchResult) =>{
+    searchData(searchResult)
   }
 
   return (

@@ -11,7 +11,6 @@ import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
 export default function MyProduct({session}) {
   //data search
-  const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
@@ -20,9 +19,12 @@ export default function MyProduct({session}) {
     perPage: 0,
     lastPage: 0
   })
-  const searchData = async (srch, page=1) =>{
+
+  const [search, setSearch] = useState('')
+  const searchData = async (searchParam='', page = 1) =>{
+    setSearch(searchParam)
     setIsLoading(true)
-    const response = await axios.get(`/companyproduct?page=${page}&status=rejected`,
+    const response = await axios.get(`/companyproduct?page=${page}&status=rejected&search=${searchParam}`,
         {
           headers: {
             "Authorization" : `Bearer ${session.accessToken}`
@@ -42,21 +44,20 @@ export default function MyProduct({session}) {
           prevPage: result.prev_page_url ? true : false
         })
       }).catch((error) => {
-        // console.log(error.response)
+        setData([]);
+        toast.error("Something went wrong. Can not load component", toastOptions);
       }).finally(() => {
         setIsLoading(false)
       })
   }
-  const setPage = (item) => {
-    searchData(search, item)
+  const setPage = (pageNumber) => {
+    searchData(search, pageNumber)
   }
   useEffect(() => {
     searchData(search)
   }, [])
-
-  const handleSearch = (item) =>{
-    setSearch(item)
-    searchData()
+  const handleSearch = (searchResult) =>{
+    searchData(searchResult)
   }
 
   return (

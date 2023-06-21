@@ -86,8 +86,9 @@ export default function TableComponent(props){
                                                 size="sm"
                                                 onClick={() => inquiryItem(item.id)}
                                             >
-                                            {isInquiryClicked && <i className="mr-2 fas fa-hourglass fa-spin"></i>}    
-                                            Inquiry</PrimaryButton>                                            
+                                            {isInquiryClicked && <i className="px-3 fas fa-hourglass fa-spin"></i>}    
+                                            {!isInquiryClicked && 'Inquiry'}    
+                                            </PrimaryButton>                                            
                                         </td>
                                     </tr>
                                 )

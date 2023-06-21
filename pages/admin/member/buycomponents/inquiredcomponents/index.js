@@ -5,13 +5,14 @@ import axios from "@/lib/axios";
 // components
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 import ComponentList from "@/components/Table/Member/InquiredComponent/ComponentList"
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
 export default function InquiryNow({session}) {
     //data search
-    const [search, setSearch] = useState('')
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [links, setLinks] = useState([])
@@ -20,9 +21,12 @@ export default function InquiryNow({session}) {
         perPage: 0,
         lastPage: 0
     })
-    const searchData = async (page=1) =>{
+
+    const [search, setSearch] = useState('')
+    const searchData = async (searchParam='', page = 1) =>{
+        setSearch(searchParam)
         setIsLoading(true)
-        const response = await axios.get(`/buyer/order/${orderStatus}?page=${page}&search=${search}`,
+        const response = await axios.get(`/buyer/order/${orderStatus}?page=${page}&search=${searchParam}`,
             {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -42,12 +46,13 @@ export default function InquiryNow({session}) {
                 })
             }).catch((error) => {
                 // console.log(error.response)
+                toast.error("Something went wrong. Can not load inquired component", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
     }
-    const setPage = (item) => {
-        searchData(item)
+    const setPage = (pageNumber) => {
+        searchData(search, pageNumber)
     }
     useEffect(() => {
         searchData()
@@ -58,12 +63,11 @@ export default function InquiryNow({session}) {
         setOrderStatuses(status.value)
     }
     useEffect(() => {
-        searchData()
+        searchData(search)
     }, [orderStatus])
 
-    const handleSearch = (item) =>{
-        setSearch(item)
-        searchData()
+    const handleSearch = (searchResult) =>{
+        searchData(searchResult)
     }
 
     return (

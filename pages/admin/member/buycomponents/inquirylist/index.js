@@ -18,7 +18,6 @@ import Admin from "layouts/Admin.js";
 
 export default function InquiryList({session}) {
     //data search
-    const [search, setSearch] = useState('')
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [links, setLinks] = useState([])
@@ -27,9 +26,12 @@ export default function InquiryList({session}) {
         perPage: 0,
         lastPage: 0
     })
-    const searchData = async (page=1) =>{
+
+    const [search, setSearch] = useState('')
+    const searchData = async (searchParam='', page=1) =>{
+        setSearch(searchParam)
         setIsLoading(true)
-        const response = await axios.get(`/Wishlist?page=${page}`,
+        const response = await axios.get(`/Wishlist?page=${page}&search=${searchParam}`,
             {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -37,7 +39,7 @@ export default function InquiryList({session}) {
             })
             .then((response) => {
                 let result = response.data.data
-                setData(result)
+                setData(result.data)
                 setLinks(result.links)
                 setMetaData({
                     total: result.total,
@@ -53,16 +55,15 @@ export default function InquiryList({session}) {
                 setIsLoading(false)
             })
     }
-    const setPage = (item) => {
-        searchData(item)
+    const setPage = (pageNumber) => {
+        searchData(search, pageNumber)
     }
     useEffect(() => {
         searchData()
     }, [])
 
-    const handleSearch = (item) =>{
-        setSearch(item)
-        searchData()
+    const handleSearch = (searchResult) =>{
+        searchData(searchResult)
     }
 
     const [orderQuantity, setOrderQuantity] = useState(0)

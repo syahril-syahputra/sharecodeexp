@@ -10,6 +10,7 @@ import { toastOptions } from "@/lib/toastOptions"
 import Admin from "layouts/Admin.js";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 import { CompanyStatusesIcon } from "@/components/Shared/Company/Statuses";
+import Link from "next/link";
 
 export default function MemberDashboard({company, message}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -23,6 +24,22 @@ export default function MemberDashboard({company, message}) {
   return (
     <>
       <div>
+        {company.is_confirmed == "rejected" && 
+          <PrimaryWrapper>
+            <div className="text-center pb-10 mt-10">
+              <h3 className="text-4xl font-semibold leading-normal text-blueGray-700">
+                <i title="Member Rejected" className="mr-2 ml-1 fas fa-times text-orange-500"></i>
+              </h3>
+              <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2">
+                <p>Your membership was rejected by Exepart registration expert</p>
+              </h3>
+              <h3 className="text-md font-semibold leading-normal text-blue-700 mb-2">
+                <i>If something is not agreeable, please contact Exepart registration expert. You can also check on <Link href="/admin/member/company/mycompany" className="underline text-black">My Company</Link></i>
+              </h3>
+            </div>
+          </PrimaryWrapper> 
+        }
+
         {company.is_confirmed == "pending" && 
           <PrimaryWrapper>
             <div className="text-center pb-10 mt-10">
