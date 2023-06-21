@@ -71,8 +71,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                 router.push(`/admin/member/sellcomponents/component/view/${routeParam.componentid}`)
                 toast.success("Your component have been updated successfully", toastOptions)
             }).catch((error) => {
-                console.log(error.data.data)
-                toast.error("Something went wrong", toastOptions)
+                toast.error("Something went wrong. Can not update the component", toastOptions)
                 setErrorInfo(error.data.data)
                 setIsLoading(false)
             })
@@ -179,7 +178,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                 setSubCategory({value: result.subcategory.id, label: result.subcategory.name}) 
 
             }).catch((error) => {
-                // console.log(error.response)
+                toast.error("Something went wrong. Can not load component", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })

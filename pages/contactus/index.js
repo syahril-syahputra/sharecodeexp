@@ -34,14 +34,12 @@ export default function Index() {
 
     const request = await axios.post('/formmail', inputData)
       .then((res) => {
-        console.log(res)
         setSuccesMessage("Your email has been sent")
         setEnteredEmail('')
         setEnteredSubject('')
         setEnteredMessages('')
       })
       .catch((err) => {
-        console.log(err.data)
         setErrorInfo(err.data.data)
       })
       .finally(() => {

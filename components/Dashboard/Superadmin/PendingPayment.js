@@ -7,6 +7,7 @@ import BaseTable from "@/components/Interface/Table/BaseTable";
 import HeaderTable from "@/components/Interface/Table/HeaderTable";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
+import NoData from '@/components/Interface/Table/NoData';
 
 export default function PendingPayment(props) {
   const data = props.data.slice(0, 5)
@@ -36,7 +37,7 @@ export default function PendingPayment(props) {
                 <th className="px-6 py-3 text-left">
                   PI Upload Date & Time (UTC 0)
                 </th>
-                <th className="px-6 py-3 text-right min-w-140-px">*</th>
+                <th className="px-6 py-3 text-right min-w-140-px">Act.</th>
               </>
           }
           tableData={
@@ -61,6 +62,9 @@ export default function PendingPayment(props) {
                   </tr>
                 )
               })}
+              {data.length === 0 &&
+                <NoData colSpan={4}/>
+              }
             </>
           }    
           isBusy={props.isLoading}              

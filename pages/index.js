@@ -55,7 +55,7 @@ export default function Index() {
         setCategories(result.data)
       })
       .catch((err) => {
-        console.log(err)
+        setCategories([])
       })
       .finally(() => {
         setIsLoading(false)
@@ -75,7 +75,7 @@ export default function Index() {
         setCompanies(result)
       })
       .catch((err) => {
-        console.log(err)
+        setCompanies([])
       })
       .finally(() => {
         setIsLoading(false)

@@ -8,6 +8,8 @@ import Admin from "layouts/Admin.js";
 // components
 import CancelledOrder from "@/components/Table/Superadmin/Orders/CancelledOrder"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
 
 
 export default function CancelledOrders({session}) {
@@ -43,7 +45,7 @@ export default function CancelledOrders({session}) {
             prevPage: result.prev_page_url ? true : false
           })
         }).catch((error) => {
-            console.log(error.response)
+          toast.error("Something went wrong. Can not load order", toastOptions)
         }).finally(() => {
           setIsLoading(false)
         })

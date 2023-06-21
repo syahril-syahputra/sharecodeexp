@@ -62,8 +62,7 @@ export default function Users({session}) {
       setShowDeleteUserModal(false)
       getData()
     }).catch((error) => {
-      console.log(error)
-      toast.error("Something went wrong", toastOptions)
+      toast.error("Something went wrong. Can not delete user", toastOptions)
     }).finally(() => {
       setIsLoading(false)
     })
@@ -77,7 +76,7 @@ export default function Users({session}) {
     <>
       <div className="">
           <div className="mb-5 w-full lg:w-1/2">
-              <MiniSearchBar searchItem={handleSearch}/>
+              {/* <MiniSearchBar searchItem={handleSearch}/> */}
           </div>
           <UsersList
               title="Contributors"

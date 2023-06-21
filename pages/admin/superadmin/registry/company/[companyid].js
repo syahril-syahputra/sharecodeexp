@@ -72,7 +72,6 @@ export default function CompanyDetail({session, routeParam}) {
       toast.success("Company has been accepted successfully", toastOptions)
     })
     .catch((error) => {
-      console.log(error)
       toast.error("Something went wrong. Can not accept company", toastOptions)
     })
     .finally(() => {
@@ -98,7 +97,6 @@ export default function CompanyDetail({session, routeParam}) {
       toast.success("Company has been rejected successfully", toastOptions)
     })
     .catch((error) => {
-      console.log(error)
       toast.error("Something went wrong. Can not reject company status", toastOptions)
     })
     .finally(() => {
@@ -124,7 +122,6 @@ export default function CompanyDetail({session, routeParam}) {
       toast.success("Company has been set to pending", toastOptions)
     })
     .catch((error) => {
-      console.log(error)
       toast.error("Something went wrong. Can not set company to pending", toastOptions)
     })
     .finally(() => {
@@ -149,7 +146,6 @@ export default function CompanyDetail({session, routeParam}) {
       setShowSendEmailModal(false)
     })
     .catch((error) => {
-      console.log(error)
       toast.error("Something went wrong. Can not request additional document", toastOptions)
     })
     .finally(() => {
@@ -175,8 +171,7 @@ export default function CompanyDetail({session, routeParam}) {
       setShowUpdateImageModal(false)
     })
     .catch((error) => {
-      console.log(error)
-      toast.error("Something went wrong. Can not update company's logo", toastOptions)
+      toast.error("Something went wrong. Can not update comapany's logo", toastOptions)
     })
     .finally(() => {
       getData()
@@ -270,12 +265,14 @@ export default function CompanyDetail({session, routeParam}) {
         </>
       }
       {(companyData?.reason && companyData.is_confirmed == "pending") &&
-        <InfoNotification
-          message="Update Needed"
-          detail={companyData.reason}
-        ></InfoNotification>
+        <>
+          <InfoNotification
+            message="Update Needed"
+            detail={companyData.reason}
+          ></InfoNotification>          
+        </>
       }
-      {companyData?.reason &&
+      {companyData?.reason && companyData.is_confirmed != "accepted" &&
         <div className="m-4 text-xl text-center font-medium italic">
           <h2>*This notification was sent for member</h2>
         </div>

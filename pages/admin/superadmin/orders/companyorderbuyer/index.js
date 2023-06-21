@@ -5,6 +5,8 @@ import { getSession } from "next-auth/react";
 // components
 import CompaniesBasedOrder from "@/components/Table/Superadmin/Orders/CompaniesBasedOrder"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -20,10 +22,11 @@ export default function ActiveOrders({session}) {
     lastPage: 0
   })
 
-  let search = ''
-  const searchData = async (page=1) =>{
+  const [search, setSearch] = useState('')
+  const searchData = async (searchParam='', page=1) =>{
+      setSearch(searchParam)
       setIsLoading(true)
-      const response = await axios.get(`/admin/orders/companiesBuyer?page=${page}&company=${search}`,
+      const response = await axios.get(`/admin/orders/companiesBuyer?page=${page}&company=${searchParam}`,
           {
             headers: {
               "Authorization" : `Bearer ${session.accessToken}`
@@ -43,21 +46,20 @@ export default function ActiveOrders({session}) {
             prevPage: result.prev_page_url ? true : false
           })
         }).catch((error) => {
-            console.log(error.response)
+            toast.error("Something went wrong. Can not load company", toastOptions)
         }).finally(() => {
           setIsLoading(false)
         })
   }
-  const setPage = (item) => {
-    searchData(item)
+  const setPage = (pageNumber) => {
+    searchData(search, pageNumber)
   }
   useEffect(() => {
     searchData()
   }, [])
 
-  const handleSearch = (item) =>{
-    search = item
-    searchData()
+  const handleSearch = (searchResult) =>{
+    searchData(searchResult)
   }
 
   return (

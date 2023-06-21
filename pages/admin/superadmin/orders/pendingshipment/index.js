@@ -8,6 +8,8 @@ import Admin from "layouts/Admin.js";
 // components
 import PendingShipment from "@/components/Table/Superadmin/Orders/PendingShipment"
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
 
 export default function ActiveOrders({session}) {
   //data search
@@ -42,7 +44,7 @@ export default function ActiveOrders({session}) {
             prevPage: result.prev_page_url ? true : false
           })
         }).catch((error) => {
-            console.log(error.response)
+            toast.error("Something went wrong. Can not load order", toastOptions)
         }).finally(() => {
           setIsLoading(false)
         })

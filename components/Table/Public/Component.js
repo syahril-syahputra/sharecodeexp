@@ -15,10 +15,13 @@ export default function TableComponent(props){
     const {status} = useSession();
     const router = useRouter()
 
+    const [isInquiryClicked, setIsInquiryClicked] = useState(false)
     const [showModal, setShowModal] = useState(false);
     const inquiryItem = (item) => {
+        setIsInquiryClicked(true)
         if(status === 'unauthenticated'){
             setShowModal(true)
+            setIsInquiryClicked(false)
         } else {
             router.push(`/admin/member/buycomponents/inquirylist/details/${item}`)
         }
@@ -79,9 +82,13 @@ export default function TableComponent(props){
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <PrimaryButton
+                                                disabled={isInquiryClicked}
                                                 size="sm"
                                                 onClick={() => inquiryItem(item.id)}
-                                            >Inquiry</PrimaryButton>                                            
+                                            >
+                                            {isInquiryClicked && <i className="px-3 fas fa-hourglass fa-spin"></i>}    
+                                            {!isInquiryClicked && 'Inquiry'}    
+                                            </PrimaryButton>                                            
                                         </td>
                                     </tr>
                                 )

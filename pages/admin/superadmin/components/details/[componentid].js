@@ -69,7 +69,6 @@ export default function ComponentDetails({session, routeParam}) {
             toast.success("Component has been accepted", toastOptions)
         })
         .catch((error) => {
-            console.log(error)
             toast.error("Something went wrong. Can not accept the component", toastOptions)
         })
         .finally(() => {
@@ -95,7 +94,6 @@ export default function ComponentDetails({session, routeParam}) {
             toast.success("Component has been rejected", toastOptions)
         })
         .catch((error) => {
-            console.log(error)
             toast.error("Something went wrong. Can not reject the component", toastOptions)
         })
         .finally(() => {
@@ -120,7 +118,6 @@ export default function ComponentDetails({session, routeParam}) {
             toast.success("Component has been set to pending", toastOptions)
         })
         .catch((error) => {
-            console.log(error)
             toast.error("Something went wrong. Can not set component to pending", toastOptions)
         })
         .finally(() => {

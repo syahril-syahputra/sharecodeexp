@@ -35,7 +35,7 @@ export default function SuperadminDashboard({session, message}) {
           let result = response.data.data
           setPendingCompany(result.data)
         }).catch((error) => {
-          console.log(error)
+          setPendingCompany([])
         }).finally(() => {
           setLoadingPendingCompany(false)
         })
@@ -58,7 +58,7 @@ export default function SuperadminDashboard({session, message}) {
           let result = response.data.data
           setNewInquiries(result.data)
         }).catch((error) => {
-          console.log(error)
+          setNewInquiries([])
         }).finally(() => {
           setLoadingNewInquiries(false)
         })
@@ -81,7 +81,7 @@ export default function SuperadminDashboard({session, message}) {
           let result = response.data.data
           setActiveOrders(result.data)
         }).catch((error) => {
-          console.log(error)
+          setActiveOrders([])
         }).finally(() => {
           setLoadingActiveOrders(false)
         })
@@ -104,7 +104,7 @@ export default function SuperadminDashboard({session, message}) {
           let result = response.data.data
           setPendingShipments(result.data)
         }).catch((error) => {
-          console.log(error)
+          setPendingShipments([])
         }).finally(() => {
           setLoadingPendingShipments(false)
         })
@@ -127,7 +127,7 @@ export default function SuperadminDashboard({session, message}) {
           let result = response.data.data
           setPendingPayments(result.data)
         }).catch((error) => {
-          console.log(error)
+          setPendingPayments([])
         }).finally(() => {
           setLoadingPendingPayments(false)
         })
@@ -150,7 +150,7 @@ export default function SuperadminDashboard({session, message}) {
           let result = response.data.data
           setMemberStatistics(result)
         }).catch((error) => {
-          console.log(error)
+          setMemberStatistics([])
         }).finally(() => {
           setLoadingMemberStatistics(false)
         })

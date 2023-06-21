@@ -133,7 +133,7 @@ export default function AddToInquiryList({session, routeParam}) {
                                 disabled={isLoading}
                                 value={orderQuantity}
                                 onChange={(input) => setDataHandler(input)}
-                                errorMsg={errorInfo.qty}
+                                errorMsg={errorInfo?.qty}
                                 min="1"
                             ></NumberInput>
                         </div>

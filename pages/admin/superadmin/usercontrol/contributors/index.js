@@ -86,8 +86,7 @@ export default function Contributors({session}) {
             setShowDeleteContributorModal(false)
         })
         .catch((error) => {
-            console.log(error)
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Can not delete contributor", toastOptions)
         })
         .finally(() => {
             setIsLoading(true)

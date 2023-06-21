@@ -16,7 +16,7 @@ export default function ProductBar(){
   //data search
   const [isLoading, setIsLoading] = useState(true)
   const [totalItem, setTotalItem] = useState(0)
-  const countCart = async (srch, page=1) =>{
+  const countCart = async () =>{
     if(!!user.accessToken){
       setIsLoading(true)
       const response = await axios.get(`/countcart`,
@@ -30,7 +30,7 @@ export default function ProductBar(){
           let result = response.data
           setTotalItem(result.data)
         }).catch((error) => {
-          // console.log(error.response)
+          setTotalItem(0)
         }).finally(() => {
           setIsLoading(false)
         })

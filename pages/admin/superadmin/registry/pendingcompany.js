@@ -58,7 +58,6 @@ export default function PendingCompany({session}) {
     
     const router = useRouter()
     const viewCompanyHandler = (companyId) => {
-        console.log(companyId)
         router.push(`/admin/superadmin/registry/company/${companyId}`)
     }
 

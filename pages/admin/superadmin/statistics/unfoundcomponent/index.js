@@ -32,7 +32,6 @@ export default function UnfoundComponents({session, }) {
             })
             .then((response) => {
                 let result = response.data.data
-                console.log(result)
                 setData(result.data)
                 setLinks(result.links)
                 setMetaData({

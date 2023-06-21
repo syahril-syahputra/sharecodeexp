@@ -162,7 +162,6 @@ export default function OrderDetails({session, routeParam}) {
 
     const [rejectPaymentDocumentModal, setRejectPaymentDocumentModal] = useState(false)
     const handleRejectPaymentDocumentModal = async (rejectionReason) => {
-        console.log(rejectionReason)
         setIsLoading(true)
         let inputData = {
             id: data.id,
@@ -230,7 +229,6 @@ export default function OrderDetails({session, routeParam}) {
             setCompleteOrderModal(false)
             loadData()
         }).catch((error) => {
-            console.log(error)
             toast.error("Something went wrong. Can not complete the order", toastOptions)
             setIsLoading(false)
         })
@@ -244,7 +242,6 @@ export default function OrderDetails({session, routeParam}) {
             id: data.id,
             infoOrder: infoOrder
         }
-        console.log(inputData)
     }
 
     if(!isOrderValid) {

@@ -41,8 +41,8 @@ export default function BulkInsert({session}) {
         router.replace('/admin/member/sellcomponents/component/pending')
         toast.success("Your components have been added successfully", toastOptions)
       }).catch((error) => {
-        setErrorMessage("Please fill the form correctly")
-        console.log(error)
+        toast.success("Something went wrong.", toastOptions)
+        setErrorMessage("Excel can not be processed")
       }).finally(() => {
         setIsLoading(false)
       })
