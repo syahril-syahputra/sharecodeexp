@@ -11,9 +11,8 @@ import UnfoundComponent from "@/components/Table/Superadmin/Statistics/UnfoundCo
 import Admin from "layouts/Admin.js";
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
-export default function UnfoundComponents({session, }) {
-    //data search
-    const [search, setSearch] = useState('')
+export default function UnfoundComponents({session}) {
+    //data search    
     const [isLoading, setIsLoading] = useState(false)
     const [data, setData] = useState([])
     const [links, setLinks] = useState([])
@@ -22,9 +21,11 @@ export default function UnfoundComponents({session, }) {
         perPage: 0,
         lastPage: 0
     })
-    const loadData = async (page=1) =>{
+    const [search, setSearch] = useState('')
+    const loadData = async (searchParam, page=1) =>{
+        setSearch(searchParam)
         setIsLoading(true)
-        const response = await axios.get(`/search?unfound=20&page=${page}`,
+        const response = await axios.get(`/search?unfound=20&page=${page}&search=${searchParam}`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -44,22 +45,21 @@ export default function UnfoundComponents({session, }) {
                 })
             }).catch((error) => {
             // console.log(error.response)
+            toast.error("Something went wrong. Can not load component", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
     }
-    const setPage = (item) => {
-        loadData(item)
+    const setPage = (pageNumber) => {
+        loadData(search, pageNumber)
     }
     useEffect(() => {
         loadData()
     }, [])
 
-    const handleSearch = (item) =>{
-        setSearch(item)
-        loadData()
+    const handleSearch = (searchResult) =>{
+        loadData(searchResult)
     }
-
 
     return (
         <>
