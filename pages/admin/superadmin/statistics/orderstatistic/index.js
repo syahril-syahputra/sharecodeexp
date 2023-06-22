@@ -12,51 +12,53 @@ import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 
 export default function Product({session, }) {
     //data search
-    const [search, setSearch] = useState('')
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
-    // const [links, setLinks] = useState([])
-    // const [metaData, setMetaData] = useState({
-    //     total: 0,
-    //     perPage: 0,
-    //     lastPage: 0
-    // })
-    const loadData = async (srch, page=1) =>{
+    const [links, setLinks] = useState([])
+    const [metaData, setMetaData] = useState({
+        total: 0,
+        perPage: 0,
+        lastPage: 0
+    })
+    const [search, setSearch] = useState('')
+    const loadData = async (searchParam='', page=1) =>{
         setIsLoading(true)
-        const response = await axios.get(`/admin/StatisticOrders`,
+        setSearch(searchParam)
+        const response = await axios.get(`/admin/StatisticOrders?page=${page}&search=${searchParam}`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
                 }
             })
             .then((response) => {
+                console.log(response)
                 let result = response.data.data
-                setData(result)
-                // setLinks(result.links)
-                // setMetaData({
-                //     total: result.total,
-                //     perPage: result.per_page,
-                //     lastPage: result.last_page,
-                //     currentPage: result.current_page,
-                //     nextPage: result.next_page_url ? true : false,
-                //     prevPage: result.prev_page_url ? true : false
-                // })
+                setData(result.data)
+                setLinks(result.links)
+                setMetaData({
+                    total: result.total,
+                    perPage: result.per_page,
+                    lastPage: result.last_page,
+                    currentPage: result.current_page,
+                    nextPage: result.next_page_url ? true : false,
+                    prevPage: result.prev_page_url ? true : false
+                })
             }).catch((error) => {
             // console.log(error.response)
+            toast.error("Something went wrong. Can not load statistic", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
     }
-    // const setPage = (item) => {
-    //     searchData(search, item)
-    // }
+    const setPage = (pageNumber) => {
+        loadData(search, pageNumber)
+    }
     useEffect(() => {
-        loadData(search)
+        loadData()
     }, [])
 
-    const handleSearch = (item) =>{
-        setSearch(item)
-        loadData()
+    const handleSearch = (searchResult) =>{
+        loadData(searchResult)
     }
 
     return (
@@ -67,11 +69,11 @@ export default function Product({session, }) {
                 </div> 
                 <OrderStatistic 
                     title="Orders Statistic"
-                    // setPage={setPage}
+                    setPage={setPage}
                     isLoading={isLoading}
                     data={data}
-                    // links={links}
-                    // metaData={metaData}
+                    links={links}
+                    metaData={metaData}
                 />
             </div>
         </>

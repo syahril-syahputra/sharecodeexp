@@ -8,7 +8,7 @@ import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import NoData from "@/components/Interface/Table/NoData";
 
 export default function MemberStatistic(props) {
-  const data = props.data.slice(0, 5)
+  const data = props.data? props.data.slice(0,5) : []
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg">

@@ -13,7 +13,6 @@ import { toastOptions } from "@/lib/toastOptions"
 
 export default function ActiveOrders({session}) {
   //data search
-  const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
@@ -22,9 +21,11 @@ export default function ActiveOrders({session}) {
     perPage: 0,
     lastPage: 0
   })
-  const searchData = async (page=1) =>{
+  const [search, setSearch] = useState('')
+  const searchData = async (searchParam='', page=1) =>{
+    setSearch(searchParam)
       setIsLoading(true)
-      const response = await axios.get(`/admin/orders/payment_verified?page=${page}&search=${search}`,
+      const response = await axios.get(`/admin/orders/payment_verified?page=${page}&search=${searchParam}`,
           {
             headers: {
               "Authorization" : `Bearer ${session.accessToken}`
@@ -49,16 +50,15 @@ export default function ActiveOrders({session}) {
           setIsLoading(false)
         })
   }
-  const setPage = (item) => {
-    searchData(item)
+  const setPage = (pageNumber) => {
+    searchData(search, pageNumber)
   }
   useEffect(() => {
     searchData()
   }, [])
 
-  const handleSearch = (item) =>{
-    setSearch(item)
-    searchData()
+  const handleSearch = (searchResult) =>{
+    searchData(searchResult)
   }
 
   return (

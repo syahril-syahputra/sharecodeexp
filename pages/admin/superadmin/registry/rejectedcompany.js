@@ -12,7 +12,6 @@ import Admin from "layouts/Admin.js";
 
 export default function RejectedCompany({session}) {
     //data search
-    const [search, setSearch] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [data, setData] = useState([])
     const [links, setLinks] = useState([])
@@ -21,13 +20,15 @@ export default function RejectedCompany({session}) {
         perPage: 0,
         lastPage: 0
     })
-
+    
     useEffect(() => {
-        searchData(search)
+        searchData()
     }, [])
-    const searchData = async (srch, page=1) =>{
+    const [search, setSearch] = useState('')
+    const searchData = async (searchParam='', page=1) =>{
+        setSearch(searchParam)
         setIsLoading(true)
-        const response = await axios.get(`/admin/companies?page=${page}&status=rejected`,
+        const response = await axios.get(`/admin/companies?page=${page}&status=rejected&search=${searchParam}`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -48,24 +49,23 @@ export default function RejectedCompany({session}) {
             })
             }).catch((error) => {
             // console.log(error.response)
+            toast.error("Something went wrong. Can not load companies", toastOptions)
             }).finally(() => {
             setIsLoading(false)
             })
     }
-    const setPage = (item) => {
-        searchData(search, item)
-    }
-    
-    const router = useRouter()
-    const viewCompanyHandler = (companyId) => {
-        console.log(companyId)
-        router.push(`/admin/superadmin/registry/company/${companyId}`)
+    const setPage = (pageNumber) => {
+        searchData(search, pageNumber)
     }
 
-    const handleSearch = (item) =>{
-        setSearch(item)
-        searchData()
+    const handleSearch = (searchResult) =>{
+        searchData(searchResult)
     }
+
+    const router = useRouter()
+    const viewCompanyHandler = (companyId) => {
+        router.push(`/admin/superadmin/registry/company/${companyId}`)
+    } 
 
     return (
         <>

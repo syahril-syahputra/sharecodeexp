@@ -10,7 +10,7 @@ import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 import NoData from "@/components/Interface/Table/NoData";
 
 export default function PendingCompany(props) {
-  const data = props.data.slice(0, 5)
+  const data = props.data? props.data.slice(0,5) : []
   
   return (
     <PrimaryWrapper>      
