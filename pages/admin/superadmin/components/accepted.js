@@ -15,7 +15,6 @@ import Admin from "layouts/Admin.js";
 export default function AcceptedComponent({session}) {
     const router = useRouter()
     //data search
-    const [search, setSearch] = useState('')
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [links, setLinks] = useState([])
@@ -24,9 +23,11 @@ export default function AcceptedComponent({session}) {
         perPage: 0,
         lastPage: 0
     })
-    const searchData = async (srch, page=1) =>{
+    const [search, setSearch] = useState('')
+    const searchData = async (searchParam='', page=1) =>{
+        setSearch(searchParam)
         setIsLoading(true)
-        const request = await axios.get(`/admin/product?page=${page}&status=approved`,
+        const request = await axios.get(`/admin/product?page=${page}&status=approved&search=${searchParam}`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -51,20 +52,19 @@ export default function AcceptedComponent({session}) {
                 setIsLoading(false)
             })
     }
-    const setPage = (item) => {
-        searchData(search, item)
+    const setPage = (pageNumber) => {
+        searchData(search, pageNumber)
     }
     useEffect(() => {
-        searchData(search)
+        searchData()
     }, [])
+    
+    const handleSearch = (searchResult) =>{
+        searchData(searchResult)
+    }
 
     const viewHandler = (componentid) => {
         router.push(`/admin/superadmin/components/details/${componentid}`)
-    }
-
-    const handleSearch = (item) =>{
-        setSearch(item)
-        searchData()
     }
 
     return (

@@ -10,10 +10,6 @@ import MetaData from "@/components/Interface/Table/MetaData";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 
 export default function IncomingInquiry(props) {
-    const data = props.data
-    const links = props.links
-    const metaData = props.metaData
-
     return (
         <>
             <PrimaryWrapper>
@@ -40,7 +36,7 @@ export default function IncomingInquiry(props) {
                     }
                     tableData={
                         <>
-                            {data.map((item, index) => {
+                            {props.data.map((item, index) => {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td scope="row" className="text-sm px-6 py-4">
@@ -65,22 +61,22 @@ export default function IncomingInquiry(props) {
                                     </tr>
                                 )
                             })}
-                            {!props.isLoading && metaData.total === 0 &&
+                            {!props.isLoading && props.metaData.total === 0 &&
                                 <NoData colSpan={4}/>
                             }
                         </>
                     }
                 ></BaseTable>
-                {!props.isLoading && metaData.total > 0 ? 
+                {!props.isLoading && props.metaData.total > 0 ? 
                     <MetaData
-                        total={metaData.total}
-                        perPage={metaData.perPage}
+                        total={props.metaData.total}
+                        perPage={props.data.length}
                     />
                 : null} 
             </PrimaryWrapper>
             <Pagination 
-                links={links}
-                metaData={metaData}
+                links={props.links}
+                metaData={props.metaData}
                 setPage={props.setPage}
             />
         </>

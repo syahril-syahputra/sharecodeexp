@@ -78,7 +78,7 @@ export default function PendingPayment(props) {
                 {!props.isLoading && props.metaData.total > 0 ? 
                     <MetaData
                         total={props.metaData.total}
-                        perPage={props.metaData.perPage}
+                        perPage={props.data.length}
                     />
                 : null}  
             </PrimaryWrapper>

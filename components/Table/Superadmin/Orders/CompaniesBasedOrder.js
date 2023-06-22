@@ -10,9 +10,6 @@ import MetaData from "@/components/Interface/Table/MetaData";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 
 export default function CompaniesBasedOrder(props) {
-    const links = props.links
-    const metaData = props.metaData
-
     return (
         <>
             <PrimaryWrapper>
@@ -58,22 +55,22 @@ export default function CompaniesBasedOrder(props) {
                                     </tr>
                                 )
                             })}
-                            {!props.isLoading && metaData.total === 0 &&
+                            {!props.isLoading && props.metaData.total === 0 &&
                                 <NoData colSpan={3}/>
                             }
                         </>
                     }
                 ></BaseTable>
-                {!props.isLoading && metaData.total > 0 ? 
+                {!props.isLoading && props.metaData.total > 0 ? 
                     <MetaData
-                        total={metaData.total}
-                        perPage={metaData.perPage}
+                        total={props.metaData.total}
+                        perPage={props.data.length}
                     />
                 : null} 
             </PrimaryWrapper>
             <Pagination 
-                links={links}
-                metaData={metaData}
+                links={props.links}
+                metaData={props.metaData}
                 setPage={props.setPage}
             />
         </>    

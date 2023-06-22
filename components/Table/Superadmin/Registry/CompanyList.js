@@ -13,10 +13,6 @@ import MetaData from "@/components/Interface/Table/MetaData";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 
 export default function CompanyList(props) {
-    const data = props.data
-    const links = props.links
-    const metaData = props.metaData
-
     return (
         <>  
             <PrimaryWrapper>
@@ -55,7 +51,7 @@ export default function CompanyList(props) {
                     }
                     tableData={
                     <>
-                        {data.map((item, index) => {
+                        {props.data.map((item, index) => {
                             return(
                                 <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                     <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
@@ -97,22 +93,22 @@ export default function CompanyList(props) {
                                 </tr>
                             )
                         })}
-                        {!props.isLoading && metaData.total === 0 &&
+                        {!props.isLoading && props.metaData.total === 0 &&
                             <NoData colSpan={11}/>
                         }
                     </>
                     }                
                 />
-                {!props.isLoading && metaData.total > 0 ? 
+                {!props.isLoading && props.metaData.total > 0 ? 
                     <MetaData
-                        total={metaData.total}
-                        perPage={metaData.perPage}
+                        total={props.metaData.total}
+                        perPage={props.data.length}
                     />
                 : null}               
             </PrimaryWrapper>
             <Pagination 
-                links={links}
-                metaData={metaData}
+                links={props.links}
+                metaData={props.metaData}
                 setPage={props.setPage}
             />
         </>

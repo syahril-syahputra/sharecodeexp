@@ -55,7 +55,7 @@ export default function UnfoundComponent(props) {
                 {!props.isLoading && props.metaData.total > 0 ? 
                     <MetaData
                         total={props.metaData.total}
-                        perPage={props.metaData.perPage}
+                        perPage={props.data.length}
                     />
                 : null} 
             </PrimaryWrapper>

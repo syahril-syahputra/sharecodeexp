@@ -136,22 +136,22 @@ export default function TableProduct(props) {
                                     </tr>
                                 )
                             })}
-                            {!props.isLoading && metaData.total === 0 &&
+                            {!props.isLoading && props.metaData.total === 0 &&
                                 <NoData colSpan={10}/>
                             }
                         </>
                     }
                 ></BaseTable>
-                {!props.isLoading && metaData.total > 0 ? 
+                {!props.isLoading && props.metaData.total > 0 ? 
                     <MetaData
-                        total={metaData.total}
-                        perPage={metaData.perPage}
+                        total={props.metaData.total}
+                        perPage={props.data.length}
                     />
                 : null} 
             </PrimaryWrapper>
             <Pagination 
-                links={links}
-                metaData={metaData}
+                links={props.links}
+                metaData={props.metaData}
                 setPage={props.setPage}
             />
         </>
