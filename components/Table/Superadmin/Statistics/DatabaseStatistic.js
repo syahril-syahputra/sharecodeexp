@@ -2,8 +2,10 @@
 // import Pagination from "@/components/Shared/Component/Pagination";
 import BaseTable from "@/components/Interface/Table/BaseTable";
 import HeaderTable from "@/components/Interface/Table/HeaderTable";
+import MetaData from "@/components/Interface/Table/MetaData";
 import NoData from "@/components/Interface/Table/NoData";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
+import Pagination from "@/components/Shared/Component/Pagination";
 
 export default function DatabaseStatistic(props) {
     return (
@@ -35,9 +37,9 @@ export default function DatabaseStatistic(props) {
                     }
                     tableData={
                         <>
-                            {props.data.map((item) => {
+                            {props.data.map((item, index) => {
                                 return(
-                                    <tr key={item.id} className="bg-white border-b hover:bg-gray-50">
+                                    <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                         <td scope="row" className="px-6 py-4 text-gray-900 whitespace-nowrap">
                                             {item.ManufacturerNumber}
                                         </td>
@@ -62,7 +64,18 @@ export default function DatabaseStatistic(props) {
                         </>
                     }
                 ></BaseTable>
+                {!props.isLoading && props.metaData.total > 0 ? 
+                    <MetaData
+                        total={props.metaData.total}
+                        perPage={props.metaData.perPage}
+                    />
+                : null} 
             </PrimaryWrapper>
+            <Pagination 
+                links={props.links}
+                metaData={props.metaData}
+                setPage={props.setPage}
+            />
         </>
     );
 }

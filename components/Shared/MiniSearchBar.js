@@ -21,28 +21,27 @@ export default function MiniSearchBar(props){
 
     return (
         <>
-            <form>
-                <div className="relative flex">
-                    <TextInput
-                        placeholder="Find here..."
-                        value={search}
-                        onChange={(input) => setSearch(input.value)}  
-                    />
-                    <PrimaryButton
-                        type="button"
-                        className="mr-2"
-                        onClick={onSubmit}                  
-                    >
-                        Search
-                    </PrimaryButton>   
-                    <InfoButton
-                        type="button"
-                        onClick={onReset}                  
-                    >
-                        <i className="fas fa-refresh"></i>
-                    </InfoButton>          
-                </div>
-            </form>
+            <div className="relative flex">
+                <TextInput
+                    placeholder="Find here..."
+                    value={search}
+                    onKeyDown={handleEnter}
+                    onChange={(input) => setSearch(input.value)}  
+                />
+                <PrimaryButton
+                    type="button"
+                    className="mr-2"
+                    onClick={onSubmit}                  
+                >
+                    Search
+                </PrimaryButton>   
+                <InfoButton
+                    type="button"
+                    onClick={onReset}                  
+                >
+                    <i className="fas fa-refresh"></i>
+                </InfoButton>          
+            </div>
         </>
     )
 }

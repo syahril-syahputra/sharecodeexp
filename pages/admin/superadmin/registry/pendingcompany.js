@@ -6,13 +6,14 @@ import axios from "@/lib/axios";
 // components
 import CompanyList from "@/components/Table/Superadmin/Registry/CompanyList";
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
 export default function PendingCompany({session}) {
     //data search
-    const [search, setSearch] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [data, setData] = useState([])
     const [links, setLinks] = useState([])
@@ -23,11 +24,13 @@ export default function PendingCompany({session}) {
     })
 
     useEffect(() => {
-        searchData(search)
+        searchData()
     }, [])
-    const searchData = async (srch, page=1) =>{
+    const [search, setSearch] = useState('')
+    const searchData = async (searchParam='', page=1) =>{
+        setSearch(searchParam)
         setIsLoading(true)
-        const response = await axios.get(`/admin/companies?page=${page}&status=pending`,
+        const response = await axios.get(`/admin/companies?page=${page}&status=pending&search=${searchParam}`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -48,22 +51,22 @@ export default function PendingCompany({session}) {
             })
             }).catch((error) => {
             // console.log(error.response)
+            toast.error("Something went wrong. Can not load companies", toastOptions)
             }).finally(() => {
             setIsLoading(false)
             })
     }
-    const setPage = (item) => {
-        searchData(search, item)
+    const setPage = (pageNumber) => {
+        searchData(search, pageNumber)
+    }
+
+    const handleSearch = (searchResult) =>{
+        searchData(searchResult)
     }
     
     const router = useRouter()
     const viewCompanyHandler = (companyId) => {
         router.push(`/admin/superadmin/registry/company/${companyId}`)
-    }
-
-    const handleSearch = (item) =>{
-        setSearch(item)
-        searchData()
     }
 
     return (

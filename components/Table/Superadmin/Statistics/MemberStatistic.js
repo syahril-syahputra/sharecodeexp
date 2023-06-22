@@ -3,8 +3,10 @@
 
 import BaseTable from "@/components/Interface/Table/BaseTable";
 import HeaderTable from "@/components/Interface/Table/HeaderTable";
+import MetaData from "@/components/Interface/Table/MetaData";
 import NoData from "@/components/Interface/Table/NoData";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
+import Pagination from "@/components/Shared/Component/Pagination";
 
 export default function MemberStatistic(props) {
     return (
@@ -63,7 +65,18 @@ export default function MemberStatistic(props) {
                         </>
                     }
                 ></BaseTable>
+                {!props.isLoading && props.metaData.total > 0 ? 
+                    <MetaData
+                        total={props.metaData.total}
+                        perPage={props.metaData.perPage}
+                    />
+                : null} 
             </PrimaryWrapper>
+            <Pagination 
+                links={props.links}
+                metaData={props.metaData}
+                setPage={props.setPage}
+            />
         </>
     );
 }

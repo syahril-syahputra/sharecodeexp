@@ -10,7 +10,7 @@ import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
 import NoData from '@/components/Interface/Table/NoData';
 
 export default function NewInquiries(props) {
-  const data = props.data.slice(0, 5)
+  const data = props.data? props.data.slice(0,5) : []
 
   return (
     <>

@@ -9,10 +9,11 @@ import DatabaseStatistic from "@/components/Table/Superadmin/Statistics/Database
 // layout for page
 import Admin from "layouts/Admin.js";
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
 
 export default function Product({session}) {
     //data search
-    const [search, setSearch] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [data, setData] = useState([])
     const [links, setLinks] = useState([])
@@ -21,9 +22,11 @@ export default function Product({session}) {
         perPage: 0,
         lastPage: 0
     })
-    const loadData = async () =>{
+    const [search, setSearch] = useState('')
+    const loadData = async (searchParam='', page=1) =>{
         setIsLoading(true)
-        const response = await axios.get(`/admin/DatabaseStatistic`,
+        setSearch(searchParam)
+        const response = await axios.get(`/admin/DatabaseStatistic?page=${page}&search=${searchParam}`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -31,32 +34,31 @@ export default function Product({session}) {
             })
             .then((response) => {
                 let result = response.data.data
-                setData(result)
-                // setLinks(result.links)
-                // setMetaData({
-                //     total: result.total,
-                //     perPage: result.per_page,
-                //     lastPage: result.last_page,
-                //     currentPage: result.current_page,
-                //     nextPage: result.next_page_url ? true : false,
-                //     prevPage: result.prev_page_url ? true : false
-                // })
+                setData(result.data)
+                setLinks(result.links)
+                setMetaData({
+                    total: result.total,
+                    perPage: result.per_page,
+                    lastPage: result.last_page,
+                    currentPage: result.current_page,
+                    nextPage: result.next_page_url ? true : false,
+                    prevPage: result.prev_page_url ? true : false
+                })
             }).catch((error) => {
-                console.log(error.response)
+                toast.error("Something went wrong. Can not load statistic", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
     }
-    // const setPage = (item) => {
-    //     searchData(search, item)
-    // }
+    const setPage = (pageNumber) => {
+        loadData(search, pageNumber)
+    }
     useEffect(() => {
-        loadData(search)
+        loadData()
     }, [])
 
-    const handleSearch = (item) =>{
-        setSearch(item)
-        loadData()
+    const handleSearch = (searchResult) =>{
+        loadData(searchResult)
     }
 
     return (
@@ -67,11 +69,11 @@ export default function Product({session}) {
                 </div> 
                 <DatabaseStatistic 
                     title="Database Statistic"
-                    // setPage={setPage}
+                    setPage={setPage}
                     isLoading={isLoading}
                     data={data}
-                    // links={links}
-                    // metaData={metaData}
+                    links={links}
+                    metaData={metaData}
                 />
             </div>
         </>

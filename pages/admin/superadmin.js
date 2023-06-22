@@ -148,7 +148,7 @@ export default function SuperadminDashboard({session, message}) {
         })
         .then((response) => {
           let result = response.data.data
-          setMemberStatistics(result)
+          setMemberStatistics(result.data)
         }).catch((error) => {
           setMemberStatistics([])
         }).finally(() => {
