@@ -35,7 +35,7 @@ export default function OrderDetails({session, routeParam}) {
     const [isOrderValid, setIsOrderValid] = useState(true)
     const loadData = async () =>{
         setIsLoading(true)
-        const response = await axios.get(`/admin/orders/${routeParam.orderid}/data`,
+        const response = await axios.get(`/admin/orders/${routeParam.orderSlug}/data`,
             {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`

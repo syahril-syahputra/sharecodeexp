@@ -39,7 +39,7 @@ export default function CompanyDetail({session, routeParam}) {
   const [companyData, setCompanyData] = useState({})
   const getData = async () => {
       setIsLoading(true)
-      const response = await axios.get(`admin/companies?id=${routeParam.companyid}`,
+      const response = await axios.get(`admin/companies?id=${routeParam.companyName}`,
         {
             headers: {
             "Authorization" : `Bearer ${session.accessToken}`
@@ -47,12 +47,12 @@ export default function CompanyDetail({session, routeParam}) {
         }
         )
         .then((response) => {
-            let result = response.data.data
-            setCompanyData(result)
+          let result = response.data.data
+          setCompanyData(result)
         }).catch((error) => {
-            // console.log(error.response)
+          toast.error("Something went wrong. Company not found", toastOptions)
         }).finally(() => {
-            setIsLoading(false)
+          setIsLoading(false)
         })
   }
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function CompanyDetail({session, routeParam}) {
   const handleAcceptCompany = async () => {
     setShowAcceptModal(false)
     setIsLoading(true)
-    const request = await axios.post(`admin/companies/${routeParam.companyid}/update`, {}, {
+    const request = await axios.post(`admin/companies/${companyData.id}/update`, {}, {
       headers: {
         "Authorization" : `Bearer ${session.accessToken}`
       }
@@ -83,9 +83,9 @@ export default function CompanyDetail({session, routeParam}) {
   const handleRejectCompany = async (text) => {
     setShowRejectModal(false)
     setIsLoading(true)
-    const request = await axios.post(`admin/companies/${routeParam.companyid}/reject`, 
+    const request = await axios.post(`admin/companies/${companyData.id}/reject`, 
     {
-      id: routeParam.companyid,
+      id: companyData.id,
       reason: text
     },
     {
@@ -108,9 +108,9 @@ export default function CompanyDetail({session, routeParam}) {
   const handlePendingCompany = async (text) => {
     setShowPendingModal(false)
     setIsLoading(true)
-    const request = await axios.post(`admin/companies/${routeParam.companyid}/pending`, 
+    const request = await axios.post(`admin/companies/${companyData.id}/pending`, 
     {
-      id: routeParam.companyid,
+      id: companyData.id,
       reason: text
     },
     {
@@ -132,7 +132,7 @@ export default function CompanyDetail({session, routeParam}) {
   const [showSendEmailModal, setShowSendEmailModal] = useState(false)
   const handleSendEmail = async (messages) => {
     setIsLoading(true)
-    const request = await axios.post(`/admin/companies/${routeParam.companyid}/RequestAdditional`, 
+    const request = await axios.post(`/admin/companies/${companyData.id}/RequestAdditional`, 
     {
       notification: messages
     },
@@ -142,7 +142,7 @@ export default function CompanyDetail({session, routeParam}) {
       }
     })
     .then((response) => {
-      toast.success(response.data.data, toastOptions)
+      toast.success(response.data.message || "Email sent successfully", toastOptions)
       setShowSendEmailModal(false)
     })
     .catch((error) => {
@@ -159,8 +159,8 @@ export default function CompanyDetail({session, routeParam}) {
     setIsLoading(true)
     let formData = new FormData();
     formData.append("company_img", image);
-    formData.append("id", routeParam.companyid)
-    const request = await axios.post(`admin/companies/${routeParam.companyid}/updateImage`, formData,
+    formData.append("id", companyData.id)
+    const request = await axios.post(`admin/companies/${companyData.id}/updateImage`, formData,
     {
       headers: {
         "Authorization" : `Bearer ${session.accessToken}`
@@ -182,7 +182,7 @@ export default function CompanyDetail({session, routeParam}) {
   const [showRemoveCompanyModal, setShowRemoveCompanyModal] = useState()
   const handleRemoveCompany = async () => {
     setIsLoading(true)
-    const request = await axios.delete(`/admin/companies/${routeParam.companyid}/delete`,
+    const request = await axios.delete(`/admin/companies/${companyData.id}/delete`,
     {
       headers: {
         "Authorization" : `Bearer ${session.accessToken}`
@@ -348,7 +348,7 @@ export default function CompanyDetail({session, routeParam}) {
                   </Link>
                 </div>
                 <div className="w-full lg:w-9/12 px-4">
-                  <Link href={`/admin/superadmin/registry/additionaldocs/${routeParam.companyid}`}>
+                  <Link href={`/admin/superadmin/registry/additionaldocs/${companyData.id}`}>
                     <SecondaryButton size="sm">
                       View Additional Documents
                     </SecondaryButton>

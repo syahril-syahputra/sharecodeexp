@@ -68,7 +68,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
             }
             })
             .then(() => {
-                router.push(`/admin/member/sellcomponents/component/view/${routeParam.componentid}`)
+                router.push(`/admin/member/sellcomponents/component/view/${routeParam.componentSlug}`)
                 toast.success("Your component have been updated successfully", toastOptions)
             }).catch((error) => {
                 toast.error("Something went wrong. Can not update the component", toastOptions)
@@ -143,7 +143,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
     const [isLoading, setIsLoading] = useState(true)
     const getData = async () =>{
         setIsLoading(true)
-        const response = await axios.get(`/companyproduct?id=${routeParam.componentid}`,
+        const response = await axios.get(`/companyproduct?id=${routeParam.componentSlug}`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -214,7 +214,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                     </h3>
                 }
                 rightTop={
-                    <Link href={`/admin/member/sellcomponents/component/view/${routeParam.componentid}`}>
+                    <Link href={`/admin/member/sellcomponents/component/view/${routeParam.componentSlug}`}>
                         <LightButton 
                             size="sm" 
                             className="mr-2">
@@ -418,7 +418,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                     />
                 </div> 
                 <div className="w-full lg:w-1/2 px-3 mb-6">
-                    <Link href={`/admin/superadmin/components/details/${routeParam.componentid}`}>
+                    <Link href={`/admin/superadmin/components/details/${routeParam.componentSlug}`}>
                         <LightButton
                             className="w-full font-bold uppercase mb-2"
                             disabled={isLoading}

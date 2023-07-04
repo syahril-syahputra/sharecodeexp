@@ -63,11 +63,6 @@ export default function PendingCompany({session}) {
     const handleSearch = (searchResult) =>{
         searchData(searchResult)
     }
-    
-    const router = useRouter()
-    const viewCompanyHandler = (companyId) => {
-        router.push(`/admin/superadmin/registry/company/${companyId}`)
-    }
 
     return (
         <>
@@ -82,7 +77,6 @@ export default function PendingCompany({session}) {
                     data={data}
                     links={links}
                     metaData={metaData}
-                    viewHandler={viewCompanyHandler}
                 />
             </div>
         </>

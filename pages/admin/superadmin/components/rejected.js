@@ -64,10 +64,6 @@ export default function RejectedComponent({session}) {
         searchData(searchResult)
     }
 
-    const viewHandler = (componentid) => {
-        router.push(`/admin/superadmin/components/details/${componentid}`)
-    }
-
   return (
     <>
         <div className="mb-10">
@@ -81,7 +77,6 @@ export default function RejectedComponent({session}) {
                 data={data}
                 links={links}
                 metaData={metaData}
-                viewHandler={viewHandler}
             />
         </div>
     </>

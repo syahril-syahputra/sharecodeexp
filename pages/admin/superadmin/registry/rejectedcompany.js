@@ -62,11 +62,6 @@ export default function RejectedCompany({session}) {
         searchData(searchResult)
     }
 
-    const router = useRouter()
-    const viewCompanyHandler = (companyId) => {
-        router.push(`/admin/superadmin/registry/company/${companyId}`)
-    } 
-
     return (
         <>
             <div className="mb-10">
@@ -80,7 +75,6 @@ export default function RejectedCompany({session}) {
                     data={data}
                     links={links}
                     metaData={metaData}
-                    viewHandler={viewCompanyHandler}
                 />
             </div>
         </>

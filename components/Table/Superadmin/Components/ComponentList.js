@@ -10,6 +10,7 @@ import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import NoData from "@/components/Interface/Table/NoData";
 import MetaData from "@/components/Interface/Table/MetaData";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
+import Link from "next/link";
 
 export default function ComponentList(props) {
     return (
@@ -88,10 +89,12 @@ export default function ComponentList(props) {
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="inline-flex">
-                                            <PrimaryButton 
-                                                size="sm"
-                                                onClick={()=> props.viewHandler(item.id)}>
-                                            View</PrimaryButton>
+                                            <Link href={`/admin/superadmin/components/details/${item.slug}`}>
+                                                <PrimaryButton
+                                                    size="sm">
+                                                    View
+                                                </PrimaryButton>
+                                            </Link>
                                         </div>
                                     </td>
                                 </tr>

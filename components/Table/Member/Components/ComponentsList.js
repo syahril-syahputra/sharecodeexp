@@ -126,7 +126,7 @@ export default function TableProduct(props) {
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
-                                                <Link href={`/admin/member/sellcomponents/component/view/${item.id}`}>
+                                                <Link href={`/admin/member/sellcomponents/component/view/${item.slug}`}>
                                                     <PrimaryButton
                                                         size="sm"
                                                     >View</PrimaryButton>

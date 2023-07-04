@@ -4,19 +4,16 @@ import axios from "@/lib/axios";
 import Link from "next/link";
 import moment from "moment";
 
-// components
-import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep";
-import AcceptQuotationModal from "@/components/Modal/OrderComponent/Buyer/AcceptQuotation"
-import RejectQuotationModal from "@/components/Modal/OrderComponent/Buyer/RejectQuotation"
-import SendPaymentDocsModal from "@/components/Modal/OrderComponent/Buyer/SendPaymentDocs"
-import SendUpdatedPaymentDocsModal from "@/components/Modal/OrderComponent/Buyer/SendUpdatedPaymentDocs"
-import AcceptOrderModal from "@/components/Modal/OrderComponent/Buyer/AcceptOrder"
-import RejectOrderModal from "@/components/Modal/OrderComponent/Buyer/RejectOrder"
-import { toast } from 'react-toastify';
-import { toastOptions } from "@/lib/toastOptions"
-
 // layout for page
 import Admin from "layouts/Admin.js";
+
+// components
+import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep"
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
+import VerifyInquiryModal from "@/components/Modal/OrderComponent/Seller/VerifyInquiry"
+import EditVerifiedOrderModal from "@/components/Modal/OrderComponent/Seller/EditVerifiedOrder"
+import SendTrackerModal from "@/components/Modal/OrderComponent/Seller/SendTracker"
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 import PageHeader from "@/components/Interface/Page/PageHeader";
 import OrderStatus from "@/components/Shared/Order/OrderStatus";
@@ -24,26 +21,28 @@ import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
 import WarningButton from "@/components/Interface/Buttons/WarningButton";
 import LightButton from "@/components/Interface/Buttons/LightButton";
 
-export default function InquiryDetails({session, routeParam, couriers}) {
+export default function InquiryDetails({session, routeParam}) {
     const publicDir = process.env.NEXT_PUBLIC_DIR
     //data search
     const [isLoading, setIsLoading] = useState(true)
-    const [data, setData] = useState([])
+    const [data, setData] = useState({})
     const [isOrderValid, setIsOrderValid] = useState(true)
     const loadData = async () =>{
         setIsLoading(true)
-        const response = await axios.get(`/buyer/${routeParam.orderid}/data`,
+        const response = await axios.get(`/seller/${routeParam.orderSlug}/data`,
             {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
             }
             })
             .then((response) => {
+                // console.log(response)
                 let result = response.data.data
                 setData(result)
                 loadTodoAction(result.order_status.id)
                 setIsOrderValid(true)
             }).catch(() => {
+                // console.log(error.response)
                 setIsOrderValid(false)
             }).finally(() => {
                 setIsLoading(false)
@@ -55,7 +54,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
 
     const [todoValue, setTodoValue] = useState()
     const loadTodoAction = async (order_status_id) => {
-        const request = await axios.get(`/buyer/notification/${order_status_id}`, 
+        const request = await axios.get(`/seller/notification/${order_status_id}`, 
         {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -67,193 +66,72 @@ export default function InquiryDetails({session, routeParam, couriers}) {
     }
 
     const [errorInfo, setErrorInfo] = useState({})
-
-    const [acceptQuotationModal, setAcceptQuotationModal] = useState(false)
-    const acceptQuotationModalHandle = async () => {
-
+    const [verifyInquiryModal, setVerifyInquiryModal] = useState(false)
+    const verifyInquiryModalHandle = async (inputData) => {
         setIsLoading(true)
-        const response = await axios.post(`/buyer/AcceptOrder`, 
-            {
-              id:  data.id
-            },
-            {
-            headers: {
-                "Authorization" : `Bearer ${session.accessToken}`
-            }
-            })
-            .then(() => {
-                toast.success("Quotation has been accepted", toastOptions)
-                setAcceptQuotationModal(false)
-                loadData()
-            }).catch((error) => {
-                toast.error("Something went wrong. Can not accept the quotation.", toastOptions)
-                setIsLoading(false)
-            }).finally(() => {
-                setIsLoading(false)
-            })
-
-
-    }
-
-    const [rejectionReason, setRejectionReasons] = useState([{value: 'other', label: 'Other'}])
-    const loadRejectionReason = async () =>{
-        setIsLoading(true)
-        const response = await axios.get(`/reason`)
-            .then((response) => {
-                let result = response.data
-                setRejectionReasons([...result.data, {value: 'other', label: 'Other'}])
-            }).catch((error) => {
-                toast.error("Failed to load rejection reason", toastOptions)
-            }).finally(() => {
-                setIsLoading(false)
-            })
-    }
-    useEffect(() => {
-        loadRejectionReason()
-    }, [])
-    const [rejectQuotationModal, setRejectQuotationModal] = useState(false)
-    const rejectQuotationModalHandle = async (value) => {
-        setIsLoading(true)
-        const response = await axios.post(`/buyer/RejectOrder`, 
-        {
-            id:  data.id,
-            reason: value
-        },
+        setErrorInfo({})
+        const response = await axios.post(`/seller/UpdateToVerified`, inputData, 
         {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
             }
         })
         .then(() => {
-            toast.success("Quotation has been rejected", toastOptions)
-            setRejectQuotationModal(false)
+            toast.success("Inquired Component has been verified", toastOptions)
+            setVerifyInquiryModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not reject the quotation", toastOptions)
-            setIsLoading(false)
-        }).finally(() => {
+            toast.error("Something went wrong. Can not verified Inquired Component", toastOptions)
+            setErrorInfo(error.data.data)
             setIsLoading(false)
         })
     }
 
-    const [sendPaymentDocsModal, setSendPaymentDocsModal] = useState(false)
-    const sendPaymentDocsModalHandle = async (shipment, paymentDocs, courier, accountInfo, receiversName) => {    
+    const [editVerifiedOrderModal, setEditVerifiedOrderModal] = useState(false)
+    const editVerifiedOrderModalHandle = async (inputData) => {
+        setIsLoading(true)
+        setErrorInfo({})
+        const response = await axios.post(`/seller/EditWrongVerify`, inputData, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Inquired Component has been verified", toastOptions)
+            setEditVerifiedOrderModal(false)
+            loadData()
+        }).catch((error) => {
+            toast.error("Something went wrong. Can not verified Inquired Component", toastOptions)
+            setErrorInfo(error.data.data)
+            setIsLoading(false)
+        })
+    }
+
+    const [sendTrackerModal, setSendTrackerModal] = useState(false)
+    const sendTrackerModalHandle = async (sellerTracker, paymentAccount, expectedShippingDateSeller, shippingInformation) => {
+        setIsLoading(true)
+        setErrorInfo({})
+
         let formData = new FormData();
-        if(!shipment){
-            setErrorInfo({shipinfobuyer: "This field can't be empty"})
+        formData.append("PaymentDocSeller", paymentAccount);
+        formData.append("trackingSeller", sellerTracker);
+        formData.append("expectedShippingDateSeller", expectedShippingDateSeller);
+        formData.append("shipping_information", shippingInformation);
+        formData.append("id", data.id)  
+        const response = await axios.post(`/seller/UpdateToPreparingShipment`, formData, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("Tracker has been set", toastOptions)
+            setSendTrackerModal(false)
+            loadData()
+        }).catch((error) => {
             toast.error("Something went wrong", toastOptions)
-            setIsLoading(false)
-            return
-        }
-        formData.append("Payment_doc", paymentDocs);
-        formData.append("addressBuyer", shipment);
-        formData.append("courier", courier);
-        formData.append("fullnameReceiving", receiversName);
-        formData.append("AccountInformation", accountInfo);
-        formData.append("id", data.id)        
-        setIsLoading(true)
-        const response = await axios.post(`/buyer/SendPayment`, 
-            formData,
-        {
-            headers: {
-                "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then(() => {
-            toast.success("Payment has been sent", toastOptions)
-            setSendPaymentDocsModal(false)
-            loadData()
-        }).catch((error) => {
             setErrorInfo(error.data.data)
-            toast.error("Something went wrong", toastOptions)
-            setIsLoading(false)
-        }).finally(() => {
-            setIsLoading(false)
-        })
-    }
-
-    const [sendUpdatedPaymentDocsModal, setSendUpdatedPaymentDocsModal] = useState(false)
-    const sendUpdatedPaymentDocsModalHandle = async (shipment, paymentDocs, courier, accountInfo, receiversName) => {
-        let formData = new FormData();
-        if(!shipment){
-            setErrorInfo({shipinfobuyer: "This field can't be empty"})
-            toast.error("Something went wrong", toastOptions)
-            setIsLoading(false)
-            return
-        }
-        formData.append("Payment_doc", paymentDocs);
-        formData.append("addressBuyer", shipment);
-        formData.append("courier", courier);
-        formData.append("fullnameReceiving", receiversName);
-        formData.append("AccountInformation", accountInfo);
-        formData.append("id", data.id)   
-        setIsLoading(true)
-        const response = await axios.post(`/buyer/SendPayment?update=1`, 
-            formData,
-        {
-            headers: {
-                "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then(() => {
-            toast.success("Payment has been updated", toastOptions)
-            setSendUpdatedPaymentDocsModal(false)
-            loadData()
-        }).catch((error) => {
-            setErrorInfo(error.data.data)
-            toast.error("Something went wrong. Can not update payment", toastOptions)
-            setIsLoading(false)
-        }).finally(() => {
-            setIsLoading(false)
-        })
-    }
-
-    const [acceptOrderModal, setAcceptOrderModal] = useState(false)
-    const acceptOrderModalHandle = async () => {
-        setIsLoading(true)
-        const response = await axios.post(`/buyer/OrderAcc`, 
-        {
-            id:  data.id
-        },
-        {
-            headers: {
-                "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then(() => {
-            toast.success("Order has been Accepted", toastOptions)
-            setAcceptOrderModal(false)
-            loadData()
-        }).catch((error) => {
-            toast.error("Something went wrong. Can not accept the order", toastOptions)
-            setIsLoading(false)
-        }).finally(() => {
-            setIsLoading(false)
-        })
-    }
-
-    const [rejectOrderModal, setRejectOrderModal] = useState(false)
-    const rejectOrderModalHandle = async (rejection) => {
-        setIsLoading(true)
-        const response = await axios.post(`/buyer/ReturnOrder`, 
-        {
-            id:  data.id,
-            reason: rejection
-        },
-        {
-            headers: {
-                "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then(() => {
-            toast.success("Order has been Rejected", toastOptions)
-            setRejectOrderModal(false)
-            loadData()
-        }).catch((error) => {
-            setErrorInfo(error.data.data)
-            toast.error("Something went wrong. Can not reject the order", toastOptions)
-            setIsLoading(false)
-        }).finally(() => {
             setIsLoading(false)
         })
     }
@@ -265,11 +143,11 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                     <PageHeader
                         leftTop={
                             <h3 className="font-semibold text-lg text-blueGray-700">
-                                Inquired Component: Order Details
+                                Incoming Inquiry : Order Detail
                             </h3>
                         }
                         rightTop={
-                            <Link href={`/admin/member/buycomponents/inquiredcomponents`}>
+                            <Link href={`/admin/member/sellcomponents/incominginquiry`}>
                                 <LightButton 
                                     size="sm" 
                                     className="mr-2">
@@ -296,33 +174,21 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             <PrimaryWrapper>
                 <PageHeader
                     leftTop={
-                        <h3
-                            className="font-semibold text-lg text-blueGray-700">
-                            Inquired Component: Order Details
+                        <h3 className="font-semibold text-lg text-blueGray-700">
+                            Incoming Inquiry : Order Detail
                         </h3>
                     }
                     rightTop={
                         <h3 className="font-semibold text-lg text-blueGray-700">
-                            Buyer
+                            Seller
                         </h3>
                     }
                 ></PageHeader>
+
                 <OrderStatus 
                     status={data.order_status?.name}
                     action={todoValue}
                 />
-                {data.reason && data.order_status_id == 4 &&
-                    <div className="px-4 py-3 border-0 bg-red-400 mt-2">
-                        <div className="flex justify-center">
-                            <div className=" text-center">
-                                <h4
-                                    className="font-semibold text-sm text-white italic">
-                                    Rejection: {data.reason}
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-                }
                 <OrderStatusStep orderStatus={data.order_status}/>
             </PrimaryWrapper>
             
@@ -334,7 +200,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                             Tracker Number
                         </div>
                         <div className="pb-4 mt-2 lg:flex lg:justify-center px-4">
-                            {data.trackingBuyer ? data.trackingBuyer : 'No Data'}
+                            {data.trackingSeller ? data.trackingSeller : 'No Data'}
                         </div>
                     </PrimaryWrapper>
                 </div>
@@ -344,12 +210,12 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                             Expected Shipment Date
                         </div>
                         <div className="pb-4 mt-2 lg:flex lg:justify-center px-4">
-                            {data.expectedShippingDateBuyer ? moment(data.expectedShippingDateBuyer).format('dddd, D MMMM YYYY') : 'No Data'}
+                            {data.expectedShippingDateSeller ? moment(data.expectedShippingDateSeller).format('dddd, D MMMM YYYY') : 'No Data'}
                         </div>
                     </PrimaryWrapper>
                 </div>                
             </div>
-            
+
             {/* product images */}
             <PrimaryWrapper>
                 <div className="w-full">
@@ -460,12 +326,17 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                                     {data.companies_products?.dateCode}
                                 </td>
                                 <td className="text-center text-sm px-6 py-4">
-                                    ${data.price_profite} / ${data.price_profite ? (parseFloat(data.price_profite) * parseFloat(data.qty)) : ''}
+                                    ${data.price} / ${data.price ? (parseFloat(data.price) * parseInt(data.qty)) : ''}
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+                {data.price_profite &&
+                    <div className="text-center mb-10 w-1/2 mx-auto">
+                        <i className="text-light italic text-red-500">Note: Price is only for the product. The order type is Ex-works. The price you see on screen does not include logistical costs, customs, tax, insurance or any additional expenses that may occur.</i>
+                    </div>
+                }
             </PrimaryWrapper>
 
             {/* documents */}
@@ -475,19 +346,26 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                 </div>
                 <div className="pb-4 mt-2 lg:flex lg:justify-center px-4">
                     <div className="mx-1 my-1">
-                        <Link target="_blank" href={publicDir + "/uploads/proforma_doc/" + data.proforma_doc}>
-                            <SecondaryButton className="md:w-full sm:w-full" disabled={data.proforma_doc ? false : true} size="sm">
-                                Proforma Invoice
+                        <Link target="_blank" href={publicDir + "/uploads/shipinfoforseller/" + data.shipinfoforseller}>
+                            <SecondaryButton className="md:w-full sm:w-full" disabled={data.shipinfoforseller ? false : true} size="sm">
+                                Shipment Info 
                             </SecondaryButton>
                         </Link>
-                    </div>    
+                    </div>
                     <div className="mx-1 my-1">
-                        <Link target="_blank" href={publicDir + "/uploads/Payment_doc/" + data.Payment_doc}>
-                            <SecondaryButton className="md:w-full sm:w-full" disabled={data.Payment_doc ? false : true} size="sm">
-                                Payment Document
+                        <Link target="_blank" href={publicDir + "/PaymentDocSeller/" + data.PaymentDocSeller}>
+                            <SecondaryButton className="md:w-full sm:w-full" disabled={data.PaymentDocSeller ? false : true} size="sm">
+                                Seller's Invoice
                             </SecondaryButton>
                         </Link>
-                    </div>      
+                    </div>
+                    <div className="mx-1 my-1">
+                        <Link target="_blank" href={publicDir + "/PaymentProof/" + data.PaymentProof}>
+                            <SecondaryButton className="md:w-full sm:w-full" disabled={data.PaymentProof ? false : true} size="sm">
+                                Payment Receipt for Seller
+                            </SecondaryButton>
+                        </Link>
+                    </div>           
                 </div>
             </PrimaryWrapper>
 
@@ -500,120 +378,72 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                     <div className="mx-1 my-1">
                         <WarningButton 
                             className="md:w-full sm:w-full" 
-                            disabled={data.order_status_id == 3 ? false : true} 
+                            disabled={data.order_status_id == 1 ? false : true} 
                             size="sm"
-                            onClick={() => setAcceptQuotationModal(true) }
+                            onClick={() => setVerifyInquiryModal(true) }
                         >
-                            Accept Quotation
-                        </WarningButton>
-                    </div>
-                    <div className="mx-1 my-1">
-                        <WarningButton 
-                            className="md:w-full sm:w-full" 
-                            disabled={data.order_status_id == 3 ? false : true} 
-                            size="sm"
-                            onClick={() => setRejectQuotationModal(true) }
-                        >
-                            Reject Quotation
-                        </WarningButton>
-                    </div>
-                    <div className="mx-1 my-1">
-                        <WarningButton 
-                            className="md:w-full sm:w-full" 
-                            disabled={data.order_status_id == 6 ? false : true} 
-                            size="sm"
-                            onClick={() => setSendPaymentDocsModal(true) }
-                        >
-                            Send Payment Receipt
-                        </WarningButton>
-                    </div> 
-                    <div className="mx-1 my-1">
-                        <WarningButton 
-                            className="md:w-full sm:w-full" 
-                            disabled={data.order_status_id == 15 ? false : true} 
-                            size="sm"
-                            onClick={() => setSendUpdatedPaymentDocsModal(true) }
-                        >
-                            Update Payment Receipt
-                        </WarningButton>
-                    </div>  
-                    <div className="mx-1 my-1">
-                        <WarningButton 
-                            className="md:w-full sm:w-full" 
-                            disabled={data.order_status_id == 10 ? false : true} 
-                            size="sm"
-                            onClick={() => setAcceptOrderModal(true) }
-                        >
-                            Accept Order
+                            Edit & Verify
                         </WarningButton>
                     </div>   
                     <div className="mx-1 my-1">
                         <WarningButton 
                             className="md:w-full sm:w-full" 
-                            disabled={data.order_status_id == 10 ? false : true} 
+                            disabled={data.order_status_id == 2 ? false : true} 
                             size="sm"
-                            onClick={() => setRejectOrderModal(true) }
+                            onClick={() => setEditVerifiedOrderModal(true) }
                         >
-                            Reject Order
+                            Edit Verified Order
                         </WarningButton>
-                    </div>        
+                    </div>   
+                    <div className="mx-1 my-1">
+                        <WarningButton 
+                            className="md:w-full sm:w-full" 
+                            disabled={data.order_status_id == 8 ? false : true} 
+                            size="sm"
+                            onClick={() => setSendTrackerModal(true) }
+                        >
+                            Send Document & Tracker
+                        </WarningButton>
+                    </div>     
                 </div>
             </PrimaryWrapper>
 
             {/* modal */}
             <>
-                {acceptQuotationModal && 
-                    <AcceptQuotationModal
+                {verifyInquiryModal && 
+                    <VerifyInquiryModal
                         isLoading={isLoading}
-                        expirationDate={data.quotation_expiration_date}
-                        closeModal={() => setAcceptQuotationModal(false)}
-                        acceptance={acceptQuotationModalHandle}
-                    />
-                }
-
-                {rejectQuotationModal && 
-                    <RejectQuotationModal
-                        isLoading={isLoading}
-                        rejectionReason={rejectionReason}
-                        closeModal={() => setRejectQuotationModal(false)}
-                        acceptance={rejectQuotationModalHandle}
+                        orderId={data.id}
+                        orderQty={data.qty}
+                        availableQty={data.companies_products?.AvailableQuantity}
+                        moq={data.companies_products?.moq}
+                        dateCode={data.companies_products?.dateCode}
+                        closeModal={() => setVerifyInquiryModal(false)}
+                        acceptance={verifyInquiryModalHandle}
                         errorInfo={errorInfo}
                     />
                 }
 
-                {sendPaymentDocsModal && 
-                    <SendPaymentDocsModal
+                {editVerifiedOrderModal && 
+                    <EditVerifiedOrderModal
                         isLoading={isLoading}
-                        closeModal={() => setSendPaymentDocsModal(false)}
-                        acceptance={sendPaymentDocsModalHandle}
-                        couriers={couriers}
+                        orderId={data.id}
+                        orderQty={data.qty}
+                        availableQty={data.companies_products?.AvailableQuantity}
+                        moq={data.companies_products?.moq}
+                        price={data.price}
+                        dateCode={data.companies_products?.dateCode}
+                        closeModal={() => setEditVerifiedOrderModal(false)}
+                        acceptance={editVerifiedOrderModalHandle}                        
                         errorInfo={errorInfo}
                     />
                 }
 
-                {sendUpdatedPaymentDocsModal && 
-                    <SendUpdatedPaymentDocsModal
+                {sendTrackerModal && 
+                    <SendTrackerModal
                         isLoading={isLoading}
-                        closeModal={() => setSendUpdatedPaymentDocsModal(false)}
-                        acceptance={sendUpdatedPaymentDocsModalHandle}
-                        couriers={couriers}
-                        errorInfo={errorInfo}
-                    />
-                }
-
-                {acceptOrderModal && 
-                    <AcceptOrderModal
-                        isLoading={isLoading}
-                        closeModal={() => setAcceptOrderModal(false)}
-                        acceptance={acceptOrderModalHandle}
-                    />
-                }
-
-                {rejectOrderModal && 
-                    <RejectOrderModal
-                        isLoading={isLoading}
-                        closeModal={() => setRejectOrderModal(false)}
-                        acceptance={rejectOrderModalHandle}
+                        closeModal={() => setSendTrackerModal(false)}
+                        acceptance={sendTrackerModalHandle}
                         errorInfo={errorInfo}
                     />
                 }
@@ -626,14 +456,10 @@ InquiryDetails.layout = Admin;
 
 export async function getServerSideProps(context) {
     const session = await getSession(context)
-    const loadCouriers = await axios.get('/courierlist')
-    const couriers = loadCouriers.data.data
-
     return {
         props: {
-            session,
-            routeParam: context.query,
-            couriers
+            session: session,
+            routeParam: context.query
         }
     }
 }
