@@ -69,10 +69,12 @@ export default function EditComponent({session, routeParam, packaginglist}) {
             })
             .then(() => {
                 router.push(`/admin/member/sellcomponents/component/view/${routeParam.componentSlug}`)
-                toast.success("Your component have been updated successfully", toastOptions)
+                toast.success("Product has been updated.", toastOptions)
             }).catch((error) => {
-                toast.error("Something went wrong. Can not update the component", toastOptions)
+                console.log(error)
+                toast.error("Something went wrong. Check your form correctly.", toastOptions)
                 setErrorInfo(error.data.data)
+                setErrorMessage(error.data.message)
                 setIsLoading(false)
             })
     }
@@ -349,7 +351,9 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                 </div>
                 <div className="w-full lg:w-1/2 px-3 mb-6">
                     <AreaInput 
-                        label="Description"
+                        characterCount={0}
+                        characterLimit={100}
+                        label="Product/Part Description"
                         name="Description"
                         disabled={isLoading}
                         required

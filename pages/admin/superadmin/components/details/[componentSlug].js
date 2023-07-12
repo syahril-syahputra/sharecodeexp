@@ -67,10 +67,10 @@ export default function ComponentDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Component has been accepted", toastOptions)
+            toast.success("The product has been accepted", toastOptions)
         })
         .catch((error) => {
-            toast.error("Something went wrong. Can not accept the component", toastOptions)
+            toast.error("Something went wrong. Can not accept the product", toastOptions)
         })
         .finally(() => {
             getData()
@@ -92,10 +92,10 @@ export default function ComponentDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Component has been rejected", toastOptions)
+            toast.success("The product has been rejected", toastOptions)
         })
         .catch((error) => {
-            toast.error("Something went wrong. Can not reject the component", toastOptions)
+            toast.error("Something went wrong. Can not reject the product", toastOptions)
         })
         .finally(() => {
             getData()
@@ -116,10 +116,10 @@ export default function ComponentDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Component has been set to pending", toastOptions)
+            toast.success("The product status has been changed to pending", toastOptions)
         })
         .catch((error) => {
-            toast.error("Something went wrong. Can not set component to pending", toastOptions)
+            toast.error("Something went wrong. Cannot changed the product status", toastOptions)
         })
         .finally(() => {
             getData()
@@ -134,7 +134,7 @@ export default function ComponentDetails({session, routeParam}) {
                         className={
                             "font-semibold text-lg text-blueGray-700"
                     }>
-                    Company Component Details
+                    Company Product Details
                     </h3>
                 }
                 rightTop={
@@ -290,7 +290,7 @@ export default function ComponentDetails({session, routeParam}) {
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
                                     <th scope="col" className="px-6 py-3">
-                                        Description
+                                        Product/Part Description
                                     </th>
                                     <td scope="row" className="text-sm px-6 py-4">
                                         :
@@ -356,7 +356,7 @@ export default function ComponentDetails({session, routeParam}) {
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
                                     <th scope="col" className="px-6 py-3">
-                                        Created at
+                                        Created on
                                     </th>
                                     <td scope="row" className="text-sm px-6 py-4">
                                         :

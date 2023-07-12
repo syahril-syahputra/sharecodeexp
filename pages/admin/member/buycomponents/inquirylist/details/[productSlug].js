@@ -29,7 +29,7 @@ export default function AddToInquiryList({session, routeParam}) {
     const [data, setData] = useState({})
     const getData = async () =>{
         setIsLoading(true)
-        const response = await axios.get(`/product/${routeParam.componentid}`,
+        const response = await axios.get(`/product/${routeParam.productSlug}`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -61,7 +61,7 @@ export default function AddToInquiryList({session, routeParam}) {
         setIsLoading(true)
         setErrorInfo({})
         const response = await axios.post(`/addtoWish`, {
-            id: routeParam.componentid,
+            id: data.id,
             qty: orderQuantity
         }, {
         headers: {
@@ -71,7 +71,7 @@ export default function AddToInquiryList({session, routeParam}) {
         .then(() => {
             updateInquiryList(session.accessToken)
             router.push(`/admin/member/buycomponents/inquirylist`)
-            toast.success("Component has been added to list", toastOptions)
+            toast.success("The product has been added to list", toastOptions)
         }).catch((error) => {
             toast.error("Something went wrong. Can not add data to Inquiry List.", toastOptions)
             setErrorInfo(error.data.data)
@@ -102,7 +102,7 @@ export default function AddToInquiryList({session, routeParam}) {
                         <Link href="/product/search">
                             <LightButton 
                                 size="sm">
-                                Search another component
+                                Search Another Product
                             </LightButton>
                         </Link>
                     </>

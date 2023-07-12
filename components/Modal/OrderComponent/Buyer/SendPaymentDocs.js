@@ -86,7 +86,7 @@ export default function SendPaymentDocs(props){
                     <div className="flex flex-wrap mb-6">
                         <div className="w-1/2 pr-4">
                             <TextInput
-                                label="Receivers Name"
+                                label="Receiver's Name"
                                 name="receiversName"
                                 required
                                 value={receiversName}

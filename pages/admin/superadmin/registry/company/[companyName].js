@@ -142,11 +142,12 @@ export default function CompanyDetail({session, routeParam}) {
       }
     })
     .then((response) => {
-      toast.success(response.data.message || "Email sent successfully", toastOptions)
+      // toast.success(response.data.message || "Email sent successfully", toastOptions)
+      toast.success("Request sent.", toastOptions)
       setShowSendEmailModal(false)
     })
     .catch((error) => {
-      toast.error("Something went wrong. Can not request additional document", toastOptions)
+      toast.error("Something went wrong. Cannot request additional document.", toastOptions)
     })
     .finally(() => {
       getData()
@@ -359,9 +360,6 @@ export default function CompanyDetail({session, routeParam}) {
             
 
             <div className="mt-10 py-5 border-t border-blueGray-200 text-center">
-              <h2 className="text-red-500">
-                DANGER ZONE
-              </h2>
               <div className="flex flex-wrap justify-center mt-5">
                 <div className="w-full lg:w-9/12 px-4">
                   <DangerButton size="sm" className="font-bold" onClick={() => setShowRemoveCompanyModal(true) }>

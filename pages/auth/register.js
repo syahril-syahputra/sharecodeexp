@@ -155,7 +155,7 @@ export default function Index() {
     return (
         <>
             <PageSEO title="Exepart - Register" description={siteMetadata.description} />
-            <IndexNavbar fixed />
+            <IndexNavbar fixed hideLogin/>
             <section className="relative bg-white pb-36 overflow-hidden h-3/6 bg-gradient-to-b from-indigo-50 via-white">
                 <div className="container mx-auto">
                     <div className="mt-36">
@@ -287,6 +287,7 @@ export default function Index() {
                                                     <div className="p-2 border-dashed border-2 border-indigo-200">
                                                         <div className='text-center grid gap-4 lg:grid-cols-1 md:grid-cols-1'>
                                                             <Image src={image}
+                                                                alt="image_logo"
                                                                 className="mx-auto"
                                                                 height={180}
                                                                 width={180}>
@@ -352,7 +353,7 @@ export default function Index() {
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="flex flex-wrap mb-6">
+                                            {/* <div className="flex flex-wrap mb-6">
                                                 <div className="w-full  px-3 mb-6 md:mb-0">
                                                 <AreaInput
                                                     label="Address"
@@ -362,6 +363,58 @@ export default function Index() {
                                                     errorMsg={errorInfo?.company_address}
                                                     onChange={(input) => handleStringValueChange(input)}
                                                 />
+                                                </div>
+                                            </div> */}
+                                            <div className="flex flex-wrap mb-6">
+                                                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                                    <AreaInput
+                                                        characterCount={0}
+                                                        characterLimit={100}
+                                                        label="Address 1"
+                                                        name="company_address"
+                                                        required
+                                                        value={registrationInfo.company_address}
+                                                        errorMsg={errorInfo?.company_address}
+                                                        onChange={(input) => handleStringValueChange(input)}
+                                                    />
+                                                </div>
+                                                <div className="w-full md:w-1/2 px-3">
+                                                    <AreaInput
+                                                        characterCount={0}
+                                                        characterLimit={100}
+                                                        label="Address 2"
+                                                        name="company_address"
+                                                        required
+                                                        value={registrationInfo.company_address}
+                                                        errorMsg={errorInfo?.company_address}
+                                                        onChange={(input) => handleStringValueChange(input)}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="flex flex-wrap mb-6">
+                                                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                                    <TextInput
+                                                        label="Province"
+                                                        className="w-full"
+                                                        required
+                                                        name="company_phone"
+                                                        value={registrationInfo.company_phone}
+                                                        errorMsg={errorInfo?.company_phone}
+                                                        onChange={(input) => handleStringValueChange(input)}
+                                                    /> 
+                                                </div>
+                                                <div className="w-full md:w-1/2 px-3">
+                                                    <div className="w-1/2 md:w-1/2">
+                                                        <TextInput
+                                                            label="Postal Code"
+                                                            className="w-full"
+                                                            required
+                                                            name="company_phone"
+                                                            value={registrationInfo.company_phone}
+                                                            errorMsg={errorInfo?.company_phone}
+                                                            onChange={(input) => handleStringValueChange(input)}
+                                                        /> 
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

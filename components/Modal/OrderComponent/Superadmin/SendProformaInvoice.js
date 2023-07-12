@@ -9,7 +9,7 @@ export default function SendProformaInvoice(props){
     return (
         <>
             <BaseModalLarge
-                title="Send Proforma Invoice"
+                title="Send Proforma Invoice to Buyer"
                 onClick={() => props.closeModal()}
                 body={
                     <>

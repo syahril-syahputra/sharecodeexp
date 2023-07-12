@@ -60,7 +60,7 @@ export default function ComponentList(props) {
                                 Packaging
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Created At
+                                Created On
                             </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.

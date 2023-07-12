@@ -17,7 +17,7 @@ export default function Login() {
     const router = useRouter();
     const {status} = useSession()
     if(status == 'authenticated'){
-        router.replace("/")
+        router.replace("/admin/dashboard")
     }
     
     const [isLoading, setIsLoading] = useState(false)
@@ -35,14 +35,12 @@ export default function Login() {
         const request = await signIn('credentials', {
             email: enteredEmail,
             password: enteredPassword,
-            redirect: false
+            redirect: false,
         }).then((res) => {
             if (res?.error) {
                 setErrMessage(res)
                 setIsLoading(false)
-            } else {
-                router.push("/");
-            }
+            } 
         }).catch((res) => {
             console.log(res)
         })
@@ -51,7 +49,7 @@ export default function Login() {
     return (
         <>
             <PageSEO title="Exepart - Login" description={siteMetadata.description} />
-            <IndexNavbar fixed isLoginPage/>
+            <IndexNavbar fixed hideLogin/>
             <section className="relative bg-white pb-36 overflow-hidden h-3/6 bg-gradient-to-b from-indigo-50 via-white">
                 <div className="container mx-auto">
                     <div className="mt-36">

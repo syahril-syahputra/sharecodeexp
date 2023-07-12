@@ -137,7 +137,7 @@ export default function EditVerifiedOrder(props){
                         </div>
                     </div>
                     <div className="text-slate-500 italic">
-                        <p>Note: If you don’t want to sell this item, you may edit the Available Quantity to 0 (zero) pieces. 
+                        <p>Note: If you don’t want to sell this item, you may edit the available quantity to 0 (zero) pieces. 
                             Your input will be updated in the database and members will not inquire until further quantity change.</p>
                     </div>
                 </>

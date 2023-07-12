@@ -9,7 +9,7 @@ export default function Logout(props){
                 onClick={() => props.closeModal()}
                 body={
                     <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                        Do you want to <span className="text-blueGray-700 font-bold">Logout</span>?
+                        Do you want to <span className="text-blueGray-700 font-bold">log out</span>?
                     </p>
                 }
                 action={

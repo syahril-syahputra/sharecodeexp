@@ -78,6 +78,7 @@ export default function InquiryNow({session}) {
                 </div>
                 <ComponentList
                     title="Inquired Components"
+                    statusDropdown
                     setPage={setPage}
                     isLoading={isLoading}
                     data={data}

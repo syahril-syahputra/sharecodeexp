@@ -16,7 +16,7 @@ export default function SendTracker(props){
     }
     return (
         <BaseModalLarge
-            title="Send Invoice & Tracking Information"
+            title="Payment Account Information & Invoice"
             onClick={() => props.closeModal()}
             body={
                 <>
@@ -24,7 +24,7 @@ export default function SendTracker(props){
                         <div className="flex flex-wrap mb-6">
                             <div className="w-1/2 px-3">
                                 <TextInput
-                                    label="Tracker Number"
+                                    label="Tracking Number"
                                     name="sellerTracker"
                                     value={sellerTracker}
                                     onChange={(input) => setSellerTracker(input.value)}

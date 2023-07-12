@@ -38,7 +38,7 @@ export default function Admin({ children }) {
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
       <Sidebar company={company}/>
-      <div className="relative md:ml-64 bg-blueGray-100">
+      <div className="relative md:ml-72 bg-blueGray-100">
       <AdminNavbar />
         {/* Header */}
         <HeaderStats />

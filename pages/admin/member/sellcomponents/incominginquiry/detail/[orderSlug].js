@@ -77,11 +77,11 @@ export default function InquiryDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Inquired Component has been verified", toastOptions)
+            toast.success("Inquired product has been verified.", toastOptions)
             setVerifyInquiryModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not verified Inquired Component", toastOptions)
+            toast.error("Something went wrong. Cannot verified the inquired product.", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -98,11 +98,11 @@ export default function InquiryDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Inquired Component has been verified", toastOptions)
+            toast.success("Inquired product has been verified.", toastOptions)
             setEditVerifiedOrderModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not verified Inquired Component", toastOptions)
+            toast.error("Something went wrong. Cannot verified the inquired product.", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -126,11 +126,11 @@ export default function InquiryDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Tracker has been set", toastOptions)
+            toast.success("Tracking information has been sent.", toastOptions)
             setSendTrackerModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Cannot send the tracking information.", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -143,7 +143,7 @@ export default function InquiryDetails({session, routeParam}) {
                     <PageHeader
                         leftTop={
                             <h3 className="font-semibold text-lg text-blueGray-700">
-                                Incoming Inquiry : Order Detail
+                                Incoming Inquiry : Order Details
                             </h3>
                         }
                         rightTop={
@@ -175,7 +175,7 @@ export default function InquiryDetails({session, routeParam}) {
                 <PageHeader
                     leftTop={
                         <h3 className="font-semibold text-lg text-blueGray-700">
-                            Incoming Inquiry : Order Detail
+                            Incoming Inquiry : Order Details
                         </h3>
                     }
                     rightTop={
@@ -197,7 +197,7 @@ export default function InquiryDetails({session, routeParam}) {
                 <div className="w-full lg:w-1/2 mr-4">
                     <PrimaryWrapper>
                         <div className="m-2 p-2 text-md uppercase border-b text-center">
-                            Tracker Number
+                            Tracking Number
                         </div>
                         <div className="pb-4 mt-2 lg:flex lg:justify-center px-4">
                             {data.trackingSeller ? data.trackingSeller : 'No Data'}
@@ -299,7 +299,7 @@ export default function InquiryDetails({session, routeParam}) {
                     </table>
                 </div>
                 <div className="text-center mt-5 mb-2 w-1/2 mx-auto">
-                    <span className="text-light text-slate-500">Order Created: {moment(data.created_at).format('dddd, D MMMM YYYY')}</span>
+                    <span className="text-light text-slate-500">Inquiry Date: {moment(data.created_at).format('dddd, D MMMM YYYY')}</span>
                 </div>
                 {/* table order information */}
                 <div className="overflow-x-auto mb-10 flex justify-center">
@@ -313,7 +313,10 @@ export default function InquiryDetails({session, routeParam}) {
                                     Date Code
                                 </th>
                                 <th scope="col" className="text-center px-6 py-3">
-                                    Price (per item) / Total
+                                    Unit Price (USD)
+                                </th>
+                                <th scope="col" className="text-center px-6 py-3">
+                                    Total Price (USD)
                                 </th>
                             </tr>
                         </thead>
@@ -326,7 +329,10 @@ export default function InquiryDetails({session, routeParam}) {
                                     {data.companies_products?.dateCode}
                                 </td>
                                 <td className="text-center text-sm px-6 py-4">
-                                    ${data.price} / ${data.price ? (parseFloat(data.price) * parseInt(data.qty)) : ''}
+                                    ${data.price} 
+                                </td>
+                                <td className="text-center text-sm px-6 py-4">
+                                    ${data.price ? (parseFloat(data.price) * parseInt(data.qty)) : ''}
                                 </td>
                             </tr>
                         </tbody>
@@ -334,7 +340,7 @@ export default function InquiryDetails({session, routeParam}) {
                 </div>
                 {data.price_profite &&
                     <div className="text-center mb-10 w-1/2 mx-auto">
-                        <i className="text-light italic text-red-500">Note: Price is only for the product. The order type is Ex-works. The price you see on screen does not include logistical costs, customs, tax, insurance or any additional expenses that may occur.</i>
+                        <i className="text-light italic text-red-500">Note: Price is only for the product. The order type is Ex-works. The price you see on screen does not include logistic costs, customs, tax, insurance or any additional expenses that may occur.</i>
                     </div>
                 }
             </PrimaryWrapper>
@@ -382,7 +388,7 @@ export default function InquiryDetails({session, routeParam}) {
                             size="sm"
                             onClick={() => setVerifyInquiryModal(true) }
                         >
-                            Edit & Verify
+                            Verify Price & Quantity
                         </WarningButton>
                     </div>   
                     <div className="mx-1 my-1">
@@ -392,7 +398,7 @@ export default function InquiryDetails({session, routeParam}) {
                             size="sm"
                             onClick={() => setEditVerifiedOrderModal(true) }
                         >
-                            Edit Verified Order
+                            Edit Verified Price & Quantity
                         </WarningButton>
                     </div>   
                     <div className="mx-1 my-1">
@@ -402,7 +408,7 @@ export default function InquiryDetails({session, routeParam}) {
                             size="sm"
                             onClick={() => setSendTrackerModal(true) }
                         >
-                            Send Document & Tracker
+                            Shipment Info & Tracking Number
                         </WarningButton>
                     </div>     
                 </div>

@@ -1,26 +1,16 @@
-import {useState, useMemo} from "react";
 import Link from "next/link";
 import moment from "moment";
 
 //data
-import {orderStatusesOptions} from "@/utils/optionData"
-import Pagination from "@/components/Shared/Component/Pagination";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 import HeaderTable from "@/components/Interface/Table/HeaderTable";
 import BaseTable from "@/components/Interface/Table/BaseTable";
-import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import NoData from "@/components/Interface/Table/NoData";
 import MetaData from "@/components/Interface/Table/MetaData";
-import NavigationViewButton from "./NavigationViewButton";
+import Pagination from "@/components/Shared/Component/Pagination";
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 
-export default function CompaniesBasedOrder(props) {
-    const orderStatuses = useMemo(() => orderStatusesOptions, [])
-    const [status, setStatus] = useState({value: "all", label: "All Status"});
-    const handleStatusChange = value => {
-        setStatus(value)
-        props.statusChange(value)
-    };
-
+export default function RejectedOrders(props) {
     return (
         <>
             <PrimaryWrapper>
@@ -36,15 +26,15 @@ export default function CompaniesBasedOrder(props) {
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 Manufacturer
-                            </th>                               
-                            <th scope="col" className="px-6 py-3">
-                                Inquiry QTY
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Status
+                                Country
+                            </th>                        
+                            <th scope="col" className="px-6 py-3">
+                                Incoming Inquiry QTY
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Created On
+                                Rejected On
                             </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.
@@ -56,24 +46,29 @@ export default function CompaniesBasedOrder(props) {
                             {props.data.map((item, index) => {
                                 return(
                                     <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                                        <td className="text-sm px-6 py-4">
+                                        <td scope="row" className="text-sm px-6 py-4">
                                             {item.companies_products.ManufacturerNumber}
                                         </td>
                                         <td className="text-sm px-6 py-4">
                                             {item.companies_products.Manufacture}
                                         </td>
                                         <td className="text-sm px-6 py-4">
+                                            {item.companies_products.country}
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
                                             {item.qty}
                                         </td>
                                         <td className="text-sm px-6 py-4">
-                                            {item.order_status.name}
-                                        </td>
-                                        <td className="text-sm px-6 py-4">
-                                            {item.created_at ? moment(item.created_at).format('dddd, D MMMM YYYY') : '-'}
+                                            {moment(item.OrderReturnedDate).format('dddd, D MMMM YYYY')}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
-                                                <NavigationViewButton navigationId={item.slug}/>
+                                                <Link href={`/admin/member/sellcomponents/incominginquiry/detail/${item.slug}`}>
+                                                    <PrimaryButton
+                                                        size="sm">
+                                                        View
+                                                    </PrimaryButton>
+                                                </Link>
                                             </div>
                                         </td>
                                     </tr>
@@ -90,7 +85,7 @@ export default function CompaniesBasedOrder(props) {
                         total={props.metaData.total}
                         perPage={props.data.length}
                     />
-                : null}
+                : null} 
             </PrimaryWrapper>
             <Pagination 
                 links={props.links}

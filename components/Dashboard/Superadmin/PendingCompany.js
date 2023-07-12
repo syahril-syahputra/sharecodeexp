@@ -15,7 +15,7 @@ export default function PendingCompany(props) {
   return (
     <PrimaryWrapper>      
       <HeaderTable
-        title="Pending Company Registry"
+        title="Pending Companies Registry"
         action={
           <Link href="/admin/superadmin/registry/pendingcompany">
             <PrimaryButton

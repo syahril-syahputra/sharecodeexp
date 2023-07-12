@@ -69,6 +69,13 @@ export default function ComponentList() {
         }
     ])
 
+    const [characterCount, setCharacterCount] = useState(0)
+    const characterLimit = 100
+    const textAreaHandler = (input) => {
+        setCharacterCount(input.value.length)
+        setEnteredInput({...enteredInput, [input.name]:input.value})
+    }
+
     return (
         <div className="relative p-2 bg-white mb-20">
             <div className="text-center pb-10 mt-10">
@@ -152,11 +159,14 @@ export default function ComponentList() {
                     </div>
                     <div className="mb-5">
                         <AreaInput
+                            characterCount={characterCount}
+                            characterLimit={characterLimit}
                             label="Text Area"
                             name="textarea"
                             required
                             value={enteredInput?.textarea}
-                            onChange={(input) => handleEnteredInput(input)}
+                            onChange={(input) => textAreaHandler(input)}
+                            // errorMsg={["disabled", "second error"]}
                         />
                         {enteredInput?.textarea}
                     </div>

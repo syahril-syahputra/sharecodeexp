@@ -91,7 +91,7 @@ export default function InquiryList({session}) {
         }
         })
         .then(() => {
-            toast.success("Component has been edited", toastOptions)
+            toast.success("The product has been edited", toastOptions)
             searchData()
             setShowEditQuantityModal(false)
             setOrderQuantity(0)
@@ -128,7 +128,7 @@ export default function InquiryList({session}) {
         .then(() => {
             updateInquiredComponent(session.accessToken)
             updateInquiryList(session.accessToken)
-            toast.success("Component has been inquired", toastOptions)
+            toast.success("The product has been inquired", toastOptions)
             searchData()
             setShowInquiryNowModal(false)
             setOrderQuantity(0)
@@ -161,11 +161,11 @@ export default function InquiryList({session}) {
         })
         .then(() => {
             updateInquiryList(session.accessToken)
-            toast.success("Your Inquire Component Successfully Deleted", toastOptions)
+            toast.success("Product successfully deleted.", toastOptions)
             setShowDeleteInquireModal(false)
             searchData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not delete inquire component", toastOptions)
+            toast.error("Something went wrong. Cannot delete inquire component", toastOptions)
         }).finally(() => {
           setIsLoading(false)
         })

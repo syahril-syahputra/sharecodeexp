@@ -30,7 +30,7 @@ export default function RejectQuotation(props){
             body={
                 <>
                     <p className="mb-4 text-blueGray-500 text-lg leading-relaxed">
-                        Do you agree to <span className="text-blueGray-700 font-bold">Reject</span> this Quotation? Select the reason bellow to continue rejecting.
+                        Do you agree to <span className="text-blueGray-700 font-bold">reject</span> this quotation? Select the reason bellow to continue rejecting.
                     </p>
                     <div className="w-full mb-6">
                         <SelectInput

@@ -85,7 +85,7 @@ export default function TableProduct(props) {
                                 Status
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Created At
+                                Created On
                             </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.

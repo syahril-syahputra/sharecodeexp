@@ -52,7 +52,7 @@ export default function MyProduct({session, routeParam}) {
                         className={
                             "font-semibold text-lg text-blueGray-700"
                     }>
-                    Company Component Details
+                    Product Details
                     </h3>
                 }
                 rightTop={
@@ -165,7 +165,7 @@ export default function MyProduct({session, routeParam}) {
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
                                     <th scope="col" className="px-6 py-3">
-                                        Description
+                                        Product/Part Description
                                     </th>
                                     <td scope="row" className="text-sm px-6 py-4">
                                         :
@@ -231,7 +231,7 @@ export default function MyProduct({session, routeParam}) {
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
                                     <th scope="col" className="px-6 py-3">
-                                        Created at
+                                        Created on
                                     </th>
                                     <td scope="row" className="text-sm px-6 py-4">
                                         :

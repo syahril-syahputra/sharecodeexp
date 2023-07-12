@@ -28,10 +28,10 @@ export default function CompletedShipment(props) {
                                 Order Number
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Tracker for Buyer
+                                Tracking Num. for Buyer
                             </th>  
                             <th scope="col" className="px-6 py-3">
-                                Tracker from Seller
+                                Tracking Num. from Seller
                             </th>  
                             <th scope="col" className="px-6 py-3">
                                 Arrival Date

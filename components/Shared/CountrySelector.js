@@ -2,11 +2,11 @@ import countryList from 'react-select-country-list';
 import { useMemo } from 'react';
 import SelectInput from '../Interface/Form/SelectInput';
 export default function CountrySelector(props){
-    const options = useMemo(() => countryList().getData(), [])
+    const options = useMemo(() => countryList().native().nativeData, [])
     let inputData = props.value
 
     if(props.setInisiate){
-        let countryCode = countryList().getValue(props.value)
+        let countryCode = countryList().native().getValue(props.value)
         inputData = {value: countryCode, label: props.value}
     }
 

@@ -81,11 +81,11 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Quotation has been sent", toastOptions)
+            toast.success("The quotation has been sent", toastOptions)
             setSendQuotationModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not send quotation", toastOptions)
+            toast.error("Something went wrong. Can not send the quotation", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -102,11 +102,11 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Quotation has been edited and sent", toastOptions)
+            toast.success("The quotation has been edited and sent", toastOptions)
             setEditRejectedQuotationModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not edit quotation", toastOptions)
+            toast.error("Something went wrong. Can not edit the quotation", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -127,11 +127,11 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Proforma Invoice has been sent", toastOptions)
+            toast.success("The Proforma Invoice has been sent", toastOptions)
             setSendProformaInvoiceModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not send Proforma Invoice", toastOptions)
+            toast.error("Something went wrong. Cannot send the Proforma Invoice", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -150,11 +150,11 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Payment has been accepted", toastOptions)
+            toast.success("The payment has been accepted", toastOptions)
             setAcceptPaymentDocumentModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not accept the payment", toastOptions)
+            toast.error("Something went wrong. Cannot accept the payment", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -174,11 +174,11 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Payment has been rejected", toastOptions)
+            toast.success("The payment has been rejected", toastOptions)
             setRejectPaymentDocumentModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not reject the payment", toastOptions)
+            toast.error("Something went wrong. Cannot reject the payment", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -200,11 +200,11 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Tracker has been sent to buyer", toastOptions)
+            toast.success("Tracking number has been sent to buyer", toastOptions)
             setTrackerNumberForBuyerModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not send tracker", toastOptions)
+            toast.error("Something went wrong. Cannot send tracking number to buyer", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -314,6 +314,18 @@ export default function OrderDetails({session, routeParam}) {
                         </div>
                     </div>
                 }
+                {data.reason && data.order_status_id == 15 &&
+                    <div className="px-4 py-3 border-0 bg-red-400 mt-2">
+                        <div className="flex justify-center">
+                            <div className=" text-center">
+                                <h4
+                                    className="font-semibold text-sm text-white italic">
+                                    Rejection: {data.reason}
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                }
                 <OrderStatusStep orderStatus={data.order_status}/>
             </PrimaryWrapper>
 
@@ -341,7 +353,7 @@ export default function OrderDetails({session, routeParam}) {
                                         <td className="">{data.buyer?.country}</td>
                                     </tr>
                                     <tr>
-                                        <td className="">Buyer's Tracker</td>
+                                        <td className="">Buyer's Tracking Number</td>
                                         <td className="">:</td>
                                         <td className="">{data.trackingBuyer}</td>
                                     </tr>
@@ -379,7 +391,7 @@ export default function OrderDetails({session, routeParam}) {
                                         <td className="">{data.companies_products?.company?.country}</td>
                                     </tr>
                                     <tr>
-                                        <td className="">Seller's Tracker</td>
+                                        <td className="">Seller's Tracking Number</td>
                                         <td className="">:</td>
                                         <td className="">{data.trackingSeller}</td>
                                     </tr>
@@ -407,7 +419,7 @@ export default function OrderDetails({session, routeParam}) {
                     <div className="lg:flex lg:justify-around mt-4">
                         <div className="w-full lg:w-4/12 border p-2 mb-4">
                             <div className="text-center">
-                                Courier
+                                Shipped Via
                             </div>
                             <div className="text-center text-sm">{data.courier ? data.courier : 'No Data'}</div>
                         </div>
@@ -531,24 +543,38 @@ export default function OrderDetails({session, routeParam}) {
                     </table>
                 </div>
                 <div className="text-center mt-5 mb-2 w-1/2 mx-auto">
-                    <span className="text-light text-slate-500">Order Created: {moment(data.created_at).format('dddd, D MMMM YYYY')}</span>
+                    <span className="text-light text-slate-500">Inquiry Date: {moment(data.created_at).format('dddd, D MMMM YYYY')}</span>
                 </div>
                 {/* table order information */}
                 <div className="overflow-x-auto mb-10 flex justify-center">
                     <table className="w-50 text-sm text-left text-gray-500 bg-white border">
                         <thead className="text-xs text-white uppercase bg-blue-500">
                             <tr>
-                                <th scope="col" className="text-center px-6 py-3">
+                                <th rowSpan={2} scope="col" className="text-center px-6 py-3">
                                     Order Quantity
                                 </th>
-                                <th scope="col" className="text-center px-6 py-3">
+                                <th rowSpan={2} scope="col" className="text-center px-6 py-3">
                                     Date Code
                                 </th>
+                                <th colSpan={2} scope="col" className="text-center px-6 py-3">
+                                    Seller
+                                </th>
+                                <th colSpan={2} scope="col" className="text-center px-6 py-3">
+                                    Exepart
+                                </th>
+                            </tr>
+                            <tr>
                                 <th scope="col" className="text-center px-6 py-3">
-                                    Seller Price (per item) / Total
+                                    Unit Price (USD)
                                 </th>
                                 <th scope="col" className="text-center px-6 py-3">
-                                    Exepart Price (per item) / Total
+                                    Total Price (USD)
+                                </th>
+                                <th scope="col" className="text-center px-6 py-3">
+                                    Unit Price (USD)
+                                </th>
+                                <th scope="col" className="text-center px-6 py-3">
+                                    Total Price (USD)
                                 </th>
                             </tr>
                         </thead>
@@ -561,10 +587,16 @@ export default function OrderDetails({session, routeParam}) {
                                     {data.companies_products?.dateCode}
                                 </td>
                                 <td className="text-center text-sm px-6 py-4">
-                                    ${data.price} / ${data.price ? (parseFloat(data.price) * parseInt(data.qty)) : '' }
+                                    ${data.price}
                                 </td>
                                 <td className="text-center text-sm px-6 py-4">
-                                    ${data.price_profite} / ${data.price_profite ? (parseFloat(data.price_profite) * parseInt(data.qty)) : '' }
+                                    ${data.price ? (parseFloat(data.price) * parseInt(data.qty)) : '' }
+                                </td>
+                                <td className="text-center text-sm px-6 py-4">
+                                    ${data.price_profite}
+                                </td>
+                                <td className="text-center text-sm px-6 py-4">
+                                    ${data.price_profite ? (parseFloat(data.price_profite) * parseInt(data.qty)) : '' }
                                 </td>
                             </tr>
                         </tbody>
@@ -572,7 +604,7 @@ export default function OrderDetails({session, routeParam}) {
                 </div>
                 {data.price_profite &&
                     <div className="text-center mb-10 w-1/2 mx-auto">
-                        <i className="text-light italic text-red-500">Note: Price is only for the product. The order type is Ex-works. The price you see on screen does not include logistical costs, customs, tax, insurance or any additional expenses that may occur.</i>
+                        <i className="text-light italic text-red-500">Note: Price is only for the product. The order type is Ex-works. The price you see on screen does not include logistic costs, customs, tax, insurance or any additional expenses that may occur.</i>
                     </div>
                 }
 
@@ -694,7 +726,7 @@ export default function OrderDetails({session, routeParam}) {
                             size="sm"
                             onClick={() => setRejectPaymentDocumentModal(true) }
                         >
-                            Reject Payment
+                            Reject Payment / Request Update Payment
                         </WarningButton>
                     </div>
                     <div className="mx-1 my-1">
@@ -704,7 +736,7 @@ export default function OrderDetails({session, routeParam}) {
                             size="sm"
                             onClick={() => setTrackerNumberForBuyerModal(true) }
                         >
-                            Provide Tracking Information
+                            Provide Tracking Number
                         </WarningButton>
                     </div>
                     <div className="mx-1 my-1">
@@ -739,7 +771,7 @@ export default function OrderDetails({session, routeParam}) {
                 <div className="pb-4 mt-2 lg:flex lg:justify-between px-4">
                     <div className="mx-1 my-1 text-center">
                         <div className=" text-slate-500 text-sm">
-                            Order Created                        
+                            Inquiry Created                        
                         </div>
                         <div className="text-xs">
                             {data.created_at ? moment(data.created_at).format('dddd, D MMMM YYYY') : '-'}

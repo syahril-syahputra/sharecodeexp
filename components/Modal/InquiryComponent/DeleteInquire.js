@@ -11,7 +11,7 @@ export default function DeleteInquire(props) {
       body={
         <>
           <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-            Do you want to remove Manufacturer Part Number <span className="text-blueGray-700 font-bold">{props.title}</span> from your list?
+            Do you want to remove manufacturer part number <span className="text-blueGray-700 font-bold">{props.title}</span> from your list?
           </p>
         </>
       }

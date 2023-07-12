@@ -9,7 +9,7 @@ export default function AcceptOrder(props){
             body={
                 <>
                     <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                        Do you want to <span className="text-blueGray-700 font-bold">Accept</span> this Order?
+                        Do you confirm that you <span className="text-blueGray-700 font-bold">received</span> the shippment?
                     </p>
                 </>
             }
@@ -31,7 +31,7 @@ export default function AcceptOrder(props){
                         {props.isLoading &&
                             <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                         }
-                        Yes, Accept
+                        Confirm
                     </PrimaryButton>
                 </>
             }

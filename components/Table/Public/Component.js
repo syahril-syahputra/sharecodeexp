@@ -84,10 +84,10 @@ export default function TableComponent(props){
                                             <PrimaryButton
                                                 disabled={isInquiryClicked}
                                                 size="sm"
-                                                onClick={() => inquiryItem(item.id)}
+                                                onClick={() => inquiryItem(item.slug)}
                                             >
                                             {isInquiryClicked && <i className="px-3 fas fa-hourglass fa-spin"></i>}    
-                                            {!isInquiryClicked && 'Inquiry'}    
+                                            {!isInquiryClicked && 'Inquire'}    
                                             </PrimaryButton>                                            
                                         </td>
                                     </tr>

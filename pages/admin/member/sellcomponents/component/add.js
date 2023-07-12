@@ -71,10 +71,10 @@ export default function MyProduct({session}) {
       .then((response) => {
         let result = response.data.data
         router.replace('/admin/member/sellcomponents/component/pending')
-        toast.success("Your component have been added successfully", toastOptions)
+        toast.success("Product has been added", toastOptions)
       }).catch((error) => {
         setErrorMessage(error.data.message ? error.data.message : "Please fill the form correctly")
-        toast.error("Something went wrong", toastOptions)
+        toast.error("Something went wrong. Check your form correctly", toastOptions)
         setErrorInfo(error.data.data)
       }).finally(() => {
         setIsLoading(false)
@@ -173,7 +173,7 @@ export default function MyProduct({session}) {
       <PageHeader
         leftTop={
           <h3 className="font-semibold text-lg text-blueGray-700">
-            Insert Product
+            Create Product
           </h3>
         }
         rightTop={
@@ -196,7 +196,7 @@ export default function MyProduct({session}) {
         <div className="flex flex-wrap mb-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                  Component Image (Optional)
+                  Product Image (Optional)
               </label>
               <div className="p-10 border-dashed border-2 border-indigo-200">
                   <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>
@@ -294,14 +294,16 @@ export default function MyProduct({session}) {
         </div>
         <div className="w-full lg:w-1/2 px-3 mb-6">
             <AreaInput 
-                label="Description"
-                name="Description"
-                disabled={isLoading}
-                required
-                rows={4}
-                value={inputData.Description}
-                errorMsg={errorInfo?.Description}
-                onChange={(input) => setDataHandler(input)}
+              characterCount={0}
+              characterLimit={100}
+              label="Product/Part Description"
+              name="Description"
+              disabled={isLoading}
+              required
+              rows={4}
+              value={inputData.Description}
+              errorMsg={errorInfo?.Description}
+              onChange={(input) => setDataHandler(input)}
             />
         </div>
         <div className="w-full lg:w-1/2 px-3 mb-6">
@@ -371,7 +373,7 @@ export default function MyProduct({session}) {
                 {isLoading &&
                     <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                 }
-                Insert
+                Create
             </PrimaryButton> 
         </div>
       </form>

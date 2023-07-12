@@ -11,7 +11,7 @@ export default function NeedLogin(props){
                 onClick={() => props.setShowModal(false)}
                 body={
                     <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                        To inquiry this component you should login, do you want to <span className="text-blueGray-700 font-bold">Login</span>?
+                        To inquire this component you should login, do you want to <span className="text-blueGray-700 font-bold">login</span>?
                     </p>
                 }
                 action={

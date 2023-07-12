@@ -17,7 +17,7 @@ export default function RejectPaymentDocument(props){
             body={
                 <div className="">
                     <p className="text-blueGray-500 text-lg leading-relaxed">
-                        Do you agree to <span className="text-blueGray-700 font-bold">Reject</span> this Payment?
+                        Do you agree to <span className="text-blueGray-700 font-bold">reject</span> this payment?
                     </p>
                     <AreaInput
                         name="reason"

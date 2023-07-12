@@ -13,13 +13,13 @@ export default function VerifyOrder(props){
 
     return (
         <BaseModalMedium
-            title="Provide Tracking Information"
+            title="Tracking Number"
             onClick={() => props.closeModal()}
             body={
                 <>  
                     <div className="mb-4">
                         <TextInput
-                            label="Tracker Number"
+                            label="Tracking Number"
                             name="buyerTracker"
                             value={buyerTracker}
                             onChange={(input) => setBuyerTracker(input.value)}
@@ -37,7 +37,7 @@ export default function VerifyOrder(props){
                         />
                     </div>
                     <p className="mt-8 italic text-blueGray-500 text-sm leading-relaxed">
-                        Note: This Tracker and Expected Shipment Date will be send to the buyer.
+                        Note: This tracking number and expected shipment date will be send to the buyer.
                     </p>
                 </>
             }   
