@@ -39,7 +39,7 @@ export default function BulkInsert({session}) {
       .then((response) => {
         let result = response.data.data
         router.replace('/admin/member/sellcomponents/component/pending')
-        toast.success("Components has been added", toastOptions)
+        toast.success("Components has been added.", toastOptions)
       }).catch((error) => {
         toast.success("Something went wrong.", toastOptions)
         setErrorMessage("Excel can not be processed")

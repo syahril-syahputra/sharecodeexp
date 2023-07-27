@@ -48,7 +48,7 @@ export default function RejectedComponent({session}) {
                 })
             }).catch((error) => {
             // console.log(error.response)
-                toast.error("Something went wrong. Can not load component", toastOptions)
+                toast.error("Something went wrong. Cannot load component.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -71,7 +71,7 @@ export default function RejectedComponent({session}) {
                 <MiniSearchBar searchItem={handleSearch}/>
             </div>
             <ComponentList 
-                title="Rejected Component"
+                title="Rejected Products"
                 setPage={setPage}
                 isLoading={isLoading}
                 data={data}

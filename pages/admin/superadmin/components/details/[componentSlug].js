@@ -43,7 +43,7 @@ export default function ComponentDetails({session, routeParam}) {
                 setComponent(result)
             }).catch((error) => {
                 // console.log(error.response)
-                toast.error("Something went wrong. Component not found", toastOptions)
+                toast.error("Something went wrong. Component not found.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -67,10 +67,10 @@ export default function ComponentDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("The product has been accepted", toastOptions)
+            toast.success("The product has been accepted.", toastOptions)
         })
         .catch((error) => {
-            toast.error("Something went wrong. Can not accept the product", toastOptions)
+            toast.error("Something went wrong. Cannot accept the product.", toastOptions)
         })
         .finally(() => {
             getData()
@@ -92,10 +92,10 @@ export default function ComponentDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("The product has been rejected", toastOptions)
+            toast.success("The product has been rejected.", toastOptions)
         })
         .catch((error) => {
-            toast.error("Something went wrong. Can not reject the product", toastOptions)
+            toast.error("Something went wrong. Cannot reject the product.", toastOptions)
         })
         .finally(() => {
             getData()
@@ -116,10 +116,10 @@ export default function ComponentDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("The product status has been changed to pending", toastOptions)
+            toast.success("The product status has been changed to pending.", toastOptions)
         })
         .catch((error) => {
-            toast.error("Something went wrong. Cannot changed the product status", toastOptions)
+            toast.error("Something went wrong. Cannot changed the product status.", toastOptions)
         })
         .finally(() => {
             getData()
@@ -196,7 +196,7 @@ export default function ComponentDetails({session, routeParam}) {
 
             {component.reason && component.status == 'rejected' &&
                 <DangerNotification 
-                    message={`Component is rejected`}
+                    message={`Products is rejected`}
                     detail={component.reason}
                 />
             }

@@ -13,7 +13,7 @@ export default function VerifyOrder(props){
 
     return (
         <BaseModalMedium
-            title="Tracking Number"
+            title="Provide Tracking Information"
             onClick={() => props.closeModal()}
             body={
                 <>  
@@ -57,7 +57,7 @@ export default function VerifyOrder(props){
                         {props.isLoading &&
                             <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                         }
-                        Set Tracker
+                        Confirm
                     </PrimaryButton>
                 </>
             }

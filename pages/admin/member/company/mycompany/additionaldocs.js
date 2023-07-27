@@ -30,7 +30,7 @@ export default function ShowAdditionalDocument({session}) {
             setAdditionalDocs(response.data.data)          
         }).catch((error) => {
             setAdditionalDocs([])
-            toast.error("Something went wrong. Can not load aditional document", toastOptions)           
+            toast.error("Something went wrong. Can not load aditional document.", toastOptions)           
         }).finally(() => {
             setIsLoading(false)
         })
@@ -61,13 +61,13 @@ export default function ShowAdditionalDocument({session}) {
       }
     })
     .then(() => {
-      toast.success("Additional Document has been updated", toastOptions)
+      toast.success("Additional Document has been updated.", toastOptions)
       setShowEditDocModal(false)
       setSelectedDocument({})
     })
     .catch((error) => {
       setErrorInfo(error.data.data)
-      toast.error("Something went wrong", toastOptions)
+      toast.error("Something went wrong.", toastOptions)
     })
     .finally(() => {
       getData()

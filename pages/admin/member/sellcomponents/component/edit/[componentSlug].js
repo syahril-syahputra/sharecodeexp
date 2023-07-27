@@ -52,12 +52,33 @@ export default function EditComponent({session, routeParam, packaginglist}) {
         setCountry(value)
     }
 
+    const [descriptionCount, setDescriptionCount] = useState(0)
+    const descriptionLimit = 100
+    const descriptionHandler = (input) => {
+        setDescriptionCount(input.value.length)
+        setInputData({...inputData, [input.name]:input.value})
+    }
+
     const router = useRouter()
     const handleSubmit = async (e) => {
         e.preventDefault()
         setIsLoading(true)
         setErrorInfo({})
         setErrorMessage(null)
+
+        //regex check
+        if(!/^[0-9+]*([+]?)+$/.test(inputData.dateCode)) {
+            setErrorInfo({dateCode: ["Wrong format!"]})
+            setIsLoading(false)
+            return
+        }
+  
+        if(descriptionCount > descriptionLimit) {
+            setErrorInfo({Description: ["Exceed maximum character!"]})
+            setIsLoading(false)
+            return
+        }
+
         let formData = new FormData();
         for (const key in inputData) {
             formData.append(key, inputData[key]);
@@ -180,7 +201,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                 setSubCategory({value: result.subcategory.id, label: result.subcategory.name}) 
 
             }).catch((error) => {
-                toast.error("Something went wrong. Can not load component", toastOptions)
+                toast.error("Something went wrong. Cannot load component.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -252,7 +273,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                 <div className="flex flex-wrap mb-6">
                     <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                            Component Image (Upload if only change)
+                            Product Image (Upload if only change)
                         </label>
                         <div className="p-10 border-dashed border-2 border-indigo-200">
                             <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>
@@ -351,8 +372,8 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                 </div>
                 <div className="w-full lg:w-1/2 px-3 mb-6">
                     <AreaInput 
-                        characterCount={0}
-                        characterLimit={100}
+                        characterCount={descriptionCount}
+                        characterLimit={descriptionLimit}
                         label="Product/Part Description"
                         name="Description"
                         disabled={isLoading}
@@ -364,8 +385,9 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                     />
                 </div>
                 <div className="w-full lg:w-1/2 px-3 mb-6">
-                    <TextInput
+                    <NumberInput
                         label="Date Code"
+                        placeholder="eg. 2023, 2023+"
                         className="w-full"
                         disabled={isLoading}
                         required

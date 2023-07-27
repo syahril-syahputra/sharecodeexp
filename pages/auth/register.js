@@ -42,6 +42,9 @@ export default function Index() {
             company_phone: "",
             company_country: "",
             company_address: "",
+            company_address_2: "",
+            postal_code: "",
+            province: "",
 
             //Documents
             company_img: "",
@@ -51,6 +54,20 @@ export default function Index() {
     )
 
     const handleStringValueChange = (input) => {
+        setRegistrationInfo({...registrationInfo, [input.name]:input.value})
+    }
+
+    const [firstAddressCharacterCount, setFirstAddressCharacterCount] = useState(0)
+    const firstAddressCharacterLimit = 100
+    const firstAddressHandler = (input) => {
+        setFirstAddressCharacterCount(input.value.length)
+        setRegistrationInfo({...registrationInfo, [input.name]:input.value})
+    }
+
+    const [secondAddressCharacterCount, setSecondAddressCharacterCount] = useState(0)
+    const secondAddressCharacterLimit = 100
+    const secondAddressHandler = (input) => {
+        setSecondAddressCharacterCount(input.value.length)
         setRegistrationInfo({...registrationInfo, [input.name]:input.value})
     }
     
@@ -151,6 +168,21 @@ export default function Index() {
             setRegistrationInfo({...registrationInfo, company_sector:value.value})
         }
     };
+
+    //checking register button status enable or disable
+    const registerButtonStatusDisabled = () => {
+        if(isLoading) return true;
+
+        if(!isAgreeTermCondtionOfSale) return true;
+
+        if(!isAgreeTermCondtionOfExport) return true;
+
+        if(firstAddressCharacterCount > firstAddressCharacterLimit) return true;
+
+        if(secondAddressCharacterCount > secondAddressCharacterLimit) return true;
+
+        return false
+    }
 
     return (
         <>
@@ -335,6 +367,7 @@ export default function Index() {
                                             <div className="flex flex-wrap mb-6">
                                                 <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                                     <TextInput
+                                                        type="tel"
                                                         label="Phone"
                                                         className="w-full"
                                                         required
@@ -344,6 +377,23 @@ export default function Index() {
                                                         onChange={(input) => handleStringValueChange(input)}
                                                     /> 
                                                 </div>
+                                            </div>
+                                            <div className="flex flex-wrap mb-6">                                                
+                                                <div className="w-full md:w-1/2 px-3">
+                                                    <div className="w-1/2 md:w-1/2">
+                                                        <TextInput
+                                                            label="Postal Code"
+                                                            className="w-full"
+                                                            required
+                                                            name="postal_code"
+                                                            value={registrationInfo.postal_code}
+                                                            errorMsg={errorInfo?.postal_code}
+                                                            onChange={(input) => handleStringValueChange(input)}
+                                                        /> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex flex-wrap mb-6">
                                                 <div className="w-full md:w-1/2 px-3">
                                                     <CountrySelector
                                                         name="country"
@@ -351,6 +401,17 @@ export default function Index() {
                                                         countryHandleChange={countryHandleChange}
                                                         errorMsg={errorInfo?.country}
                                                     />
+                                                </div>
+                                                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                                    <TextInput
+                                                        label="Province"
+                                                        className="w-full"
+                                                        required
+                                                        name="province"
+                                                        value={registrationInfo.province}
+                                                        errorMsg={errorInfo?.province}
+                                                        onChange={(input) => handleStringValueChange(input)}
+                                                    /> 
                                                 </div>
                                             </div>
                                             {/* <div className="flex flex-wrap mb-6">
@@ -368,55 +429,31 @@ export default function Index() {
                                             <div className="flex flex-wrap mb-6">
                                                 <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                                     <AreaInput
-                                                        characterCount={0}
-                                                        characterLimit={100}
+                                                        rows={5}
+                                                        characterCount={firstAddressCharacterCount}
+                                                        characterLimit={firstAddressCharacterLimit}
                                                         label="Address 1"
                                                         name="company_address"
                                                         required
                                                         value={registrationInfo.company_address}
                                                         errorMsg={errorInfo?.company_address}
-                                                        onChange={(input) => handleStringValueChange(input)}
+                                                        onChange={(input) => firstAddressHandler(input)}
                                                     />
                                                 </div>
                                                 <div className="w-full md:w-1/2 px-3">
                                                     <AreaInput
-                                                        characterCount={0}
-                                                        characterLimit={100}
+                                                        rows={5}
+                                                        characterCount={secondAddressCharacterCount}
+                                                        characterLimit={secondAddressCharacterLimit}
                                                         label="Address 2"
-                                                        name="company_address"
+                                                        name="company_address_2"
                                                         required
-                                                        value={registrationInfo.company_address}
-                                                        errorMsg={errorInfo?.company_address}
-                                                        onChange={(input) => handleStringValueChange(input)}
+                                                        value={registrationInfo.company_address_2}
+                                                        errorMsg={errorInfo?.company_address_2}
+                                                        onChange={(input) => secondAddressHandler(input)}
                                                     />
                                                 </div>
-                                            </div>
-                                            <div className="flex flex-wrap mb-6">
-                                                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                                    <TextInput
-                                                        label="Province"
-                                                        className="w-full"
-                                                        required
-                                                        name="company_phone"
-                                                        value={registrationInfo.company_phone}
-                                                        errorMsg={errorInfo?.company_phone}
-                                                        onChange={(input) => handleStringValueChange(input)}
-                                                    /> 
-                                                </div>
-                                                <div className="w-full md:w-1/2 px-3">
-                                                    <div className="w-1/2 md:w-1/2">
-                                                        <TextInput
-                                                            label="Postal Code"
-                                                            className="w-full"
-                                                            required
-                                                            name="company_phone"
-                                                            value={registrationInfo.company_phone}
-                                                            errorMsg={errorInfo?.company_phone}
-                                                            onChange={(input) => handleStringValueChange(input)}
-                                                        /> 
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            </div>                                            
                                         </div>
 
                                         <div className="mt-8">
@@ -518,7 +555,7 @@ export default function Index() {
                                         <div className="text-center">
                                             <div className='mt-5'>
                                                 <PrimaryButton
-                                                    disabled={isLoading}
+                                                    disabled={registerButtonStatusDisabled()}
                                                     type="submit"
                                                     className="w-full md:w-6/12 font-bold uppercase"
                                                 >

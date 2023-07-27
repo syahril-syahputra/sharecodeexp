@@ -53,7 +53,7 @@ export default function ApprovedCompany({session}) {
             })
             }).catch((error) => {
             // console.log(error.response)
-                toast.error("Something went wrong. Can not load companies", toastOptions)
+                toast.error("Something went wrong. Cannot load companies.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })

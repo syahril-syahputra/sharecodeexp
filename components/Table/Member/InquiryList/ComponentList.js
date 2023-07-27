@@ -26,7 +26,7 @@ export default function ComponentList(props) {
                                 size="sm"
                             >
                                 <i className="mr-2 ml-1 fas fa-search text-white"></i>
-                                Search New Component
+                                Search New Product
                             </SecondaryButton>
                         </Link>
                     }

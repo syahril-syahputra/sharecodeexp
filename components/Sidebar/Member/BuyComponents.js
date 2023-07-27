@@ -58,7 +58,7 @@ export default function BuyComponents(){
                 : "text-blueGray-700 hover:text-blueGray-500")
             }>
               <i className="fas fa-truck text-blueGray-400 mr-1 text-sm"></i>{" "}
-              Inquired Components 
+              Inquired Products 
               <span className="ml-1 text-xs font-semibold inline-block py-0.5 px-1 text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
                 {inquiredComponent}
               </span>

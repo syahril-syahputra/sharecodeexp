@@ -47,7 +47,7 @@ export default function DownloadOrdersData({session, buyersData, orderStatusesDa
             }
             })
             .then((response) => {
-                toast.success("Link Generated Successfully", toastOptions)
+                toast.success("Link generated successfully.", toastOptions)
                 setDownloadLink(response.data.data)
 
                 setOrderStatusId('')
@@ -55,7 +55,7 @@ export default function DownloadOrdersData({session, buyersData, orderStatusesDa
                 setBuyerId('')
                 setSelectedBuyerId('')
             }).catch((err) => {
-                toast.error("Something went wrong. Can not generate link", toastOptions)
+                toast.error("Something went wrong. Cannot generate link.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })

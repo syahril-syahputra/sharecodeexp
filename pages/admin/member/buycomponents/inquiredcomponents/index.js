@@ -46,7 +46,7 @@ export default function InquiryNow({session}) {
                 })
             }).catch((error) => {
                 // console.log(error.response)
-                toast.error("Something went wrong. Can not load inquired component", toastOptions)
+                toast.error("Something went wrong. Cannot load inquired component.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -77,7 +77,7 @@ export default function InquiryNow({session}) {
                     <MiniSearchBar searchItem={handleSearch}/>
                 </div>
                 <ComponentList
-                    title="Inquired Components"
+                    title="Inquired Products"
                     statusDropdown
                     setPage={setPage}
                     isLoading={isLoading}

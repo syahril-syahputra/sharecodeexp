@@ -46,7 +46,7 @@ export default function InquiryNow({session}) {
                 })
             }).catch((error) => {
                 // console.log(error.response)
-                toast.error("Something went wrong. Can not load completed orders", toastOptions)
+                toast.error("Something went wrong. Cannot load completed orders.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })

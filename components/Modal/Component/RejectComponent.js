@@ -12,12 +12,12 @@ export default function RejectComponent(props) {
 
     return (
       <BaseModalMedium
-        title="Reject Component"
+        title="Reject Product"
         onClick={() => props.setShowModal(false)}
         body={
           <>
             <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-              Do you want to reject <span className="text-blueGray-700 font-bold">{props.itemName}</span> as a Component?
+              Do you want to reject <span className="text-blueGray-700 font-bold">{props.itemName}</span> as a product?
             </p>
             <AreaInput
                 name="rejectMessage"

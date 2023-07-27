@@ -16,7 +16,7 @@ export default function CompleteOrder(props){
             body={
                 <>
                     <p className="text-blueGray-500 text-lg leading-relaxed">
-                        Do you agree to <span className="text-blueGray-700 font-bold">Complete</span> this Order?
+                        Do you agree to <span className="text-blueGray-700 font-bold">complete</span> this order?
                     </p>
                     <div className="w-full mt-5">
                         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">

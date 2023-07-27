@@ -5,12 +5,12 @@ import { BaseModalMedium } from "@/components/Interface/Modal/BaseModal";
 export default function PendingComponent(props) {
   return (
     <BaseModalMedium
-      title="Pending Component"
+      title="Pending Product"
       onClick={() => props.setShowModal(false)}
       body={
         <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
           {/* Do you want to change <span className="text-blueGray-700 font-bold">{props.itemName}</span> Component Status? */}
-          Do you want to change the product status into pending?
+          Do you want to change <span className="text-blueGray-700 font-bold">{props.itemName}</span> status into pending?
         </p>
       }
       action={

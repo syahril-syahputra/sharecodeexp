@@ -44,7 +44,7 @@ export default function Product({session, }) {
                 })
             }).catch((error) => {
             // console.log(error.response)
-            toast.error("Something went wrong. Can not load statistic", toastOptions)
+            toast.error("Something went wrong. Cannot load statistic.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })

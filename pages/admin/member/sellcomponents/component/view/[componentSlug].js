@@ -35,7 +35,7 @@ export default function MyProduct({session, routeParam}) {
                 setData(result)
             }).catch((error) => {
                 // console.log(error.response)
-                toast.success("Something went wrong. Can not load component", toastOptions)
+                toast.success("Something went wrong. Cannot load component.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })

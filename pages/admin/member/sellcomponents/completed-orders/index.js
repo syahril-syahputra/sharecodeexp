@@ -45,7 +45,7 @@ export default function CompletedOrders({session}) {
             prevPage: result.prev_page_url ? true : false
           })
         }).catch((error) => {
-            toast.error("Something went wrong. Cannot load completed orders", toastOptions)
+            toast.error("Something went wrong. Cannot load completed orders.", toastOptions)
         }).finally(() => {
           setIsLoading(false)
         })

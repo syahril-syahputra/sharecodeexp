@@ -82,7 +82,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             }
             })
             .then(() => {
-                toast.success("The quotation has been accepted", toastOptions)
+                toast.success("The quotation has been accepted.", toastOptions)
                 setAcceptQuotationModal(false)
                 loadData()
             }).catch((error) => {
@@ -103,7 +103,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                 let result = response.data
                 setRejectionReasons([...result.data, {value: 'other', label: 'Other'}])
             }).catch((error) => {
-                toast.error("Failed to load rejection reason", toastOptions)
+                toast.error("Failed to load rejection reason.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -125,11 +125,11 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             }
         })
         .then(() => {
-            toast.success("The quotation has been rejected", toastOptions)
+            toast.success("The quotation has been rejected.", toastOptions)
             setRejectQuotationModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not reject the quotation", toastOptions)
+            toast.error("Something went wrong. Cannot reject the quotation.", toastOptions)
             setIsLoading(false)
         }).finally(() => {
             setIsLoading(false)
@@ -137,19 +137,23 @@ export default function InquiryDetails({session, routeParam, couriers}) {
     }
 
     const [sendPaymentDocsModal, setSendPaymentDocsModal] = useState(false)
-    const sendPaymentDocsModalHandle = async (shipment, paymentDocs, courier, accountInfo, receiversName) => {    
+    const sendPaymentDocsModalHandle = async (paymentData) => {    
         let formData = new FormData();
-        if(!shipment){
+        if(!paymentData.firstAddress){
             setErrorInfo({shipinfobuyer: "This field can't be empty"})
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong.", toastOptions)
             setIsLoading(false)
             return
         }
-        formData.append("Payment_doc", paymentDocs);
-        formData.append("addressBuyer", shipment);
-        formData.append("courier", courier);
-        formData.append("fullnameReceiving", receiversName);
-        formData.append("AccountInformation", accountInfo);
+
+        formData.append("Payment_doc", paymentData.paymentDocs);
+        formData.append("addressBuyer", paymentData.firstAddress);
+        formData.append("addressBuyer", paymentData.secondAddress);
+        formData.append("postalCode", paymentData.postalCode);
+        formData.append("province", paymentData.province);
+        formData.append("courier", paymentData.selectedCourier);
+        formData.append("fullnameReceiving", paymentData.receiversName);
+        formData.append("AccountInformation", paymentData.buyerAccountInformation);
         formData.append("id", data.id)        
         setIsLoading(true)
         const response = await axios.post(`/buyer/SendPayment`, 
@@ -160,12 +164,12 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             }
         })
         .then(() => {
-            toast.success("The payment has been sent", toastOptions)
+            toast.success("The payment has been sent.", toastOptions)
             setSendPaymentDocsModal(false)
             loadData()
         }).catch((error) => {
             setErrorInfo(error.data.data)
-            toast.error("Something went wrong. Cannot sent the payment", toastOptions)
+            toast.error("Something went wrong. Cannot sent the payment.", toastOptions)
             setIsLoading(false)
         }).finally(() => {
             setIsLoading(false)
@@ -173,20 +177,24 @@ export default function InquiryDetails({session, routeParam, couriers}) {
     }
 
     const [sendUpdatedPaymentDocsModal, setSendUpdatedPaymentDocsModal] = useState(false)
-    const sendUpdatedPaymentDocsModalHandle = async (shipment, paymentDocs, courier, accountInfo, receiversName) => {
+    const sendUpdatedPaymentDocsModalHandle = async (paymentData) => {
         let formData = new FormData();
-        if(!shipment){
+        if(!paymentData.firstAddress){
             setErrorInfo({shipinfobuyer: "This field can't be empty"})
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong.", toastOptions)
             setIsLoading(false)
             return
         }
-        formData.append("Payment_doc", paymentDocs);
-        formData.append("addressBuyer", shipment);
-        formData.append("courier", courier);
-        formData.append("fullnameReceiving", receiversName);
-        formData.append("AccountInformation", accountInfo);
-        formData.append("id", data.id)   
+
+        formData.append("Payment_doc", paymentData.paymentDocs);
+        formData.append("addressBuyer", paymentData.firstAddress);
+        formData.append("addressBuyer", paymentData.secondAddress);
+        formData.append("postalCode", paymentData.postalCode);
+        formData.append("province", paymentData.province);
+        formData.append("courier", paymentData.selectedCourier);
+        formData.append("fullnameReceiving", paymentData.receiversName);
+        formData.append("AccountInformation", paymentData.buyerAccountInformation);
+        formData.append("id", data.id)        
         setIsLoading(true)
         const response = await axios.post(`/buyer/SendPayment?update=1`, 
             formData,
@@ -196,12 +204,12 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             }
         })
         .then(() => {
-            toast.success("The payment has been updated", toastOptions)
+            toast.success("The payment has been updated.", toastOptions)
             setSendUpdatedPaymentDocsModal(false)
             loadData()
         }).catch((error) => {
             setErrorInfo(error.data.data)
-            toast.error("Something went wrong. Cannot update the payment", toastOptions)
+            toast.error("Something went wrong. Cannot update the payment.", toastOptions)
             setIsLoading(false)
         }).finally(() => {
             setIsLoading(false)
@@ -221,11 +229,11 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             }
         })
         .then(() => {
-            toast.success("Order has been Accepted", toastOptions)
+            toast.success("The order has been accepted.", toastOptions)
             setAcceptOrderModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not accept the order", toastOptions)
+            toast.error("Something went wrong. Cannot accept the order.", toastOptions)
             setIsLoading(false)
         }).finally(() => {
             setIsLoading(false)
@@ -246,12 +254,12 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             }
         })
         .then(() => {
-            toast.success("Order has been Rejected", toastOptions)
+            toast.success("The order has been rejected.", toastOptions)
             setRejectOrderModal(false)
             loadData()
         }).catch((error) => {
             setErrorInfo(error.data.data)
-            toast.error("Something went wrong. Can not reject the order", toastOptions)
+            toast.error("Something went wrong. Cannot reject the order.", toastOptions)
             setIsLoading(false)
         }).finally(() => {
             setIsLoading(false)
@@ -298,7 +306,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                     leftTop={
                         <h3
                             className="font-semibold text-lg text-blueGray-700">
-                            Inquired Component: Order Details
+                            Inquired Products: Order Details
                         </h3>
                     }
                     rightTop={

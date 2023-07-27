@@ -71,9 +71,9 @@ export default function AddToInquiryList({session, routeParam}) {
         .then(() => {
             updateInquiryList(session.accessToken)
             router.push(`/admin/member/buycomponents/inquirylist`)
-            toast.success("The product has been added to list", toastOptions)
+            toast.success("The product has been added to list.", toastOptions)
         }).catch((error) => {
-            toast.error("Something went wrong. Can not add data to Inquiry List.", toastOptions)
+            toast.error("Something went wrong. Can not add data to inquiry list.", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })

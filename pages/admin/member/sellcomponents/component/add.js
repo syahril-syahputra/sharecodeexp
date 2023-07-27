@@ -52,12 +52,32 @@ export default function MyProduct({session}) {
     setCountry(value)
   }
 
+  const [descriptionCount, setDescriptionCount] = useState(0)
+  const descriptionLimit = 100
+  const descriptionHandler = (input) => {
+    setDescriptionCount(input.value.length)
+    setInputData({...inputData, [input.name]:input.value})
+  }
+
   const router = useRouter()
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
     setErrorInfo({})
     setErrorMessage(null)
+
+    //regex check
+    if(!/^[0-9+]*([+]?)+$/.test(inputData.dateCode)) {
+      setErrorInfo({dateCode: ["Wrong format!"]})
+      setIsLoading(false)
+      return
+    }
+
+    if(descriptionCount > descriptionLimit) {
+      setErrorInfo({Description: ["Exceed maximum character!"]})
+      setIsLoading(false)
+      return
+    }
 
     let formData = new FormData();
     for (const key in inputData) {
@@ -71,10 +91,10 @@ export default function MyProduct({session}) {
       .then((response) => {
         let result = response.data.data
         router.replace('/admin/member/sellcomponents/component/pending')
-        toast.success("Product has been added", toastOptions)
+        toast.success("Product has been added.", toastOptions)
       }).catch((error) => {
         setErrorMessage(error.data.message ? error.data.message : "Please fill the form correctly")
-        toast.error("Something went wrong. Check your form correctly", toastOptions)
+        toast.error("Something went wrong. Check your form correctly.", toastOptions)
         setErrorInfo(error.data.data)
       }).finally(() => {
         setIsLoading(false)
@@ -294,8 +314,8 @@ export default function MyProduct({session}) {
         </div>
         <div className="w-full lg:w-1/2 px-3 mb-6">
             <AreaInput 
-              characterCount={0}
-              characterLimit={100}
+              characterCount={descriptionCount}
+              characterLimit={descriptionLimit}
               label="Product/Part Description"
               name="Description"
               disabled={isLoading}
@@ -303,12 +323,13 @@ export default function MyProduct({session}) {
               rows={4}
               value={inputData.Description}
               errorMsg={errorInfo?.Description}
-              onChange={(input) => setDataHandler(input)}
+              onChange={(input) => descriptionHandler(input)}
             />
         </div>
         <div className="w-full lg:w-1/2 px-3 mb-6">
             <TextInput
                 label="Date Code"
+                placeholder="eg. 2023, 2023+"
                 className="w-full"
                 disabled={isLoading}
                 required

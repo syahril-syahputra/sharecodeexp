@@ -46,7 +46,7 @@ export default function InquiryNow({session}) {
                 })
             }).catch((error) => {
                 // console.log(error.response)
-                toast.error("Something went wrong. Cannot load rejected orders", toastOptions)
+                toast.error("Something went wrong. Cannot load rejected orders.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })

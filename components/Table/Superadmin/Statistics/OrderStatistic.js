@@ -23,7 +23,7 @@ export default function MemberStatistic(props) {
                                 Manufacture Part Number
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Total Member has Component
+                                Total Member has Products
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 Order Complete

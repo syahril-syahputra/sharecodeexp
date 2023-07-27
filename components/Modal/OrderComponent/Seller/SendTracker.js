@@ -8,11 +8,39 @@ import AreaInput from "@/components/Interface/Form/AreaInput";
 export default function SendTracker(props){
     const [sellerTracker, setSellerTracker] = useState('')
     const [expectedShippingDateSeller, setExpectedShippingDateSeller] = useState('')
-    const [paymentAccount, setPaymentAccount] = useState()
-    const [shippingInformation, setshippingInformation] = useState('')
+    const [paymentAccount, setPaymentAccount] = useState('')
+    const [province, setProvince] = useState('')
+    const [postalCode, setPostalCode] = useState('')
+
+    const [firstAddress, setFirstAddress] = useState('')
+    const [firstAddressCharacterCount, setFirstAddressCharacterCount] = useState(0)
+    const firstAddressCharacterLimit = 100
+    const firstAddressHandler = (input) => {
+        setFirstAddressCharacterCount(input.length)
+        setFirstAddress(input)
+    }
+
+    const [secondAddress, setSecondAddress] = useState('')
+    const [secondAddressCharacterCount, setSecondAddressCharacterCount] = useState(0)
+    const secondAddressCharacterLimit = 100
+    const secondAddressHandler = (input) => {
+        setSecondAddressCharacterCount(input.length)
+        setSecondAddress(input)
+    }
 
     const handleSubmit = () => {
-        props.acceptance(sellerTracker, paymentAccount, expectedShippingDateSeller, shippingInformation)
+        props.acceptance(sellerTracker, paymentAccount, expectedShippingDateSeller, firstAddress, secondAddress)
+    }
+
+    //checking register button status enable or disable
+    const buttonStatusDisabled = () => {
+        if(props.isLoading) return true;
+        
+        if(firstAddressCharacterCount > firstAddressCharacterLimit) return true;
+
+        if(secondAddressCharacterCount > secondAddressCharacterLimit) return true;
+
+        return false
     }
     return (
         <BaseModalLarge
@@ -42,14 +70,53 @@ export default function SendTracker(props){
                                 />
                             </div>                            
                         </div>
+                        <div className="flex flex-wrap mb-6">                        
+                            <div className="w-1/2 pr-4 px-3">
+                                <TextInput
+                                    label="Province"
+                                    name="province"
+                                    required
+                                    value={province}
+                                    errorMsg={props.errorInfo?.province}
+                                    onChange={(input) => setProvince(input.value)}
+                                />
+                            </div>
+                            <div className="w-1/2  px-3">
+                                <div className="w-1/2">
+                                    <TextInput
+                                        label="Postal Code"
+                                        name="postalCode"
+                                        required
+                                        value={postalCode}
+                                        errorMsg={props.errorInfo?.postalCode}
+                                        onChange={(input) => setPostalCode(input.value)}
+                                    />
+                                </div> 
+                            </div> 
+                        </div>
                         <div className="flex flex-wrap mb-6">
                             <div className="w-1/2 px-3">
                                 <AreaInput
                                     label="Seller's Shipment Address"
-                                    value={shippingInformation}
+                                    characterCount={firstAddressCharacterCount}
+                                    characterLimit={firstAddressCharacterLimit}
+                                    value={firstAddress}
                                     rows={5}
                                     onChange={(input) => 
-                                        setshippingInformation(input.value)
+                                        firstAddressHandler(input.value)
+                                    }
+                                    errorMsg={props.errorInfo?.shipping_information}
+                                ></AreaInput>
+                            </div>
+                            <div className="w-1/2 px-3">
+                                <AreaInput
+                                    label="Seller's Shipment Address"
+                                    characterCount={secondAddressCharacterCount}
+                                    characterLimit={secondAddressCharacterLimit}
+                                    value={secondAddress}
+                                    rows={5}
+                                    onChange={(input) => 
+                                        secondAddressHandler(input.value)
                                     }
                                     errorMsg={props.errorInfo?.shipping_information}
                                 ></AreaInput>
@@ -96,7 +163,7 @@ export default function SendTracker(props){
                     </LightButton>
 
                     <PrimaryButton
-                        disabled={props.isLoading}
+                        disabled={buttonStatusDisabled()}
                         className="font-bold uppercase"
                         onClick={handleSubmit}>
                         {props.isLoading &&

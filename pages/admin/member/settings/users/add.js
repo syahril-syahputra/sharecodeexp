@@ -45,10 +45,10 @@ export default function AddAccount({session}) {
       }
     })
       .then((response) => {
-        toast.success(response.data.message, toastOptions)  
+        toast.success(`${response.data.message}.`, toastOptions)  
         router.push('/admin/member/settings/users')
       }).catch((error) => {
-        toast.error("Something went wrong", toastOptions)
+        toast.error("Something went wrong.", toastOptions)
         setErrorMessage(error.data.message ? error.data.message :"Fill your form correctly")
         setErrorInfo(error.data.data)
       }).finally(() => {

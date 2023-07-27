@@ -50,7 +50,7 @@ export default function CompanyDetail({session, routeParam}) {
           let result = response.data.data
           setCompanyData(result)
         }).catch((error) => {
-          toast.error("Something went wrong. Company not found", toastOptions)
+          toast.error("Something went wrong. Company not found.", toastOptions)
         }).finally(() => {
           setIsLoading(false)
         })
@@ -69,10 +69,10 @@ export default function CompanyDetail({session, routeParam}) {
       }
     })
     .then(() => {
-      toast.success("Company has been accepted successfully", toastOptions)
+      toast.success("Company has been accepted successfully.", toastOptions)
     })
     .catch((error) => {
-      toast.error("Something went wrong. Can not accept company", toastOptions)
+      toast.error("Something went wrong. Cannot accept company.", toastOptions)
     })
     .finally(() => {
       getData()
@@ -94,10 +94,10 @@ export default function CompanyDetail({session, routeParam}) {
       }
     })
     .then(() => {
-      toast.success("Company has been rejected successfully", toastOptions)
+      toast.success("Company has been rejected successfully.", toastOptions)
     })
     .catch((error) => {
-      toast.error("Something went wrong. Can not reject company status", toastOptions)
+      toast.error("Something went wrong. Cannot reject company status.", toastOptions)
     })
     .finally(() => {
       getData()
@@ -119,10 +119,10 @@ export default function CompanyDetail({session, routeParam}) {
       }
     })
     .then(() => {
-      toast.success("Company has been set to pending", toastOptions)
+      toast.success("The company status has been changed into pending.", toastOptions)
     })
     .catch((error) => {
-      toast.error("Something went wrong. Can not set company to pending", toastOptions)
+      toast.error("Something went wrong. Cannot change company status into pending.", toastOptions)
     })
     .finally(() => {
       getData()
@@ -168,11 +168,11 @@ export default function CompanyDetail({session, routeParam}) {
       }
     })
     .then(() => {
-      toast.success("Company logo has been updated", toastOptions)
+      toast.success("Company logo has been updated.", toastOptions)
       setShowUpdateImageModal(false)
     })
     .catch((error) => {
-      toast.error("Something went wrong. Can not update comapany's logo", toastOptions)
+      toast.error("Something went wrong. Cannot update comapany's logo.", toastOptions)
     })
     .finally(() => {
       getData()
@@ -190,11 +190,11 @@ export default function CompanyDetail({session, routeParam}) {
       }
     })
     .then(() => {
-      toast.success("Company has been deleted", toastOptions)
+      toast.success("The company has been deleted.", toastOptions)
       router.push(`/admin/superadmin/registry/approvedcompany`)
     })
     .catch((error) => {
-      toast.error("Something went wrong. Can not delete comapany", toastOptions)
+      toast.error("Something went wrong. Cannot delete the company.", toastOptions)
     })
     .finally(() => {
       getData()

@@ -59,7 +59,7 @@ export default function EditRejectedQuotation(props){
                         <div className="flex flex-wrap mb-6">
                             <div className="w-1/2 px-3 mb-6">
                                 <NumberInput
-                                    label="Price per Item ($)"
+                                    label="Unit Price (USD)"
                                     disabled={props.isLoading}
                                     required
                                     step={0.01}
@@ -72,7 +72,7 @@ export default function EditRejectedQuotation(props){
 
                             <div className="w-1/2 px-3 mb-6">
                                 <NumberInput
-                                    label="Total ($)"
+                                    label="Total Price (USD)"
                                     className="cursor-not-allowed"
                                     disabled
                                     step={0.01}

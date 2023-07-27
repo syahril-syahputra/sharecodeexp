@@ -69,7 +69,7 @@ export default function MyCompany({session}) {
           toast.success(response.data.data, toastOptions)
         }).catch((error) => {
           toast.warning("Something went wrong!", toastOptions)
-          toast.warning("Please upload again", toastOptions)
+          toast.warning("Please upload again.", toastOptions)
         }).finally(() => {
             setIsLoading(false)
         })
@@ -91,12 +91,12 @@ export default function MyCompany({session}) {
       }
     })
     .then(() => {
-      toast.success("Company logo has been updated", toastOptions)
+      toast.success("Company logo has been updated.", toastOptions)
       setShowUpdateImageModal(false)
     })
     .catch((error) => {
       setErrorInfo(error.data.data)
-      toast.error("Something went wrong", toastOptions)
+      toast.error("Something went wrong.", toastOptions)
     })
     .finally(() => {
       getData()
@@ -117,12 +117,12 @@ export default function MyCompany({session}) {
       }
     })
     .then(() => {
-      toast.success("Certification of Activity has been updated", toastOptions)
+      toast.success("Certification of Activity has been updated.", toastOptions)
       setShowUpdateCertificationofActivityModal(false)
     })
     .catch((error) => {
       setErrorInfo(error.data.data)
-      toast.error("Something went wrong", toastOptions)
+      toast.error("Something went wrong.", toastOptions)
     })
     .finally(() => {
       getData()
@@ -143,12 +143,12 @@ export default function MyCompany({session}) {
       }
     })
     .then(() => {
-      toast.success("Registration Document has been updated", toastOptions)
+      toast.success("Registration Document has been updated.", toastOptions)
       setShowUpdateRegistrationDocumentModal(false)
     })
     .catch((error) => {
       setErrorInfo(error.data.data)
-      toast.error("Something went wrong", toastOptions)
+      toast.error("Something went wrong.", toastOptions)
     })
     .finally(() => {
       getData()

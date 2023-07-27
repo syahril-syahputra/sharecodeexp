@@ -81,11 +81,11 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("The quotation has been sent", toastOptions)
+            toast.success("The quotation has been sent.", toastOptions)
             setSendQuotationModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not send the quotation", toastOptions)
+            toast.error("Something went wrong. Cannot send the quotation.", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -102,11 +102,11 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("The quotation has been edited and sent", toastOptions)
+            toast.success("The quotation has been edited and sent.", toastOptions)
             setEditRejectedQuotationModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not edit the quotation", toastOptions)
+            toast.error("Something went wrong. Cannot edit the quotation.", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -127,11 +127,11 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("The Proforma Invoice has been sent", toastOptions)
+            toast.success("The proforma invoice has been sent.", toastOptions)
             setSendProformaInvoiceModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Cannot send the Proforma Invoice", toastOptions)
+            toast.error("Something went wrong. Cannot send the proforma invoice.", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -150,11 +150,11 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("The payment has been accepted", toastOptions)
+            toast.success("The payment has been accepted.", toastOptions)
             setAcceptPaymentDocumentModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Cannot accept the payment", toastOptions)
+            toast.error("Something went wrong. Cannot accept the payment.", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -174,11 +174,11 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("The payment has been rejected", toastOptions)
+            toast.success("The payment has been rejected.", toastOptions)
             setRejectPaymentDocumentModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Cannot reject the payment", toastOptions)
+            toast.error("Something went wrong. Cannot reject the payment.", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -200,11 +200,11 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Tracking number has been sent to buyer", toastOptions)
+            toast.success("Tracking number has been sent to buyer.", toastOptions)
             setTrackerNumberForBuyerModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Cannot send tracking number to buyer", toastOptions)
+            toast.error("Something went wrong. Cannot send tracking number to buyer.", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -225,11 +225,11 @@ export default function OrderDetails({session, routeParam}) {
             }
         })
         .then(() => {
-            toast.success("Order has been Completed", toastOptions)
+            toast.success("The order has been completed.", toastOptions)
             setCompleteOrderModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not complete the order", toastOptions)
+            toast.error("Something went wrong. Cannot complete the order.", toastOptions)
             setIsLoading(false)
         })
     }
@@ -726,7 +726,7 @@ export default function OrderDetails({session, routeParam}) {
                             size="sm"
                             onClick={() => setRejectPaymentDocumentModal(true) }
                         >
-                            Reject Payment / Request Update Payment
+                            Request Update Payment
                         </WarningButton>
                     </div>
                     <div className="mx-1 my-1">
