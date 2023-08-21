@@ -48,7 +48,7 @@ export default function PendingComponent({session}) {
                 })
             }).catch((error) => {
             // console.log(error.response)
-                toast.error("Something went wrong. Can not load component", toastOptions)
+                toast.error("Something went wrong. Cannot load component.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -64,10 +64,6 @@ export default function PendingComponent({session}) {
         searchData(searchResult)
     }
 
-    const viewHandler = (componentid) => {
-        router.push(`/admin/superadmin/components/details/${componentid}`)
-    }
-
     return (
         <>
             <div className="mb-10">
@@ -75,13 +71,12 @@ export default function PendingComponent({session}) {
                     <MiniSearchBar searchItem={handleSearch}/>
                 </div>
                 <ComponentList 
-                    title="Pending Component"
+                    title="Pending Products"
                     setPage={setPage}
                     isLoading={isLoading}
                     data={data}
                     links={links}
                     metaData={metaData}
-                    viewHandler={viewHandler}
                 />
             </div>
         </>

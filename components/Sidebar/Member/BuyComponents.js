@@ -41,7 +41,7 @@ export default function BuyComponents(){
             }>
               <i className="fas fa-cart-shopping text-blueGray-400 mr-2 text-sm"></i>{" "}
               Inquiry List
-              <span className="ml-1 text-xs font-semibold inline-block py-1 px-2 text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
+              <span className="ml-1 text-xs font-semibold inline-block py-0.5 px-1 text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
                 {inquiryList}
               </span>
           </Link>
@@ -58,9 +58,43 @@ export default function BuyComponents(){
                 : "text-blueGray-700 hover:text-blueGray-500")
             }>
               <i className="fas fa-truck text-blueGray-400 mr-1 text-sm"></i>{" "}
-              Inquired Components 
-              <span className="ml-1 text-xs font-semibold inline-block py-1 px-2 text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
+              Inquired Products 
+              <span className="ml-1 text-xs font-semibold inline-block py-0.5 px-1 text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
                 {inquiredComponent}
+              </span>
+          </Link>
+        </li>
+      </ul>
+      <ul className="md:flex-col md:min-w-full flex flex-col list-none">
+        <li className="items-center">
+          <Link href="/admin/member/buycomponents/completed-orders"
+            className={
+              "text-xs uppercase py-2 font-bold block " +
+              (router.pathname.indexOf("/admin/member/buycomponents/completed-orders") !== -1
+                ? "text-lightBlue-500 hover:text-lightBlue-600"
+                : "text-blueGray-700 hover:text-blueGray-500")
+            }>
+              <i className="fas fa-handshake text-blueGray-400 mr-1 text-sm"></i>{" "}
+              Complete Order
+              <span className="ml-1 text-xs font-semibold inline-block py-0.5 px-1 text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
+                x
+              </span> 
+          </Link>
+        </li>
+      </ul>
+      <ul className="md:flex-col md:min-w-full flex flex-col list-none">
+        <li className="items-center">
+          <Link href="/admin/member/buycomponents/rejected-orders"
+            className={
+              "text-xs uppercase py-2 font-bold block " +
+              (router.pathname.indexOf("/admin/member/buycomponents/rejected-orders") !== -1
+                ? "text-lightBlue-500 hover:text-lightBlue-600"
+                : "text-blueGray-700 hover:text-blueGray-500")
+            }>
+              <i className="fas fa-thumbs-down text-blueGray-400 mr-1 text-sm"></i>{" "}
+              Reject Order 
+              <span className="ml-1 text-xs font-semibold inline-block py-0.5 px-1 text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
+                1000
               </span>
           </Link>
         </li>

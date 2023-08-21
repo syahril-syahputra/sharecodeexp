@@ -12,7 +12,7 @@ export default function CompanyControl(){
             <hr className="my-4 md:min-w-full" />
             {/* Heading */}
             <h6 className="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
-            Components Management
+            Products Management
             </h6>
             {/* Navigation */}
 
@@ -26,7 +26,7 @@ export default function CompanyControl(){
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
                         <i className="fas fa-clock text-blueGray-400 mr-2 text-sm"></i>{" "}
-                        Pending Components
+                        Pending Products
                     </Link>
                 </li>
             </ul>
@@ -40,7 +40,7 @@ export default function CompanyControl(){
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
                         <i className="fas fa-check text-blueGray-400 mr-2 text-sm"></i>{" "}
-                        Accepted Components
+                        Accepted Products
                     </Link>
                 </li>
             </ul>
@@ -54,7 +54,7 @@ export default function CompanyControl(){
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
                         <i className="fas fa-times text-blueGray-400 mr-2 text-sm"></i>{" "}
-                        Rejected Components
+                        Rejected Products
                     </Link>
                 </li>
             </ul>

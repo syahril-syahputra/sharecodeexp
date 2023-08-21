@@ -52,12 +52,32 @@ export default function MyProduct({session}) {
     setCountry(value)
   }
 
+  const [descriptionCount, setDescriptionCount] = useState(0)
+  const descriptionLimit = 100
+  const descriptionHandler = (input) => {
+    setDescriptionCount(input.value.length)
+    setInputData({...inputData, [input.name]:input.value})
+  }
+
   const router = useRouter()
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
     setErrorInfo({})
     setErrorMessage(null)
+
+    //regex check
+    if(!/^[0-9+]*([+]?)+$/.test(inputData.dateCode)) {
+      setErrorInfo({dateCode: ["Wrong format!"]})
+      setIsLoading(false)
+      return
+    }
+
+    if(descriptionCount > descriptionLimit) {
+      setErrorInfo({Description: ["Exceed maximum character!"]})
+      setIsLoading(false)
+      return
+    }
 
     let formData = new FormData();
     for (const key in inputData) {
@@ -71,10 +91,10 @@ export default function MyProduct({session}) {
       .then((response) => {
         let result = response.data.data
         router.replace('/admin/member/sellcomponents/component/pending')
-        toast.success("Your component have been added successfully", toastOptions)
+        toast.success("Product has been added.", toastOptions)
       }).catch((error) => {
         setErrorMessage(error.data.message ? error.data.message : "Please fill the form correctly")
-        toast.error("Something went wrong", toastOptions)
+        toast.error("Something went wrong. Check your form correctly.", toastOptions)
         setErrorInfo(error.data.data)
       }).finally(() => {
         setIsLoading(false)
@@ -173,7 +193,7 @@ export default function MyProduct({session}) {
       <PageHeader
         leftTop={
           <h3 className="font-semibold text-lg text-blueGray-700">
-            Insert Product
+            Create Product
           </h3>
         }
         rightTop={
@@ -196,7 +216,7 @@ export default function MyProduct({session}) {
         <div className="flex flex-wrap mb-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
-                  Component Image (Optional)
+                  Product Image (Optional)
               </label>
               <div className="p-10 border-dashed border-2 border-indigo-200">
                   <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>
@@ -294,19 +314,22 @@ export default function MyProduct({session}) {
         </div>
         <div className="w-full lg:w-1/2 px-3 mb-6">
             <AreaInput 
-                label="Description"
-                name="Description"
-                disabled={isLoading}
-                required
-                rows={4}
-                value={inputData.Description}
-                errorMsg={errorInfo?.Description}
-                onChange={(input) => setDataHandler(input)}
+              characterCount={descriptionCount}
+              characterLimit={descriptionLimit}
+              label="Product/Part Description"
+              name="Description"
+              disabled={isLoading}
+              required
+              rows={4}
+              value={inputData.Description}
+              errorMsg={errorInfo?.Description}
+              onChange={(input) => descriptionHandler(input)}
             />
         </div>
         <div className="w-full lg:w-1/2 px-3 mb-6">
             <TextInput
                 label="Date Code"
+                placeholder="eg. 2023, 2023+"
                 className="w-full"
                 disabled={isLoading}
                 required
@@ -371,7 +394,7 @@ export default function MyProduct({session}) {
                 {isLoading &&
                     <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                 }
-                Insert
+                Create
             </PrimaryButton> 
         </div>
       </form>

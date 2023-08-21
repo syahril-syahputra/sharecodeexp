@@ -9,6 +9,7 @@ import NoData from "@/components/Interface/Table/NoData";
 import MetaData from "@/components/Interface/Table/MetaData";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
+import NavigationViewButton from "./NavigationViewButton";
 
 export default function RejectedOrder(props) {
     return (
@@ -58,12 +59,7 @@ export default function RejectedOrder(props) {
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
-                                                <Link href={`/admin/superadmin/orders/details/${item.id}`}>
-                                                    <PrimaryButton
-                                                        size="sm">
-                                                        View
-                                                    </PrimaryButton>
-                                                </Link>
+                                                <NavigationViewButton navigationId={item.slug}/>
                                             </div>
                                         </td>
                                     </tr>

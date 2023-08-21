@@ -8,9 +8,10 @@ import SelectInput from "@/components/Interface/Form/SelectInput";
 import LightButton from "@/components/Interface/Buttons/LightButton";
 export default function SendPaymentDocs(props){
     const [paymentDocs, setPaymentDocs] = useState()
-    const [buyerShipmentAddress, setBuyerShipmentAddress] = useState('')
     const [buyerAccountInformation, setBuyerAccountInformation] = useState()
     const [receiversName, setReceiversName] = useState('')
+    const [province, setProvince] = useState('')
+    const [postalCode, setPostalCode] = useState('')
 
     const [courier, setCourier] = useState(null);
     const [selectedCourier, setSelectedCourier] = useState(null);
@@ -19,9 +20,49 @@ export default function SendPaymentDocs(props){
         setSelectedCourier(value.value)
     };
 
+    const [firstAddress, setFirstAddress] = useState('')
+    const [firstAddressCharacterCount, setFirstAddressCharacterCount] = useState(0)
+    const firstAddressCharacterLimit = 100
+    const firstAddressHandler = (input) => {
+        setFirstAddressCharacterCount(input.length)
+        setFirstAddress(input)
+    }
+
+    const [secondAddress, setSecondAddress] = useState('')
+    const [secondAddressCharacterCount, setSecondAddressCharacterCount] = useState(0)
+    const secondAddressCharacterLimit = 100
+    const secondAddressHandler = (input) => {
+        setSecondAddressCharacterCount(input.length)
+        setSecondAddress(input)
+    }
+
 
     const handleSubmit = () => {
-        props.acceptance(buyerShipmentAddress, paymentDocs, selectedCourier, buyerAccountInformation, receiversName)
+        props.acceptance({
+            firstAddress,
+            secondAddress,
+            postalCode,
+            province,
+            paymentDocs,
+            selectedCourier,
+            buyerAccountInformation,
+            receiversName
+        })
+    }
+
+    const buttonStatusDisabled = () => {
+        if(props.isLoading) return true;
+
+        if(firstAddressCharacterCount > firstAddressCharacterLimit) return true;
+
+        if(firstAddressCharacterCount === 0) return true;
+
+        if(secondAddressCharacterCount > secondAddressCharacterLimit) return true;
+
+        if(secondAddressCharacterCount === 0) return true;
+
+        return false
+
     }
 
     return (
@@ -60,24 +101,65 @@ export default function SendPaymentDocs(props){
                         </div>                       
                     </div>
                     <div className="flex flex-wrap mb-6">
+                        <div className="w-1/2">
+                            <AreaInput
+                                label="Buyer’s Courier Account Information"
+                                value={buyerAccountInformation}
+                                rows={4}
+                                onChange={(input) => 
+                                    setBuyerAccountInformation(input.value)
+                                }
+                                errorMsg={props.errorInfo?.AccountInformation}
+                            ></AreaInput>
+                        </div>
+                    </div>
+                    <div className="flex flex-wrap mb-6">                        
+                        <div className="w-1/2 pr-4">
+                            <TextInput
+                                label="Province"
+                                name="province"
+                                required
+                                value={province}
+                                errorMsg={props.errorInfo?.province}
+                                onChange={(input) => setProvince(input.value)}
+                            />
+                        </div>
+                        <div className="w-1/2 pr-4">
+                            <div className="w-1/2">
+                                <TextInput
+                                    label="Postal Code"
+                                    name="postalCode"
+                                    required
+                                    value={postalCode}
+                                    errorMsg={props.errorInfo?.postalCode}
+                                    onChange={(input) => setPostalCode(input.value)}
+                                />
+                            </div> 
+                        </div> 
+                    </div>
+                    <div className="flex flex-wrap mb-6">
                         <div className="w-1/2 pr-4">
                             <AreaInput
-                                label="Buyer's Shipment Address"
-                                value={buyerShipmentAddress}
-                                rows={5}
+                                label="Buyer's Shipment Address 1"
+                                characterCount={firstAddressCharacterCount}
+                                characterLimit={firstAddressCharacterLimit}
+                                value={firstAddress}
+                                rows={4}
                                 onChange={(input) => 
-                                    setBuyerShipmentAddress(input.value)
+                                    firstAddressHandler(input.value)
                                 }
                                 errorMsg={props.errorInfo?.addressBuyer}
                             ></AreaInput>
                         </div> 
                         <div className="w-1/2">
                             <AreaInput
-                                label="Buyer’s Courier Account Information"
-                                value={buyerAccountInformation}
-                                rows={5}
+                                label="Buyer's Shipment Address 2"
+                                characterCount={secondAddressCharacterCount}
+                                characterLimit={secondAddressCharacterLimit}
+                                value={secondAddress}
+                                rows={4}
                                 onChange={(input) => 
-                                    setBuyerAccountInformation(input.value)
+                                    secondAddressHandler(input.value)
                                 }
                                 errorMsg={props.errorInfo?.AccountInformation}
                             ></AreaInput>
@@ -86,7 +168,7 @@ export default function SendPaymentDocs(props){
                     <div className="flex flex-wrap mb-6">
                         <div className="w-1/2 pr-4">
                             <TextInput
-                                label="Receivers Name"
+                                label="Receiver's Name"
                                 name="receiversName"
                                 required
                                 value={receiversName}
@@ -117,7 +199,7 @@ export default function SendPaymentDocs(props){
                     </LightButton>
 
                     <PrimaryButton
-                        disabled={props.isLoading}
+                        disabled={buttonStatusDisabled()}
                         className="font-bold uppercase "
                         onClick={handleSubmit}>
                         {props.isLoading &&

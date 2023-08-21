@@ -51,7 +51,7 @@ const authOptions = {
         },
         async session({token}) {
             return token
-        }
+        },
     },
 
 }

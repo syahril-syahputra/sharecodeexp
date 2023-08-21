@@ -35,7 +35,7 @@ export default function EditVerifiedOrder(props){
 
     useEffect(() => {
         let total = props.orderQty * inputData.price
-        setTotal(total)
+        setTotal(total.toFixed(2))
     }, [inputData.price])
 
     const handleVerify = () => {
@@ -55,7 +55,7 @@ export default function EditVerifiedOrder(props){
 
     return (
         <BaseModalLarge
-            title="Edit Verified Order"
+            title="Edit Verified Price and Quantity"
             onClick={() => props.closeModal()}
             body={
                 <>
@@ -115,7 +115,7 @@ export default function EditVerifiedOrder(props){
                         <div className="flex flex-wrap mb-4">
                             <div className="w-1/2 pr-4">
                                 <NumberInput
-                                    label="Price per Item ($)"
+                                    label="Unit Price (USD)"
                                     disabled={props.isLoading}
                                     required
                                     step={0.01}
@@ -127,7 +127,7 @@ export default function EditVerifiedOrder(props){
                             </div>
                             <div className="w-1/2 pr-4 mb-6">
                                 <NumberInput
-                                    label="Total ($)"
+                                    label="Total Price (USD)"
                                     className="cursor-not-allowed"
                                     disabled
                                     step={0.01}
@@ -137,7 +137,7 @@ export default function EditVerifiedOrder(props){
                         </div>
                     </div>
                     <div className="text-slate-500 italic">
-                        <p>Note: If you don’t want to sell this item, you may edit the Available Quantity to 0 (zero) pieces. 
+                        <p>Note: If you don’t want to sell this item, you may edit the available quantity to 0 (zero) pieces. 
                             Your input will be updated in the database and members will not inquire until further quantity change.</p>
                     </div>
                 </>

@@ -4,26 +4,34 @@ import Link from "next/link";
 import axios from "lib/axios";
 import { getSession } from "next-auth/react";
 
-// layout for page
-import Admin from "layouts/Admin.js";
-
 // components
 import ComponentStatus from "@/components/Shared/Component/Statuses";
+import AcceptComponent from "@/components/Modal/Component/AcceptComponent"
+import RejectComponent from "@/components/Modal/Component/RejectComponent"
+import PendingComponent from "@/components/Modal/Component/PendingComponent"
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions"
+import DangerNotification from '@/components/Interface/Notification/DangerNotification';
+import WarningButton from "@/components/Interface/Buttons/WarningButton";
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
+import DangerButton from "@/components/Interface/Buttons/DangerButton";
+
+// layout for page
+import Admin from "layouts/Admin.js";
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper';
 import PageHeader from '@/components/Interface/Page/PageHeader';
-import DangerNotification from '@/components/Interface/Notification/DangerNotification';
 import LoadingState from '@/components/Interface/Loader/LoadingState';
-import WarningButton from '@/components/Interface/Buttons/WarningButton';
+import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses';
 import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton';
 
-export default function MyProduct({session, routeParam}) {
+export default function ComponentDetails({session, routeParam}) {
     //data search
     const publicDir = process.env.NEXT_PUBLIC_DIR
     const [isLoading, setIsLoading] = useState(true)
-    const [data, setData] = useState({})
+    const [component, setComponent] = useState({})
     const getData = async () => {
         setIsLoading(true)
-        const response = await axios.get(`/companyproduct?id=${routeParam.componentid}`,
+        const response = await axios.get(`/admin/product?id=${routeParam.componentSlug}`,
             {
                 headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -32,9 +40,10 @@ export default function MyProduct({session, routeParam}) {
             )
             .then((response) => {
                 let result = response.data.data
-                setData(result)
+                setComponent(result)
             }).catch((error) => {
                 // console.log(error.response)
+                toast.error("Something went wrong. Component not found.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -42,6 +51,80 @@ export default function MyProduct({session, routeParam}) {
     useEffect(() => {
         getData()
     }, [])
+
+
+    const [showAcceptModal, setShowAcceptModal] = useState(false)
+    const handleAcceptComponent = async () => {
+        setShowAcceptModal(false)
+        setIsLoading(true)
+        const request = await axios.post(`admin/product/update`, 
+        {
+            id: component.id
+        },
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("The product has been accepted.", toastOptions)
+        })
+        .catch((error) => {
+            toast.error("Something went wrong. Cannot accept the product.", toastOptions)
+        })
+        .finally(() => {
+            getData()
+        })
+    }
+
+    const [showRejectModal, setShowRejectModal] = useState(false)
+    const handleRejectComponent = async (text) => {
+        setShowRejectModal(false)
+        setIsLoading(true)
+        const request = await axios.post(`admin/product/updateReject`, 
+        {
+            id: component.id,
+            reason: text
+        },
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("The product has been rejected.", toastOptions)
+        })
+        .catch((error) => {
+            toast.error("Something went wrong. Cannot reject the product.", toastOptions)
+        })
+        .finally(() => {
+            getData()
+        })
+    }
+
+    const [showPendingModal, setShowPendingModal] = useState(false)
+    const handlePendingComponent = async (text) => {
+        setShowPendingModal(false)
+        setIsLoading(true)
+        const request = await axios.post(`admin/product/updatePending`, 
+        {
+            id: component.id
+        },
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then(() => {
+            toast.success("The product status has been changed to pending.", toastOptions)
+        })
+        .catch((error) => {
+            toast.error("Something went wrong. Cannot changed the product status.", toastOptions)
+        })
+        .finally(() => {
+            getData()
+        })
+    }
 
     return (
         <PrimaryWrapper>
@@ -51,38 +134,70 @@ export default function MyProduct({session, routeParam}) {
                         className={
                             "font-semibold text-lg text-blueGray-700"
                     }>
-                    Company Component Details
+                    Company Product Details
                     </h3>
                 }
                 rightTop={
                     <>
-                        <Link target="_blank" href={publicDir + "/product_datasheet/" + data.datasheet}>
+                        <Link target="_blank" href={publicDir + "/product_datasheet/" + component.datasheet}>
                             <SecondaryButton
                                 size="sm"
                                 className="mr-2"
-                                disabled={data.datasheet ? false : true}
+                                disabled={component.datasheet ? false : true}
                             >   
                                 <i className="mr-2 ml-1 fas fa-eye"></i>
                                 View Datasheet
                             </SecondaryButton>
                         </Link>
-                        {!!routeParam.componentid && 
-                            <Link href={`/admin/member/sellcomponents/component/edit/${routeParam.componentid}`}>
-                                <WarningButton 
+                        {(component.status == "pending" || component.status == "rejected") && 
+                            <PrimaryButton
+                                size="sm"
+                                className="mr-2"
+                                onClick={() => setShowAcceptModal(true)}
+                            >
+                                <i className="mr-2 ml-1 fas fa-check text-white"></i>
+                                Accept
+                            </PrimaryButton>
+                        }
+                        {(component.status == "approved" || component.status == "rejected") && 
+                            <WarningButton 
+                                size="sm"
+                                className="mr-2"
+                                onClick={() => setShowPendingModal(true)}
+                            >
+                                <i className="mr-2 ml-1 fas fa-clock text-white"></i>
+                                Pending
+                            </WarningButton>
+                        }
+                        {(component.status == "approved" || component.status == "pending") &&
+                        <DangerButton
+                            size="sm"
+                            className="mr-2"
+                            onClick={() => setShowRejectModal(true)}
+                        >
+                            <i className="mr-2 ml-1 fas fa-times text-white"></i>
+                            Reject
+                        </DangerButton>
+                        }
+
+                        {/* {!!routeParam.componentid && !isLoading &&
+                            <Link href={`/admin/superadmin/components/edit/${routeParam.componentid}`}>
+                                <WarningButton
                                     size="sm"
                                 >
                                     <i className="mr-2 ml-1 fas fa-pen text-white"></i>
-                                    Edit Product
+                                    Edit Component
                                 </WarningButton>
                             </Link>
-                        }  
+                        } */}
                     </>
                 }
             ></PageHeader>
-            {data.reason && data.status == 'rejected' &&
+
+            {component.reason && component.status == 'rejected' &&
                 <DangerNotification 
-                    message={`Component is rejected`}
-                    detail={data.reason}
+                    message={`Products is rejected`}
+                    detail={component.reason}
                 />
             }
 
@@ -91,22 +206,33 @@ export default function MyProduct({session, routeParam}) {
                 <>
                     {/* component image */}
                     <div className="w-full">
-                        {data.img ? 
+                        {component.img ? 
                             <div className="p-16 border mx-2 my-4">
                                 <img className="object-contain mb-3 h-40 mx-auto" 
-                                alt={data.ManufacturerNumber}
-                                src={publicDir + "/product_images/" + data.img}/>
+                                alt={component.ManufacturerNumber}
+                                src={publicDir + "/product_images/" + component.img}/>
                             </div>
                         :
                             <div className="px-3 mb-6 md:mb-0 text-center">
-                                <div className="p-24 border mx-2 my-4">product image {data.ManufacturerNumber}</div>
+                                <div className="p-24 border mx-2 my-4">product image {component.ManufacturerNumber}</div>
                             </div>
                         }                    
                     </div>
-
                     <div className="overflow-x-auto pb-10">
                         <table className="w-50 text-sm text-left text-gray-500 bg-white">
                             <tbody>
+                                <tr className="text-black hover:bg-slate-100">
+                                    <th scope="col" className="px-6 py-3">
+                                        Company
+                                    </th>
+                                    <td scope="row" className="text-sm px-6 py-4">
+                                        :
+                                    </td>
+                                    <td className="text-sm px-2 py-4">
+                                        <Link href={`/admin/superadmin/registry/company/${component.company?.id}`} className="text-blueGray-700 underline">{component.company?.name}</Link>
+                                        <CompanyStatusesIcon status={component.company?.is_confirmed}/>   
+                                    </td>
+                                </tr>
                                 <tr className="text-black hover:bg-slate-100">
                                     <th scope="col" className="px-6 py-3">
                                         Manufacturer Part Number
@@ -115,7 +241,7 @@ export default function MyProduct({session, routeParam}) {
                                         :
                                     </td>
                                     <td className="text-sm px-2 py-4">
-                                        {data.ManufacturerNumber}
+                                        {component.ManufacturerNumber}
                                     </td>
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
@@ -126,7 +252,7 @@ export default function MyProduct({session, routeParam}) {
                                         :
                                     </td>
                                     <td className="text-sm px-2 py-4">
-                                        {data.Manufacture}
+                                        {component.Manufacture}
                                     </td>
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
@@ -137,7 +263,7 @@ export default function MyProduct({session, routeParam}) {
                                         :
                                     </td>
                                     <td className="text-sm px-2 py-4">
-                                        {data.AvailableQuantity}
+                                        {component.AvailableQuantity}
                                     </td>
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
@@ -148,7 +274,7 @@ export default function MyProduct({session, routeParam}) {
                                         :
                                     </td>
                                     <td className="text-sm px-2 py-4">
-                                        {data.moq}
+                                        {component.moq}
                                     </td>
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
@@ -159,18 +285,18 @@ export default function MyProduct({session, routeParam}) {
                                         :
                                     </td>
                                     <td className="text-sm px-2 py-4">
-                                        {data.country}
+                                        {component.country}
                                     </td>
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
                                     <th scope="col" className="px-6 py-3">
-                                        Description
+                                        Product/Part Description
                                     </th>
                                     <td scope="row" className="text-sm px-6 py-4">
                                         :
                                     </td>
                                     <td className="text-sm px-2 py-4">
-                                        {data.Description}
+                                        {component.Description}
                                     </td>
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
@@ -181,7 +307,7 @@ export default function MyProduct({session, routeParam}) {
                                         :
                                     </td>
                                     <td className="text-sm px-2 py-4">
-                                        {data.dateCode}
+                                        {component.dateCode}
                                     </td>
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
@@ -192,7 +318,7 @@ export default function MyProduct({session, routeParam}) {
                                         :
                                     </td>
                                     <td className="text-sm px-2 py-4">
-                                        {data.packaging}
+                                        {component.packaging}
                                     </td>
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
@@ -203,7 +329,7 @@ export default function MyProduct({session, routeParam}) {
                                         :
                                     </td>
                                     <td className="text-sm px-2 py-4">
-                                        {data.subcategory?.category?.name}
+                                        {component.subcategory?.category?.name}
                                     </td>
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
@@ -214,7 +340,7 @@ export default function MyProduct({session, routeParam}) {
                                         :
                                     </td>
                                     <td className="text-sm px-2 py-4">
-                                        {data.subcategory?.name}
+                                        {component.subcategory?.name}
                                     </td>
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
@@ -225,23 +351,48 @@ export default function MyProduct({session, routeParam}) {
                                         :
                                     </td>
                                     <td className="text-sm px-2 py-4">
-                                        <ComponentStatus status={data.status} title={`stock status ${data.status}`} label={data.status}/>
+                                        <ComponentStatus status={component.status} title={`stock status ${component.status}`} label={component.status}/>
                                     </td>
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
                                     <th scope="col" className="px-6 py-3">
-                                        Created at
+                                        Created on
                                     </th>
                                     <td scope="row" className="text-sm px-6 py-4">
                                         :
                                     </td>
                                     <td className="text-sm px-2 py-4">
-                                        {moment(data.created_at).format('dddd, D MMMM YYYY')}
+                                        {moment(component.created_at).format('dddd, D MMMM YYYY')}
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
+
+                    {showAcceptModal ? (
+                        <AcceptComponent
+                            setShowModal={setShowAcceptModal}
+                            itemName={component.ManufacturerNumber}
+                            acceptModal={handleAcceptComponent}
+                        />
+                    ) : null}
+
+                    {showRejectModal ? (
+                        <RejectComponent
+                            setShowModal={setShowRejectModal}
+                            itemName={component.ManufacturerNumber}
+                            acceptModal={handleRejectComponent}
+                        />
+                    ) : null}
+
+                    {showPendingModal ? (
+                        <PendingComponent
+                            setShowModal={setShowPendingModal}
+                            itemName={component.ManufacturerNumber}
+                            acceptModal={handlePendingComponent}
+                        />
+                    ) : null}
+
                 </>
                 : 
                 <LoadingState className={"pb-40"}/>
@@ -250,7 +401,7 @@ export default function MyProduct({session, routeParam}) {
     );
 }
 
-MyProduct.layout = Admin;
+ComponentDetails.layout = Admin;
 
 export async function getServerSideProps(context) {
 const session = await getSession(context)

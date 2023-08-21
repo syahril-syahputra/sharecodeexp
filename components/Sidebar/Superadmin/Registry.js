@@ -24,7 +24,7 @@ export default function Registry(){
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
                         <i className="fas fa-clock text-blueGray-400 mr-2 text-sm"></i>{" "}
-                        Pending Company 
+                        Pending Companies 
                     </Link>
                 </li>
             </ul>
@@ -39,7 +39,7 @@ export default function Registry(){
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
                         <i className="fas fa-check text-blueGray-400 mr-2 text-sm"></i>{" "}
-                        Approved Company
+                        Approved Companies
                     </Link>
                 </li>
             </ul>
@@ -54,7 +54,7 @@ export default function Registry(){
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
                         <i className="fas fa-times text-blueGray-400 mr-2 text-sm"></i>{" "}
-                        Rejected Company 
+                        Rejected Companies 
                     </Link>
                 </li>
             </ul>

@@ -35,7 +35,7 @@ export default function RejectPaymentDocument(props){
                     {/* <form onSubmit={handleSubmit} ref={refdata}> */}
                     <form className="">
                         <p className="text-blueGray-500 text-lg leading-relaxed">
-                            Do you agree to send this <span className="text-blueGray-700 font-bold">Order Back</span> to Seller?
+                            Do you agree to send this <span className="text-blueGray-700 font-bold">order back</span> to seller?
                         </p>
                         <div className="w-full mb-6 mt-10">
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">

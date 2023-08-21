@@ -5,9 +5,9 @@ import Pagination from "@/components/Shared/Component/Pagination";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 import HeaderTable from "@/components/Interface/Table/HeaderTable";
 import BaseTable from "@/components/Interface/Table/BaseTable";
-import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import NoData from "@/components/Interface/Table/NoData";
 import MetaData from "@/components/Interface/Table/MetaData";
+import NavigationViewButton from "./NavigationViewButton";
 
 export default function CompleteOrder(props) {
     return (
@@ -21,25 +21,19 @@ export default function CompleteOrder(props) {
                     header={
                         <>
                             <th scope="col" className="px-6 py-3">
-                                Company Name
+                                Buyer
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Seller
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Order Number
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 Manufacturer Part Number
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Order Qty
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Exepart - Seller (/Pcs)
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Order Amount ($) for Exepart
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Order Amount ($) for Seller
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Completed At
+                                Completion Date
                             </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.
@@ -54,32 +48,21 @@ export default function CompleteOrder(props) {
                                         <td scope="row" className="text-sm px-6 py-4">
                                             {item.buyer?.name}
                                         </td>
+                                        <td scope="row" className="text-sm px-6 py-4">
+                                            {item.companies_products?.company.name}
+                                        </td>
+                                        <td className="text-sm px-6 py-4">
+                                            
+                                        </td>
                                         <td className="text-sm px-6 py-4">
                                             {item.companies_products?.ManufacturerNumber}
-                                        </td>
-                                        <td className="text-sm px-6 py-4">
-                                            {item.qty}
-                                        </td>
-                                        <td className="text-sm px-6 py-4">
-                                            ${parseFloat(item.price_profite)} - ${parseFloat(item.price)}
-                                        </td>
-                                        <td className="text-sm px-6 py-4">
-                                            ${parseInt(item.qty) * parseFloat(item.price_profite)}
-                                        </td>
-                                        <td className="text-sm px-6 py-4">
-                                            ${parseInt(item.qty) * parseFloat(item.price)}
                                         </td>
                                         <td className="text-sm px-6 py-4">
                                             {item.completedOrdersDate ? moment(item.completedOrdersDate).format('dddd, D MMMM YYYY') : '-'}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
-                                                <Link href={`/admin/superadmin/orders/details/${item.id}`}>
-                                                    <PrimaryButton
-                                                        size="sm">
-                                                        View
-                                                    </PrimaryButton>
-                                                </Link>
+                                                <NavigationViewButton navigationId={item.slug}/>
                                             </div>
                                         </td>
                                     </tr>

@@ -76,10 +76,10 @@ export default function EditMyAccount({session}) {
         .then((response) => {
             let result = response.data.data
             loadUsername(session.accessToken)
-            toast.success("Your account have been updated successfully", toastOptions)
+            toast.success("Your account have been updated successfully.", toastOptions)
             router.push("/admin/myaccount");
         }).catch((error) => {
-            toast.warning("Something went wrong", toastOptions)
+            toast.warning("Something went wrong.", toastOptions)
             setErrorMessage("Please fill your form correctly")
             setErrorInfo(error.data.data)
         }).finally(() => {

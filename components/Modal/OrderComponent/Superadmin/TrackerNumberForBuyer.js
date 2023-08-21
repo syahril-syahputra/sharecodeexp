@@ -19,7 +19,7 @@ export default function VerifyOrder(props){
                 <>  
                     <div className="mb-4">
                         <TextInput
-                            label="Tracker Number"
+                            label="Tracking Number"
                             name="buyerTracker"
                             value={buyerTracker}
                             onChange={(input) => setBuyerTracker(input.value)}
@@ -37,7 +37,7 @@ export default function VerifyOrder(props){
                         />
                     </div>
                     <p className="mt-8 italic text-blueGray-500 text-sm leading-relaxed">
-                        Note: This Tracker and Expected Shipment Date will be send to the buyer.
+                        Note: This tracking number and expected shipment date will be send to the buyer.
                     </p>
                 </>
             }   
@@ -57,7 +57,7 @@ export default function VerifyOrder(props){
                         {props.isLoading &&
                             <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                         }
-                        Set Tracker
+                        Confirm
                     </PrimaryButton>
                 </>
             }

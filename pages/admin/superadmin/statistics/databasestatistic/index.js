@@ -45,7 +45,7 @@ export default function Product({session}) {
                     prevPage: result.prev_page_url ? true : false
                 })
             }).catch((error) => {
-                toast.error("Something went wrong. Can not load statistic", toastOptions)
+                toast.error("Something went wrong. Cannot load statistic.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })

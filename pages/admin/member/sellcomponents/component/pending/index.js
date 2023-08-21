@@ -45,7 +45,7 @@ export default function MyProduct({session}) {
           prevPage: result.prev_page_url ? true : false
         })
       }).catch((error) => {
-        toast.error("Something went wrong. Can not load component", toastOptions)
+        toast.error("Something went wrong. Cannot load component.", toastOptions)
       }).finally(() => {
         setIsLoading(false)
       })

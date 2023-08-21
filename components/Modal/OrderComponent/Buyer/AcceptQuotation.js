@@ -14,7 +14,7 @@ export default function VerifyOrder(props){
                         Quotation Expiration Date: <span className="text-blueGray-700 font-bold">{moment(props.expirationDate).format('dddd, D MMMM YYYY')}</span>
                     </p>
                     <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                        Do you agree to <span className="text-blueGray-700 font-bold">Accept</span> this Quotation?
+                        Do you agree to <span className="text-blueGray-700 font-bold">accept</span> this quotation?
                     </p>
                 </>
             }

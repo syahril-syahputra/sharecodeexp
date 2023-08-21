@@ -53,7 +53,7 @@ export default function ApprovedCompany({session}) {
             })
             }).catch((error) => {
             // console.log(error.response)
-                toast.error("Something went wrong. Can not load companies", toastOptions)
+                toast.error("Something went wrong. Cannot load companies.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -64,12 +64,7 @@ export default function ApprovedCompany({session}) {
 
     const handleSearch = (searchResult) =>{
         searchData(searchResult)
-    }
-
-    const router = useRouter()
-    const viewCompanyHandler = (companyId) => {
-        router.push(`/admin/superadmin/registry/company/${companyId}`)
-    }    
+    }  
 
     return (
         <>
@@ -84,7 +79,6 @@ export default function ApprovedCompany({session}) {
                     data={data}
                     links={links}
                     metaData={metaData}
-                    viewHandler={viewCompanyHandler}
                 />
             </div>
         </>

@@ -17,7 +17,7 @@ export default function Modal(props) {
                 {/*header*/}
                 <div className="flex items-start justify-between p-4 border-b border-solid border-blueGray-200 bg-red-500">
                   <h3 className="text-3xl font-semibold">
-                    Delete Component
+                    Delete Product
                   </h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
@@ -31,7 +31,7 @@ export default function Modal(props) {
                 {/*body*/}
                 <div className="relative p-4 flex-auto">
                   <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                    Do you want to delete <span className="text-blueGray-700 font-bold">{props.itemName}</span> this Component?
+                    Do you want to delete <span className="text-blueGray-700 font-bold">{props.itemName}</span> this product?
                   </p>
                   <textarea 
                     value={rejectMessage}

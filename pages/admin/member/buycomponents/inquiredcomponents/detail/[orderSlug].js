@@ -32,7 +32,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
     const [isOrderValid, setIsOrderValid] = useState(true)
     const loadData = async () =>{
         setIsLoading(true)
-        const response = await axios.get(`/buyer/${routeParam.orderid}/data`,
+        const response = await axios.get(`/buyer/${routeParam.orderSlug}/data`,
             {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -82,7 +82,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             }
             })
             .then(() => {
-                toast.success("Quotation has been accepted", toastOptions)
+                toast.success("The quotation has been accepted.", toastOptions)
                 setAcceptQuotationModal(false)
                 loadData()
             }).catch((error) => {
@@ -103,7 +103,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                 let result = response.data
                 setRejectionReasons([...result.data, {value: 'other', label: 'Other'}])
             }).catch((error) => {
-                toast.error("Failed to load rejection reason", toastOptions)
+                toast.error("Failed to load rejection reason.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -125,11 +125,11 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             }
         })
         .then(() => {
-            toast.success("Quotation has been rejected", toastOptions)
+            toast.success("The quotation has been rejected.", toastOptions)
             setRejectQuotationModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not reject the quotation", toastOptions)
+            toast.error("Something went wrong. Cannot reject the quotation.", toastOptions)
             setIsLoading(false)
         }).finally(() => {
             setIsLoading(false)
@@ -137,19 +137,23 @@ export default function InquiryDetails({session, routeParam, couriers}) {
     }
 
     const [sendPaymentDocsModal, setSendPaymentDocsModal] = useState(false)
-    const sendPaymentDocsModalHandle = async (shipment, paymentDocs, courier, accountInfo, receiversName) => {    
+    const sendPaymentDocsModalHandle = async (paymentData) => {    
         let formData = new FormData();
-        if(!shipment){
+        if(!paymentData.firstAddress){
             setErrorInfo({shipinfobuyer: "This field can't be empty"})
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong.", toastOptions)
             setIsLoading(false)
             return
         }
-        formData.append("Payment_doc", paymentDocs);
-        formData.append("addressBuyer", shipment);
-        formData.append("courier", courier);
-        formData.append("fullnameReceiving", receiversName);
-        formData.append("AccountInformation", accountInfo);
+
+        formData.append("Payment_doc", paymentData.paymentDocs);
+        formData.append("addressBuyer", paymentData.firstAddress);
+        formData.append("addressBuyer", paymentData.secondAddress);
+        formData.append("postalCode", paymentData.postalCode);
+        formData.append("province", paymentData.province);
+        formData.append("courier", paymentData.selectedCourier);
+        formData.append("fullnameReceiving", paymentData.receiversName);
+        formData.append("AccountInformation", paymentData.buyerAccountInformation);
         formData.append("id", data.id)        
         setIsLoading(true)
         const response = await axios.post(`/buyer/SendPayment`, 
@@ -160,12 +164,12 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             }
         })
         .then(() => {
-            toast.success("Payment has been sent", toastOptions)
+            toast.success("The payment has been sent.", toastOptions)
             setSendPaymentDocsModal(false)
             loadData()
         }).catch((error) => {
             setErrorInfo(error.data.data)
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong. Cannot sent the payment.", toastOptions)
             setIsLoading(false)
         }).finally(() => {
             setIsLoading(false)
@@ -173,20 +177,24 @@ export default function InquiryDetails({session, routeParam, couriers}) {
     }
 
     const [sendUpdatedPaymentDocsModal, setSendUpdatedPaymentDocsModal] = useState(false)
-    const sendUpdatedPaymentDocsModalHandle = async (shipment, paymentDocs, courier, accountInfo, receiversName) => {
+    const sendUpdatedPaymentDocsModalHandle = async (paymentData) => {
         let formData = new FormData();
-        if(!shipment){
+        if(!paymentData.firstAddress){
             setErrorInfo({shipinfobuyer: "This field can't be empty"})
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong.", toastOptions)
             setIsLoading(false)
             return
         }
-        formData.append("Payment_doc", paymentDocs);
-        formData.append("addressBuyer", shipment);
-        formData.append("courier", courier);
-        formData.append("fullnameReceiving", receiversName);
-        formData.append("AccountInformation", accountInfo);
-        formData.append("id", data.id)   
+
+        formData.append("Payment_doc", paymentData.paymentDocs);
+        formData.append("addressBuyer", paymentData.firstAddress);
+        formData.append("addressBuyer", paymentData.secondAddress);
+        formData.append("postalCode", paymentData.postalCode);
+        formData.append("province", paymentData.province);
+        formData.append("courier", paymentData.selectedCourier);
+        formData.append("fullnameReceiving", paymentData.receiversName);
+        formData.append("AccountInformation", paymentData.buyerAccountInformation);
+        formData.append("id", data.id)        
         setIsLoading(true)
         const response = await axios.post(`/buyer/SendPayment?update=1`, 
             formData,
@@ -196,12 +204,12 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             }
         })
         .then(() => {
-            toast.success("Payment has been updated", toastOptions)
+            toast.success("The payment has been updated.", toastOptions)
             setSendUpdatedPaymentDocsModal(false)
             loadData()
         }).catch((error) => {
             setErrorInfo(error.data.data)
-            toast.error("Something went wrong. Can not update payment", toastOptions)
+            toast.error("Something went wrong. Cannot update the payment.", toastOptions)
             setIsLoading(false)
         }).finally(() => {
             setIsLoading(false)
@@ -221,11 +229,11 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             }
         })
         .then(() => {
-            toast.success("Order has been Accepted", toastOptions)
+            toast.success("The order has been accepted.", toastOptions)
             setAcceptOrderModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not accept the order", toastOptions)
+            toast.error("Something went wrong. Cannot accept the order.", toastOptions)
             setIsLoading(false)
         }).finally(() => {
             setIsLoading(false)
@@ -246,12 +254,12 @@ export default function InquiryDetails({session, routeParam, couriers}) {
             }
         })
         .then(() => {
-            toast.success("Order has been Rejected", toastOptions)
+            toast.success("The order has been rejected.", toastOptions)
             setRejectOrderModal(false)
             loadData()
         }).catch((error) => {
             setErrorInfo(error.data.data)
-            toast.error("Something went wrong. Can not reject the order", toastOptions)
+            toast.error("Something went wrong. Cannot reject the order.", toastOptions)
             setIsLoading(false)
         }).finally(() => {
             setIsLoading(false)
@@ -298,7 +306,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                     leftTop={
                         <h3
                             className="font-semibold text-lg text-blueGray-700">
-                            Inquired Component: Order Details
+                            Inquired Products: Order Details
                         </h3>
                     }
                     rightTop={
@@ -323,6 +331,18 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                         </div>
                     </div>
                 }
+                {data.reason && data.order_status_id == 15 &&
+                    <div className="px-4 py-3 border-0 bg-red-400 mt-2">
+                        <div className="flex justify-center">
+                            <div className=" text-center">
+                                <h4
+                                    className="font-semibold text-sm text-white italic">
+                                    Request Update: {data.reason}
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                }
                 <OrderStatusStep orderStatus={data.order_status}/>
             </PrimaryWrapper>
             
@@ -331,7 +351,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                 <div className="w-full lg:w-1/2 mr-4">
                     <PrimaryWrapper>
                         <div className="m-2 p-2 text-md uppercase border-b text-center">
-                            Tracker Number
+                            Tracking Number
                         </div>
                         <div className="pb-4 mt-2 lg:flex lg:justify-center px-4">
                             {data.trackingBuyer ? data.trackingBuyer : 'No Data'}
@@ -433,7 +453,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                     </table>
                 </div>
                 <div className="text-center mt-5 mb-2 w-1/2 mx-auto">
-                    <span className="text-light text-slate-500">Order Created: {moment(data.created_at).format('dddd, D MMMM YYYY')}</span>
+                    <span className="text-light text-slate-500">Inquiry Date: {moment(data.created_at).format('dddd, D MMMM YYYY')}</span>
                 </div>
                 {/* table order information */}
                 <div className="overflow-x-auto mb-10 flex justify-center">
@@ -447,7 +467,10 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                                     Date Code
                                 </th>
                                 <th scope="col" className="text-center px-6 py-3">
-                                    Price (per item) / Total
+                                    Unit Price (USD)
+                                </th>
+                                <th scope="col" className="text-center px-6 py-3">
+                                    Total Price (USD)
                                 </th>
                             </tr>
                         </thead>
@@ -460,7 +483,10 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                                     {data.companies_products?.dateCode}
                                 </td>
                                 <td className="text-center text-sm px-6 py-4">
-                                    ${data.price_profite} / ${data.price_profite ? (parseFloat(data.price_profite) * parseFloat(data.qty)) : ''}
+                                    ${data.price_profite}
+                                </td>
+                                <td className="text-center text-sm px-6 py-4">
+                                    ${data.price_profite ? (parseFloat(data.price_profite) * parseFloat(data.qty)) : ''}
                                 </td>
                             </tr>
                         </tbody>
@@ -554,7 +580,7 @@ export default function InquiryDetails({session, routeParam, couriers}) {
                             size="sm"
                             onClick={() => setRejectOrderModal(true) }
                         >
-                            Reject Order
+                            Request a Return Process
                         </WarningButton>
                     </div>        
                 </div>

@@ -24,7 +24,7 @@ export default function Statistics(){
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }>
                         <i className="fas fa-heart-crack text-blueGray-400 mr-2 text-sm"></i>{" "}
-                        Unfound Components
+                        Unfound Products
                     </Link>
                 </li>
             </ul>

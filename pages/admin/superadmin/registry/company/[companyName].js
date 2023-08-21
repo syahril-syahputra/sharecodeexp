@@ -39,7 +39,7 @@ export default function CompanyDetail({session, routeParam}) {
   const [companyData, setCompanyData] = useState({})
   const getData = async () => {
       setIsLoading(true)
-      const response = await axios.get(`admin/companies?id=${routeParam.companyid}`,
+      const response = await axios.get(`admin/companies?id=${routeParam.companyName}`,
         {
             headers: {
             "Authorization" : `Bearer ${session.accessToken}`
@@ -47,12 +47,12 @@ export default function CompanyDetail({session, routeParam}) {
         }
         )
         .then((response) => {
-            let result = response.data.data
-            setCompanyData(result)
+          let result = response.data.data
+          setCompanyData(result)
         }).catch((error) => {
-            // console.log(error.response)
+          toast.error("Something went wrong. Company not found.", toastOptions)
         }).finally(() => {
-            setIsLoading(false)
+          setIsLoading(false)
         })
   }
   useEffect(() => {
@@ -63,16 +63,16 @@ export default function CompanyDetail({session, routeParam}) {
   const handleAcceptCompany = async () => {
     setShowAcceptModal(false)
     setIsLoading(true)
-    const request = await axios.post(`admin/companies/${routeParam.companyid}/update`, {}, {
+    const request = await axios.post(`admin/companies/${companyData.id}/update`, {}, {
       headers: {
         "Authorization" : `Bearer ${session.accessToken}`
       }
     })
     .then(() => {
-      toast.success("Company has been accepted successfully", toastOptions)
+      toast.success("Company has been accepted successfully.", toastOptions)
     })
     .catch((error) => {
-      toast.error("Something went wrong. Can not accept company", toastOptions)
+      toast.error("Something went wrong. Cannot accept company.", toastOptions)
     })
     .finally(() => {
       getData()
@@ -83,9 +83,9 @@ export default function CompanyDetail({session, routeParam}) {
   const handleRejectCompany = async (text) => {
     setShowRejectModal(false)
     setIsLoading(true)
-    const request = await axios.post(`admin/companies/${routeParam.companyid}/reject`, 
+    const request = await axios.post(`admin/companies/${companyData.id}/reject`, 
     {
-      id: routeParam.companyid,
+      id: companyData.id,
       reason: text
     },
     {
@@ -94,10 +94,10 @@ export default function CompanyDetail({session, routeParam}) {
       }
     })
     .then(() => {
-      toast.success("Company has been rejected successfully", toastOptions)
+      toast.success("Company has been rejected successfully.", toastOptions)
     })
     .catch((error) => {
-      toast.error("Something went wrong. Can not reject company status", toastOptions)
+      toast.error("Something went wrong. Cannot reject company status.", toastOptions)
     })
     .finally(() => {
       getData()
@@ -108,9 +108,9 @@ export default function CompanyDetail({session, routeParam}) {
   const handlePendingCompany = async (text) => {
     setShowPendingModal(false)
     setIsLoading(true)
-    const request = await axios.post(`admin/companies/${routeParam.companyid}/pending`, 
+    const request = await axios.post(`admin/companies/${companyData.id}/pending`, 
     {
-      id: routeParam.companyid,
+      id: companyData.id,
       reason: text
     },
     {
@@ -119,10 +119,10 @@ export default function CompanyDetail({session, routeParam}) {
       }
     })
     .then(() => {
-      toast.success("Company has been set to pending", toastOptions)
+      toast.success("The company status has been changed into pending.", toastOptions)
     })
     .catch((error) => {
-      toast.error("Something went wrong. Can not set company to pending", toastOptions)
+      toast.error("Something went wrong. Cannot change company status into pending.", toastOptions)
     })
     .finally(() => {
       getData()
@@ -132,7 +132,7 @@ export default function CompanyDetail({session, routeParam}) {
   const [showSendEmailModal, setShowSendEmailModal] = useState(false)
   const handleSendEmail = async (messages) => {
     setIsLoading(true)
-    const request = await axios.post(`/admin/companies/${routeParam.companyid}/RequestAdditional`, 
+    const request = await axios.post(`/admin/companies/${companyData.id}/RequestAdditional`, 
     {
       notification: messages
     },
@@ -142,11 +142,12 @@ export default function CompanyDetail({session, routeParam}) {
       }
     })
     .then((response) => {
-      toast.success(response.data.data, toastOptions)
+      // toast.success(response.data.message || "Email sent successfully", toastOptions)
+      toast.success("Request sent.", toastOptions)
       setShowSendEmailModal(false)
     })
     .catch((error) => {
-      toast.error("Something went wrong. Can not request additional document", toastOptions)
+      toast.error("Something went wrong. Cannot request additional document.", toastOptions)
     })
     .finally(() => {
       getData()
@@ -159,19 +160,19 @@ export default function CompanyDetail({session, routeParam}) {
     setIsLoading(true)
     let formData = new FormData();
     formData.append("company_img", image);
-    formData.append("id", routeParam.companyid)
-    const request = await axios.post(`admin/companies/${routeParam.companyid}/updateImage`, formData,
+    formData.append("id", companyData.id)
+    const request = await axios.post(`admin/companies/${companyData.id}/updateImage`, formData,
     {
       headers: {
         "Authorization" : `Bearer ${session.accessToken}`
       }
     })
     .then(() => {
-      toast.success("Company logo has been updated", toastOptions)
+      toast.success("Company logo has been updated.", toastOptions)
       setShowUpdateImageModal(false)
     })
     .catch((error) => {
-      toast.error("Something went wrong. Can not update comapany's logo", toastOptions)
+      toast.error("Something went wrong. Cannot update comapany's logo.", toastOptions)
     })
     .finally(() => {
       getData()
@@ -182,18 +183,18 @@ export default function CompanyDetail({session, routeParam}) {
   const [showRemoveCompanyModal, setShowRemoveCompanyModal] = useState()
   const handleRemoveCompany = async () => {
     setIsLoading(true)
-    const request = await axios.delete(`/admin/companies/${routeParam.companyid}/delete`,
+    const request = await axios.delete(`/admin/companies/${companyData.id}/delete`,
     {
       headers: {
         "Authorization" : `Bearer ${session.accessToken}`
       }
     })
     .then(() => {
-      toast.success("Company has been deleted", toastOptions)
+      toast.success("The company has been deleted.", toastOptions)
       router.push(`/admin/superadmin/registry/approvedcompany`)
     })
     .catch((error) => {
-      toast.error("Something went wrong. Can not delete comapany", toastOptions)
+      toast.error("Something went wrong. Cannot delete the company.", toastOptions)
     })
     .finally(() => {
       getData()
@@ -348,7 +349,7 @@ export default function CompanyDetail({session, routeParam}) {
                   </Link>
                 </div>
                 <div className="w-full lg:w-9/12 px-4">
-                  <Link href={`/admin/superadmin/registry/additionaldocs/${routeParam.companyid}`}>
+                  <Link href={`/admin/superadmin/registry/additionaldocs/${companyData.id}`}>
                     <SecondaryButton size="sm">
                       View Additional Documents
                     </SecondaryButton>
@@ -359,9 +360,6 @@ export default function CompanyDetail({session, routeParam}) {
             
 
             <div className="mt-10 py-5 border-t border-blueGray-200 text-center">
-              <h2 className="text-red-500">
-                DANGER ZONE
-              </h2>
               <div className="flex flex-wrap justify-center mt-5">
                 <div className="w-full lg:w-9/12 px-4">
                   <DangerButton size="sm" className="font-bold" onClick={() => setShowRemoveCompanyModal(true) }>

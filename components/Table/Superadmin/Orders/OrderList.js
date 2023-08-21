@@ -14,6 +14,7 @@ import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 
 //data
 import {orderStatusesOptions} from "@/utils/optionData"
+import NavigationViewButton from "./NavigationViewButton";
 
 export default function IncomingInquiry(props) {
     const orderStatuses = useMemo(() => orderStatusesOptions, [])
@@ -65,7 +66,7 @@ export default function IncomingInquiry(props) {
                                 Status
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Created At
+                                Created On
                             </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.
@@ -103,12 +104,7 @@ export default function IncomingInquiry(props) {
                                     </td>
                                     <td className="text-sm px-6 py-4 text-right">
                                         <div className="inline-flex">
-                                            <Link href={`/admin/superadmin/orders/details/${item.id}`}>
-                                                <PrimaryButton
-                                                    size="sm">
-                                                    View
-                                                </PrimaryButton>
-                                            </Link>
+                                            <NavigationViewButton navigationId={item.slug}/>
                                         </div>
                                     </td>
                                 </tr>

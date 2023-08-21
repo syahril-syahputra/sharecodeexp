@@ -55,7 +55,7 @@ export default function MyCompany({session, sectorlist}) {
                     setSector({value: 'other', label: 'Other'})
                 }
             }).catch((error) => {
-                toast.error("Something went wrong. Can not load company data", toastOptions)
+                toast.error("Something went wrong. Can not load company data.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -120,10 +120,10 @@ export default function MyCompany({session, sectorlist}) {
             .then((response) => {
                 let result = response.data.data
                 router.replace('/admin/member')
-                toast.success("Your company have been updated successfully", toastOptions)
+                toast.success("Your company have been updated successfully.", toastOptions)
             }).catch((error) => {
                 setErrorMessage("Please fill your form correctly")
-                toast.error("Something went wrong", toastOptions)
+                toast.error("Something went wrong.", toastOptions)
                 setErrorInfo(error.data.data)
             }).finally(() => {
                 setIsLoading(false)

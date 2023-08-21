@@ -17,12 +17,12 @@ export default function AcceptOrder(props){
             body={
                 <>
                     <p className="text-blueGray-500 text-lg leading-relaxed mb-4">
-                        Do you agree to <span className="text-blueGray-700 font-bold">Reject</span> this Order?
+                        Do you agree to <span className="text-blueGray-700 font-bold">reject</span> this order?
                     </p>
                     <div className="w-full mb-6">
                         <AreaInput
                             label="Rejection Reason"
-                            placeholder="Write rejection reason for our expert, click Reject Order to Continue."
+                            placeholder="Write rejection reason for our expert, click Reject order to continue."
                             value={rejectionReason}
                             rows={5}
                             onChange={(input) => 

@@ -14,7 +14,7 @@ export default function AcceptPaymentDocument(props){
                 <>
                     <div className="">
                         <p className="text-blueGray-500 text-lg leading-relaxed">
-                            Do you agree to <span className="text-blueGray-700 font-bold">Accept</span> this Payment?
+                            Do you agree to <span className="text-blueGray-700 font-bold">accept</span> this payment?
                         </p>
 
                         <div className="w-full mb-6 mt-10">

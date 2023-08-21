@@ -8,6 +8,7 @@ import BaseTable from "@/components/Interface/Table/BaseTable";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import NoData from "@/components/Interface/Table/NoData";
 import MetaData from "@/components/Interface/Table/MetaData";
+import NavigationViewButton from "./NavigationViewButton";
 
 export default function CompletedShipment(props) {
     return (
@@ -27,10 +28,10 @@ export default function CompletedShipment(props) {
                                 Order Number
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Tracker for Buyer
+                                Tracking Num. for Buyer
                             </th>  
                             <th scope="col" className="px-6 py-3">
-                                Tracker from Seller
+                                Tracking Num. from Seller
                             </th>  
                             <th scope="col" className="px-6 py-3">
                                 Arrival Date
@@ -62,11 +63,7 @@ export default function CompletedShipment(props) {
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
-                                                <Link href={`/admin/superadmin/orders/details/${item.id}`}>
-                                                    <PrimaryButton
-                                                        size="sm"
-                                                    >View</PrimaryButton>
-                                                </Link>
+                                                <NavigationViewButton navigationId={item.slug}/>
                                             </div>
                                         </td>
                                     </tr>

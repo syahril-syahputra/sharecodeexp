@@ -50,7 +50,7 @@ export default function InquiryList({session}) {
                     prevPage: result.prev_page_url ? true : false
                 })
             }).catch((error) => {
-                toast.error('Something went wrong. Can not load Inquiry List', toastOptions)
+                toast.error('Something went wrong. Cannot load inquiry list.', toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -91,13 +91,13 @@ export default function InquiryList({session}) {
         }
         })
         .then(() => {
-            toast.success("Component has been edited", toastOptions)
+            toast.success("The product has been edited.", toastOptions)
             searchData()
             setShowEditQuantityModal(false)
             setOrderQuantity(0)
             setListid(0)
         }).catch((error) => {
-            toast.error("Something went wrong", toastOptions)
+            toast.error("Something went wrong.", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
@@ -128,13 +128,13 @@ export default function InquiryList({session}) {
         .then(() => {
             updateInquiredComponent(session.accessToken)
             updateInquiryList(session.accessToken)
-            toast.success("Component has been inquired", toastOptions)
+            toast.success("The product has been inquired.", toastOptions)
             searchData()
             setShowInquiryNowModal(false)
             setOrderQuantity(0)
             setListid(0)
         }).catch((error) => {
-            toast.error(`Something went wrong. ${error.data.message}`, toastOptions)
+            toast.error(`Something went wrong. ${error.data.message}.`, toastOptions)
             setErrorInfo()
             setIsLoading(false)
         })
@@ -161,11 +161,11 @@ export default function InquiryList({session}) {
         })
         .then(() => {
             updateInquiryList(session.accessToken)
-            toast.success("Your Inquire Component Successfully Deleted", toastOptions)
+            toast.success("Product successfully deleted.", toastOptions)
             setShowDeleteInquireModal(false)
             searchData()
         }).catch((error) => {
-            toast.error("Something went wrong. Can not delete inquire component", toastOptions)
+            toast.error("Something went wrong. Cannot delete inquire component.", toastOptions)
         }).finally(() => {
           setIsLoading(false)
         })

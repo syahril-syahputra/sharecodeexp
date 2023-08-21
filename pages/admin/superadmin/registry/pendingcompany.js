@@ -51,7 +51,7 @@ export default function PendingCompany({session}) {
             })
             }).catch((error) => {
             // console.log(error.response)
-            toast.error("Something went wrong. Can not load companies", toastOptions)
+            toast.error("Something went wrong. Cannot load companies.", toastOptions)
             }).finally(() => {
             setIsLoading(false)
             })
@@ -63,11 +63,6 @@ export default function PendingCompany({session}) {
     const handleSearch = (searchResult) =>{
         searchData(searchResult)
     }
-    
-    const router = useRouter()
-    const viewCompanyHandler = (companyId) => {
-        router.push(`/admin/superadmin/registry/company/${companyId}`)
-    }
 
     return (
         <>
@@ -76,13 +71,12 @@ export default function PendingCompany({session}) {
                     <MiniSearchBar searchItem={handleSearch}/>
                 </div>
                 <CompanyList 
-                    title="Pending Company"
+                    title="Pending Companies"
                     setPage={setPage}
                     isLoading={isLoading}
                     data={data}
                     links={links}
                     metaData={metaData}
-                    viewHandler={viewCompanyHandler}
                 />
             </div>
         </>

@@ -21,7 +21,7 @@ export default function SendQuotation(props){
 
     useEffect(() => {
         let total = props.orderQty * inputData.price_profite
-        setTotal(total)
+        setTotal(total.toFixed(2))
     }, [inputData.price_profite])
 
     return (
@@ -58,7 +58,7 @@ export default function SendQuotation(props){
                         <div className="flex flex-wrap mb-6">
                             <div className="w-1/2 px-3 mb-6">
                                 <NumberInput
-                                    label="Price per Item ($)"
+                                    label="Unit Price (USD)"
                                     disabled={props.isLoading}
                                     required
                                     step={0.01}
@@ -71,7 +71,7 @@ export default function SendQuotation(props){
 
                             <div className="w-1/2 px-3 mb-6">
                                 <NumberInput
-                                    label="Total ($)"
+                                    label="Total Price (USD)"
                                     className="cursor-not-allowed"
                                     disabled
                                     step={0.01}

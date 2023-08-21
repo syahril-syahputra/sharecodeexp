@@ -9,6 +9,7 @@ import BaseTable from "@/components/Interface/Table/BaseTable";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import MetaData from "@/components/Interface/Table/MetaData";
 import NoData from "@/components/Interface/Table/NoData";
+import NavigationViewButton from "./NavigationViewButton";
 
 export default function PendingPayment(props) {
     return (
@@ -57,13 +58,7 @@ export default function PendingPayment(props) {
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
-                                                <Link href={`/admin/superadmin/orders/details/${item.id}`}>
-                                                    <PrimaryButton
-                                                        size="sm"
-                                                    >
-                                                        View
-                                                    </PrimaryButton>
-                                                </Link>
+                                                <NavigationViewButton navigationId={item.slug}/>
                                             </div>
                                         </td>
                                     </tr>

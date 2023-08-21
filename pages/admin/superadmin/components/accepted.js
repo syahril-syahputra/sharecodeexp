@@ -47,7 +47,7 @@ export default function AcceptedComponent({session}) {
                 })
             }).catch((error) => {
                 setData([])
-                toast.error("Something went wrong. Can not load component", toastOptions)
+                toast.error("Something went wrong. Cannot load product.", toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
@@ -63,10 +63,6 @@ export default function AcceptedComponent({session}) {
         searchData(searchResult)
     }
 
-    const viewHandler = (componentid) => {
-        router.push(`/admin/superadmin/components/details/${componentid}`)
-    }
-
     return (
         <>
             <div className="mb-10">
@@ -74,13 +70,12 @@ export default function AcceptedComponent({session}) {
                     <MiniSearchBar searchItem={handleSearch}/>
                 </div>
                 <ComponentList 
-                    title="Accepted Component"
+                    title="Accepted Products"
                     setPage={setPage}
                     isLoading={isLoading}
                     data={data}
                     links={links}
                     metaData={metaData}
-                    viewHandler={viewHandler}
                 />
             </div>
         </>

@@ -11,6 +11,7 @@ import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import NoData from "@/components/Interface/Table/NoData";
 import MetaData from "@/components/Interface/Table/MetaData";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
+import Link from "next/link";
 
 export default function CompanyList(props) {
     return (
@@ -76,13 +77,21 @@ export default function CompanyList(props) {
                                         {moment(item.created_at).format('dddd, D MMMM YYYY')}
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                        {!props.isLoading && 
+                                        {/* {!props.isLoading && 
                                             <div className="inline-flex">
                                                 <PrimaryButton 
                                                     size="sm"
                                                     onClick={()=> props.viewHandler(item.id)}>
                                                 View</PrimaryButton>
                                             </div>
+                                        } */}
+                                        {!props.isLoading && 
+                                            <Link href={`/admin/superadmin/registry/company/${item.name}`}>
+                                                <PrimaryButton
+                                                    size="sm">
+                                                    View
+                                                </PrimaryButton>
+                                            </Link>
                                         }
                                         {props.isLoading &&<div>
                                             <div className='text-center p-2'>

@@ -63,7 +63,7 @@ export default function IncomingInquiry(props) {
                                 Status
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Created At
+                                Created On
                             </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.
@@ -101,7 +101,7 @@ export default function IncomingInquiry(props) {
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
-                                                <Link href={`/admin/member/sellcomponents/incominginquiry/detail/${item.id}`}>
+                                                <Link href={`/admin/member/sellcomponents/incominginquiry/detail/${item.slug}`}>
                                                     <PrimaryButton
                                                         size="sm">
                                                         View

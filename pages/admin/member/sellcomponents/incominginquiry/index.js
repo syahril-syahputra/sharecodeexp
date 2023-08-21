@@ -45,7 +45,7 @@ export default function IncomingInquiry({session}) {
             prevPage: result.prev_page_url ? true : false
           })
         }).catch((error) => {
-            toast.error("Something went wrong. Can not load incoming inquiry", toastOptions)
+            toast.error("Something went wrong. Cannot load incoming inquiry.", toastOptions)
         }).finally(() => {
           setIsLoading(false)
         })

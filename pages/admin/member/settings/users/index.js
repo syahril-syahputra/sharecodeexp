@@ -58,11 +58,11 @@ export default function Users({session}) {
       }
     })
     .then(() => {
-      toast.success("Your Users Successfully Deleted", toastOptions)
+      toast.success("Your users successfully deleted.", toastOptions)
       setShowDeleteUserModal(false)
       getData()
     }).catch((error) => {
-      toast.error("Something went wrong. Can not delete user", toastOptions)
+      toast.error("Something went wrong. Cannot delete user.", toastOptions)
     }).finally(() => {
       setIsLoading(false)
     })

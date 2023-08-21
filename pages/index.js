@@ -43,53 +43,30 @@ export default function Index() {
     }
   }, [search])
 
-  //data search
-  const [isLoading, setIsLoading] = useState(true)
 
-  //load categories
-  const [categories, setCategories] = useState([])
-  const loadCategories = async () => {
-    const request = await axios.get(`/categories?limit=8`)
-      .then((res) => {
-        let result = res.data.data
-        setCategories(result.data)
-      })
-      .catch((err) => {
-        setCategories([])
-      })
-      .finally(() => {
-        setIsLoading(false)
+  const [statisticCounter, setStatisticCounter] = useState({
+    memberCounter: 0,
+    productCounter: 0
+  })
+  const loadStatisticCounter = async () => {
+    const request = await axios.get(`/statistic-counter`)
+      .then((respose) => {
+        setStatisticCounter({
+          memberCounter: respose.data.data.member,
+          productCounter: respose.data.data.product
+        })
       })
   }
   useEffect(() => {
-    loadCategories()
+    loadStatisticCounter()
   }, [])
 
-  //load companies //
-  const publicDir = process.env.NEXT_PUBLIC_DIR
-  const [companies, setCompanies] = useState([])
-  const loadCompanies = async () => {
-    const request = await axios.get(`/newstcompany?limit=10`)
-      .then((res) => {
-        let result = res.data.data
-        setCompanies(result)
-      })
-      .catch((err) => {
-        setCompanies([])
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
-  }
-  useEffect(() => {
-    loadCompanies()
-  }, [])
 
   return (
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
       <IndexNavbar fixed />
-      <section className="bg-white pb-36 overflow-hidden h-3/6 bg-gradient-to-b from-indigo-50 via-white">
+      <section className="bg-white pb-44 overflow-hidden h-3/6 bg-gradient-to-b from-indigo-50 via-white">
         <div className="container mx-auto mt-48">
           <div className="">
             <div className="relative object-center px-12 md:px-4 ml-auto mr-auto">
@@ -162,74 +139,66 @@ export default function Index() {
         </div>
       </section>
 
-      <section className="pb-28 relative bg-white">
-        <div className="container mx-auto">
+      <section className="pb-28 relative">
+        <div className="bg-indigo-900 h-96">
           <div className="justify-center text-center flex flex-wrap">
             <div className="w-full md:w-6/12 px-12 md:px-4 mt-16 mb-16">
-              <h2 className="font-semibold text-4xl text-indigo-900">How Exepart System Operates</h2>
+              <h2 className="font-semibold text-4xl text-white">How Exepart System Operates</h2>
             </div>
           </div>
-
-            <div className="w-full ml-auto mr-auto">
+        </div>
+        <div className="container mx-auto">
+          <div className="-mt-56 bg-white">
+            <div className="w-full ml-auto mr-auto pb-10">
               <Image
-                src='/img/how-exepart-system-operates.png'
+                src='/img/landing-pages/how_exepart_operates.png'
                 alt="how-exepart-system-operates"
                 height={1500}
                 width={1500}
                 className="mx-auto shadow-lg"
               />
             </div>
-            
+            <div className="w-full ml-auto mr-auto pb-10">
+              <Image
+                src='/img/landing-pages/testing.png'
+                alt="how-exepart-system-operates"
+                height={1500}
+                width={1500}
+                className="mx-auto shadow-lg"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
-
-      <section className="mt-20 md:mt-20 pb-20 relative bg-indigo-50 pt-20">
-        <div className="container mx-auto">
-          <div className="justify-center text-center flex flex-wrap mb-20">
-            <div className="w-full md:w-6/12 px-12 md:px-4">
-              <h2 className="font-semibold text-4xl text-indigo-900">Component Categories</h2>
+      <section className="relative bg-blue-200">
+        <div className="container mx-auto pb-24">
+          <div className="justify-center text-center flex flex-wrap">
+            <div className="w-full md:w-6/12 px-12 md:px-4 mt-16 mb-8">
+              <h2 className="font-semibold text-4xl lg:text-4xl xl:text-4xl text-indigo-900">Registered Members and Products</h2>
             </div>
           </div>
 
-          <div className="w-full px-12 md:px-4">
-            <div className="mb-4 text-end">
-              <Link href="/categories" className="font-medium text-blueGray-700 underline">View all Categories</Link>
-            </div>
-            <div className="grid gap-4 lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 place-content-center text-center">
-              {categories.map((item, index) => 
-                <div key={index}>
-                  <CategoriesCard
-                    label={item.name}
-                  />
+          <div className="w-full md:px-4">
+            <div className="py-8 mx-auto sm:max-w-xl md:w-1/2 lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-8">
+              <div className="grid grid-cols-2 row-gap-2 md:grid-cols-2">
+                <div className="text-center md:border-r">
+                  <h6 className="text-4xl font-bold lg:text-5xl xl:text-6xl">{statisticCounter.memberCounter}</h6>
+                  <p className="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base">
+                    Members
+                  </p>
                 </div>
-              )}              
-            </div>
-          </div>
-        </div>
-      </section>
+                <div className="text-center md:border-r">
+                  <h6 className="text-4xl font-bold lg:text-5xl xl:text-6xl">{statisticCounter.productCounter}</h6>
+                  <p className="text-sm font-medium tracking-widest text-gray-800 uppercase lg:text-base">
+                    Products
+                  </p>
+                </div>
+              </div>
+            </div>                    
 
-      <section className="mt-20 md:mt-20 pb-40 relative bg-white">
-        <div className="container mx-auto">
-          <div className="justify-center text-center flex flex-wrap mb-20">
-            <div className="w-full md:w-6/12 px-12 md:px-4 mt-16">
-              <h2 className="font-semibold text-4xl text-indigo-900">Our Members</h2>
-            </div>
-          </div>
-
-          <div className="w-full px-12 md:px-4">
-            <div className="mb-4 text-end">
+            <div className="text-center">
               <Link href="/members" className="font-medium text-blueGray-700 underline">View all Members</Link>
-            </div>
-            <div className="grid gap-4 lg:grid-cols-5 md:grid-cols-2 sm:grid-cols-2 place-content-center">
-              {companies.map((item, index) => 
-                <div key={index}>
-                  <MemberCard
-                    imageSrc={publicDir + "/companies_images/" + item.img}
-                    label={item.name}
-                  />
-                </div>
-              )}              
             </div>
           </div>
         </div>
