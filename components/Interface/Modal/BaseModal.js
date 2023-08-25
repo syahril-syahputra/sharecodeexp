@@ -11,7 +11,7 @@ export function BaseModalMedium(props){
                 <div className="relative w-full h-full max-w-lg md:h-auto">
                     <div className="border-0 shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                         <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200">
-                            <h3 className="text-3xl font-semibold">
+                            <h3 className="text-xl">
                                 {props.title}
                             </h3>
                             <div
@@ -42,7 +42,7 @@ export function BaseModalLarge(props){
                 <div className="relative w-full max-w-4xl max-h-full md:h-auto ">
                     <div className="border-0 shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                         <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200">
-                            <h3 className="text-3xl font-semibold">
+                            <h3 className="text-xl">
                                 {props.title}
                             </h3>
                             <div
@@ -73,7 +73,7 @@ export function BaseModalXLarge(props){
                 <div className="relative w-full max-w-7xl max-h-full md:h-auto">
                     <div className="border-0 shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                         <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200">
-                            <h3 className="text-3xl font-semibold">
+                            <h3 className="text-xl">
                                 {props.title}
                             </h3>
                             <div

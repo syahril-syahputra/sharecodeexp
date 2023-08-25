@@ -51,7 +51,6 @@ const GlobalProvider = props => {
 
     }
 
-
     const [username, setUsername] = useState('...')
     const loadUsername = async (token) => {
         const response = await axios.get(`/my-account`,
@@ -61,9 +60,32 @@ const GlobalProvider = props => {
             }
         })
         .then((response) => {       
+            setUserPermission({
+                role: response.data.data.roles.id,
+                status: response.data.data.status.id
+            })
             setUsername(response.data.data.name)
         }).catch(() => {
             setUsername('Please Logout')
+        })
+    }
+
+    const [userPermission, setUserPermission] = useState({isLoading: true, role: 0, status: 0})
+    const loadUserPermission = async (token) => {
+        const response = await axios.get(`/my-account`,
+        {
+            headers: {
+            "Authorization" : `Bearer ${token}`
+            }
+        })
+        .then((response) => {       
+            setUserPermission({
+                isLoading: false,
+                role: response.data.data.roles.id,
+                status: response.data.data.status.id
+            })
+        }).catch(() => {
+            setUsername({isLoading: false, role: 0, status: 0})
         })
     }
 
@@ -81,7 +103,11 @@ const GlobalProvider = props => {
 
         //loggeduser
         username,
-        loadUsername
+        loadUsername,
+        
+        //load user permission
+        userPermission,
+        loadUserPermission
     }
 
     return (

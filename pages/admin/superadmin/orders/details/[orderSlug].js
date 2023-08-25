@@ -1,15 +1,17 @@
 import moment from "moment";
 import React, {useState, useEffect} from "react";
 import { getSession } from "next-auth/react";
+import Image from "next/image"
 import axios from "@/lib/axios";
 import Link from "next/link";
 
 // layout for page
 import Admin from "layouts/Admin.js";
 
+//route
+import { AdminUrl } from "@/route/route-url";
+
 // components
-import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep";
-import OrderStatus from "@/components/Shared/Order/OrderStatus";
 import SendQuotationModal from "@/components/Modal/OrderComponent/Superadmin/SendQuotation"
 import EditRejectedQuotationModal from "@/components/Modal/OrderComponent/Superadmin/EditRejectedQuotation";
 import SendOrderToInquireModal from "@/components/Modal/OrderComponent/Superadmin/SendOrderToInquire"
@@ -26,6 +28,9 @@ import LightButton from "@/components/Interface/Buttons/LightButton";
 import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
 import WarningButton from "@/components/Interface/Buttons/WarningButton";
 import {CompanyStatusesIcon} from "@/components/Shared/Company/Statuses";
+import PrimaryNotification from "@/components/Interface/Notification/PrimaryNotification";
+import DangerNotification from "@/components/Interface/Notification/DangerNotification";
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 
 export default function OrderDetails({session, routeParam}) {
     const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -35,7 +40,7 @@ export default function OrderDetails({session, routeParam}) {
     const [isOrderValid, setIsOrderValid] = useState(true)
     const loadData = async () =>{
         setIsLoading(true)
-        const response = await axios.get(`/admin/orders/${routeParam.orderSlug}/data`,
+        const response = await axios.get(`/admin/orders/${routeParam.orderSlug}/detail`,
             {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
@@ -44,7 +49,6 @@ export default function OrderDetails({session, routeParam}) {
             .then((response) => {
                 let result = response.data.data
                 setData(result)
-                loadTodoAction(result.order_status.id)
                 setIsOrderValid(true)
             }).catch(() => {
                 setIsOrderValid(false)
@@ -56,18 +60,29 @@ export default function OrderDetails({session, routeParam}) {
         loadData()
     }, [])
 
-    const [todoValue, setTodoValue] = useState()
-    const loadTodoAction = async (order_status_id) => {
-        const request = await axios.get(`/admin/notification/${order_status_id}`, 
-        {
-            headers: {
-                "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then((response) => {
-            setTodoValue(response.data.data.message)
-        })
-    }
+
+    const sendProformaInvoiceHandler = async () => {
+        setIsLoading(true)
+        const request = await axios.post('/admin/orders/send-proforma-invoice',
+            {
+                'order_slug': data.slug
+            },
+            {
+                headers: {
+                    "Authorization" : `Bearer ${session.accessToken}`
+                }
+            })
+            .then((response) => {
+                toast.success(response.data.message, toastOptions)
+                setSendQuotationModal(false)
+                loadData()
+            }).catch((error) => {
+                toast.error("Something went wrong. Cannot send the quotation.", toastOptions)
+                setIsLoading(false)
+            })
+    } 
+
+    // old process
 
     const [errorInfo, setErrorInfo] = useState({})
     const [sendQuotationModal, setSendQuotationModal] = useState(false)
@@ -244,376 +259,432 @@ export default function OrderDetails({session, routeParam}) {
         }
     }
 
-    if(!isOrderValid) {
+    if(!isOrderValid) {    
         return (
-            <>
-                <PrimaryWrapper>
-                    <PageHeader
-                        leftTop={
-                            <h3 className="font-semibold text-lg text-blueGray-700">
-                                Order Details
-                            </h3>
-                        }
-                        rightTop={
-                            <Link href={`/admin/superadmin/orders/allorders`}>
-                                <LightButton 
-                                    size="sm" 
-                                    className="mr-2">
-                                    <i className="mr-2 ml-1 fas fa-arrow-left"></i>
-                                    Back
-                                </LightButton>
-                            </Link>
-                        }
-                    ></PageHeader>
-                    <div className="h-64 px-4 py-3 border-0 mt-2">
-                        <div className="flex justify-center">
-                            <div className=" text-center">
-                                <h4 className="font-semibold text-xl italic">Your Order is Not Found</h4>
-                            </div>
-                        </div>
+            <div className="">
+                <div className="flex flex-wrap items-center justify-between">
+                    <div className="">
+                        <h1 className="font-semibold text-2xl">
+                            Order Details
+                        </h1>
                     </div>
-                </PrimaryWrapper>
-            </>
+                    <Link href={AdminUrl.orderComponent.allOrders}>
+                        <LightButton 
+                            size="sm" 
+                            className="">
+                            <i className="mr-2 ml-1 fas fa-arrow-left"></i>
+                                Back
+                        </LightButton>
+                    </Link>
+                </div>
+                <div className="px-4 py-3 border-0 mt-5 pb-64">
+                     <div className="flex justify-center">
+                         <div className="text-center mt-60">
+                             <h4 className="text-md italic">Your order is not found</h4>
+                         </div>
+                     </div>
+                 </div>
+            </div>
         )
     }
     
     return (
         <>
-            <PrimaryWrapper>
-                <PageHeader
-                    leftTop={
-                        <h3 className="font-semibold text-lg text-blueGray-700">
-                            Order Details
-                        </h3>
-                    }
-                    rightTop={
-                        <Link href={`/admin/superadmin/orders/allorders`}>
-                            <LightButton 
-                                size="sm" 
-                                className="mr-2">
-                                <i className="mr-2 ml-1 fas fa-arrow-left"></i>
-                                Back
-                            </LightButton>
-                        </Link>
-                    }
-                ></PageHeader>
-
-                <OrderStatus 
-                    status={data.order_status?.name}
-                    action={todoValue}
-                />
-                {data.reason && data.order_status_id == 4 &&
-                    <div className="px-4 py-3 border-0 bg-red-400 mt-2">
-                        <div className="flex justify-center">
-                            <div className=" text-center">
-                                <h4
-                                    className="font-semibold text-sm text-white italic">
-                                    Rejection: {data.reason}
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-                }
-                {data.reason && data.order_status_id == 15 &&
-                    <div className="px-4 py-3 border-0 bg-red-400 mt-2">
-                        <div className="flex justify-center">
-                            <div className=" text-center">
-                                <h4
-                                    className="font-semibold text-sm text-white italic">
-                                    Rejection: {data.reason}
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-                }
-                <OrderStatusStep orderStatus={data.order_status}/>
-            </PrimaryWrapper>
-
-            {/* seller buyer */}
-            <div className="lg:flex lg:justify-around">
-                <div className="w-full lg:w-1/2 mr-4">
-                    <PrimaryWrapper>
-                        <div className="m-2 p-2 text-md uppercase border-b text-center">
-                            Buyer
-                        </div>
-                        <div className="m-2 p-2 text-sm">
-                            <table className="w-auto">
-                                <tbody>
-                                    <tr>
-                                        <td className="pr-16">Company Name</td>
-                                        <td className="pr-2">:</td>
-                                        <td className="">
-                                            <Link href={`/admin/superadmin/registry/company/${data.buyer?.id}`} className="text-blueGray-700 underline">{data.buyer?.name}</Link>
-                                            <CompanyStatusesIcon status={data.buyer?.is_confirmed}/>                                  
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="">Country</td>
-                                        <td className="">:</td>
-                                        <td className="">{data.buyer?.country}</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="">Buyer's Tracking Number</td>
-                                        <td className="">:</td>
-                                        <td className="">{data.trackingBuyer}</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="">Expected Shipment Date</td>
-                                        <td className="">:</td>
-                                        <td className="">
-                                            {data.expectedShippingDateBuyer ? moment(data.expectedShippingDateBuyer).format('dddd, D MMMM YYYY') : '-'}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </PrimaryWrapper>
-                </div>
-                <div className="w-full lg:w-1/2">
-                    <PrimaryWrapper>
-                        <div className="m-2 p-2 text-md uppercase border-b text-center">
-                            Seller
-                        </div>
-                        <div className="m-2 p-2 text-sm">
-                            <table className="w-auto">
-                                <tbody>
-                                    <tr>
-                                        <td className="pr-16">Company Name</td>
-                                        <td className="pr-2">:</td>
-                                        <td className="">
-                                            <Link href={`/admin/superadmin/registry/company/${data.companies_products?.company?.id}`} className="text-blueGray-700 underline">{data.companies_products?.company?.name}</Link>
-                                            <CompanyStatusesIcon status={data.buyer?.is_confirmed}/>  
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="">Country</td>
-                                        <td className="">:</td>
-                                        <td className="">{data.companies_products?.company?.country}</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="">Seller's Tracking Number</td>
-                                        <td className="">:</td>
-                                        <td className="">{data.trackingSeller}</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="">Expected Shipment Date</td>
-                                        <td className="">:</td>
-                                        <td className="">
-                                            {data.expectedShippingDateSeller ? moment(data.expectedShippingDateSeller).format('dddd, D MMMM YYYY') : '-'}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </PrimaryWrapper>
-                </div>
-                
-            </div>
-
-            {/* buyer shipment info */}
-            <PrimaryWrapper>
-                <div className="p-4">
-                    <div className="p-2 text-md uppercase border-b text-center">
-                        Buyer's Shipment Info
-                    </div>
-                    <div className="lg:flex lg:justify-around mt-4">
-                        <div className="w-full lg:w-4/12 border p-2 mb-4">
-                            <div className="text-center">
-                                Shipped Via
-                            </div>
-                            <div className="text-center text-sm">{data.courier ? data.courier : 'No Data'}</div>
-                        </div>
-                        <div className="w-full lg:w-4/12 border p-2 mb-4 lg:mx-4">
-                            <div className="text-center">
-                                Receiver
-                            </div>
-                            <div className="text-center text-sm">{data.fullnameReceiving ? data.fullnameReceiving : 'No Data'}</div>
-                        </div>
-                        <div className="w-full lg:w-4/12 border p-2 mb-4">
-                            <div className="text-center">
-                                Account Information
-                            </div>
-                            <div className="text-center text-sm">{data.AccountInformation ? data.AccountInformation : 'No Data'}</div>
-                        </div>
-                    </div>
+            <div className="">
+                <div className="flex flex-wrap items-center justify-between">
                     <div className="">
-                        <div className="text-center">
-                            Buyer's Address
-                        </div>
-                        <div className="text-center text-sm">{data.addressBuyer ? data.addressBuyer : 'No Data'}</div>
+                        <h1 className="font-semibold text-2xl">
+                            Order Details
+                        </h1>
                     </div>
+                    <Link href={AdminUrl.orderComponent.allOrders}>
+                        <LightButton 
+                            size="sm" 
+                            className="">
+                            <i className="mr-2 ml-1 fas fa-arrow-left"></i>
+                                Back
+                        </LightButton>
+                    </Link>
                 </div>
-            </PrimaryWrapper>
-
-            {/* seller shipment info */}
-            <PrimaryWrapper>
-                <div className="p-4">
-                    <div className="p-2 text-md uppercase border-b text-center">
-                        Seller's Shipment Info
+                {!!data.order_status?.name ? 
+                    <PrimaryNotification 
+                        message={data.order_status?.name} 
+                        detail={data.order_status?.admin_notification?.message}
+                    ></PrimaryNotification> : 
+                    <div className="animate-pulse my-4">
+                        <div className="h-16 bg-gray-200 dark:bg-gray-400 w-full"></div>
                     </div>
-                    <div className="mt-2">
-                        <div className="text-center">
-                            Seller's Address
-                        </div>
-                        <div className="text-center text-sm">{data.shipping_information ? data.shipping_information : 'No Data'}</div>
-                    </div>
-                </div>
-            </PrimaryWrapper>
-
-            {/* product images */}
-            <PrimaryWrapper>
-                <div className="w-full">
-                    {data.companies_products?.img ? 
-                        <div className="p-16 border mx-2 my-4">
-                            <img className="object-contain mb-3 h-40 mx-auto" 
-                            alt={data.companies_products.ManufacturerNumber}
-                            src={publicDir + "/product_images/" + data.companies_products.img}/>
-                        </div>
-                    :
-                        <div className="px-3 mb-6 md:mb-0 text-center">
-                            <div className="p-24 border mx-2 my-4">product image {data.companies_products?.ManufacturerNumber}</div>
-                        </div>
-                    } 
-                </div>
-                <div className="text-center">
-                    <p>Product Description</p>
-                </div>
-                <div className="text-center mb-10">
-                    <p>{data.companies_products?.Description}</p>
-                </div>
-                {/*  table component */}
-                <div className="overflow-x-auto mb-5 flex justify-center">
-                    <table className="w-50 text-sm text-left text-gray-500 bg-white border">
-                        <thead className="text-xs text-gray-700 uppercase bg-gray-200">
-                            <tr>
-                                <th scope="col" className="text-center px-6 py-3 w-28">
-                                    Manufacturer Part Number
-                                </th>
-                                <th scope="col" className="text-center px-6 py-3 w-28">
-                                    Manufacturer
-                                </th>   
-                                <th scope="col" className="text-center px-6 py-3">
-                                    Available Quantity
-                                </th>
-                                <th scope="col" className="text-center px-6 py-3 w-28">
-                                    MOQ
-                                </th>
-                                <th scope="col" className="text-center px-6 py-3 w-28">
-                                    Country
-                                </th>
-                                <th scope="col" className="text-center px-6 py-3 w-28">
-                                    Packaging
-                                </th>
-                                <th scope="col" className="text-center px-6 py-3 w-28">
-                                    Category
-                                </th>
-                                <th scope="col" className="text-center px-6 py-3 w-28">
-                                    Sub-Category
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr className="bg-white hover:bg-gray-50">
-                                <td scope="row" className="text-center text-sm px-6 py-4">
-                                    {data.companies_products?.ManufacturerNumber}
-                                </td>
-                                <td className="text-center text-sm px-6 py-4">
-                                    {data.companies_products?.Manufacture}
-                                </td>
-                                <td className="text-center text-sm px-6 py-4">
-                                    {data.companies_products?.AvailableQuantity}
-                                </td>
-                                <td className="text-center text-sm px-6 py-4">
-                                    {data.companies_products?.moq}
-                                </td>
-                                <td className="text-center text-sm px-6 py-4">
-                                    {data.companies_products?.country}
-                                </td>
-                                <td className="text-center text-sm px-6 py-4">
-                                    {data.companies_products?.packaging}
-                                </td>
-                                <td className="text-center text-sm px-6 py-4">
-                                    {data.companies_products?.subcategory?.name}
-                                </td>
-                                <td className="text-center text-sm px-6 py-4">
-                                    {data.companies_products?.subcategory?.category?.name}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div className="text-center mt-5 mb-2 w-1/2 mx-auto">
-                    <span className="text-light text-slate-500">Inquiry Date: {moment(data.created_at).format('dddd, D MMMM YYYY')}</span>
-                </div>
-                {/* table order information */}
-                <div className="overflow-x-auto mb-10 flex justify-center">
-                    <table className="w-50 text-sm text-left text-gray-500 bg-white border">
-                        <thead className="text-xs text-white uppercase bg-blue-500">
-                            <tr>
-                                <th rowSpan={2} scope="col" className="text-center px-6 py-3">
-                                    Order Quantity
-                                </th>
-                                <th rowSpan={2} scope="col" className="text-center px-6 py-3">
-                                    Date Code
-                                </th>
-                                <th colSpan={2} scope="col" className="text-center px-6 py-3">
-                                    Seller
-                                </th>
-                                <th colSpan={2} scope="col" className="text-center px-6 py-3">
-                                    Exepart
-                                </th>
-                            </tr>
-                            <tr>
-                                <th scope="col" className="text-center px-6 py-3">
-                                    Unit Price (USD)
-                                </th>
-                                <th scope="col" className="text-center px-6 py-3">
-                                    Total Price (USD)
-                                </th>
-                                <th scope="col" className="text-center px-6 py-3">
-                                    Unit Price (USD)
-                                </th>
-                                <th scope="col" className="text-center px-6 py-3">
-                                    Total Price (USD)
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr className="bg-white hover:bg-gray-50">
-                                <td className="text-center text-sm px-6 py-4">
-                                    {data.qty}
-                                </td>
-                                <td className="text-center text-sm px-6 py-4">
-                                    {data.companies_products?.dateCode}
-                                </td>
-                                <td className="text-center text-sm px-6 py-4">
-                                    ${data.price}
-                                </td>
-                                <td className="text-center text-sm px-6 py-4">
-                                    ${data.price ? (parseFloat(data.price) * parseInt(data.qty)) : '' }
-                                </td>
-                                <td className="text-center text-sm px-6 py-4">
-                                    ${data.price_profite}
-                                </td>
-                                <td className="text-center text-sm px-6 py-4">
-                                    ${data.price_profite ? (parseFloat(data.price_profite) * parseInt(data.qty)) : '' }
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                {data.price_profite &&
-                    <div className="text-center mb-10 w-1/2 mx-auto">
-                        <i className="text-light italic text-red-500">Note: Price is only for the product. The order type is Ex-works. The price you see on screen does not include logistic costs, customs, tax, insurance or any additional expenses that may occur.</i>
-                    </div>
+                }                
+                {false && 
+                    <DangerNotification message="[this is message]" detail="[this is details]"></DangerNotification>
                 }
-
-                {(data.quotation_expiration_date && data.order_status.id == 3) &&
-                    <div className="text-center mb-10 w-1/2 mx-auto">
-                        <span className="text-light text-slate-500">Quotation Expiration Date: {moment(data.quotation_expiration_date).format('dddd, D MMMM YYYY')}</span>
+                <PrimaryWrapper>
+                    <PageHeader
+                        leftTop={
+                            <h3 className="font-semibold text-lg text-blueGray-700">
+                                {!!data.order_status?.name ?
+                                    data.order_status?.name :
+                                    <div className="animate-pulse">
+                                        <div className="h-5 bg-gray-200 dark:bg-gray-400 w-40"></div>
+                                    </div>
+                                }
+                            </h3>
+                        }
+                    ></PageHeader>
+                    {!!data.order_status?.slug ? 
+                        <Image
+                            src={`/img/order-status/${data.order_status?.slug}.png`}
+                            width="2000"
+                            height="200"
+                            alt="exepart-order-status"
+                            className="mx-auto"
+                        ></Image> :
+                        <div className="animate-pulse">
+                            <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
+                                <svg className="w-10 h-10 text-gray-200 dark:text-gray-600"  xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                                    <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    }
+                </PrimaryWrapper>
+                
+                {/* seller buyer */}
+                <div className="lg:flex lg:justify-around">
+                    <div className="w-full lg:w-1/2 mr-4">
+                        <PrimaryWrapper className="p-1">
+                            <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                                Buyer
+                            </div>
+                            <div className="mx-2 my-1 text-xl">
+                                <Link href={`/admin/superadmin/registry/company/${data.buyer?.id}`} className="text-blueGray-700 underline">{data.buyer?.name}</Link>
+                                <CompanyStatusesIcon status={data.buyer?.is_confirmed}/>
+                            </div>
+                            <div className="mx-2 text-md mb-5">
+                                {data.buyer?.country}
+                            </div>
+                            <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                                Buyer's Shipment Info
+                            </div>
+                            <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                                Tracking Number
+                            </div>
+                            <div className="mx-2 mb-5 text-xl uppercase">
+                                {data.trackingBuyer ? data.trackingBuyer : '-'}
+                            </div>
+                        </PrimaryWrapper>
                     </div>
-                }
-            </PrimaryWrapper>
+                    <div className="w-full lg:w-1/2">
+                        <PrimaryWrapper className="p-1">
+                            <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                                Seller
+                            </div>
+                            <div className="mx-2 my-1 text-xl">
+                                <Link href={`/admin/superadmin/registry/company/${data.companies_products?.company?.id}`} className="text-blueGray-700 underline">{data.companies_products?.company?.name}</Link>
+                                <CompanyStatusesIcon status={data.companies_products?.company?.is_confirmed}/>  
+                            </div>
+                            <div className="mx-2 text-md mb-5">
+                                {data.companies_products?.company?.country}
+                            </div>
+                            <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                                Seller's Shipment Info
+                            </div>
+                            <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                                Tracking Number
+                            </div>
+                            <div className="mx-2 mb-5 text-xl uppercase">
+                                {data.trackingSeller ? data.trackingSeller : '-'}
+                            </div>
+                        </PrimaryWrapper>
+                    </div>
+                </div>
+
+                {/* product info and quotation */}
+                <div className="lg:flex lg:justify-around">
+                    <div className="w-full lg:w-2/3 mr-4">
+                        <PrimaryWrapper className="p-3">                            
+                            <div className="lg:flex lg:justify-around">
+                                <div className="w-full lg:w-1/2 mr-4 border">
+                                    {data.companies_products?.img && 
+                                        <Image
+                                            src={publicDir + "/product_images/" + data.companies_products.img}
+                                            width="400"
+                                            height="400"
+                                            alt="exepart-order-status"
+                                            className="mx-auto"
+                                        ></Image>
+                                    } 
+                                    {!data.companies_products?.img && 
+                                        <div className="flex justify-center items-center h-40">
+                                            no image
+                                        </div>
+                                    }   
+                                </div>
+                                <div className="w-full lg:w-1/2">
+                                    <div className="mx-2 my-1 text-xl">
+                                        {data.companies_products?.ManufacturerNumber}
+                                    </div>
+                                    <div className="mx-2 text-md mb-5">
+                                        {data.companies_products?.Manufacture}
+                                    </div>
+                                    <div className="mx-2 my-1 text-gray-500 text-sm">
+                                        Description
+                                    </div>
+                                    <div className="mx-2 text-md mb-5">
+                                        {data.companies_products?.Description}
+                                    </div>
+                                    <div className="mx-2 my-1 text-gray-500 text-sm">
+                                        Inquired Date
+                                    </div>
+                                    <div className="mx-2 text-md">
+                                        {moment(data.created_at).format('dddd, D MMMM YYYY')}
+                                    </div>
+                                    <div className="mx-2 my-1 text-gray-500 text-sm">
+                                        Order Date
+                                    </div>
+                                    <div className="mx-2 text-md">
+                                        {moment(data.start_order_date).format('dddd, D MMMM YYYY')}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="lg:flex lg:justify-around mt-5">
+                                <div className="w-full lg:w-1/3 mr-2">
+                                    <div className="mx-2 my-1 text-gray-500 text-sm">
+                                        MOQ
+                                    </div>
+                                    <div className="mx-2 text-md">
+                                        {data.companies_products?.moq}
+                                    </div>
+                                </div>
+                                <div className="w-full lg:w-1/3 mr-2">
+                                    <div className="mx-2 my-1 text-gray-500 text-sm">
+                                        Available Quantity
+                                    </div>
+                                    <div className="mx-2 text-md">
+                                        {data.companies_products?.AvailableQuantity}
+                                    </div>
+                                </div>
+                                <div className="w-full lg:w-1/3">
+                                    <div className="mx-2 my-1 text-gray-500 text-sm">
+                                        Country
+                                    </div>
+                                    <div className="mx-2 text-md">
+                                        {data.companies_products?.country}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="lg:flex lg:justify-around mt-3 mb-8">
+                                <div className="w-full lg:w-1/3 mr-2">
+                                    <div className="mx-2 my-1 text-gray-500 text-sm">
+                                        Packaging
+                                    </div>
+                                    <div className="mx-2 text-md">
+                                        {data.companies_products?.packaging}
+                                    </div>
+                                </div>
+                                <div className="w-full lg:w-1/3 mr-2">
+                                    <div className="mx-2 my-1 text-gray-500 text-sm">
+                                        Category
+                                    </div>
+                                    <div className="mx-2 text-sm">
+                                        {data.companies_products?.subcategory?.category?.name}
+                                    </div>
+                                </div>
+                                <div className="w-full lg:w-1/3">
+                                    <div className="mx-2 my-1 text-gray-500 text-sm">
+                                        Sub-Category
+                                    </div>
+                                    <div className="mx-2 text-sm">
+                                        {data.companies_products?.subcategory?.name}
+                                    </div>
+                                </div>
+                            </div>
+                        </PrimaryWrapper>
+                    </div>
+                    <div className="w-full lg:w-1/3">
+                        <PrimaryWrapper className="p-1">
+                            <div className="mx-2 my-1 text-md">
+                                Inquiry Details
+                            </div>
+                            <div className="mx-2 my-1 text-sm border-b">
+                                <div className="flex flex-wrap justify-between">
+                                    <span className="text-gray-500">Date Code</span>
+                                    <span>{data.companies_products?.dateCode}</span>
+                                </div>
+                            </div>
+                            <div className="mx-2 my-1 text-sm">
+                                Seller
+                            </div>
+                            <div className="mx-2 my-1 text-sm">
+                                <div className="flex flex-wrap justify-between">
+                                    <span className="text-gray-500">Order Quantity</span>
+                                    <span>{data.qty}</span>
+                                </div>
+                            </div>
+                            <div className="mx-2 my-1 text-sm border-b">
+                                <div className="flex flex-wrap justify-between">
+                                    <span className="text-gray-500">Unit Price (USD)</span>
+                                    <span>${data.price}</span>
+                                </div>
+                            </div>
+                            <div className="mx-2 my-1 text-sm mb-5">
+                                <div className="flex flex-wrap justify-between">
+                                    <span className="text-gray-500 font-bold">Total Price (USD)</span>
+                                    <span>${data.price ? (parseFloat(data.price) * parseInt(data.qty)) : '' }</span>
+                                </div>
+                            </div>
+
+                            {/* Exepart */}
+                            <div className="mx-2 my-1 text-sm">
+                                Exepart
+                            </div>
+                            <div className="mx-2 my-1 text-sm">
+                                <div className="flex flex-wrap justify-between">
+                                    <span className="text-gray-500">Order Quantity</span>
+                                    <span>{data.qty}</span>
+                                </div>
+                            </div>
+                            <div className="mx-2 my-1 text-sm border-b">
+                                <div className="flex flex-wrap justify-between">
+                                    <span className="text-gray-500">Unit Price (USD)</span>
+                                    <span>${data.price_profite}</span>
+                                </div>
+                            </div>
+                            <div className="mx-2 my-1 text-sm mb-5">
+                                <div className="flex flex-wrap justify-between">
+                                    <span className="text-gray-500 font-bold">Total Price (USD)</span>
+                                    <span>${data.price_profite ? (parseFloat(data.price_profite) * parseInt(data.qty)) : '' }</span>
+                                </div>
+                            </div>
+                            <div className="mx-2 my-1 text-sm font-bold text-gray-500">
+                                Note: 
+                            </div>
+                            <div className="mx-2 text-sm text-gray-500 mb-5">
+                                Price is only for the product. The order type is Ex-works. The price you see on screen does not include logistic costs, customs, tax, insurance or any additional expenses that may occur.
+                            </div>                                                        
+                        </PrimaryWrapper>
+                    </div>
+                </div>
+
+                {/* document */}
+                <div className="lg:flex lg:justify-around">
+                    <div className="w-full lg:w-1/2 mr-4">
+                        <PrimaryWrapper className="p-1">
+                            <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                                Documents
+                            </div>
+                            <div className="mx-2 mt-1 text-sm">
+                                <span className="text-gray-500">From Buyer</span>
+                            </div>
+                            <div className="mx-2 mt-1 text-sm border-b mb-2">
+                                <div className="flex flex-wrap justify-between">
+                                    <span>Buyer's Payment</span>
+                                    <span className="underline text-blue-500">[action]</span>
+                                </div>
+                            </div>
+                            <div className="mx-2 mt-1 text-sm">
+                                <span className="text-gray-500">From Seller</span>
+                            </div>
+                            <div className="mx-2 mt-1 text-sm border-b mb-2">
+                                <div className="flex flex-wrap justify-between">
+                                    <span>Seller's Invoice</span>
+                                    <span className="underline text-blue-500">[action]</span>
+                                </div>
+                            </div>
+                            <div className="mb-5">
+                                <div className="mx-2 mt-1 text-sm">
+                                    <span className="text-gray-500">Exepart</span>
+                                </div>
+                                <div className="mx-2 mt-1 text-sm">
+                                    <div className="flex flex-wrap justify-between">
+                                        <span>Quotation</span>
+                                        <span className="underline text-blue-500">[action]</span>
+                                    </div>
+                                </div>
+                                <div className="mx-2 mt-1 text-sm">
+                                    <div className="flex flex-wrap justify-between">
+                                        <span>Purchase Order</span>
+                                        <span className="underline text-blue-500">[action]</span>
+                                    </div>
+                                </div>
+                                <div className="mx-2 mt-1 text-sm">
+                                    <div className="flex flex-wrap justify-between">
+                                        <span>Proforma Invoice</span>
+                                        {data.proforma_doc ? 
+                                            <Link target="_blank" href={publicDir + data.proforma_doc} className="underline text-blue-500">
+                                                [view]
+                                            </Link>
+                                            :
+                                            <span className="underline text-gray-500">
+                                                [view]
+                                            </span>                                        
+                                        }
+                                    </div>
+                                </div> 
+                                <div className="mx-2 mt-1 text-sm">
+                                    <div className="flex flex-wrap justify-between">
+                                        <span>Invoice</span>
+                                        <span className="underline text-blue-500">[action]</span>
+                                    </div>
+                                </div>                            
+                                <div className="mx-2 mt-1 text-sm">
+                                    <div className="flex flex-wrap justify-between">
+                                        <span>Packing List for Seller</span>
+                                        <span className="underline text-blue-500">[action]</span>
+                                    </div>
+                                </div>
+                                <div className="mx-2 mt-1 text-sm">
+                                    <div className="flex flex-wrap justify-between">
+                                        <span>Test Result</span>
+                                        <span className="underline text-blue-500">[action]</span>
+                                    </div>
+                                </div>
+                                <div className="mx-2 mt-1 text-sm">
+                                    <div className="flex flex-wrap justify-between">
+                                        <span>Packing List for White Horse</span>
+                                        <span className="underline text-blue-500">[action]</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </PrimaryWrapper>
+                    </div>
+                    <div className="w-full lg:w-1/2">
+                        <PrimaryWrapper className="p-1">
+                            <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                                Actions to take
+                            </div>
+                            {data.order_status_id !== 4 && 
+                                <div className="italic flex justify-center items-center h-28">
+                                    No action to take
+                                </div>
+                            }
+                            {data.order_status_id == 4 &&
+                                <div className="mx-2 my-4">
+                                    <PrimaryButton 
+                                        outline
+                                        className="mx-1" 
+                                        size="sm"
+                                        disabled={isLoading}
+                                        // onClick={() => sendProformaInvoiceHandler(true) }
+                                        onClick={() => setSendProformaInvoiceModal(true) }
+                                    >   
+                                        {isLoading ?
+                                            <span>
+                                                <i className="fas fa-hourglass fa-spin mr-2"></i>
+                                                Sending...
+                                            </span>
+                                            :
+                                            'Send Proforma Invoice'
+                                        }
+                                    </PrimaryButton>
+                                </div>
+
+                            }
+                            
+                        </PrimaryWrapper>
+                    </div>
+                </div>
+            </div>            
 
             {/* documents */}
             <PrimaryWrapper>
@@ -622,7 +693,7 @@ export default function OrderDetails({session, routeParam}) {
                 </div>
                 <div className="pb-4 mt-2 lg:flex lg:justify-center px-4">
                     <div className="mx-1 my-1">
-                        <Link target="_blank" href={publicDir + "/uploads/proforma_doc/" + data.proforma_doc}>
+                        <Link target="_blank" href={publicDir + data.proforma_doc}>
                             <SecondaryButton className="md:w-full sm:w-full" disabled={data.proforma_doc ? false : true} size="sm">
                                 Proforma Invoice
                             </SecondaryButton>
@@ -760,63 +831,6 @@ export default function OrderDetails({session, routeParam}) {
                         </WarningButton>
                     </div> */}
           
-                </div>
-            </PrimaryWrapper>
-
-            {/* date details  */}
-            <PrimaryWrapper>
-                <div className="p-2 text-md uppercase border-b text-center">
-                    Date Details
-                </div>
-                <div className="pb-4 mt-2 lg:flex lg:justify-between px-4">
-                    <div className="mx-1 my-1 text-center">
-                        <div className=" text-slate-500 text-sm">
-                            Inquiry Created                        
-                        </div>
-                        <div className="text-xs">
-                            {data.created_at ? moment(data.created_at).format('dddd, D MMMM YYYY') : '-'}
-                        </div>
-                    </div>
-                    <div className="mx-1 my-1 text-center">
-                        <div className=" text-slate-500 text-sm">
-                            PI Uploaded                        
-                        </div>
-                        <div className="text-xs">
-                            {data.piUploadedDate ? moment(data.piUploadedDate).format('dddd, D MMMM YYYY') : '-'}
-                        </div>
-                    </div>
-                    <div className="mx-1 my-1 text-center">
-                        <div className=" text-slate-500 text-sm">
-                            Quotation Rejected                       
-                        </div>
-                        <div className="text-xs">
-                            {data.QuotationRejectedDate ? moment(data.QuotationRejectedDate).format('dddd, D MMMM YYYY') : '-'}
-                        </div>
-                    </div>
-                    <div className="mx-1 my-1 text-center">
-                        <div className=" text-slate-500 text-sm">
-                            Arrived                      
-                        </div>
-                        <div className="text-xs">
-                            {data.arrivalDate ? moment(data.arrivalDate).format('dddd, D MMMM YYYY') : '-'}
-                        </div>
-                    </div>
-                    <div className="mx-1 my-1 text-center">
-                        <div className=" text-slate-500 text-sm">
-                            Order Completed                
-                        </div>
-                        <div className="text-xs">
-                            {data.completedOrdersDate ? moment(data.completedOrdersDate).format('dddd, D MMMM YYYY') : '-'}
-                        </div>
-                    </div>
-                    <div className="mx-1 my-1 text-center">
-                        <div className=" text-slate-500 text-sm">
-                            Order Returned                
-                        </div>
-                        <div className="text-xs">
-                            {data.OrderReturnedDate ? moment(data.OrderReturnedDate).format('dddd, D MMMM YYYY') : '-'}
-                        </div>
-                    </div>                    
                 </div>
             </PrimaryWrapper>
             

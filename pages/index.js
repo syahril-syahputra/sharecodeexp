@@ -14,6 +14,7 @@ import MemberCard from "@/components/LandingPage/MemberCard";
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
 import CategoriesCard from "@/components/LandingPage/CategoriesCard";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
+import TextInput from "@/components/Interface/Form/TextInput";
 
 export default function Index() {
   const router = useRouter()
@@ -89,32 +90,33 @@ export default function Index() {
 
             <div className="w-full px-12 md:px-4 ml-auto mr-auto">
               <div className="text-center items-stretch mb-3 mt-3">
-                <span className="z-10 h-full leading-snug font-normal text-center text-slate-300 absolute bg-transparent text-lg items-center justify-center w-8 pl-3 py-3">
-                  <i className="fas fa-search mt-2"></i>
-                </span>
-                <input
-                  value={search}
-                  onChange={({target}) => setSearch(target.value)}
-                  onKeyDown={searchComponent}
-                  type="text" 
-                  placeholder="Search for the components" 
-                  className="border-0 md:w-8/12 px-3 py-4 placeholder-slate-300 text-slate-600 relative  bg-white text-base shadow outline-grey focus:outline-none focus:ring w-full pl-10"/>
-              </div>  
+                <TextInput
+                    value={search}
+                    onChange={(target) => setSearch(target.value)}
+                    onKeyDown={searchComponent}
+                    type="text" 
+                    setIcon="fas fa-search"
+                    className="md:w-8/12  border-2"
+                    placeholder="Search for the components" 
+                /> 
+              </div>
               <div className="text-center">
                 {suggestion && suggestion.length > 0 &&
                   <div>
                     {isSuggestionLoading && 
-                      <div className="text-blueGray-700">
+                      <div className="text-blueGray-500">
                         Suggestion : 
                         <i className="ml-2 fas fa-circle-notch fa-spin"></i>
                       </div>
                     }
                     {!isSuggestionLoading && 
-                      <div className="flex justify-center text-blueGray-700">Suggestion : {suggestion.map(name => (  
-                        <Link key={name} href={`/product/search?q=${name}`} className="mx-1 underline">  
-                          {name}  
-                        </Link>  
-                      ))}</div>
+                      <div className="flex justify-center"><span className="text-blueGray-500">Suggestion :</span> 
+                        {suggestion.map(name => (  
+                          <Link key={name} href={`/product/search?q=${name}`} className="mx-1 underline text-blue-500 italic">  
+                            {name}  
+                          </Link>  
+                        ))}
+                      </div>
                     }
                   </div>
                 }

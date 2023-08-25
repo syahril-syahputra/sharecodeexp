@@ -1,45 +1,19 @@
-import { useState, useMemo } from "react";
-import Link from "next/link";
 import moment from "moment";
 
 // components
-import SelectInput from "@/components/Interface/Form/SelectInput"
 import BaseTable from "@/components/Interface/Table/BaseTable";
-import HeaderTable from "@/components/Interface/Table/HeaderTable";
-import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import Pagination from "@/components/Shared/Component/Pagination";
 import NoData from "@/components/Interface/Table/NoData";
 import MetaData from "@/components/Interface/Table/MetaData";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 
 //data
-import {orderStatusesOptions} from "@/utils/optionData"
 import NavigationViewButton from "./NavigationViewButton";
 
 export default function IncomingInquiry(props) {
-    const orderStatuses = useMemo(() => orderStatusesOptions, [])
-    const [status, setStatus] = useState({value: "all", label: "All Status"});
-    const handleStatusChange = value => {
-        setStatus(value)
-        props.statusChange(value)
-    };
     return (
         <>  
             <PrimaryWrapper>
-                <HeaderTable
-                    title={props.title}
-                    action={
-                        props.filterStatus && 
-                        <div className="w-64">
-                            <SelectInput
-                                name="status"
-                                value={status}
-                                options={orderStatuses}
-                                onChange={handleStatusChange}
-                                />
-                        </div>
-                    }
-                />
                 <BaseTable  
                     isBusy={props.isLoading}
                     header={
@@ -60,13 +34,13 @@ export default function IncomingInquiry(props) {
                                 Seller (Country)
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Incoming Inquiry QTY
+                                Qty
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 Status
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Created On
+                                Order Created On
                             </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.
@@ -100,7 +74,7 @@ export default function IncomingInquiry(props) {
                                         {item.order_status.name}
                                     </td>
                                     <td className="text-sm px-6 py-4">
-                                        {moment(item.created_at).format('dddd, D MMMM YYYY')}
+                                        {item.start_order_date ? moment(item.start_order_date).format('dddd, D MMMM YYYY') : '-'}
                                     </td>
                                     <td className="text-sm px-6 py-4 text-right">
                                         <div className="inline-flex">

@@ -1,21 +1,32 @@
-import React from "react";
-import { useSession } from "next-auth/react"
+import navigation from '@/layouts/navigation';
+
 import Link from "next/link";
+import classNames from "@/utils/classNames";
+import { useState } from 'react'
+import { useSession } from "next-auth/react"
 
-// components
-import AdminNavbar from "components/Navbars/AdminNavbar.js";
-import Sidebar from "components/Sidebar/Sidebar.js";
-import HeaderStats from "components/Headers/HeaderStats.js";
-import FooterAdmin from "components/Footers/FooterAdmin.js";
+import { Disclosure } from '@headlessui/react'
+import { ChevronRightIcon } from '@heroicons/react/20/solid'
+import FooterAdmin from "@/components/Footers/FooterAdmin";
+import HeaderStats from "@/components/Headers/HeaderStats";
 import { PageSEO } from "@/components/Utils/SEO";
-import siteMetadata from '@/utils/siteMetadata'
+import siteMetadata from '@/utils/siteMetadata';
 
-//hooks
-import useCompany from '@/hooks/useCompany'
+import TopNavigation from "./TopNavigation";
 import ImageLogo from "@/components/ImageLogo/ImageLogo";
 
-export default function Admin({ children }) {
-  const session = useSession();
+//sidenavigation
+import SuperadminNav from "./Superadmin/SideNavigation";
+import MemberNav from "./Member/SideNavigation";
+
+//small side navigation
+import SmallSideSuperadminNav from "./Superadmin/SmallSideNavigation";
+import SmallSideMemberNav from "./Member/SmallSideNavigation";
+
+import MyAccount from './MyAccount';
+
+export default function Admin({children}) {
+  const session = useSession();  
   if (!session.data) {
     return (
       <div className="relative p-2 bg-white">
@@ -33,20 +44,56 @@ export default function Admin({ children }) {
       </div> 
     );
   }
-  const company = useCompany(session.data.user.userDetail, session.data.accessToken)
+  const role = session.data.user.userDetail.role_id
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
   return (
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
-      <Sidebar company={company}/>
-      <div className="relative md:ml-72 bg-blueGray-100">
-      <AdminNavbar />
-        {/* Header */}
-        <HeaderStats />
-        <div className="px-4 md:px-10 mx-auto w-full -m-24 h-full">
-          {children}
-          <FooterAdmin /> 
+      <div>
+
+        {role == 1 &&
+          <SmallSideSuperadminNav sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
+        }
+
+        {role == 2 &&
+          <SmallSideMemberNav sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
+        }
+
+        {/* Static sidebar for desktop */}
+        <div className="hidden lg:fixed lg:inset-y-0 lg:z-30 lg:flex lg:w-72 lg:flex-col">
+          {/* Sidebar component, swap this element with another sidebar if you like */}
+          <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
+            <Link href="/" className="flex h-16 shrink-0 items-center mt-4">
+              <ImageLogo size={200}/>
+            </Link>
+            
+            {role == 1 &&
+              <SuperadminNav></SuperadminNav>
+            }
+
+            {role == 2 &&
+              <MemberNav></MemberNav>
+            }
+
+            {/* Divider */}
+            <hr className="md:min-w-full" />
+            <nav className="flex flex-1 flex-col">
+              <MyAccount/>
+            </nav>
+          </div>
         </div>
+
+        <div className="lg:pl-72">
+          <TopNavigation setSidebarOpen={setSidebarOpen} role={role}/>
+          <div className="bg-zinc-100">
+            <div className="px-4 pt-6 md:px-10 mx-auto h-full">
+              {children}
+            </div>
+            <FooterAdmin /> 
+          </div>
+        </div>        
       </div>
     </>
-  );
+  )
 }
