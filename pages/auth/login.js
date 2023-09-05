@@ -94,7 +94,7 @@ export default function Login() {
                                             }
                                         </div>
                                     </div>
-                                    <div className="text-right items-stretch mb-5 md:px-5">
+                                    <div className="text-right items-stretch mb-5 md:px-5 mt-2">
                                         <p className="text-blueGray-400 hover:text-blueGray-700"><Link href="/auth/forgotpassword">Forgot Password</Link></p>
                                     </div>
                                     <div className="text-center mt-2">

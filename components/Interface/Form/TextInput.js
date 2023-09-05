@@ -1,5 +1,7 @@
 import classNames from '@/utils/classNames';
 import ErrorInput from './ErrorInput';
+import React from 'react'
+
 export default function TextInput(props){
     return (
         <>  
@@ -7,7 +9,7 @@ export default function TextInput(props){
                 {props.label}
             </label>
             {(props.setIcon) &&
-                <span className="z-10 h-full leading-snug font-normal text-center text-slate-300 absolute bg-transparent text-lg items-center justify-center w-8 pl-3 py-2">
+                <span className="z-10 h-full mt-0.5 leading-snug font-normal text-center text-slate-300 absolute bg-transparent text-lg items-center justify-center w-8 pl-3 py-2 mr-10">
                     <i className={props.setIcon}></i>
                 </span>
             }
@@ -22,7 +24,7 @@ export default function TextInput(props){
                 autoComplete="off" 
                 type={props.type || "text"}
                 className={classNames(
-                    props.errorMsg ? 'border-red-500' : 'border-gray-200',                    
+                    props.errorMsg ? 'border-red-500' : 'border-blue-200',                    
                     props.setIcon && 'pl-10',
                     `${props.className} shadow-sm placeholder-slate-300 appearance-none w-full bg-white text-gray-700 border py-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`)}/>
             {props.errorMsg &&

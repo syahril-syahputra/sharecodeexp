@@ -14,7 +14,8 @@ const GlobalContext = React.createContext({
 
     //logged user
     username: '...',
-    loadUsername: (token) => {}
+    loadUsername: (token) => {},
+
 })
 
 export default GlobalContext

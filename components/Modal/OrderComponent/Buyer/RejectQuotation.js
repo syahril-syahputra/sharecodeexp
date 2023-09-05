@@ -3,7 +3,7 @@ import { BaseModalMedium } from "@/components/Interface/Modal/BaseModal"
 import SelectInput from "@/components/Interface/Form/SelectInput";
 import TextInput from "@/components/Interface/Form/TextInput";
 import LightButton from "@/components/Interface/Buttons/LightButton";
-import DangerButton from "@/components/Interface/Buttons/DangerButton";
+import WarningButton from "@/components/Interface/Buttons/WarningButton";
 export default function RejectQuotation(props){
     const [rejectionReason, setRejectionReason] = useState()
     const handleRejectionChange = (value) => {
@@ -17,10 +17,6 @@ export default function RejectQuotation(props){
     const [rejectionData, setRejectionData] = useState()
     const handleRejection = () => {
         props.acceptance(rejectionData)
-    }
-
-    const setDataHandler = (item) => {
-        setRejectionData(item.value)
     }
 
     return (
@@ -59,22 +55,24 @@ export default function RejectQuotation(props){
             action={
                 <>
                     <LightButton
-                        className="font-bold uppercase mr-2"
+                        disabled={props.isLoading}
+                        size="sm"
+                        className="mr-2"
                         onClick={() => props.closeModal()}
-                    >
+                        >
                         No, Close
                     </LightButton>
 
-                    <DangerButton
+                    <WarningButton
                         disabled={props.isLoading || !rejectionData}
-                        className="font-bold uppercase"
+                        size="sm"
                         onClick={handleRejection}
                     >
                         {props.isLoading &&
                             <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                         }
                         Yes, Reject
-                    </DangerButton>
+                    </WarningButton>
                 </>
             }
         ></BaseModalMedium>

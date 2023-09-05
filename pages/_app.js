@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import GlobalProvider from '../store/GlobalProvider';
 
-import { SessionProvider, useSession } from 'next-auth/react';
+import { SessionProvider } from 'next-auth/react';
 import { Roboto } from '@next/font/google'
 
 const roboto = Roboto({
@@ -14,7 +14,6 @@ const roboto = Roboto({
 })
 
 export default function App({ Component, pageProps }) {
-
   const Layout = Component.layout || (({ children }) => <>{children}</>);
 
   return (
@@ -31,5 +30,3 @@ export default function App({ Component, pageProps }) {
   )
 }
 
-
-//nyobain git

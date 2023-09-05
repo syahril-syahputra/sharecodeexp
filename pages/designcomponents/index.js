@@ -20,6 +20,7 @@ import BaseTable from "@/components/Interface/Table/BaseTable"
 import {categoriesOptions} from "@/utils/optionData"
 
 import { useRef, useState } from "react"
+import FileInput from "@/components/Interface/Form/FileInput"
 
 export default function ComponentList() {
     const [isDisabled, setIsDisabled] = useState(false)
@@ -199,6 +200,16 @@ export default function ComponentList() {
                             value={category}
                             options={categoriesOptions}
                             onChange={(input) => handleSelectInput(input)}
+                        />
+                    </div>
+                    <div className="mb-5">
+                        <FileInput
+                            description="Input PDF (.pdf) only, max 10MB"
+                            accept=".pdf"
+                            name="File Upload"
+                            required
+                            onChange={(target) => console.log(target.files[0])}
+                            errorMsg={["disabled", "second error"]}
                         />
                     </div>
                 </div>

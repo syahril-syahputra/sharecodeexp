@@ -16,7 +16,7 @@ export default function AreaInput(props){
                 placeholder={props.placeholder || ""}
                 autoComplete="off"
                 className={classNames(
-                    props.errorMsg || (props.characterCount > props.characterLimit) ? 'border-red-500' : 'border-gray-200',                    
+                    props.errorMsg || (props.characterCount > props.characterLimit) ? 'border-red-500' : 'border-blue-200',                    
                     `${props.className} shadow-sm placeholder-slate-300 appearance-none w-full bg-white text-gray-700 border py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`)}/>
                 {(""+props.characterCount && props.characterLimit) &&
                     <p className={classNames(

@@ -1,32 +1,32 @@
 import { useState } from "react"
 import { BaseModalMedium } from "@/components/Interface/Modal/BaseModal";
-import DangerButton from "@/components/Interface/Buttons/DangerButton";
+import WarningButton from "@/components/Interface/Buttons/WarningButton";
 import LightButton from "@/components/Interface/Buttons/LightButton";
 import AreaInput from "@/components/Interface/Form/AreaInput";
-export default function RejectPaymentDocument(props){
-    const [rejectionReason, setRejectionReason] = useState('')
+export default function RequestUpdatePayment(props){
+    const [requestUpdate, setRequestUpdate] = useState('')
 
-    const handleRejection = () => {
-        props.acceptance(rejectionReason)
+    const requestHandler = () => {
+        props.acceptance(requestUpdate)
     }
 
     return (
         <BaseModalMedium
-            title="Reject Payment"
+            title="Request Update Payment"
             onClick={() => props.closeModal()}
             body={
                 <div className="">
                     <p className="text-blueGray-500 text-lg leading-relaxed">
-                        Do you agree to <span className="text-blueGray-700 font-bold">reject</span> this payment?
+                        Do you want to <span className="text-blueGray-700 font-bold">request update</span> payment?
                     </p>
                     <AreaInput
                         name="reason"
                         required
                         rows={8}
-                        placeholder="Write your reason here before rejecting"
-                        value={rejectionReason}
-                        errorMsg={props.errorInfo?.reason}
-                        onChange={(input) => setRejectionReason(input.value)}
+                        placeholder="Write your reason here before request"
+                        value={requestUpdate}
+                        errorMsg={props.errorInfo?.request_update_payment_reason}
+                        onChange={(input) => setRequestUpdate(input.value)}
                     /> 
                 </div>
             }
@@ -34,21 +34,21 @@ export default function RejectPaymentDocument(props){
                 <>
                     <LightButton
                         disabled={props.isLoading}
-                        className="font-bold uppercase mr-2"
+                        size="sm"
+                        className="mr-2"
                         onClick={() => props.closeModal()}
                         >
                         No, Close
                     </LightButton>
-
-                    <DangerButton
-                        disabled={props.isLoading || !rejectionReason}
-                        className="font-bold uppercase"
-                        onClick={handleRejection}>
+                    <WarningButton
+                        disabled={props.isLoading || !requestUpdate}
+                        size="sm"
+                        onClick={requestHandler}>
                         {props.isLoading &&
                             <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                         }
-                        Yes, Reject Payment
-                    </DangerButton>
+                        Request Update
+                    </WarningButton>
                 </>
             }
         ></BaseModalMedium>

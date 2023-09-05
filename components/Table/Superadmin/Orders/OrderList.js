@@ -1,49 +1,27 @@
-import { useState, useMemo } from "react";
-import Link from "next/link";
 import moment from "moment";
+import { checkValue } from "@/utils/general";
 
 // components
-import SelectInput from "@/components/Interface/Form/SelectInput"
 import BaseTable from "@/components/Interface/Table/BaseTable";
-import HeaderTable from "@/components/Interface/Table/HeaderTable";
-import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import Pagination from "@/components/Shared/Component/Pagination";
 import NoData from "@/components/Interface/Table/NoData";
 import MetaData from "@/components/Interface/Table/MetaData";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 
 //data
-import {orderStatusesOptions} from "@/utils/optionData"
 import NavigationViewButton from "./NavigationViewButton";
 
-export default function IncomingInquiry(props) {
-    const orderStatuses = useMemo(() => orderStatusesOptions, [])
-    const [status, setStatus] = useState({value: "all", label: "All Status"});
-    const handleStatusChange = value => {
-        setStatus(value)
-        props.statusChange(value)
-    };
+export default function OrderList(props) {
     return (
         <>  
             <PrimaryWrapper>
-                <HeaderTable
-                    title={props.title}
-                    action={
-                        props.filterStatus && 
-                        <div className="w-64">
-                            <SelectInput
-                                name="status"
-                                value={status}
-                                options={orderStatuses}
-                                onChange={handleStatusChange}
-                                />
-                        </div>
-                    }
-                />
                 <BaseTable  
                     isBusy={props.isLoading}
                     header={
                         <>
+                            <th scope="col" className="px-6 py-3">
+                                Order Number
+                            </th>
                             <th scope="col" className="px-6 py-3">
                                 Manufacturer Part Number (Country)
                             </th>
@@ -60,13 +38,13 @@ export default function IncomingInquiry(props) {
                                 Seller (Country)
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Incoming Inquiry QTY
+                                Qty
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 Status
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Created On
+                                Order Created On
                             </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.
@@ -78,31 +56,34 @@ export default function IncomingInquiry(props) {
                         {props.data.map((item, index) => {
                             return(
                                 <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                                    <td scope="row" className="text-sm px-6 py-4">
-                                        {item.companies_products.ManufacturerNumber} ({item.companies_products.country})
+                                    <td scope="row" className="text-xs px-6 py-4">
+                                        {checkValue(item.order_number)}
                                     </td>
-                                    <td className="text-sm px-6 py-4">
+                                    <td scope="row" className="text-xs px-6 py-4">
+                                        {item.companies_products.ManufacturerNumber} <span className="text-xs">({item.companies_products.country})</span>
+                                    </td>
+                                    <td className="text-xs px-6 py-4">
                                         {item.companies_products.Manufacture}
                                     </td>
-                                    <td className="text-sm px-6 py-4">
+                                    <td className="text-xs px-6 py-4">
                                         {item.companies_products.packaging}
                                     </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {item.buyer.name} ({item.buyer.country})
+                                    <td className="text-xs px-6 py-4">
+                                        {item.buyer.name} <span className="text-xs">({item.buyer.country})</span>
                                     </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {item.companies_products.company.name} ({item.companies_products.company.country})
+                                    <td className="text-xs px-6 py-4">
+                                        {item.companies_products.company.name} <span className="text-xs">({item.companies_products.company.country})</span>
                                     </td>
-                                    <td className="text-sm px-6 py-4">
+                                    <td className="text-xs px-6 py-4">
                                         {item.qty}
                                     </td>
-                                    <td className="text-sm px-6 py-4">
+                                    <td className="text-xs px-6 py-4">
                                         {item.order_status.name}
                                     </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {moment(item.created_at).format('dddd, D MMMM YYYY')}
+                                    <td className="text-xs px-6 py-4">
+                                        {item.start_order_date ? moment(item.start_order_date).format('dddd, D MMMM YYYY') : '-'}
                                     </td>
-                                    <td className="text-sm px-6 py-4 text-right">
+                                    <td className="text-xs px-6 py-4 text-right">
                                         <div className="inline-flex">
                                             <NavigationViewButton navigationId={item.slug}/>
                                         </div>

@@ -3,7 +3,8 @@ import Credentials from "next-auth/providers/credentials";
 
 const authOptions = {
     session: {
-        strategy: 'jwt'
+        strategy: 'jwt',
+        maxAge: 60 * 60 * 24,
     },
     providers: [
         Credentials({
@@ -28,7 +29,8 @@ const authOptions = {
                         name: user.data.user.name,
                         userDetail: user.data.user,
                         accessToken: user.data.token,
-                        isCompanyConfirmed: user.data.is_confirmed
+                        isCompanyConfirmed: user.data.is_confirmed,
+                        dashboardStatus: null
                     }
                 } 
 
@@ -40,13 +42,18 @@ const authOptions = {
         signIn: '/auth/login'
     },
     callbacks: {
-        async jwt({token, user}) {
+        async jwt({token, user, trigger, session}) {    
             if (user) {
                 const { accessToken, ...rest } = user;
                 token.accessToken = accessToken;
                 token.user = rest;
-                token.userRole = "admin"
+                token.userRole = "admin";
               }
+
+            if (trigger === "update") {
+                token.user.dashboardStatus = session.dashboardStatus                
+            }
+
             return token;
         },
         async session({token}) {
