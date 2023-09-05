@@ -1,8 +1,22 @@
 import { getSession } from "next-auth/react";
+
+
 export default function Dashboard(){}
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+  console.log(session)
+  if(!session){
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/auth/login",
+      },
+      props: {
+          message: "Your session has expired."
+      }
+    };
+  }
 
   // redirection member or superadmin
   let nextDestination = "/admin/member"

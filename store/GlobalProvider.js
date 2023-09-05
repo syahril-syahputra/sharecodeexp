@@ -2,6 +2,9 @@ import { useState } from "react"
 import GlobalContext from "./global-context"
 import axios from "@/lib/axios";
 
+const BUYER = 'buyer';
+const SELLER = 'seller';
+
 const GlobalProvider = props => {
     const [incomingInquiry, setIncomingInquiry] = useState(0)
     const updateIncomingInquiry = async (token) => {
@@ -53,21 +56,23 @@ const GlobalProvider = props => {
 
     const [username, setUsername] = useState('...')
     const loadUsername = async (token) => {
-        const response = await axios.get(`/my-account`,
-        {
-            headers: {
-            "Authorization" : `Bearer ${token}`
-            }
-        })
-        .then((response) => {       
-            setUserPermission({
-                role: response.data.data.roles.id,
-                status: response.data.data.status.id
+        if(username === '...'){
+            const response = await axios.get(`/my-account`,
+            {
+                headers: {
+                "Authorization" : `Bearer ${token}`
+                }
             })
-            setUsername(response.data.data.name)
-        }).catch(() => {
-            setUsername('Please Logout')
-        })
+            .then((response) => {       
+                setUserPermission({
+                    role: response.data.data.roles.id,
+                    status: response.data.data.status.id
+                })
+                setUsername(response.data.data.name)
+            }).catch(() => {
+                setUsername('Please Logout')
+            })
+        }        
     }
 
     const [userPermission, setUserPermission] = useState({isLoading: true, role: 0, status: 0})
@@ -107,7 +112,7 @@ const GlobalProvider = props => {
         
         //load user permission
         userPermission,
-        loadUserPermission
+        loadUserPermission,
     }
 
     return (

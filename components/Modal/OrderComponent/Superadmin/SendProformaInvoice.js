@@ -1,20 +1,23 @@
-import { useState } from "react"
-import { BaseModalXLarge } from "@/components/Interface/Modal/BaseModal";
+import { BaseModalLarge } from "@/components/Interface/Modal/BaseModal";
 import LightButton from "@/components/Interface/Buttons/LightButton";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
-import ImageLogo from "@/components/ImageLogo/ImageLogo";
-export default function SendProformaInvoice(props){
-    const [proformaDocs, setProformaDocs] = useState()
+import { toast } from 'react-toastify';
+import { toastOptions } from "@/lib/toastOptions";
+import axios from "@/lib/axios";
+import { useState } from "react";
 
+export default function SendProformaInvoice(props){
     return (
         <>
-            <BaseModalXLarge
+            <BaseModalLarge
                 title="Proforma Invoice"
                 onClick={() => props.closeModal()}
                 body={
                     <>  
-                        <span className="italic text-sm">*preview it on desktop</span>
-                        <div className="mt-5 w-full border-2 border-blue-200 p-5">
+                        <span className="italic text-sm">*previewing PDF</span>
+                        <br></br>
+                        <span className="italic text-sm">*download link</span>
+                        {/* <div className="mt-5 w-full border-2 border-blue-200 p-5">
                             <ImageLogo className="ml-0" size={200}></ImageLogo>
                             <label className="block uppercase tracking-wide text-gray-700 text-md font-bold my-4" htmlFor="grid-last-name">
                                 Proforma Invoice Document
@@ -401,7 +404,7 @@ export default function SendProformaInvoice(props){
                                     </tbody>
                                 </table> 
                             </div>
-                        </div>                        
+                        </div>                         */}
                     </>
                 }
                 action={
@@ -412,13 +415,13 @@ export default function SendProformaInvoice(props){
                             className="mr-2"
                             onClick={() => props.closeModal()}
                             >
-                            No, Close
+                            Close
                         </LightButton>
 
                         <PrimaryButton
                             disabled={props.isLoading}
                             size="sm"
-                            onClick={() => props.acceptance(proformaDocs)}>
+                            onClick={()=> props.acceptance()}>
                             {props.isLoading &&
                                 <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                             }
@@ -426,7 +429,7 @@ export default function SendProformaInvoice(props){
                         </PrimaryButton>
                     </>
                 }
-            ></BaseModalXLarge>
+            ></BaseModalLarge>
         </>
     )
 }

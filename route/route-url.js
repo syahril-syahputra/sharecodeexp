@@ -20,12 +20,12 @@ export const AdminUrl = {
         rejected: "/admin/superadmin/registry/rejectedcompany",
         detailCompany: "/admin/superadmin/registry/company/"
     },
-    componentManagement: {
+    propductManagement: {
         pending: "/admin/superadmin/components/pending",
         accepted: "/admin/superadmin/components/accepted",
         rejected: "/admin/superadmin/components/rejected",
     },
-    orderComponent: {
+    orderProduct: {
         allOrders: "/admin/superadmin/orders/allorders",
         activeOrders: "/admin/superadmin/orders/activeorders",
         completedOrder: "/admin/superadmin/orders/completedorders",
@@ -53,42 +53,67 @@ export const AdminUrl = {
 
 export const VendorUrl = {
     dahsboard: "/admin/member",
-    sellingComponent: {
-        stocks : {
-            approved: "/admin/member/sellcomponents/component",
-            pending: "/admin/member/sellcomponents/component/pending",
-            rejected: "/admin/member/sellcomponents/component/rejected",
-            insert: "/admin/member/sellcomponents/component/add",
-            bulkInsert: "/admin/member/sellcomponents/component/bulkInsert",
-            detail: "/admin/member/sellcomponents/component/view/",
-            edit: "/admin/member/sellcomponents/component/edit/",
+    sellerDahsboard: "/admin/member/seller/dashboard",
+    buyerDahsboard: "/admin/member/buyer/dashboard",
+    sellingProduct: {
+        product : {
+            index: "/admin/member/seller/product",
+            insert: "/admin/member/seller/product/add",
+            bulkInsert: "/admin/member/seller/product/bulk-insert",
+            detail: "/admin/member/seller/product/details",
+            edit: "/admin/member/seller/product/edit",
         },
         incomingInquiries: {
-            index: "/admin/member/sellcomponents/incominginquiry",
-            detail: "/admin/member/sellcomponents/incominginquiry/detail/"
+            index: "/admin/member/seller/incoming-inquiry",
+            detail: "/admin/member/seller/incoming-inquiry/detail"
         }
-        
     },
-    buyingComponent: {
-        inquiryList: {
-            index: "/admin/member/buycomponents/inquirylist",
-            detail: "/admin/member/buycomponents/inquirylist/details/"
+    buyingProduct: {
+        product: {
+            detail: "/admin/member/buyer/product/details"
         },
-        inquiredComponents: {
-            index: "/admin/member/buycomponents/inquiredcomponents",
-            detail: "/admin/member/buycomponents/inquiredcomponents/detail/",
+        inquiredProduct: {
+            index: "/admin/member/buyer/inquired-product",
+            detail: "/admin/member/buyer/inquired-product/details",
         }
     },
-    settings: {
+    // sellingComponent: {
+    //     stocks : {
+    //         approved: "/admin/member/sellcomponents/component",
+    //         pending: "/admin/member/sellcomponents/component/pending",
+    //         rejected: "/admin/member/sellcomponents/component/rejected",
+    //         insert: "/admin/member/sellcomponents/component/add",
+    //         bulkInsert: "/admin/member/sellcomponents/component/bulkInsert",
+    //         detail: "/admin/member/sellcomponents/component/view/",
+    //         edit: "/admin/member/sellcomponents/component/edit/",
+    //     },
+    //     incomingInquiries: {
+    //         index: "/admin/member/sellcomponents/incominginquiry",
+    //         detail: "/admin/member/sellcomponents/incominginquiry/detail/"
+    //     }
+        
+    // },
+    // buyingComponent: {
+    //     inquiryList: {
+    //         index: "/admin/member/buycomponents/inquirylist",
+    //         detail: "/admin/member/buycomponents/inquirylist/details/"
+    //     },
+    //     inquiredComponents: {
+    //         index: "/admin/member/buycomponents/inquiredcomponents",
+    //         detail: "/admin/member/buycomponents/inquiredcomponents/detail/",
+    //     }
+    // },
+
+    management: {
         myCompany: {
-            details: "/admin/member/company/mycompany",
-            update: "/admin/member/company/mycompany/edit",
-            additionalDocument: "/admin/member/company/mycompany/additionaldocs"
+            details: "/admin/member/company/my-company",
+            update: "/admin/member/company/my-company/edit",
+            additionalDocument: "/admin/member/company/my-company/additional-docs"
         },
         contributors: {
             index: "/admin/member/settings/users",
             insert: "/admin/member/settings/users/add",
-            edit: "/admin/member/settings/users/edit/"
+            edit: "/admin/member/settings/users/edit"
         }
     },
 }

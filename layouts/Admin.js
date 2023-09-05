@@ -1,14 +1,8 @@
-import navigation from '@/layouts/navigation';
-
 import Link from "next/link";
-import classNames from "@/utils/classNames";
 import { useState } from 'react'
 import { useSession } from "next-auth/react"
 
-import { Disclosure } from '@headlessui/react'
-import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import FooterAdmin from "@/components/Footers/FooterAdmin";
-import HeaderStats from "@/components/Headers/HeaderStats";
 import { PageSEO } from "@/components/Utils/SEO";
 import siteMetadata from '@/utils/siteMetadata';
 
@@ -61,7 +55,7 @@ export default function Admin({children}) {
         }
 
         {/* Static sidebar for desktop */}
-        <div className="hidden lg:fixed lg:inset-y-0 lg:z-30 lg:flex lg:w-72 lg:flex-col">
+        <div className="hidden lg:fixed lg:inset-y-0 lg:z-30 lg:flex lg:w-72 lg:flex-col shadow-xl">
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
             <Link href="/" className="flex h-16 shrink-0 items-center mt-4">
@@ -78,7 +72,7 @@ export default function Admin({children}) {
 
             {/* Divider */}
             <hr className="md:min-w-full" />
-            <nav className="flex flex-1 flex-col">
+            <nav className="flex flex-1 flex-col mb-20">
               <MyAccount/>
             </nav>
           </div>

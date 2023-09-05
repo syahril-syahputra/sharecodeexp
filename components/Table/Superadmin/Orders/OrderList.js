@@ -1,4 +1,5 @@
 import moment from "moment";
+import { checkValue } from "@/utils/general";
 
 // components
 import BaseTable from "@/components/Interface/Table/BaseTable";
@@ -10,7 +11,7 @@ import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 //data
 import NavigationViewButton from "./NavigationViewButton";
 
-export default function IncomingInquiry(props) {
+export default function OrderList(props) {
     return (
         <>  
             <PrimaryWrapper>
@@ -18,6 +19,9 @@ export default function IncomingInquiry(props) {
                     isBusy={props.isLoading}
                     header={
                         <>
+                            <th scope="col" className="px-6 py-3">
+                                Order Number
+                            </th>
                             <th scope="col" className="px-6 py-3">
                                 Manufacturer Part Number (Country)
                             </th>
@@ -52,31 +56,34 @@ export default function IncomingInquiry(props) {
                         {props.data.map((item, index) => {
                             return(
                                 <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                                    <td scope="row" className="text-sm px-6 py-4">
-                                        {item.companies_products.ManufacturerNumber} ({item.companies_products.country})
+                                    <td scope="row" className="text-xs px-6 py-4">
+                                        {checkValue(item.order_number)}
                                     </td>
-                                    <td className="text-sm px-6 py-4">
+                                    <td scope="row" className="text-xs px-6 py-4">
+                                        {item.companies_products.ManufacturerNumber} <span className="text-xs">({item.companies_products.country})</span>
+                                    </td>
+                                    <td className="text-xs px-6 py-4">
                                         {item.companies_products.Manufacture}
                                     </td>
-                                    <td className="text-sm px-6 py-4">
+                                    <td className="text-xs px-6 py-4">
                                         {item.companies_products.packaging}
                                     </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {item.buyer.name} ({item.buyer.country})
+                                    <td className="text-xs px-6 py-4">
+                                        {item.buyer.name} <span className="text-xs">({item.buyer.country})</span>
                                     </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {item.companies_products.company.name} ({item.companies_products.company.country})
+                                    <td className="text-xs px-6 py-4">
+                                        {item.companies_products.company.name} <span className="text-xs">({item.companies_products.company.country})</span>
                                     </td>
-                                    <td className="text-sm px-6 py-4">
+                                    <td className="text-xs px-6 py-4">
                                         {item.qty}
                                     </td>
-                                    <td className="text-sm px-6 py-4">
+                                    <td className="text-xs px-6 py-4">
                                         {item.order_status.name}
                                     </td>
-                                    <td className="text-sm px-6 py-4">
+                                    <td className="text-xs px-6 py-4">
                                         {item.start_order_date ? moment(item.start_order_date).format('dddd, D MMMM YYYY') : '-'}
                                     </td>
-                                    <td className="text-sm px-6 py-4 text-right">
+                                    <td className="text-xs px-6 py-4 text-right">
                                         <div className="inline-flex">
                                             <NavigationViewButton navigationId={item.slug}/>
                                         </div>

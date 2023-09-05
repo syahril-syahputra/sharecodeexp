@@ -4,10 +4,9 @@ import TextInput from "@/components/Interface/Form/TextInput";
 import NumberInput from "@/components/Interface/Form/NumberInput";
 import LightButton from "@/components/Interface/Buttons/LightButton";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
-export default function EditVerifiedOrder(props){
+export default function UpdateVerifiedInquiry(props){
     const [inputData, setInputData] = useState(
         {
-            id: props.orderId,
             AvailableQuantity: props.availableQty,
             moq: props.moq,
             dateCode: props.dateCode,
@@ -55,7 +54,7 @@ export default function EditVerifiedOrder(props){
 
     return (
         <BaseModalLarge
-            title="Edit Verified Price and Quantity"
+            title="Update Verified Price and Quantity"
             onClick={() => props.closeModal()}
             body={
                 <>
@@ -146,7 +145,8 @@ export default function EditVerifiedOrder(props){
                 <>
                     <LightButton
                         disabled={props.isLoading}
-                        className="font-bold uppercase mr-2"
+                        className="mr-2"
+                        size="sm"
                         onClick={() => props.closeModal()}
                         >
                         No, Close
@@ -154,12 +154,12 @@ export default function EditVerifiedOrder(props){
 
                     <PrimaryButton
                         disabled={props.isLoading}
-                        className="font-bold uppercase"
+                        size="sm"
                         onClick={handleVerify}>
                         {props.isLoading &&
                             <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                         }
-                        Edit Verified Order
+                        Update Verified Inquiry
                     </PrimaryButton>
                 </>
             }

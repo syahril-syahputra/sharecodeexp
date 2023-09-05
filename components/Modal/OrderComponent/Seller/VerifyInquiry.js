@@ -7,7 +7,6 @@ import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 export default function VerifyOrder(props){
     const [inputData, setInputData] = useState(
         {
-            id: props.orderId,
             AvailableQuantity: props.availableQty,
             moq: props.moq,
             dateCode: props.dateCode,
@@ -145,7 +144,8 @@ export default function VerifyOrder(props){
                 <>
                     <LightButton
                         disabled={props.isLoading}
-                        className="font-bold uppercase mr-2"
+                        className="mr-2"
+                        size="sm"
                         onClick={() => props.closeModal()}
                         >
                         No, Close
@@ -153,7 +153,7 @@ export default function VerifyOrder(props){
 
                     <PrimaryButton
                         disabled={props.isLoading}
-                        className="font-bold uppercase"
+                        size="sm"
                         onClick={handleVerify}>
                         {props.isLoading &&
                             <i className="fas fa-hourglass fa-spin text-white mr-2"></i>

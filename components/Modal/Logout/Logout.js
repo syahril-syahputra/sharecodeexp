@@ -15,14 +15,15 @@ export default function Logout(props){
                 action={
                     <>
                         <LightButton
-                            className="uppercase mr-2 font-bold"
+                            className="mr-2"
+                            size="sm"
                             onClick={() => props.closeModal()}
                         >
                             No, Stay
                         </LightButton>
 
                         <PrimaryButton
-                            className="uppercase font-bold"
+                            size="sm"
                             isLoading={props.isLoading}
                             onClick={() => props.acceptance()}
                         >Yes, Logout</PrimaryButton>

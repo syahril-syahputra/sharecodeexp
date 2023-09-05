@@ -1,4 +1,5 @@
 import moment from "moment";
+import { checkValue } from "@/utils/general";
 import React, {useState, useEffect} from "react";
 import { getSession } from "next-auth/react";
 import Image from "next/image"
@@ -12,12 +13,11 @@ import Admin from "layouts/Admin.js";
 import { AdminUrl } from "@/route/route-url";
 
 // components
-import SendQuotationModal from "@/components/Modal/OrderComponent/Superadmin/SendQuotation"
-import EditRejectedQuotationModal from "@/components/Modal/OrderComponent/Superadmin/EditRejectedQuotation";
-import SendOrderToInquireModal from "@/components/Modal/OrderComponent/Superadmin/SendOrderToInquire"
 import SendProformaInvoiceModal from "@/components/Modal/OrderComponent/Superadmin/SendProformaInvoice"
-import AcceptPaymentDocumentModal from "@/components/Modal/OrderComponent/Superadmin/AcceptPaymentDocument"
-import RejectPaymentDocumentModal from "@/components/Modal/OrderComponent/Superadmin/RejectPaymentDocument"
+import AcceptPaymentModal from "@/components/Modal/OrderComponent/Superadmin/AcceptPayment"
+import RequestUpdatePaymentModal from "@/components/Modal/OrderComponent/Superadmin/RequestUpdatePayment"
+import GoodResultModal from "@/components/Modal/OrderComponent/Superadmin/GoodResult"
+import BadResultModal from "@/components/Modal/OrderComponent/Superadmin/BadResult"
 import TrackerNumberForBuyerModal from "@/components/Modal/OrderComponent/Superadmin/TrackerNumberForBuyer"
 import CompleteOrderModal from "@/components/Modal/OrderComponent/Superadmin/CompleteOrder"
 import { toast } from 'react-toastify';
@@ -25,21 +25,23 @@ import { toastOptions } from "@/lib/toastOptions"
 import PageHeader from "@/components/Interface/Page/PageHeader";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 import LightButton from "@/components/Interface/Buttons/LightButton";
-import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
 import WarningButton from "@/components/Interface/Buttons/WarningButton";
-import {CompanyStatusesIcon} from "@/components/Shared/Company/Statuses";
+import { CompanyStatusesIcon } from "@/components/Shared/Company/Statuses";
 import PrimaryNotification from "@/components/Interface/Notification/PrimaryNotification";
-import DangerNotification from "@/components/Interface/Notification/DangerNotification";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
+import WarningNotification from "@/components/Interface/Notification/WarningNotification";
+import InfoNotification from "@/components/Interface/Notification/InfoNotification";
 
 export default function OrderDetails({session, routeParam}) {
     const publicDir = process.env.NEXT_PUBLIC_DIR
     //data search
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
+    const [errorInfo, setErrorInfo] = useState({})
     const [isOrderValid, setIsOrderValid] = useState(true)
     const loadData = async () =>{
         setIsLoading(true)
+        setErrorInfo({})
         const response = await axios.get(`/admin/orders/${routeParam.orderSlug}/detail`,
             {
             headers: {
@@ -50,19 +52,21 @@ export default function OrderDetails({session, routeParam}) {
                 let result = response.data.data
                 setData(result)
                 setIsOrderValid(true)
-            }).catch(() => {
+            }).catch((error) => {
                 setIsOrderValid(false)
+                toast.error(error.data.message, toastOptions)
             }).finally(() => {
                 setIsLoading(false)
             })
     }
     useEffect(() => {
         loadData()
-    }, [])
+    }, [])    
 
-
+    const [sendProformaInvoiceModal, setSendProformaInvoiceModal] = useState(false)
     const sendProformaInvoiceHandler = async () => {
         setIsLoading(true)
+        setErrorInfo({})
         const request = await axios.post('/admin/orders/send-proforma-invoice',
             {
                 'order_slug': data.slug
@@ -74,148 +78,133 @@ export default function OrderDetails({session, routeParam}) {
             })
             .then((response) => {
                 toast.success(response.data.message, toastOptions)
-                setSendQuotationModal(false)
+                setSendProformaInvoiceModal(false)
                 loadData()
             }).catch((error) => {
-                toast.error("Something went wrong. Cannot send the quotation.", toastOptions)
+                toast.error("Something went wrong. Cannot send the proforma invoice.", toastOptions)
+                setErrorInfo(error.data.data)
                 setIsLoading(false)
             })
     } 
 
-    // old process
-
-    const [errorInfo, setErrorInfo] = useState({})
-    const [sendQuotationModal, setSendQuotationModal] = useState(false)
-    const handleSendQuotationModal = async (inputData) => {
+    const [acceptPaymentModal, setAcceptPaymentModal] = useState(false)
+    const handleAcceptPaymentModal = async () => {
         setIsLoading(true)
         setErrorInfo({})
-        const response = await axios.post(`/admin/orders/UpdateQuotedApproval`, inputData, 
+        const response = await axios.post(`/admin/orders/accept-payment`, 
+        {
+            'order_slug': data.slug
+        }, 
         {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
             }
         })
-        .then(() => {
-            toast.success("The quotation has been sent.", toastOptions)
-            setSendQuotationModal(false)
-            loadData()
-        }).catch((error) => {
-            toast.error("Something went wrong. Cannot send the quotation.", toastOptions)
-            setErrorInfo(error.data.data)
-            setIsLoading(false)
-        })
-    }
-
-    const [editRejectedQuotationModal, setEditRejectedQuotationModal] = useState(false)
-    const handleEditRejectedQuotationModal = async (inputData) => {
-        setIsLoading(true)
-        setErrorInfo({})
-        const response = await axios.post(`/admin/orders/EditQuotedApproval`, inputData, 
-        {
-            headers: {
-                "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then(() => {
-            toast.success("The quotation has been edited and sent.", toastOptions)
-            setEditRejectedQuotationModal(false)
-            loadData()
-        }).catch((error) => {
-            toast.error("Something went wrong. Cannot edit the quotation.", toastOptions)
-            setErrorInfo(error.data.data)
-            setIsLoading(false)
-        })
-    }
-
-    const [sendProformaInvoiceModal, setSendProformaInvoiceModal] = useState(false)
-    const handleSendProformaInvoiceModal = async (proformaDocs) => {
-        setIsLoading(true)
-        setErrorInfo({})
-        let formData = new FormData();
-        formData.append("proforma_doc", proformaDocs);
-        formData.append("id", data.id)
-
-        const response = await axios.post(`/admin/orders/UpdateProformaInvoice`, formData, 
-        {
-            headers: {
-                "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then(() => {
-            toast.success("The proforma invoice has been sent.", toastOptions)
-            setSendProformaInvoiceModal(false)
-            loadData()
-        }).catch((error) => {
-            toast.error("Something went wrong. Cannot send the proforma invoice.", toastOptions)
-            setErrorInfo(error.data.data)
-            setIsLoading(false)
-        })
-    }
-
-    const [acceptPaymentDocumentModal, setAcceptPaymentDocumentModal] = useState(false)
-    const handleAcceptPaymentDocumentModal = async (shipinfoforseller) => {
-        setIsLoading(true)
-        let formData = new FormData();
-        formData.append("shipinfoforseller", shipinfoforseller);
-        formData.append("id", data.id)
-        const response = await axios.post(`/admin/orders/UpdateComplatePayment`, formData, 
-        {
-            headers: {
-                "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then(() => {
-            toast.success("The payment has been accepted.", toastOptions)
-            setAcceptPaymentDocumentModal(false)
+        .then((response) => {
+            toast.success(response.data.message, toastOptions)
+            setAcceptPaymentModal(false)
             loadData()
         }).catch((error) => {
             toast.error("Something went wrong. Cannot accept the payment.", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
-    }
+    }    
 
-    const [rejectPaymentDocumentModal, setRejectPaymentDocumentModal] = useState(false)
-    const handleRejectPaymentDocumentModal = async (rejectionReason) => {
+    const [requestUpdatePaymentModal, setRequestUpdatePaymentModal] = useState(false)
+    const handleRequestUpdatePaymentModal = async (requestUpdate) => {
         setIsLoading(true)
-        let inputData = {
-            id: data.id,
-            reason: rejectionReason
-        }
-        const response = await axios.post(`/admin/orders/UpdateRejectPayment`, inputData, 
+        setErrorInfo({})
+        const response = await axios.post(`/admin/orders/request-update-payment`,
+        {
+            'order_slug': data.slug,
+            'request_update_payment_reason': requestUpdate
+        }, 
         {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
             }
         })
-        .then(() => {
-            toast.success("The payment has been rejected.", toastOptions)
-            setRejectPaymentDocumentModal(false)
+        .then((response) => {
+            toast.success(response.data.message, toastOptions)
+            setRequestUpdatePaymentModal(false)
             loadData()
         }).catch((error) => {
-            toast.error("Something went wrong. Cannot reject the payment.", toastOptions)
+            toast.error("Something went wrong. Cannot sent the request.", toastOptions)
+            setErrorInfo(error.data.data)
+            setIsLoading(false)
+        })
+    }
+
+    const [goodResultModal, setGoodResultModal] = useState(false)
+    const handleGoodResultModal = async (goodResult) => {
+        setIsLoading(true)
+        setErrorInfo({})
+        let formData = new FormData();
+        formData.append("order_slug", data.slug);
+        formData.append("test_result", goodResult);
+
+        const response = await axios.post(`/admin/orders/upload-good-test`,
+        formData, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then((response) => {
+            toast.success(response.data.message, toastOptions)
+            setRequestUpdatePaymentModal(false)
+            loadData()
+        }).catch((error) => {
+            toast.error("Something went wrong. Cannot upload the result.", toastOptions)
+            setErrorInfo(error.data.data)
+            setIsLoading(false)
+        })
+    }
+
+    const [badResultModal, setBadResultModal] = useState(false)
+    const handleBadResultModal = async (badResult, terminateOrder) => {
+        setIsLoading(true)
+        setErrorInfo({})
+        let formData = new FormData();
+        formData.append("order_slug", data.slug);
+        formData.append("test_result", badResult);
+        formData.append("terminate_order", terminateOrder);
+
+        const response = await axios.post(`/admin/orders/upload-bad-test`,
+        formData, 
+        {
+            headers: {
+                "Authorization" : `Bearer ${session.accessToken}`
+            }
+        })
+        .then((response) => {
+            toast.success(response.data.message, toastOptions)
+            setRequestUpdatePaymentModal(false)
+            loadData()
+        }).catch((error) => {
+            toast.error("Something went wrong. Cannot upload the result.", toastOptions)
             setErrorInfo(error.data.data)
             setIsLoading(false)
         })
     }
 
     const [trackerNumberForBuyerModal, setTrackerNumberForBuyerModal] = useState(false)
-    const handleTrackerNumberForBuyerModal = async (buyerTracker, expectedShippingDateBuyer) => {
+    const handleTrackerNumberForBuyerModal = async (trackingNumber) => {
         setIsLoading(true)
         setErrorInfo({})
-        let inputData = {
-            id: data.id,
-            trackingBuyer: buyerTracker,
-            expectedShippingDateBuyer: expectedShippingDateBuyer,
-        }
-        const response = await axios.post(`/admin/orders/UpdateOrderShiped`, inputData, 
+        const response = await axios.post(`/admin/orders/shipping-product`,
+        {
+            'order_slug' : data.slug,
+            'tracking_number' : trackingNumber
+        },
         {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
             }
         })
-        .then(() => {
-            toast.success("Tracking number has been sent to buyer.", toastOptions)
+        .then((response) => {
+            toast.success(response.data.message, toastOptions)
             setTrackerNumberForBuyerModal(false)
             loadData()
         }).catch((error) => {
@@ -226,37 +215,29 @@ export default function OrderDetails({session, routeParam}) {
     }
 
     const [completeOrderModal, setCompleteOrderModal] = useState(false)
-    const handleCompleteOrderModal = async (sellerInvoice) => {
+    const handleCompleteOrderModal = async (adminReceipt, orderArrived) => {
         setIsLoading(true)
         setErrorInfo({})
         let formData = new FormData();
-        formData.append("PaymentProof", sellerInvoice);
-        formData.append("id", data.id)
+        formData.append("order_slug", data.slug)
+        formData.append("admin_receipt", adminReceipt);
+        formData.append("order_arrived", orderArrived);
 
-        const response = await axios.post(`/admin/orders/UpdateCompletedOrder`, formData, 
+        const response = await axios.post(`/admin/orders/close-order`, formData, 
         {
             headers: {
                 "Authorization" : `Bearer ${session.accessToken}`
             }
         })
-        .then(() => {
-            toast.success("The order has been completed.", toastOptions)
+        .then((response) => {
+            toast.success(response.data.message, toastOptions)
             setCompleteOrderModal(false)
             loadData()
         }).catch((error) => {
             toast.error("Something went wrong. Cannot complete the order.", toastOptions)
+            setErrorInfo(error.data.data)
             setIsLoading(false)
         })
-    }
-
-    const [sendOrderToInquire, setSendOrderToInquire] = useState(false)
-    const handleSendOrderToInquire = (infoOrder) => {
-        setIsLoading(true)
-        setErrorInfo({})
-        let inputData = {
-            id: data.id,
-            infoOrder: infoOrder
-        }
     }
 
     if(!isOrderValid) {    
@@ -268,7 +249,7 @@ export default function OrderDetails({session, routeParam}) {
                             Order Details
                         </h1>
                     </div>
-                    <Link href={AdminUrl.orderComponent.allOrders}>
+                    <Link href={AdminUrl.orderProduct.allOrders}>
                         <LightButton 
                             size="sm" 
                             className="">
@@ -287,6 +268,249 @@ export default function OrderDetails({session, routeParam}) {
             </div>
         )
     }
+
+    //notification
+    let notification = 
+        <PrimaryNotification 
+            message={data.order_status?.name} 
+            detail={data.order_status?.admin_notification?.message}
+        ></PrimaryNotification>
+    switch(data.order_status?.id){
+        case 1: 
+        case 2: 
+        case 4: 
+        case 6: 
+        case 7: 
+        case 8: 
+        case 10: 
+        case 11: 
+        case 13: 
+        case 14: 
+        case 16: 
+            notification =
+                <PrimaryNotification 
+                    message={data.order_status?.name} 
+                    detail={data.order_status?.admin_notification?.message}
+                ></PrimaryNotification>
+            break;
+        case 3:
+        case 12: 
+        case 15: 
+            notification =
+                <WarningNotification 
+                    message={data.order_status?.name} 
+                    detail={data.order_status?.admin_notification?.message}
+                ></WarningNotification>
+            break;    
+        case 5: 
+            notification = 
+                <>
+                    <WarningNotification
+                        message={data.order_status?.name} 
+                        detail={data.order_status?.admin_notification?.message}
+                    ></WarningNotification>
+                    <InfoNotification 
+                        message="Rejection Reason" 
+                        detail={data.reason}
+                    ></InfoNotification>
+                </>
+            break;
+        case 9: 
+            notification = 
+                <>
+                    <WarningNotification
+                        message={data.order_status?.name} 
+                        detail={data.order_status?.admin_notification?.message}
+                    ></WarningNotification>
+                    <InfoNotification 
+                        message="Request Update" 
+                        detail={data.request_update_payment_reason}
+                    ></InfoNotification>
+                </>
+            break;
+        case 17: 
+            notification =
+                <InfoNotification 
+                    message={data.order_status?.name} 
+                    detail={data.order_status?.admin_notification?.message}
+                ></InfoNotification>
+            break;
+    }
+
+    //action to take using switch
+    let actionToTake = <div className="italic flex justify-center items-center h-28">
+        No action to take
+    </div>    
+    switch(data.order_status?.id) {
+        case 4:
+            actionToTake = <div>
+                {sendProformaInvoiceModal &&
+                    <SendProformaInvoiceModal
+                        isLoading={isLoading}
+                        closeModal={() => setSendProformaInvoiceModal(false)}
+                        acceptance={sendProformaInvoiceHandler}
+                        errorInfo={errorInfo}
+                    />
+                }
+                <div className="flex justify-center">
+                    <div className="mx-2 my-4">
+                        <PrimaryButton 
+                            outline
+                            className="mx-1" 
+                            size="sm"
+                            disabled={isLoading}                    
+                            onClick={() => setSendProformaInvoiceModal(true) }
+                        >   
+                            Send Proforma Invoice
+                        </PrimaryButton>
+                    </div>
+                </div>
+            </div>
+            break;
+        case 7:
+            actionToTake = <div>
+                {acceptPaymentModal && 
+                    <AcceptPaymentModal
+                        isLoading={isLoading}
+                        closeModal={() => setAcceptPaymentModal(false)}
+                        acceptance={handleAcceptPaymentModal}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                {requestUpdatePaymentModal &&
+                    <RequestUpdatePaymentModal
+                        isLoading={isLoading}
+                        closeModal={() => setRequestUpdatePaymentModal(false)}
+                        acceptance={handleRequestUpdatePaymentModal}
+                        errorInfo={errorInfo}
+                    />
+                }
+                <div className="flex justify-center">
+                    <div className="mx-2 my-4">
+                        <PrimaryButton 
+                            outline
+                            className="mx-1" 
+                            size="sm"
+                            disabled={isLoading}                    
+                            onClick={() => setAcceptPaymentModal(true) }
+                        >   
+                            Accept Payment
+                        </PrimaryButton>
+                    </div>
+                    <div className="mx-2 my-4">
+                        <WarningButton 
+                            outline
+                            className="mx-1" 
+                            size="sm"
+                            disabled={isLoading}                    
+                            onClick={() => setRequestUpdatePaymentModal(true) }
+                        >   
+                            Request Update Payment
+                        </WarningButton>
+                    </div>
+                </div>
+            </div>
+            break;
+        case 10:
+            actionToTake = <div>
+                {goodResultModal && 
+                    <GoodResultModal
+                        isLoading={isLoading}
+                        closeModal={() => setGoodResultModal(false)}
+                        acceptance={handleGoodResultModal}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                {badResultModal && 
+                    <BadResultModal
+                        isLoading={isLoading}
+                        closeModal={() => setBadResultModal(false)}
+                        acceptance={handleBadResultModal}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                <div className="flex justify-center">
+                    <div className="mx-2 my-4">
+                        <PrimaryButton 
+                            outline
+                            className="mx-1" 
+                            size="sm"
+                            disabled={isLoading}                    
+                            onClick={() => setGoodResultModal(true) }
+                        >   
+                            Upload Good Result
+                        </PrimaryButton>
+                    </div>
+                    <div className="mx-2 my-4">
+                        <WarningButton 
+                            outline
+                            className="mx-1" 
+                            size="sm"
+                            disabled={isLoading}                    
+                            onClick={() => setBadResultModal(true) }
+                        >   
+                            Upload Bad Result
+                        </WarningButton>
+                    </div>
+                </div>
+            </div>
+            break;
+        case 11:
+            actionToTake = <div>
+                {trackerNumberForBuyerModal &&
+                    <TrackerNumberForBuyerModal
+                        isLoading={isLoading}
+                        closeModal={() => setTrackerNumberForBuyerModal(false)}
+                        acceptance={handleTrackerNumberForBuyerModal}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                <div className="flex justify-center">
+                    <div className="mx-2 my-4">
+                        <PrimaryButton 
+                            outline
+                            className="mx-1" 
+                            size="sm"
+                            disabled={isLoading}                    
+                            onClick={() => setTrackerNumberForBuyerModal(true) }
+                        >   
+                            Provide Tracking Number
+                        </PrimaryButton>
+                    </div>
+                </div>
+            </div>
+            break;
+        case 16:
+            actionToTake = <div>
+                {completeOrderModal &&
+                    <CompleteOrderModal
+                        isLoading={isLoading}
+                        closeModal={() => setCompleteOrderModal(false)}
+                        acceptance={handleCompleteOrderModal}
+                        errorInfo={errorInfo}
+                    />
+                }
+
+                <div className="flex justify-center">
+                    <div className="mx-2 my-4">
+                        <PrimaryButton 
+                            outline
+                            className="mx-1" 
+                            size="sm"
+                            disabled={isLoading}                    
+                            onClick={() => setCompleteOrderModal(true) }
+                        >   
+                            Complete Order
+                        </PrimaryButton>
+                    </div>
+                </div>
+            </div>
+            break;
+    }
     
     return (
         <>
@@ -297,7 +521,7 @@ export default function OrderDetails({session, routeParam}) {
                             Order Details
                         </h1>
                     </div>
-                    <Link href={AdminUrl.orderComponent.allOrders}>
+                    <Link href={AdminUrl.orderProduct.allOrders}>
                         <LightButton 
                             size="sm" 
                             className="">
@@ -306,17 +530,12 @@ export default function OrderDetails({session, routeParam}) {
                         </LightButton>
                     </Link>
                 </div>
+                {/* <OrderNotification order_status={data.order_status}/> */}
                 {!!data.order_status?.name ? 
-                    <PrimaryNotification 
-                        message={data.order_status?.name} 
-                        detail={data.order_status?.admin_notification?.message}
-                    ></PrimaryNotification> : 
+                    notification : 
                     <div className="animate-pulse my-4">
                         <div className="h-16 bg-gray-200 dark:bg-gray-400 w-full"></div>
                     </div>
-                }                
-                {false && 
-                    <DangerNotification message="[this is message]" detail="[this is details]"></DangerNotification>
                 }
                 <PrimaryWrapper>
                     <PageHeader
@@ -328,7 +547,12 @@ export default function OrderDetails({session, routeParam}) {
                                         <div className="h-5 bg-gray-200 dark:bg-gray-400 w-40"></div>
                                     </div>
                                 }
-                            </h3>
+                            </h3>                           
+                        }
+                        rightTop={
+                            <h3 className="text-md text-blueGray-700">
+                                { data.order_number }
+                            </h3> 
                         }
                     ></PageHeader>
                     {!!data.order_status?.slug ? 
@@ -357,11 +581,23 @@ export default function OrderDetails({session, routeParam}) {
                                 Buyer
                             </div>
                             <div className="mx-2 my-1 text-xl">
-                                <Link href={`/admin/superadmin/registry/company/${data.buyer?.id}`} className="text-blueGray-700 underline">{data.buyer?.name}</Link>
-                                <CompanyStatusesIcon status={data.buyer?.is_confirmed}/>
+                                {!!data.buyer?.name ?
+                                    <>
+                                        <Link href={`/admin/superadmin/registry/company/${data.buyer?.id}`} className="text-blueGray-700 underline">{data.buyer?.name}</Link>
+                                        <CompanyStatusesIcon status={data.buyer?.is_confirmed}/>
+                                    </> :
+                                    <div className="animate-pulse">
+                                        <div className="h-5 bg-gray-200 dark:bg-gray-400 w-48"></div>
+                                    </div>
+                                }
                             </div>
                             <div className="mx-2 text-md mb-5">
-                                {data.buyer?.country}
+                                {!!data.buyer?.country ?
+                                    data.buyer?.country :
+                                    <div className="animate-pulse">
+                                        <div className="h-3 bg-gray-200 dark:bg-gray-400 w-40"></div>
+                                    </div>
+                                }
                             </div>
                             <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                                 Buyer's Shipment Info
@@ -369,8 +605,8 @@ export default function OrderDetails({session, routeParam}) {
                             <div className="mx-2 my-1 text-sm uppercase text-gray-500">
                                 Tracking Number
                             </div>
-                            <div className="mx-2 mb-5 text-xl uppercase">
-                                {data.trackingBuyer ? data.trackingBuyer : '-'}
+                            <div className="mx-2 mb-5 text-xl">
+                                {checkValue(data.trackingBuyer)}
                             </div>
                         </PrimaryWrapper>
                     </div>
@@ -380,20 +616,32 @@ export default function OrderDetails({session, routeParam}) {
                                 Seller
                             </div>
                             <div className="mx-2 my-1 text-xl">
-                                <Link href={`/admin/superadmin/registry/company/${data.companies_products?.company?.id}`} className="text-blueGray-700 underline">{data.companies_products?.company?.name}</Link>
-                                <CompanyStatusesIcon status={data.companies_products?.company?.is_confirmed}/>  
+                                {!!data.companies_products?.company?.name ?
+                                    <>
+                                        <Link href={`/admin/superadmin/registry/company/${data.companies_products?.company?.id}`} className="text-blueGray-700 underline">{data.companies_products?.company?.name}</Link>
+                                        <CompanyStatusesIcon status={data.companies_products?.company?.is_confirmed}/>  
+                                    </> :
+                                    <div className="animate-pulse">
+                                        <div className="h-5 bg-gray-200 dark:bg-gray-400 w-48"></div>
+                                    </div>
+                                }
                             </div>
                             <div className="mx-2 text-md mb-5">
-                                {data.companies_products?.company?.country}
+                                {!!data.companies_products?.company?.country ?
+                                    data.companies_products?.company?.country :
+                                    <div className="animate-pulse">
+                                        <div className="h-3 bg-gray-200 dark:bg-gray-400 w-40"></div>
+                                    </div>
+                                }
                             </div>
                             <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                                 Seller's Shipment Info
                             </div>
-                            <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                            <div className="mx-2 my-1 text-sm text-gray-500">
                                 Tracking Number
                             </div>
                             <div className="mx-2 mb-5 text-xl uppercase">
-                                {data.trackingSeller ? data.trackingSeller : '-'}
+                                {checkValue(data.trackingSeller)}
                             </div>
                         </PrimaryWrapper>
                     </div>
@@ -405,16 +653,26 @@ export default function OrderDetails({session, routeParam}) {
                         <PrimaryWrapper className="p-3">                            
                             <div className="lg:flex lg:justify-around">
                                 <div className="w-full lg:w-1/2 mr-4 border">
-                                    {data.companies_products?.img && 
-                                        <Image
-                                            src={publicDir + "/product_images/" + data.companies_products.img}
-                                            width="400"
-                                            height="400"
-                                            alt="exepart-order-status"
-                                            className="mx-auto"
-                                        ></Image>
+                                    {isLoading &&
+                                        <div className="animate-pulse">
+                                            <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
+                                                <svg className="h-14 w-14 text-gray-200 dark:text-gray-600"  xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                                                    <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    }
+                                    {(data.companies_products?.img && !isLoading) && 
+                                        <div className="flex justify-center items-center h-60">
+                                            <Image
+                                                src={publicDir + "/product_images/" + data.companies_products.img}
+                                                width="400"
+                                                height="400"
+                                                alt="exepart-product"
+                                            ></Image>
+                                        </div>
                                     } 
-                                    {!data.companies_products?.img && 
+                                    {(!data.companies_products?.img && !isLoading) && 
                                         <div className="flex justify-center items-center h-40">
                                             no image
                                         </div>
@@ -422,28 +680,55 @@ export default function OrderDetails({session, routeParam}) {
                                 </div>
                                 <div className="w-full lg:w-1/2">
                                     <div className="mx-2 my-1 text-xl">
-                                        {data.companies_products?.ManufacturerNumber}
+                                        {!!data.companies_products?.ManufacturerNumber ?
+                                            data.companies_products?.ManufacturerNumber :
+                                            <div className="animate-pulse">
+                                                <div className="h-6 bg-gray-200 dark:bg-gray-400 w-60"></div>
+                                            </div>
+                                        }
                                     </div>
                                     <div className="mx-2 text-md mb-5">
-                                        {data.companies_products?.Manufacture}
+                                        {!!data.companies_products?.Manufacture?
+                                            data.companies_products?.Manufacture:
+                                            <div className="animate-pulse">
+                                                <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
+                                            </div>
+                                        }
                                     </div>
                                     <div className="mx-2 my-1 text-gray-500 text-sm">
                                         Description
                                     </div>
                                     <div className="mx-2 text-md mb-5">
-                                        {data.companies_products?.Description}
+                                        {!!data.companies_products?.Description?
+                                            data.companies_products?.Description:
+                                            <div className="animate-pulse">
+                                                <div className="h-3 bg-gray-200 dark:bg-gray-400"></div>
+                                                <div className="h-3 bg-gray-200 dark:bg-gray-400 mt-1"></div>
+                                            </div>
+                                        }
                                     </div>
                                     <div className="mx-2 my-1 text-gray-500 text-sm">
                                         Inquired Date
                                     </div>
                                     <div className="mx-2 text-md">
-                                        {moment(data.created_at).format('dddd, D MMMM YYYY')}
+                                        {!!data.companies_products?.created_at?
+                                            moment(data.created_at).format('dddd, D MMMM YYYY'):
+                                            <div className="animate-pulse">
+                                                <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
+                                            </div>
+                                        }
                                     </div>
                                     <div className="mx-2 my-1 text-gray-500 text-sm">
                                         Order Date
                                     </div>
                                     <div className="mx-2 text-md">
-                                        {moment(data.start_order_date).format('dddd, D MMMM YYYY')}
+                                        {!isLoading?
+                                            data.order_date ? moment(data.created_at).format('dddd, D MMMM YYYY') : '-' 
+                                            :
+                                            <div className="animate-pulse">
+                                                <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -453,7 +738,12 @@ export default function OrderDetails({session, routeParam}) {
                                         MOQ
                                     </div>
                                     <div className="mx-2 text-md">
-                                        {data.companies_products?.moq}
+                                        {!!data.companies_products?.moq?
+                                            data.companies_products?.moq:
+                                            <div className="animate-pulse">
+                                                <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                                 <div className="w-full lg:w-1/3 mr-2">
@@ -461,7 +751,12 @@ export default function OrderDetails({session, routeParam}) {
                                         Available Quantity
                                     </div>
                                     <div className="mx-2 text-md">
-                                        {data.companies_products?.AvailableQuantity}
+                                        {!!data.companies_products?.AvailableQuantity?
+                                            data.companies_products?.AvailableQuantity:
+                                            <div className="animate-pulse">
+                                                <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                                 <div className="w-full lg:w-1/3">
@@ -469,25 +764,40 @@ export default function OrderDetails({session, routeParam}) {
                                         Country
                                     </div>
                                     <div className="mx-2 text-md">
-                                        {data.companies_products?.country}
+                                        {!!data.companies_products?.country?
+                                            data.companies_products?.country:
+                                            <div className="animate-pulse">
+                                                <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
-                            <div className="lg:flex lg:justify-around mt-3 mb-8">
+                            <div className="mt-3 mb-8">
                                 <div className="w-full lg:w-1/3 mr-2">
                                     <div className="mx-2 my-1 text-gray-500 text-sm">
                                         Packaging
                                     </div>
                                     <div className="mx-2 text-md">
-                                        {data.companies_products?.packaging}
+                                        {!!data.companies_products?.packaging?
+                                            data.companies_products?.packaging:
+                                            <div className="animate-pulse">
+                                                <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
-                                <div className="w-full lg:w-1/3 mr-2">
+                                {/* <div className="w-full lg:w-1/3 mr-2">
                                     <div className="mx-2 my-1 text-gray-500 text-sm">
                                         Category
                                     </div>
                                     <div className="mx-2 text-sm">
-                                        {data.companies_products?.subcategory?.category?.name}
+                                        {!!data.companies_products?.subcategory?.category?.name?
+                                            data.companies_products?.subcategory?.category?.name:
+                                            <div className="animate-pulse">
+                                                <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                                 <div className="w-full lg:w-1/3">
@@ -495,9 +805,14 @@ export default function OrderDetails({session, routeParam}) {
                                         Sub-Category
                                     </div>
                                     <div className="mx-2 text-sm">
-                                        {data.companies_products?.subcategory?.name}
+                                        {!!data.companies_products?.subcategory?.name?
+                                            data.companies_products?.subcategory?.name:
+                                            <div className="animate-pulse">
+                                                <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                                            </div>
+                                        }
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </PrimaryWrapper>
                     </div>
@@ -509,7 +824,12 @@ export default function OrderDetails({session, routeParam}) {
                             <div className="mx-2 my-1 text-sm border-b">
                                 <div className="flex flex-wrap justify-between">
                                     <span className="text-gray-500">Date Code</span>
-                                    <span>{data.companies_products?.dateCode}</span>
+                                    {!!data.companies_products?.dateCode ?
+                                        <span>{data.companies_products?.dateCode}</span>:
+                                        <div className="animate-pulse">
+                                            <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                             <div className="mx-2 my-1 text-sm">
@@ -517,20 +837,35 @@ export default function OrderDetails({session, routeParam}) {
                             </div>
                             <div className="mx-2 my-1 text-sm">
                                 <div className="flex flex-wrap justify-between">
-                                    <span className="text-gray-500">Order Quantity</span>
-                                    <span>{data.qty}</span>
+                                    <span className="text-gray-500">Order Quantity</span>                                    
+                                    {!!data.qty ?
+                                        <span>{data.qty}</span>:
+                                        <div className="animate-pulse">
+                                            <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                             <div className="mx-2 my-1 text-sm border-b">
                                 <div className="flex flex-wrap justify-between">
                                     <span className="text-gray-500">Unit Price (USD)</span>
-                                    <span>${data.price}</span>
+                                    {!isLoading ?
+                                        <span>${data.price}</span>:
+                                        <div className="animate-pulse">
+                                            <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                             <div className="mx-2 my-1 text-sm mb-5">
                                 <div className="flex flex-wrap justify-between">
-                                    <span className="text-gray-500 font-bold">Total Price (USD)</span>
-                                    <span>${data.price ? (parseFloat(data.price) * parseInt(data.qty)) : '' }</span>
+                                    <span className="text-gray-500 font-bold">Total Price (USD)</span>                                    
+                                    {!isLoading ?
+                                        <span>${data.price ? (parseFloat(data.price) * parseInt(data.qty)) : '' }</span>:
+                                        <div className="animate-pulse">
+                                            <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
 
@@ -541,19 +876,34 @@ export default function OrderDetails({session, routeParam}) {
                             <div className="mx-2 my-1 text-sm">
                                 <div className="flex flex-wrap justify-between">
                                     <span className="text-gray-500">Order Quantity</span>
-                                    <span>{data.qty}</span>
+                                    {!!data.qty ?
+                                        <span>{data.qty}</span>:
+                                        <div className="animate-pulse">
+                                            <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                             <div className="mx-2 my-1 text-sm border-b">
                                 <div className="flex flex-wrap justify-between">
                                     <span className="text-gray-500">Unit Price (USD)</span>
-                                    <span>${data.price_profite}</span>
+                                    {!isLoading ?
+                                        <span>${ data.price_profite }</span>:
+                                        <div className="animate-pulse">
+                                            <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                             <div className="mx-2 my-1 text-sm mb-5">
                                 <div className="flex flex-wrap justify-between">
                                     <span className="text-gray-500 font-bold">Total Price (USD)</span>
-                                    <span>${data.price_profite ? (parseFloat(data.price_profite) * parseInt(data.qty)) : '' }</span>
+                                    {!isLoading ?
+                                        <span>${data.price_profite ? (parseFloat(data.price_profite) * parseInt(data.qty)) : '' }</span>:
+                                        <div className="animate-pulse">
+                                            <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                             <div className="mx-2 my-1 text-sm font-bold text-gray-500">
@@ -566,7 +916,7 @@ export default function OrderDetails({session, routeParam}) {
                     </div>
                 </div>
 
-                {/* document */}
+                {/* document and action to take */}
                 <div className="lg:flex lg:justify-around">
                     <div className="w-full lg:w-1/2 mr-4">
                         <PrimaryWrapper className="p-1">
@@ -579,7 +929,15 @@ export default function OrderDetails({session, routeParam}) {
                             <div className="mx-2 mt-1 text-sm border-b mb-2">
                                 <div className="flex flex-wrap justify-between">
                                     <span>Buyer's Payment</span>
-                                    <span className="underline text-blue-500">[action]</span>
+                                    {data.buyer_receipt_path ? 
+                                        <Link target="_blank" href={publicDir + data.buyer_receipt_path} className="underline text-blue-500">
+                                            view
+                                        </Link>
+                                        :
+                                        <span className="underline text-gray-500">
+                                            view
+                                        </span>                                        
+                                    }
                                 </div>
                             </div>
                             <div className="mx-2 mt-1 text-sm">
@@ -588,7 +946,15 @@ export default function OrderDetails({session, routeParam}) {
                             <div className="mx-2 mt-1 text-sm border-b mb-2">
                                 <div className="flex flex-wrap justify-between">
                                     <span>Seller's Invoice</span>
-                                    <span className="underline text-blue-500">[action]</span>
+                                    {data.seller_invoice_path ? 
+                                        <Link target="_blank" href={publicDir + data.seller_invoice_path} className="underline text-blue-500">
+                                            view
+                                        </Link>
+                                        :
+                                        <span className="underline text-gray-500">
+                                            view
+                                        </span>                                        
+                                    }
                                 </div>
                             </div>
                             <div className="mb-5">
@@ -598,51 +964,65 @@ export default function OrderDetails({session, routeParam}) {
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Quotation</span>
-                                        <span className="underline text-blue-500">[action]</span>
+                                        <span className="underline text-blue-500">view</span>
                                     </div>
                                 </div>
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Purchase Order</span>
-                                        <span className="underline text-blue-500">[action]</span>
+                                        <span className="underline text-blue-500">view</span>
                                     </div>
                                 </div>
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Proforma Invoice</span>
-                                        {data.proforma_doc ? 
-                                            <Link target="_blank" href={publicDir + data.proforma_doc} className="underline text-blue-500">
-                                                [view]
-                                            </Link>
-                                            :
-                                            <span className="underline text-gray-500">
-                                                [view]
-                                            </span>                                        
-                                        }
+                                        <span className="underline text-blue-500">view</span>
                                     </div>
                                 </div> 
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
-                                        <span>Invoice</span>
-                                        <span className="underline text-blue-500">[action]</span>
+                                        <span>Buyer's Invoice</span>
+                                        <span className="underline text-blue-500">view</span>
                                     </div>
                                 </div>                            
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Packing List for Seller</span>
-                                        <span className="underline text-blue-500">[action]</span>
+                                        <span className="underline text-blue-500">view</span>
                                     </div>
                                 </div>
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Test Result</span>
-                                        <span className="underline text-blue-500">[action]</span>
+                                        {data.test_result_path ? 
+                                            <Link target="_blank" href={publicDir + data.test_result_path} className="underline text-blue-500">
+                                                view
+                                            </Link>
+                                            :
+                                            <span className="underline text-gray-500">
+                                                view
+                                            </span>                                        
+                                        }
                                     </div>
                                 </div>
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Packing List for White Horse</span>
-                                        <span className="underline text-blue-500">[action]</span>
+                                        <span className="underline text-blue-500">view</span>
+                                    </div>
+                                </div>
+                                <div className="mx-2 mt-1 text-sm">
+                                    <div className="flex flex-wrap justify-between">
+                                        <span>Admin's Receipt</span>
+                                        {data.admin_receipt_path ? 
+                                            <Link target="_blank" href={publicDir + data.admin_receipt_path} className="underline text-blue-500">
+                                                view
+                                            </Link>
+                                            :
+                                            <span className="underline text-gray-500">
+                                                view
+                                            </span>                                        
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -653,273 +1033,11 @@ export default function OrderDetails({session, routeParam}) {
                             <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                                 Actions to take
                             </div>
-                            {data.order_status_id !== 4 && 
-                                <div className="italic flex justify-center items-center h-28">
-                                    No action to take
-                                </div>
-                            }
-                            {data.order_status_id == 4 &&
-                                <div className="mx-2 my-4">
-                                    <PrimaryButton 
-                                        outline
-                                        className="mx-1" 
-                                        size="sm"
-                                        disabled={isLoading}
-                                        // onClick={() => sendProformaInvoiceHandler(true) }
-                                        onClick={() => setSendProformaInvoiceModal(true) }
-                                    >   
-                                        {isLoading ?
-                                            <span>
-                                                <i className="fas fa-hourglass fa-spin mr-2"></i>
-                                                Sending...
-                                            </span>
-                                            :
-                                            'Send Proforma Invoice'
-                                        }
-                                    </PrimaryButton>
-                                </div>
-
-                            }
-                            
+                            {actionToTake}                     
                         </PrimaryWrapper>
                     </div>
                 </div>
-            </div>            
-
-            {/* documents */}
-            <PrimaryWrapper>
-                <div className="p-2 text-md uppercase border-b text-center">
-                    Documents
-                </div>
-                <div className="pb-4 mt-2 lg:flex lg:justify-center px-4">
-                    <div className="mx-1 my-1">
-                        <Link target="_blank" href={publicDir + data.proforma_doc}>
-                            <SecondaryButton className="md:w-full sm:w-full" disabled={data.proforma_doc ? false : true} size="sm">
-                                Proforma Invoice
-                            </SecondaryButton>
-                        </Link>
-                    </div>
-                    <div className="mx-1 my-1">
-                        <Link target="_blank" href={publicDir + "/uploads/Payment_doc/" + data.Payment_doc}>
-                            <SecondaryButton className="md:w-full sm:w-full" disabled={data.Payment_doc ? false : true} size="sm">
-                                Payment Document
-                            </SecondaryButton>
-                        </Link>
-                    </div>
-                    <div className="mx-1 my-1">
-                        <Link target="_blank" href={publicDir + "/uploads/shipinfoforseller/" + data.shipinfoforseller}>
-                            <SecondaryButton className="md:w-full sm:w-full" disabled={data.shipinfoforseller ? false : true} size="sm">
-                                Shipment Info 
-                            </SecondaryButton>
-                        </Link>
-                    </div>
-                    <div className="mx-1 my-1">
-                        <Link target="_blank" href={publicDir + "/PaymentDocSeller/" + data.PaymentDocSeller}>
-                            <SecondaryButton className="md:w-full sm:w-full" disabled={data.PaymentDocSeller ? false : true} size="sm">
-                                Seller's Invoice
-                            </SecondaryButton>
-                        </Link>
-                    </div>
-                    <div className="mx-1 my-1">
-                        <Link target="_blank" href={publicDir + "/PaymentProof/" + data.PaymentProof}>
-                            <SecondaryButton className="md:w-full sm:w-full" disabled={data.PaymentProof ? false : true} size="sm">
-                                Payment Receipt for Seller
-                            </SecondaryButton>
-                        </Link>
-                    </div>           
-                </div>
-            </PrimaryWrapper>
-            
-            {/* action */}
-            <PrimaryWrapper>
-                <div className="p-2 text-md uppercase border-b text-center">
-                    Actions
-                </div>
-                <div className="pb-4 mt-2 lg:flex lg:justify-center px-4">
-                    {data.order_status_id != 4 && 
-                        <div className="mx-1 my-1">
-                            <WarningButton 
-                                className="md:w-full sm:w-full" 
-                                disabled={data.order_status_id == 2 ? false : true} 
-                                size="sm"
-                                onClick={() => setSendQuotationModal(true) }
-                            >
-                                Send Quotation
-                            </WarningButton>
-                        </div>
-                    }
-                    {data.order_status_id == 4 && 
-                        <div className="mx-1 my-1">
-                            <WarningButton 
-                                className="md:w-full sm:w-full" 
-                                disabled={data.order_status_id == 4 ? false : true} 
-                                size="sm"
-                                onClick={() => setEditRejectedQuotationModal(true) }
-                            >
-                                Edit Rejected Quotation
-                            </WarningButton>
-                        </div>
-                    }
-                    {/* <div className="mx-1 my-1">
-                        <WarningButton 
-                            className="md:w-full sm:w-full" 
-                            // disabled={data.order_status_id == 2 ? false : true} 
-                            size="sm"
-                            onClick={() => setSendOrderToInquire(true) }
-                        >
-                            Set Order to Inquired
-                        </WarningButton>
-                    </div> */}
-                    <div className="mx-1 my-1">
-                        <WarningButton 
-                            className="md:w-full sm:w-full" 
-                            disabled={data.order_status_id == 5 ? false : true} 
-                            size="sm"
-                            onClick={() => setSendProformaInvoiceModal(true) }
-                        >
-                            Send Proforma Invoice
-                        </WarningButton>
-                    </div>
-                    <div className="mx-1 my-1">
-                        <WarningButton 
-                            className="md:w-full sm:w-full" 
-                            disabled={data.order_status_id == 7 ? false : true} 
-                            size="sm"
-                            onClick={() => setAcceptPaymentDocumentModal(true) }
-                        >
-                            Accept Payment
-                        </WarningButton>
-                    </div>
-                    <div className="mx-1 my-1">
-                        <WarningButton 
-                            className="md:w-full sm:w-full" 
-                            disabled={data.order_status_id == 7 ? false : true} 
-                            size="sm"
-                            onClick={() => setRejectPaymentDocumentModal(true) }
-                        >
-                            Request Update Payment
-                        </WarningButton>
-                    </div>
-                    <div className="mx-1 my-1">
-                        <WarningButton 
-                            className="md:w-full sm:w-full" 
-                            disabled={data.order_status_id == 9 ? false : true} 
-                            size="sm"
-                            onClick={() => setTrackerNumberForBuyerModal(true) }
-                        >
-                            Provide Tracking Number
-                        </WarningButton>
-                    </div>
-                    <div className="mx-1 my-1">
-                        <WarningButton 
-                            className="md:w-full sm:w-full" 
-                            disabled={data.order_status_id == 12 ? false : true} 
-                            size="sm"
-                            onClick={() => setCompleteOrderModal(true) }
-                        >
-                            Complete Order
-                        </WarningButton>
-                    </div>
-                    {/* <div className="mx-1 my-1">
-                        <WarningButton 
-                            className="md:w-full sm:w-full" 
-                            // disabled={data.order_status_id != 13 ? false : true} 
-                            size="sm"
-                            onClick={() => setCancelOrderModal(true) }
-                        >
-                            Cancel Order
-                        </WarningButton>
-                    </div> */}
-          
-                </div>
-            </PrimaryWrapper>
-            
-            {/* modal */}
-            <>
-                {sendQuotationModal &&
-                    <SendQuotationModal
-                        isLoading={isLoading}
-                        orderId={data.id}
-                        orderQty={data.qty}
-                        closeModal={() => setSendQuotationModal(false)}
-                        acceptance={handleSendQuotationModal}
-                        errorInfo={errorInfo}
-                    />
-                }
-
-                {editRejectedQuotationModal &&
-                    <EditRejectedQuotationModal
-                        isLoading={isLoading}
-                        orderId={data.id}
-                        orderQty={data.qty}
-                        closeModal={() => setEditRejectedQuotationModal(false)}
-                        acceptance={handleEditRejectedQuotationModal}
-                        errorInfo={errorInfo}
-                    />
-                }
-
-                {sendOrderToInquire &&
-                    <SendOrderToInquireModal
-                        isLoading={isLoading}
-                        closeModal={() => setSendOrderToInquire(false)}
-                        acceptance={handleSendOrderToInquire}
-                        errorInfo={errorInfo}
-                    />
-                }
-
-                {sendProformaInvoiceModal &&
-                    <SendProformaInvoiceModal
-                        isLoading={isLoading}
-                        closeModal={() => setSendProformaInvoiceModal(false)}
-                        acceptance={handleSendProformaInvoiceModal}
-                        errorInfo={errorInfo}
-                    />
-                }
-
-                {acceptPaymentDocumentModal && 
-                    <AcceptPaymentDocumentModal
-                        isLoading={isLoading}
-                        closeModal={() => setAcceptPaymentDocumentModal(false)}
-                        acceptance={handleAcceptPaymentDocumentModal}
-                        errorInfo={errorInfo}
-                    />
-                }
-
-                {rejectPaymentDocumentModal &&
-                    <RejectPaymentDocumentModal
-                        isLoading={isLoading}
-                        closeModal={() => setRejectPaymentDocumentModal(false)}
-                        acceptance={handleRejectPaymentDocumentModal}
-                        errorInfo={errorInfo}
-                    />
-                }
-
-                {trackerNumberForBuyerModal &&
-                    <TrackerNumberForBuyerModal
-                        isLoading={isLoading}
-                        closeModal={() => setTrackerNumberForBuyerModal(false)}
-                        acceptance={handleTrackerNumberForBuyerModal}
-                        errorInfo={errorInfo}
-                    />
-                }
-
-                {completeOrderModal &&
-                    <CompleteOrderModal
-                        isLoading={isLoading}
-                        closeModal={() => setCompleteOrderModal(false)}
-                        acceptance={handleCompleteOrderModal}
-                        errorInfo={errorInfo}
-                    />
-                }
-
-                {/* {cancelOrderModal &&
-                    <CancelOrderModal
-                        isLoading={isLoading}
-                        closeModal={() => setCancelOrderModal(false)}
-                        acceptance={handleCancelOrderModal}
-                    />
-                } */}
-            </>
+            </div>                    
         </>
     );
 }

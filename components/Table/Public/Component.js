@@ -23,7 +23,7 @@ export default function TableComponent(props){
             setShowModal(true)
             setIsInquiryClicked(false)
         } else {
-            router.push(`/admin/member/buycomponents/inquirylist/details/${item}`)
+            router.push(`/admin/member/buyer/product/details/${item}`)
         }
     }
 

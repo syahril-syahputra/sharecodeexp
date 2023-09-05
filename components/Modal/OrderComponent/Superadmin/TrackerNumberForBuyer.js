@@ -4,40 +4,30 @@ import TextInput from "@/components/Interface/Form/TextInput";
 import LightButton from "@/components/Interface/Buttons/LightButton";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 export default function VerifyOrder(props){
-    const [buyerTracker, setBuyerTracker] = useState('')
-    const [expectedShippingDateBuyer, setExpectedShippingDateBuyer] = useState('')
+    const [trackingNumber, setTrackingNumber] = useState('')
 
     const handleSubmit = () => {
-        props.acceptance(buyerTracker, expectedShippingDateBuyer)
+        props.acceptance(trackingNumber)
     }
 
     return (
         <BaseModalMedium
-            title="Provide Tracking Information"
+            title="Provide Tracking Number"
             onClick={() => props.closeModal()}
             body={
                 <>  
                     <div className="mb-4">
                         <TextInput
                             label="Tracking Number"
-                            name="buyerTracker"
-                            value={buyerTracker}
-                            onChange={(input) => setBuyerTracker(input.value)}
+                            name="trackingNumber"
+                            value={trackingNumber}
+                            onChange={(input) => setTrackingNumber(input.value)}
                             errorMsg={props.errorInfo?.trackingBuyer}
                         ></TextInput>
                     </div>
-                    <div>
-                        <TextInput
-                            type="date"
-                            label="Expected Shipment Date"
-                            name="expectedShippingDateBuyer"
-                            value={expectedShippingDateBuyer}
-                            onChange={(input) => setExpectedShippingDateBuyer(input.value)}
-                            errorMsg={props.errorInfo?.expectedShippingDateBuyer}
-                        />
-                    </div>
+
                     <p className="mt-8 italic text-blueGray-500 text-sm leading-relaxed">
-                        Note: This tracking number and expected shipment date will be send to the buyer.
+                        Note: This tracking number will be send to the buyer.
                     </p>
                 </>
             }   
@@ -45,19 +35,20 @@ export default function VerifyOrder(props){
                 <>
                     <LightButton
                         disabled={props.isLoading}
-                        className="font-bold uppercase mr-2"
+                        size="sm"
+                        className="mr-2"
                         onClick={() => props.closeModal()}
                         >
                         Close
                     </LightButton>
                     <PrimaryButton
                         disabled={props.isLoading}
-                        className="font-bold uppercase"
+                        size="sm"
                         onClick={handleSubmit}>
                         {props.isLoading &&
                             <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                         }
-                        Confirm
+                        Provide
                     </PrimaryButton>
                 </>
             }

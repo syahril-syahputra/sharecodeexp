@@ -3,42 +3,53 @@ import {
   HomeIcon,
   Cog8ToothIcon,
   ShoppingCartIcon,
-  WrenchIcon,
+  FolderIcon,
 } from '@heroicons/react/24/outline'
 
 export const dahsboard = [
   { name: 'Dashboard', href: routeUrl.VendorUrl.dahsboard, icon: HomeIcon, current: false },
 ]
 
-export const protectedNavigation = [
+export const sellerDahsboard = [
+  { name: 'Dashboard', href: routeUrl.VendorUrl.sellerDahsboard, icon: HomeIcon, current: false },
+]
+
+export const sellerNavigation = [
   {
-    name: 'Selling Components',
+    name: 'My Products',
     icon: Cog8ToothIcon,
     current: false,
-    children: [
-      { name: 'My Stocks', href: routeUrl.VendorUrl.sellingComponent.stocks.approved },
-      { name: 'Incoming Inquiries', href: routeUrl.VendorUrl.sellingComponent.incomingInquiries.index },
-    ],
+    href: routeUrl.VendorUrl.sellingProduct.product
   },
   {
-    name: 'Buying Components',
-    icon: ShoppingCartIcon,
+    name: 'Incoming Inquiries',
+    icon: Cog8ToothIcon,
     current: false,
-    children: [
-      { name: 'Inquiry List', href: routeUrl.VendorUrl.buyingComponent.inquiryList.index },
-      { name: 'Inquired Components', href: routeUrl.VendorUrl.buyingComponent.inquiredComponents.index },
-    ],
+    href: routeUrl.VendorUrl.sellingProduct.incomingInquiries.index
+  },
+]
+
+export const buyerDahsboard = [
+  { name: 'Dashboard', href: routeUrl.VendorUrl.buyerDahsboard, icon: HomeIcon, current: false },
+]
+
+export const buyerNavigation = [
+  {
+    name: 'Inquired Products',
+    icon: Cog8ToothIcon,
+    current: false,
+    href: routeUrl.VendorUrl.buyingProduct.inquiredProduct.index
   },
 ]
 
 export const vendorsNavigation = [
-    {
-      name: 'Settings',
-      icon: WrenchIcon,
-      current: false,
-      children: [
-        { name: 'My Company', href: routeUrl.VendorUrl.settings.myCompany.details },
-        { name: 'Contributors', href: routeUrl.VendorUrl.settings.contributors.index },
-      ],
-    },
-  ];
+  {
+    name: 'Management',
+    icon: FolderIcon,
+    current: false,
+    children: [
+      { name: 'My Company', href: routeUrl.VendorUrl.management.myCompany.details },
+      { name: 'Contributors', href: routeUrl.VendorUrl.management.contributors.index },
+    ],
+  },
+];

@@ -1,6 +1,8 @@
-import React, {useEffect }from "react";
-import { getSession } from "next-auth/react";
+import React, { useEffect, useContext }from "react";
+import { useSession, getSession } from "next-auth/react";
 import axios from "@/lib/axios";
+import GlobalContext from "@/store/global-context";
+import { useRouter } from "next/router";
 
 // member
 import { toast } from 'react-toastify';
@@ -11,6 +13,7 @@ import Admin from "layouts/Admin.js";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 import { CompanyStatusesIcon } from "@/components/Shared/Company/Statuses";
 import Link from "next/link";
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 
 export default function MemberDashboard({company, message}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -20,6 +23,20 @@ export default function MemberDashboard({company, message}) {
     }
   }, [])
 
+  const { update } = useSession()
+  const router = useRouter()
+  const handleDashboard = async (status) => {
+    await update({
+        dashboardStatus: status
+    });
+    if(status === 'buyer') {
+      router.replace('/admin/member/buyer/dashboard')
+    }
+
+    if(status === 'seller') {
+      router.replace('/admin/member/seller/dashboard')
+    }
+  }
 
   return (
     <>
@@ -56,16 +73,34 @@ export default function MemberDashboard({company, message}) {
           </PrimaryWrapper> 
         }
 
-        {company.is_confirmed == "accepted" &&
+        {/* {company.is_confirmed == "accepted" &&
           <PrimaryWrapper>
             <div className="text-center pb-10 pt-10">
               <img className="object-contain mb-3 h-40 mx-auto" 
                 alt={company.name}
                 src={publicDir + "/companies_images/" + company.img}/>
-              <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2">
+              <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
                 {company.name}
                 <CompanyStatusesIcon status={company.is_confirmed}/>                
               </h3>
+            </div>
+          </PrimaryWrapper>
+        } */}
+        {company.is_confirmed == "accepted" &&
+          <PrimaryWrapper>
+            <div className="text-center pb-20 pt-20">
+              <img className="object-contain mb-3 h-40 mx-auto" 
+                alt={company.name}
+                src={publicDir + "/companies_images/" + company.img}/>
+              <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
+                {company.name}
+                <CompanyStatusesIcon status={company.is_confirmed}/>                
+              </h3>
+              <div className="mt-20">
+                <PrimaryButton className="m-2" size="lg" outline onClick={() => handleDashboard('buyer')}>Buyer</PrimaryButton>
+                <PrimaryButton className="m-2" size="lg" outline onClick={() => handleDashboard('seller')}>Seller</PrimaryButton>
+              </div>
+              
             </div>
           </PrimaryWrapper>
         }
@@ -83,6 +118,15 @@ export async function getServerSideProps(context) {
       redirect: {
         permanent: false,
         destination: '/',
+      },
+    };
+  }
+
+  if(session.user.dashboardStatus){
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/admin/member/${session.user.dashboardStatus}/dashboard`,
       },
     };
   }

@@ -89,7 +89,7 @@ export default function ComponentList(props) {
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="inline-flex">
-                                            <Link href={`/admin/superadmin/components/details/${item.slug}`}>
+                                            <Link href={`/admin/superadmin/product/details/${item.slug}`}>
                                                 <PrimaryButton
                                                     size="sm">
                                                     View

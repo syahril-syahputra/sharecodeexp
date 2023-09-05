@@ -86,7 +86,7 @@ export default function CompanyList(props) {
                                             </div>
                                         } */}
                                         {!props.isLoading && 
-                                            <Link href={`/admin/superadmin/registry/company/${item.name}`}>
+                                            <Link href={`/admin/superadmin/registry/details/${item.name}`}>
                                                 <PrimaryButton
                                                     size="sm">
                                                     View

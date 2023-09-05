@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "lib/axios"
 import { getSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -14,8 +15,9 @@ import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import InfoButton from "@/components/Interface/Buttons/InfoButton";
 import SelectInput from "@/components/Interface/Form/SelectInput";
+import { AdminUrl } from "@/route/route-url";
 
-export default function FindByStatusOrder({session}) {
+export default function FindByStatusOrder({session, routeParam}) {
   //data search
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
@@ -26,11 +28,21 @@ export default function FindByStatusOrder({session}) {
     lastPage: 0
   })
 
+  let orderStatusFromRoute = routeParam
   const [orderStatusOptions, setOrderStatusOption] = useState([])
   const loadOrderStatusOption = async () => {
     const request = await axios.get(`/allstatus`)
       .then(response => {
-        setOrderStatusOption(response.data.data)
+        let res = response.data.data
+        setOrderStatusOption(res)
+        res.filter(option => {
+            if(option.value === orderStatusFromRoute) {
+                setOrderStatus({
+                    'label' : option.label,
+                    'value' : option.value
+                })
+            }
+        })
       })
       .catch(() => {
         toast.error("Cannot load order status.", toastOptions)
@@ -47,7 +59,7 @@ export default function FindByStatusOrder({session}) {
   const [orderDate, setOrderDate] = useState('')
   const loadData = async (
       page=1, 
-      orderStatusParam='', 
+      orderStatusParam=orderStatusFromRoute ? orderStatusFromRoute : '', 
       orderNumberParam='', 
       manufacturerPartNumberParam='', 
       orderDateParam=''
@@ -87,17 +99,19 @@ export default function FindByStatusOrder({session}) {
   const handleSearchData = () => {
     loadData(1, orderStatus?.value, orderNumber, manufacturerPartNumber, orderDate)
   }
-  const selectOrderStatut = () => {
-
-  }
+  const router = useRouter()
   const handleResetSearchFilter = () => {
+    if(orderStatusFromRoute){
+      orderStatusFromRoute = ''
+      router.push(`${AdminUrl.orderProduct.allOrders}`)
+    }
     setOrderStatus({
       'label': 'Select Order Status',
       'value': ''
     })
     setManufacturerPartNumber('')
     setOrderNumber('')
-    setOrderDate('')
+    setOrderDate('')        
     loadData()
   }
   const setPage = (pageNumber) => {
@@ -168,7 +182,6 @@ export default function FindByStatusOrder({session}) {
         </PrimaryWrapper>        
         <OrderList
           filterStatus
-          title="Find by Status"
           setPage={setPage}
           isLoading={isLoading}
           data={data}
@@ -184,9 +197,11 @@ FindByStatusOrder.layout = Admin;
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+  const orderStatus = context.query.orderStatus ? context.query.orderStatus : null
   return {
       props: {
-          session
+          session,
+          routeParam: orderStatus
       }
   }
 }

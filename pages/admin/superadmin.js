@@ -4,6 +4,8 @@ import axios from "@/lib/axios";
 import { toast } from 'react-toastify';
 import { toastOptions } from "@/lib/toastOptions"
 
+import Link from "next/link";
+
 // superadmin
 import PendingCompany from "@/components/Dashboard/Superadmin/PendingCompany"
 import NewInquiries from "@/components/Dashboard/Superadmin/NewInquiries";
@@ -14,200 +16,188 @@ import MemberStatistic from "@/components/Dashboard/Superadmin/MemberStatistic";
 
 // layout for page
 import Admin from "layouts/Admin.js";
+import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 
 export default function SuperadminDashboard({session, message}) {
+  const [isLoading, setIsLoading] = useState(true)
+  const [data, setData] = useState({
+    pending_companies: 0,
+    pending_product: 0,
+    order_process_one: {
+        active_order: 0,
+        approve_reject_payment: 0
+    },
+    order_process_two: {
+        pending_shipment: 0,
+        release_payment: 0
+    }
+  })
+
   useEffect(() => {
     if(!!message){
       toast.warning(message, toastOptions)
     }
-  }, [])
-  const [loadingPendingCompany, setLoadingPendingCompany] = useState()
-  const [pendingCompany, setPendingCompany] = useState([])
-  const loadPendingCompany = async () => {
-    setLoadingPendingCompany(true)
-    const request = await axios.get(`/admin/companies?status=pending`,
-        {
-            headers: {
-            "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then((response) => {
+    async function fetchData(){
+      const response = await axios.get(`/admin/dashboard/all`, {
+          headers: {
+              "Authorization" : `Bearer ${session.accessToken}`
+          }
+      })
+      .then((response) => {
           let result = response.data.data
-          setPendingCompany(result.data)
+          setData(result)
         }).catch((error) => {
-          setPendingCompany([])
+          setData({})
+          toast.error(error.data.message, toastOptions)
         }).finally(() => {
-          setLoadingPendingCompany(false)
+          setIsLoading(false)
         })
-  }
-  useEffect(() => {
-    loadPendingCompany()
-  }, [])
-
-  const [loadingNewInquiries, setLoadingNewInquiries] = useState()
-  const [newInquiries, setNewInquiries] = useState([])
-  const loadNewInquiries = async () => {
-    setLoadingNewInquiries(true)
-    const request = await axios.get(`/admin/orders/inquired`,
-        {
-            headers: {
-            "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then((response) => {
-          let result = response.data.data
-          setNewInquiries(result.data)
-        }).catch((error) => {
-          setNewInquiries([])
-        }).finally(() => {
-          setLoadingNewInquiries(false)
-        })
-  }
-  useEffect(() => {
-    loadNewInquiries()
-  }, [])
-
-  const [loadingActiveOrders, setLoadingActiveOrders] = useState()
-  const [activeOrders, setActiveOrders] = useState([])
-  const loadActiveOrders = async () => {
-    setLoadingActiveOrders(true)
-    const request = await axios.get(`/admin/orders/ongoing`,
-        {
-            headers: {
-            "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then((response) => {
-          let result = response.data.data
-          setActiveOrders(result.data)
-        }).catch((error) => {
-          setActiveOrders([])
-        }).finally(() => {
-          setLoadingActiveOrders(false)
-        })
-  }
-  useEffect(() => {
-    loadActiveOrders()
-  }, [])
-
-  const [loadingPendingShipments, setLoadingPendingShipments] = useState()
-  const [pendingShipments, setPendingShipments] = useState([])
-  const loadPendingShipments = async () => {
-    setLoadingPendingShipments(true)
-    const request = await axios.get(`/admin/orders/preparing_shipment`,
-        {
-            headers: {
-            "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then((response) => {
-          let result = response.data.data
-          setPendingShipments(result.data)
-        }).catch((error) => {
-          setPendingShipments([])
-        }).finally(() => {
-          setLoadingPendingShipments(false)
-        })
-  }
-  useEffect(() => {
-    loadPendingShipments()
-  }, [])
-
-  const [loadingPendingPayments, setLoadingPendingPayments] = useState()
-  const [pendingPayments, setPendingPayments] = useState([])
-  const loadPendingPayments = async () => {
-    setLoadingPendingPayments(true)
-    const request = await axios.get(`/admin/orders/payment_verified`,
-        {
-            headers: {
-            "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then((response) => {
-          let result = response.data.data
-          setPendingPayments(result.data)
-        }).catch((error) => {
-          setPendingPayments([])
-        }).finally(() => {
-          setLoadingPendingPayments(false)
-        })
-  }
-  useEffect(() => {
-    loadPendingPayments()
-  }, [])
-
-  const [loadingMemberStatistics, setLoadingMemberStatistics] = useState()
-  const [memberStatistics, setMemberStatistics] = useState([])
-  const loadMemberStatistics = async () => {
-    setLoadingMemberStatistics(true)
-    const request = await axios.get(`/admin/visitor`,
-        {
-            headers: {
-            "Authorization" : `Bearer ${session.accessToken}`
-            }
-        })
-        .then((response) => {
-          let result = response.data.data
-          setMemberStatistics(result.data)
-        }).catch((error) => {
-          setMemberStatistics([])
-        }).finally(() => {
-          setLoadingMemberStatistics(false)
-        })
-  }
-  useEffect(() => {
-    loadMemberStatistics()
+    }
+    fetchData()       
   }, [])
 
   return (
     <>
-      <div className="flex flex-wrap mt-4">
-        <div className="w-full px-4">
-          <PendingCompany 
-            isLoading={loadingPendingCompany}
-            data={pendingCompany}
-          />
-        </div>         
+      <div className="flex flex-wrap items-center justify-between">
+        <div className="">
+            <h1 className="font-semibold text-2xl">
+              Admin Dashboard
+            </h1>
+        </div>
       </div>
-      <div className="flex flex-wrap mt-4">
-        <div className="w-full px-4">
-          <NewInquiries
-            isLoading={loadingNewInquiries}
-            data={newInquiries}
-          />
-        </div>         
-      </div>
-      <div className="flex flex-wrap mt-4">
-        <div className="w-full px-4">
-          <StatusUpdateOngoingOrder 
-            isLoading={loadingActiveOrders}
-            data={activeOrders}
-          />
-        </div>         
-      </div>
-      <div className="flex flex-wrap mt-4">
-        <div className="w-full px-4">
-          <PendingShipment 
-            isLoading={loadingPendingShipments}
-            data={pendingShipments}
-          />
-        </div>         
-      </div>
-      <div className="flex flex-wrap mt-4">
-        <div className="w-full px-4">
-          <PendingPayment
-            isLoading={loadingPendingPayments}
-            data={pendingPayments}
-          />
-        </div>         
-      </div>
-      <div className="flex flex-wrap mt-4">
-        <div className="w-full px-4">
-          <MemberStatistic 
-            isLoading={loadingMemberStatistics}
-            data={memberStatistics}
-          />
-        </div>         
+      <div className="grid grid-cols-4 gap-4 mt-5">
+        <PrimaryWrapper className="border border-blue-500">
+          <div className="p-4 mb-auto">
+            <h1 className="font-semibold text-7xl mb-3">
+              {data.pending_companies}
+            </h1>
+            <span className="text-md italic">Pending Company</span>
+          </div>
+          <Link
+            href="/admin/superadmin/registry/company"
+            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4">
+            <div className="">
+                <h1 className="text-md text-white">
+                  Check Now
+                </h1>
+            </div>
+            <div className="">
+              <span className="text-md">
+                <i className="fas fa-chevron-right text-white"></i>
+              </span>
+            </div>
+          </Link>
+        </PrimaryWrapper>     
+        <PrimaryWrapper className="border border-blue-500">
+          <div className="p-4 mb-auto">
+            <h1 className="font-semibold text-7xl mb-3">
+              {data.pending_product}
+            </h1>
+            <span className="text-md italic">Pending Product</span>
+          </div>
+          <Link
+            href="/admin/superadmin/product-management"
+            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4">
+            <div className="">
+                <h1 className="text-md text-white">
+                  Check Now
+                </h1>
+            </div>
+            <div className="">
+              <span className="text-md">
+                <i className="fas fa-chevron-right text-white"></i>
+              </span>
+            </div>
+          </Link>
+        </PrimaryWrapper>
+        <PrimaryWrapper className="border border-blue-500">
+          <div className="p-4 mb-auto">
+            <h1 className="font-semibold text-7xl mb-3">
+              {data.order_process_one.active_order}
+            </h1>
+            <span className="text-md italic">Active Orders</span>
+          </div>
+          <Link
+            href="/admin/superadmin/orders/allorders"
+            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4">
+            <div className="">
+                <h1 className="text-md text-white">
+                  Check Now
+                </h1>
+            </div>
+            <div className="">
+              <span className="text-md">
+                <i className="fas fa-chevron-right text-white"></i>
+              </span>
+            </div>
+          </Link>
+        </PrimaryWrapper>
+        <PrimaryWrapper className="border border-blue-500">
+          <div className="p-4 mb-auto">
+            <h1 className="font-semibold text-7xl mb-3">
+              {data.order_process_one.approve_reject_payment}
+            </h1>
+            <span className="text-md italic">Approve / Reject Payment</span>
+          </div>
+          <Link
+            href="/admin/superadmin/orders/allorders?orderStatus=payment-uploaded"
+            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4">
+            <div className="">
+                <h1 className="text-md text-white">
+                  Check Now
+                </h1>
+            </div>
+            <div className="">
+              <span className="text-md">
+                <i className="fas fa-chevron-right text-white"></i>
+              </span>
+            </div>
+          </Link>
+        </PrimaryWrapper>
+        <PrimaryWrapper className="border border-blue-500">
+          <div className="p-4 mb-auto">
+            <h1 className="font-semibold text-7xl mb-3">
+              {data.order_process_two.pending_shipment}
+            </h1>
+            <span className="text-md italic">Pending Shipment</span>
+          </div>
+          <Link
+            href="/admin/superadmin/orders/allorders?orderStatus=payment-accepted"
+            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4">
+            <div className="">
+                <h1 className="text-md text-white">
+                  Check Now
+                </h1>
+            </div>
+            <div className="">
+              <span className="text-md">
+                <i className="fas fa-chevron-right text-white"></i>
+              </span>
+            </div>
+          </Link>
+        </PrimaryWrapper>  
+        <PrimaryWrapper className="border border-blue-500">
+          <div className="p-4 mb-auto">
+            <h1 className="font-semibold text-7xl mb-3">
+              {data.order_process_two.release_payment}
+            </h1>
+            <span className="text-md italic">Release Payment</span>
+          </div>
+          <Link
+            href="/admin/superadmin/orders/allorders?orderStatus=invoice-uploaded"
+            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4">
+            <div className="">
+                <h1 className="text-md text-white">
+                  Check Now
+                </h1>
+            </div>
+            <div className="">
+              <span className="text-md">
+                <i className="fas fa-chevron-right text-white"></i>
+              </span>
+            </div>
+          </Link>
+        </PrimaryWrapper>       
       </div>
     </>
   )
@@ -219,7 +209,7 @@ export async function getServerSideProps(context) {
   const session = await getSession(context)
   let redirectedMessage = ''
   if(!!context.query.redirect) {
-    redirectedMessage = 'Superadmin can not inquire any component!'
+    redirectedMessage = 'Superadmin cannot inquire any component!'
   }
 
   return {

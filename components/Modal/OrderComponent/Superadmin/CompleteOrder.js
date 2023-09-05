@@ -1,68 +1,69 @@
-import { useState } from "react";
-import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
-import ErrorInput from '@/components/Shared/ErrorInput';
+import { useState } from "react"
 import { BaseModalMedium } from "@/components/Interface/Modal/BaseModal";
 import LightButton from "@/components/Interface/Buttons/LightButton";
+import FileInput from "@/components/Interface/Form/FileInput";
+import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
+
 export default function CompleteOrder(props){
-    const [invoiceDocs, setInvoiceDocs] = useState()
-    const handleSubmit = () => {
-        props.acceptance(invoiceDocs)
+    const [adminReceipt, setAdminReceipt] = useState('')
+    const [orderArrived, setOrderArrived] = useState('')
+
+    const handleOrderArrived = () => {
+        setOrderArrived(prev => !prev)
+    }
+
+    const handlerUpload = () => {
+        props.acceptance(adminReceipt, orderArrived)
     }
 
     return (
-        <BaseModalMedium 
+        <BaseModalMedium
             title="Complete Order"
             onClick={() => props.closeModal()}
             body={
-                <>
-                    <p className="text-blueGray-500 text-lg leading-relaxed">
-                        Do you agree to <span className="text-blueGray-700 font-bold">complete</span> this order?
-                    </p>
-                    <div className="w-full mt-5">
-                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                            Send Payment Receipt for Seller
-                        </label>
-                        <div className="p-5 border-dashed border-2 border-indigo-200">
-                            <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>
-                                <div className='text-center my-auto'>
-                                    <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
-                                </div>
-                                <div className="text-xs ">
-                                    <p>PDF file size no more than 10MB</p>
-                                    <input 
-                                        className="mt-3" 
-                                        type="file"
-                                        name='invoiceDocs'
-                                        accept='.pdf'
-                                        onChange={({target}) => 
-                                            setInvoiceDocs(target.files[0])
-                                        }
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        {props.errorInfo.PaymentProof &&
-                            <ErrorInput error={props.errorInfo.PaymentProof}/>
-                        }
+                <div>  
+                    <div className="mb-6">
+                        <FileInput
+                            description="Input PDF (.pdf) only, max 10MB"
+                            accept=".pdf"
+                            name="File Upload"
+                            required
+                            onChange={(target) => setAdminReceipt(target.files[0])}
+                            errorMsg={props.errorInfo?.admin_receipt}
+                        />
                     </div>
-                </>
+                    <div className="w-full">
+                        {props.errorInfo?.order_arrived &&
+                            <div>
+                                <span className="font-light text-sm">
+                                    <i className="text-red-500">{props.errorInfo?.order_arrived}</i>
+                                </span>
+                            </div>
+                        }
+                        <input name="order" id="order" type="checkbox" checked={orderArrived} onChange={handleOrderArrived} className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"/>
+                        <label htmlFor="order" className="ml-2 text-sm font-medium text-gray-900 italic">Order is arrived</label>
+                    </div>
+
+                </div>
             }
             action={
                 <>
                     <LightButton
                         disabled={props.isLoading}
-                        className="font-bold uppercase mr-2"
+                        size="sm"
+                        className="mr-2"
                         onClick={() => props.closeModal()}
-                    >No, Close</LightButton>
-
+                        >
+                        Close
+                    </LightButton>
                     <PrimaryButton
                         disabled={props.isLoading}
-                        className="font-bold uppercase "
-                        onClick={handleSubmit}>
+                        size="sm"
+                        onClick={handlerUpload}>
                         {props.isLoading &&
                             <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                         }
-                        Yes, Complete Order
+                        Complete Order
                     </PrimaryButton>
                 </>
             }

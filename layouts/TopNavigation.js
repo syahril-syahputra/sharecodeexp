@@ -1,9 +1,10 @@
-import { MyAccountUrl } from '@/route/route-url';
+import { MyAccountUrl, VendorUrl } from '@/route/route-url';
 import { Fragment, useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
 import classNames from '@/utils/classNames'
 import GlobalContext from "@/store/global-context";
 import { useSession, signOut } from "next-auth/react"
+import { useRouter } from 'next/router';
 
 import { Menu, Transition } from '@headlessui/react'
 import { Bars3Icon } from '@heroicons/react/24/outline'
@@ -11,13 +12,30 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import LogoutModal from "@/components/Modal/Logout/Logout";
 
 const userNavigation = [
-    { name: 'Your profile', href: MyAccountUrl.view },
+    { name: 'My Profile', href: MyAccountUrl.view },
 ]
 
 function TopNavigation({setSidebarOpen, role}){
     const session = useSession()
-    const {username, loadUsername} = useContext(GlobalContext)
+    const {
+      username, 
+      loadUsername
+    } = useContext(GlobalContext)
     const [logoutModal, setLogoutModal] = useState(false)
+
+    const route = useRouter()
+    const switchToBuyer = async () => {
+      await session.update({
+        dashboardStatus: 'buyer'
+      });
+      route.push('/admin/member/buyer/dashboard')
+    }
+    const switchToSeller = async () => {
+      await session.update({
+        dashboardStatus: 'seller'
+      });
+      route.push('/admin/member/seller/dashboard')
+    }
 
     useEffect(() => {
         loadUsername(session.data.accessToken)
@@ -35,7 +53,10 @@ function TopNavigation({setSidebarOpen, role}){
 
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
             <div className="relative flex flex-1">
-              <div className="pt-5 text-gray-400">{role == 1 ? 'STAF ONLY' : 'MEMBER AREA'}</div>
+              <div className="pt-5 text-gray-400">{role == 1 && 'SUPERADMIN'}</div>
+              {/* <div className="pt-5 text-gray-400">{role == 3 && 'SUPERADMIN'}</div> */}
+              <div className="pt-5 text-gray-400">{(role == 2 && session.data.user.dashboardStatus == 'buyer') && 'BUYER AREA'}</div>
+              <div className="pt-5 text-gray-400">{(role == 2 && session.data.user.dashboardStatus == 'seller') && 'SELLER AREA'}</div>
             </div>
             
             <div className="flex items-center gap-x-4 lg:gap-x-6">
@@ -63,7 +84,7 @@ function TopNavigation({setSidebarOpen, role}){
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
+                  <Menu.Items className="absolute right-0 z-10 mt-2.5 w-52 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
                     {userNavigation.map((item) => (
                       <Menu.Item key={item.name}>
                         {({ active }) => (
@@ -79,6 +100,36 @@ function TopNavigation({setSidebarOpen, role}){
                         )}
                       </Menu.Item>
                     ))}
+                    {session.data.user.dashboardStatus === 'seller' && 
+                      <Menu.Item>
+                        {({ active }) => (
+                          <span
+                            onClick={() => switchToBuyer(true)}
+                            className={classNames(
+                              active ? 'bg-gray-50' : '',
+                              'cursor-pointer block px-3 py-1 text-sm leading-6 text-gray-900'
+                            )}
+                          >
+                            Switch to Buyer
+                          </span>
+                        )}
+                      </Menu.Item>
+                    }
+                    {session.data.user.dashboardStatus === 'buyer' && 
+                      <Menu.Item>
+                        {({ active }) => (
+                          <span
+                            onClick={() => switchToSeller(true)}
+                            className={classNames(
+                              active ? 'bg-gray-50' : '',
+                              'cursor-pointer block px-3 py-1 text-sm leading-6 text-gray-900'
+                            )}
+                          >
+                            Switch to Seller
+                          </span>
+                        )}
+                      </Menu.Item>
+                    }
                     <Menu.Item>
                       {({ active }) => (
                         <span

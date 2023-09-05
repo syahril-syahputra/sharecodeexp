@@ -17,7 +17,8 @@ export default function AcceptOrder(props){
                 <>
                     <LightButton
                         disabled={props.isLoading}
-                        className="font-bold uppercase mr-2"
+                        className="mr-2"
+                        size="sm"
                         onClick={() => props.closeModal()}
                         >
                         No, Close
@@ -25,7 +26,7 @@ export default function AcceptOrder(props){
 
                     <PrimaryButton
                         disabled={props.isLoading}
-                        className="font-bold uppercase "
+                        size="sm"
                         onClick={() => props.acceptance()}
                     >
                         {props.isLoading &&

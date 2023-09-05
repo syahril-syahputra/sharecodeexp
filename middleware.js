@@ -3,6 +3,11 @@ import { NextResponse } from "next/server"
 
 export async  function middleware(request) {
   const session = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
+  // if(!session){
+  //   if (request.nextUrl.pathname.startsWith('/admin')) {
+  //     return NextResponse.redirect(new URL('/auth/unauthenticated', request.url));
+  //   }
+  // }
   if(session){
     if (request.nextUrl.pathname.startsWith('/admin/superadmin') && session.user.userDetail.role_id !=1 ) {
       return NextResponse.redirect(new URL('/admin/member', request.url));
@@ -12,10 +17,8 @@ export async  function middleware(request) {
       return NextResponse.redirect(new URL('/admin/superadmin', request.url));
     }
   }
-
-  // if(!session){
-  //   if (request.nextUrl.pathname.startsWith('/admin')) {
-  //     return NextResponse.redirect(new URL('/auth/login', request.url));
-  //   }
-  // }
 }
+
+// export const config = {
+//   matcher: ['/admin/:path*'],
+// }

@@ -199,9 +199,9 @@ export default function Index() {
               </div>
             </div>                    
 
-            <div className="text-center">
+            {/* <div className="text-center">
               <Link href="/members" className="font-medium text-blueGray-700 underline">View all Members</Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
