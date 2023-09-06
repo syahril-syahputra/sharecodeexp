@@ -12,8 +12,8 @@ import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep"
 import { toast } from 'react-toastify';
 import { toastOptions } from "@/lib/toastOptions"
 import VerifyInquiryModal from "@/components/Modal/OrderComponent/Seller/VerifyInquiry"
-import EditVerifiedOrderModal from "@/components/Modal/OrderComponent/Seller/EditVerifiedOrder"
-import SendTrackerModal from "@/components/Modal/OrderComponent/Seller/SendTracker"
+// import EditVerifiedOrderModal from "@/components/Modal/OrderComponent/Seller/EditVerifiedOrder"
+// import SendTrackerModal from "@/components/Modal/OrderComponent/Seller/SendTracker"
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 import PageHeader from "@/components/Interface/Page/PageHeader";
 import OrderStatus from "@/components/Shared/Order/OrderStatus";
@@ -430,7 +430,7 @@ export default function InquiryDetails({session, routeParam}) {
                     />
                 }
 
-                {editVerifiedOrderModal && 
+                {/* {editVerifiedOrderModal && 
                     <EditVerifiedOrderModal
                         isLoading={isLoading}
                         orderId={data.id}
@@ -443,16 +443,16 @@ export default function InquiryDetails({session, routeParam}) {
                         acceptance={editVerifiedOrderModalHandle}                        
                         errorInfo={errorInfo}
                     />
-                }
+                } */}
 
-                {sendTrackerModal && 
+                {/* {sendTrackerModal && 
                     <SendTrackerModal
                         isLoading={isLoading}
                         closeModal={() => setSendTrackerModal(false)}
                         acceptance={sendTrackerModalHandle}
                         errorInfo={errorInfo}
                     />
-                }
+                } */}
             </>
         </>
     );

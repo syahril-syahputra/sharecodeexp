@@ -6,8 +6,8 @@ import { Page, Text, Font, View, Document, StyleSheet } from "@react-pdf/rendere
       <Document>
           <Page size="A4" style={styles.page}>
               <View style={styles.section}>
-                  <Text>Section #1 {props.data.memberCounter}</Text>
-                  <Text>Section #1 {props.data.productCounter}</Text>                
+                  <Text>Section #1 123</Text>
+                  <Text>Section #1 123</Text>                
               </View>
           </Page>
       </Document>
