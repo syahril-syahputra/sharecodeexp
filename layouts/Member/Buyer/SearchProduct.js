@@ -10,7 +10,7 @@ export default function SearchProduct(){
     return (
         <li>
             <Link
-                href="/admin/member/buyer/product"
+                href="/product/search"
                 className={classNames(
                 false ? 'bg-gray-50' : 'hover:bg-gray-50',
                 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-700'

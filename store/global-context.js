@@ -11,10 +11,23 @@ const GlobalContext = React.createContext({
     updateInquiryList: (token) => {},
     inquiredComponents: 0,
     updateInquiredComponent: (token) => {},
+    //above this will be deleted
 
     //logged user
     username: '...',
     loadUsername: (token) => {},
+
+    //buyer sidebar counter
+    buyerSidebarCounter: {},
+    loadBuyerSidebarCounter: (token) => {},
+
+    //seller sidebar counter
+    sellerSidebarCounter: {},
+    loadSellerSidebarCounter: (token) => {},
+
+    //admin sidebar counter
+    adminSidebarCounter: {},
+    loadAdminSidebarCounter: (token) => {},
 
 })
 

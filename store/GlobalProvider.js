@@ -64,10 +64,6 @@ const GlobalProvider = props => {
                 }
             })
             .then((response) => {       
-                setUserPermission({
-                    role: response.data.data.roles.id,
-                    status: response.data.data.status.id
-                })
                 setUsername(response.data.data.name)
             }).catch(() => {
                 setUsername('Please Logout')
@@ -75,22 +71,90 @@ const GlobalProvider = props => {
         }        
     }
 
-    const [userPermission, setUserPermission] = useState({isLoading: true, role: 0, status: 0})
-    const loadUserPermission = async (token) => {
-        const response = await axios.get(`/my-account`,
+    let buyerSidebarInitialState = {
+        order: {
+            active: 0,
+            inquiries_rejected: 0,
+            quotation_rejected: 0,
+            complete: 0,
+            not_arrived: 0
+        }
+    }
+    const [buyerSidebarCounter, setBuyerSidebarCounter] = useState(buyerSidebarInitialState)
+    const loadBuyerSidebarCounter = async (token) => {
+        const response = await axios.get(`/buyer/sidebar`,
         {
             headers: {
             "Authorization" : `Bearer ${token}`
             }
         })
         .then((response) => {       
-            setUserPermission({
-                isLoading: false,
-                role: response.data.data.roles.id,
-                status: response.data.data.status.id
-            })
+            setBuyerSidebarCounter(response.data.data)
         }).catch(() => {
-            setUsername({isLoading: false, role: 0, status: 0})
+            setBuyerSidebarCounter(buyerSidebarInitialState)
+        })
+    }
+
+    let sellerSidebarInitialState = {
+        product: {
+            pending: 0,
+            approved: 0,
+            rejected: 0
+        },
+        order: {
+            active: 0,
+            inquiries_rejected: 0,
+            quotation_rejected: 0,
+            bad_result: 0,
+            complete: 0
+        }
+    }
+    const [sellerSidebarCounter, setSellerSidebarCounter] = useState(sellerSidebarInitialState)
+    const loadSellerSidebarCounter = async (token) => {
+        const response = await axios.get(`/seller/sidebar`,
+        {
+            headers: {
+            "Authorization" : `Bearer ${token}`
+            }
+        })
+        .then((response) => {       
+            setSellerSidebarCounter(response.data.data)
+        }).catch(() => {
+            setSellerSidebarCounter(sellerSidebarInitialState)
+        })
+    }
+
+    let adminSidebarInitialState = {
+        registry: {
+            pending: 0,
+            approved: 0,
+            rejected: 0
+        },
+        product: {
+            pending: 0,
+            approved: 0,
+            rejected: 0
+        },
+        order: {
+            active: 0,
+            inquiries_rejected: 0,
+            quotation_rejected: 0,
+            complete: 0,
+            not_arrived: 0
+        }
+    }
+    const [adminSidebarCounter, setAdminSidebarCounter] = useState(adminSidebarInitialState)
+    const loadAdminSidebarCounter = async (token) => {
+        const response = await axios.get(`/admin/sidebar`,
+        {
+            headers: {
+            "Authorization" : `Bearer ${token}`
+            }
+        })
+        .then((response) => {       
+            setAdminSidebarCounter(response.data.data)
+        }).catch(() => {
+            setAdminSidebarCounter(adminSidebarInitialState)
         })
     }
 
@@ -109,10 +173,19 @@ const GlobalProvider = props => {
         //loggeduser
         username,
         loadUsername,
-        
-        //load user permission
-        userPermission,
-        loadUserPermission,
+
+        //Buyer
+        buyerSidebarCounter,
+        loadBuyerSidebarCounter,
+
+        //Seller
+        sellerSidebarCounter,
+        loadSellerSidebarCounter,
+
+        //Administrator
+        adminSidebarCounter,
+        loadAdminSidebarCounter
+
     }
 
     return (

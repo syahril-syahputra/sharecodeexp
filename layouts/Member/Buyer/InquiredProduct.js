@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import classNames from "@/utils/classNames";
 
@@ -9,7 +8,7 @@ import { Disclosure } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import PrimaryBadges from "@/components/Interface/Badges/PrimaryBadges";
 
-export default function IncomingInquiries(){
+export default function IncomingInquiries({order}){        
     return (
         <li>
             <Disclosure as="div">
@@ -34,58 +33,58 @@ export default function IncomingInquiries(){
                     <Disclosure.Panel as="ul" className="mt-1 px-2">
                         <Link
                             // as="a"
-                            href="/admin/member/buyer/inquired-product/index"
+                            href="/admin/member/buyer/inquired-product"
                             className={classNames(
                             false ? 'bg-gray-50' : 'hover:bg-gray-50',
                             'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                             )}
                         >
-                            Inquired Products
-                            <PrimaryBadges title={222}/>
+                            Active
+                            <PrimaryBadges title={order.active}/>
                         </Link>                        
                         <Link
                             // as="a"
-                            href="/admin/member/seller/incoming-inquiry/index"
+                            href="/admin/member/buyer/inquired-product"
                             className={classNames(
                             false ? 'bg-gray-50' : 'hover:bg-gray-50',
                             'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                             )}
                         >
                             Inquiries Rejected
-                            <PrimaryBadges title={222}/>
+                            <PrimaryBadges title={order.inquiries_rejected}/>
                         </Link>
                         <Link
                             // as="a"
-                            href="/admin/member/seller/incoming-inquiry/index"
+                            href="/admin/member/buyer/inquired-product"
                             className={classNames(
                             false ? 'bg-gray-50' : 'hover:bg-gray-50',
                             'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                             )}
                         >
                             Quotations Rejected
-                            <PrimaryBadges title={222}/>
+                            <PrimaryBadges title={order.quotation_rejected}/>
                         </Link>
                         <Link
                             // as="a"
-                            href="/admin/member/seller/incoming-inquiry/index"
+                            href="/admin/member/buyer/inquired-product"
                             className={classNames(
                             false ? 'bg-gray-50' : 'hover:bg-gray-50',
                             'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                             )}
                         >
                             Complete Orders
-                            <PrimaryBadges title={222}/>
+                            <PrimaryBadges title={order.complete}/>
                         </Link>
                         <Link
                             // as="a"
-                            href="/admin/member/seller/incoming-inquiry/index"
+                            href="/admin/member/buyer/inquired-product"
                             className={classNames(
                             false ? 'bg-gray-50' : 'hover:bg-gray-50',
                             'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                             )}
                         >
                             Didn't Receive Any
-                            <PrimaryBadges title={222}/>
+                            <PrimaryBadges title={order.not_arrived}/>
                         </Link>
                     </Disclosure.Panel>
                 </>

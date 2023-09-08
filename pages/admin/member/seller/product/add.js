@@ -34,7 +34,7 @@ export default function MyProduct({session}) {
     Description: '',
     dateCode: '',
     category: '',
-    subcategory_id: '',
+    // subcategory_id: '',
     img: ''
   });
 
@@ -90,7 +90,7 @@ export default function MyProduct({session}) {
     })
       .then((response) => {
         let result = response.data.data
-        router.replace('/admin/member/sellcomponents/component/pending')
+        router.replace('/admin/member/seller/product/pending')
         toast.success("Product has been added.", toastOptions)
       }).catch((error) => {
         setErrorMessage(error.data.message ? error.data.message : "Please fill the form correctly")
@@ -128,50 +128,50 @@ export default function MyProduct({session}) {
 
   //option  
   //categories option
-  const [categories, setCategories] = useState([{value: "loading", label: "loading", disabled: true}])
-  useEffect(() => {
-    const loadCategories = async () => {
-      const response = await axios.get(`/categories`)
-        .then((response) => {
-          setCategories(response.data.data)
-        }).catch((error) => {
-          console.log('failed to load categories')
-        })
-    }
-    loadCategories()
-  },[])
+  // const [categories, setCategories] = useState([{value: "loading", label: "loading", disabled: true}])
+  // useEffect(() => {
+  //   const loadCategories = async () => {
+  //     const response = await axios.get(`/categories`)
+  //       .then((response) => {
+  //         setCategories(response.data.data)
+  //       }).catch((error) => {
+  //         console.log('failed to load categories')
+  //       })
+  //   }
+  //   loadCategories()
+  // },[])
 
-  const [category, setCategory] = useState(null);
-  const handleCategoryChange = value => {
-    setCategory(value);
-    setInputData({...inputData, category:value.value})
-  };
+  // const [category, setCategory] = useState(null);
+  // const handleCategoryChange = value => {
+  //   setCategory(value);
+  //   setInputData({...inputData, category:value.value})
+  // };
 
   //option
   //sub-categories option
-  const [subcategories, setSubCategories] = useState([{value: 'select category first', label: 'Select Category First', disabled: true}])
-  useEffect(() => {
-    const loadSubCategory = async (parent) => {
-      setSubCategories([{value: 'select category first', label: 'Select Category First', disabled: true}])
-      setSubCategory(null);
-      setInputData({...inputData, subcategory_id:''})
+  // const [subcategories, setSubCategories] = useState([{value: 'select category first', label: 'Select Category First', disabled: true}])
+  // useEffect(() => {
+  //   const loadSubCategory = async (parent) => {
+  //     setSubCategories([{value: 'select category first', label: 'Select Category First', disabled: true}])
+  //     setSubCategory(null);
+  //     setInputData({...inputData, subcategory_id:''})
   
-      const response = await axios.get(`/${parent}/subcategories?drop=1`)
-        .then((response) => {
-          setSubCategories(response.data.data)
-        }).catch((error) => {
-          console.log('failed to load subcategories')
-        })
+  //     const response = await axios.get(`/${parent}/subcategories?drop=1`)
+  //       .then((response) => {
+  //         setSubCategories(response.data.data)
+  //       }).catch((error) => {
+  //         console.log('failed to load subcategories')
+  //       })
   
-    }
-    loadSubCategory(category?.value)
-  },[category])
+  //   }
+  //   loadSubCategory(category?.value)
+  // },[category])
 
-  const [subcategory, setSubCategory] = useState(null);
-  const handleSubCategoryChange = value => {
-    setSubCategory(value);
-    setInputData({...inputData, subcategory_id:value.value})
-  };
+  // const [subcategory, setSubCategory] = useState(null);
+  // const handleSubCategoryChange = value => {
+  //   setSubCategory(value);
+  //   setInputData({...inputData, subcategory_id:value.value})
+  // };
 
   const [image, setImage] = useState(null)
   const componentImageHandler = (e) =>{
@@ -363,7 +363,7 @@ export default function MyProduct({session}) {
                 </div>
             }
         </div>
-        <div className="w-full lg:w-1/2 px-3 mb-6">
+        {/* <div className="w-full lg:w-1/2 px-3 mb-6">
             <SelectInput
                 disabled={isLoading}                              
                 label="Category"
@@ -384,7 +384,7 @@ export default function MyProduct({session}) {
                 errorMsg={errorInfo?.subcategory_id}
                 onChange={handleSubCategoryChange}
             />
-        </div> 
+        </div>  */}
         <div className="w-full lg:w-1/2 px-3 mb-6">
             <PrimaryButton
                 className="w-full font-bold uppercase"

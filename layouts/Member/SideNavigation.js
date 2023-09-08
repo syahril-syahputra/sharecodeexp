@@ -17,12 +17,10 @@ import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import LoadingState from "@/components/Interface/Loader/LoadingState";
 
 import SellerDahsboardNavigation from "./Seller/Dashboard";
-import ProductManagement from "./Seller/ProductManagement";
-import IncomingInquiries from "./Seller/IncomingInquiries";
-
 import BuyerDashboardNavigation from "./Buyer/Dashboard";
-import InquiredProduct from "./Buyer/InquiredProduct"
-import SearchProduct from "./Buyer/SearchProduct"
+
+import MainSidebarBuyer from "./Buyer/MainSidebar";
+import MainSidebarSeller from "./Seller/MainSidebar";
 
 function SideNavigation(){
   const session = useSession();
@@ -70,35 +68,13 @@ function SideNavigation(){
         </>
       }
       {(company?.is_confirmed === 'accepted' && session.data.user.dashboardStatus == 'buyer') ? 
-        <>
-          <ul role="list" className="flex flex-1 flex-col gap-y-7">
-            <li>
-              <ul role="list" className="-mx-2 space-y-1">
-                <SearchProduct/>
-                <InquiredProduct/>
-              </ul>
-            </li>
-          </ul>
-          {/* Divider */}
-          <hr className="md:min-w-full my-5" />
-        </>
+        <MainSidebarBuyer/>
         :
         null
       }
 
       {(company?.is_confirmed === 'accepted' && session.data.user.dashboardStatus == 'seller') ? 
-        <>
-          <ul role="list" className="flex flex-1 flex-col gap-y-7">
-            <li>
-              <ul role="list" className="-mx-2 space-y-1">
-                <ProductManagement/>
-                <IncomingInquiries/>
-              </ul>
-            </li>
-          </ul>
-          {/* Divider */}
-          <hr className="md:min-w-full my-5" />
-        </>
+        <MainSidebarSeller/>
         :
         null
       }

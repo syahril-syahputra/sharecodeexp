@@ -27,25 +27,7 @@ export default function TableProduct(props) {
                     title={props.title}
                     action={
                         <>
-                            <Link href="/admin/member/sellcomponents/component/pending">
-                                <WarningButton
-                                    size="sm"
-                                    className="mr-2"
-                                >
-                                    <i className="mr-2 ml-1 fas fa-clock text-white"></i>
-                                    Pending Product
-                                </WarningButton>
-                            </Link>
-                            <Link href="/admin/member/sellcomponents/component/rejected">
-                                <DangerButton
-                                    size="sm"
-                                    className="mr-2"
-                                >   
-                                    <i className="mr-2 ml-1 fas fa-times text-white"></i>
-                                    Rejected Product
-                                </DangerButton>
-                            </Link>
-                            <Link href="/admin/member/sellcomponents/component/add">
+                            <Link href="/admin/member/seller/product/add">
                                 <SecondaryButton
                                     size="sm"
                                 >
@@ -126,7 +108,7 @@ export default function TableProduct(props) {
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
                                             <div className="inline-flex">
-                                                <Link href={`/admin/member/sellcomponents/component/view/${item.slug}`}>
+                                                <Link href={`/admin/member/seller/product/details/${item.slug}`}>
                                                     <PrimaryButton
                                                         size="sm"
                                                     >View</PrimaryButton>

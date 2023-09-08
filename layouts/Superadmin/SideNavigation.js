@@ -5,9 +5,8 @@ import { Disclosure } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { HomeIcon } from '@heroicons/react/24/outline'
 import { AdminUrl } from "@/route/route-url";
-import Registry from "@/layouts/Superadmin/Registry";
-import ComponentManagement from "@/layouts/Superadmin/ComponentManagement";
-import Order from "@/layouts/Superadmin/Order";
+
+import MainSidebar from "./MainSidebar";
 
 function SideNavigation(){
   return (
@@ -34,17 +33,7 @@ function SideNavigation(){
       {/* Divider */}
       <hr className="md:min-w-full my-5" />
 
-      <ul role="list" className="flex flex-1 flex-col gap-y-7">
-        <li>
-          <ul role="list" className="-mx-2 space-y-1">
-            <Registry/>
-            <ComponentManagement/>
-            <Order/>
-          </ul>
-        </li>
-      </ul>
-      {/* Divider */}
-      <hr className="md:min-w-full my-5" />
+      <MainSidebar/>
 
       {/* main nav */}
       <ul role="list" className="flex flex-1 flex-col gap-y-7">

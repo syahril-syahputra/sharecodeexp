@@ -246,7 +246,7 @@ export default function AddToInquiryList({session, routeParam}) {
                                     {data.packaging}
                                 </td>
                             </tr>
-                            <tr className="text-black hover:bg-slate-100">
+                            {/* <tr className="text-black hover:bg-slate-100">
                                 <th scope="col" className="px-6 py-3">
                                     Category
                                 </th>
@@ -267,7 +267,7 @@ export default function AddToInquiryList({session, routeParam}) {
                                 <td className="text-sm px-2 py-4">
                                     {data.subcategory?.name}
                                 </td>
-                            </tr>
+                            </tr> */}
                             <tr className="text-black hover:bg-slate-100">
                                 <th scope="col" className="px-6 py-3">
                                     Status

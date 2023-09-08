@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 import axios from "lib/axios";
 export default function ReportGenerator () {
-  console.log('load')
 
     const [isClient, setIsClient] = useState(false)
     const [statisticCounter, setStatisticCounter] = useState({
@@ -35,9 +34,9 @@ export default function ReportGenerator () {
               Download PDF
             </PDFDownloadLink>
             <div className="w-full ml-10">
-                <PDFViewer  width={1100} height={1500}>
-                    <PDF data={statisticCounter}/>
-                </PDFViewer>
+              <PDFViewer  width={1100} height={1500}>
+                  <PDF data={statisticCounter}/>
+              </PDFViewer>
             </div>
           </div>
         : 'Loading...'}

@@ -9,7 +9,7 @@ import { Disclosure } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import PrimaryBadges from "@/components/Interface/Badges/PrimaryBadges";
 
-export default function Registry(){
+export default function Registry({registry}){
     return (
         <li>
             <Disclosure as="div">
@@ -40,7 +40,7 @@ export default function Registry(){
                             )}
                         >
                             Pending 
-                            <PrimaryBadges title="5000"/>
+                            <PrimaryBadges title={registry.pending}/>
                         </Link>
                         <Link
                             href="/admin/superadmin/registry/approvedcompany"
@@ -50,7 +50,7 @@ export default function Registry(){
                             )}
                         >
                             Approved
-                            <PrimaryBadges title="5000"/>
+                            <PrimaryBadges title={registry.approved}/>
                         </Link>
                         <Link
                             href="/admin/superadmin/registry/rejectedcompany"
@@ -60,7 +60,7 @@ export default function Registry(){
                             )}
                         >
                             Rejected
-                            <PrimaryBadges title="5000"/>
+                            <PrimaryBadges title={registry.rejected}/>
                         </Link>
                     </Disclosure.Panel>
                 </>

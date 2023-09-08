@@ -663,7 +663,7 @@ export default function OrderDetails({session, routeParam}) {
                                         </div>
                                     }
                                     {(data.companies_products?.img && !isLoading) && 
-                                        <div className="flex justify-center items-center h-60">
+                                        <div className="flex justify-center items-center">
                                             <Image
                                                 src={publicDir + "/product_images/" + data.companies_products.img}
                                                 width="400"
@@ -964,7 +964,15 @@ export default function OrderDetails({session, routeParam}) {
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Quotation</span>
-                                        <span className="underline text-blue-500">view</span>
+                                        {data.quotation_available ? 
+                                            <Link target="_blank" href={`pdf/quotation/${data.slug}`} className="underline text-blue-500">
+                                                view
+                                            </Link>
+                                            :
+                                            <span className="underline text-gray-500">
+                                                view
+                                            </span>                                        
+                                        }
                                     </div>
                                 </div>
                                 <div className="mx-2 mt-1 text-sm">

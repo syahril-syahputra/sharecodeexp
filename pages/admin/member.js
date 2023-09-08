@@ -111,7 +111,7 @@ export default function MemberDashboard({company, message}) {
   
 MemberDashboard.layout = Admin;
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context) {  
   const session = await getSession(context)
   if(!session){
     return {
@@ -122,6 +122,8 @@ export async function getServerSideProps(context) {
     };
   }
 
+  let company = {}
+  let redirectedMessage = ''
   if(session.user.dashboardStatus){
     return {
       redirect: {
@@ -132,12 +134,16 @@ export async function getServerSideProps(context) {
   }
   const loadCompany = await axios.get(`/company`, {
     headers: {
-    "Authorization" : `Bearer ${session.accessToken}`
+      "Authorization" : `Bearer ${session.accessToken}`
     }
   })
-  const company = loadCompany.data.data
+  .then((res) => {
+    company = res.data.data
+  })
+  .catch((err) => {
+    redirectedMessage = err.data.message
+  })
 
-  let redirectedMessage = ''
   if(!!context.query.redirect) {
     redirectedMessage = 'Waiting for your company approval'
   }

@@ -36,7 +36,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
         Description: '',
         dateCode: '',
         status: '',
-        subcategory_id: '',
+        // subcategory_id: '',
         img: ''
       });
     const [errorInfo, setErrorInfo] = useState({})
@@ -89,7 +89,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
             }
             })
             .then(() => {
-                router.push(`/admin/member/sellcomponents/component/view/${routeParam.componentSlug}`)
+                router.push(`/admin/member/seller/product/details/${routeParam.componentSlug}`)
                 toast.success("Product has been updated.", toastOptions)
             }).catch((error) => {
                 console.log(error)
@@ -115,51 +115,49 @@ export default function EditComponent({session, routeParam, packaginglist}) {
 
     //option  
     //categories option
-    const [categories, setCategories] = useState([{value: "loading", label: "loading", disabled: true}])
-    const loadCategories = async () => {
-        const response = await axios.get(`/categories`)
-        .then((response) => {
-            setCategories(response.data.data)
-        }).catch((error) => {
-            console.log('failed to load categories')
-        })
-    }
-    useEffect(() => {
-        loadCategories()
-    },[])
+    // const [categories, setCategories] = useState([{value: "loading", label: "loading", disabled: true}])
+    // const loadCategories = async () => {
+    //     const response = await axios.get(`/categories`)
+    //     .then((response) => {
+    //         setCategories(response.data.data)
+    //     }).catch((error) => {
+    //         console.log('failed to load categories')
+    //     })
+    // }
+    // useEffect(() => {
+    //     loadCategories()
+    // },[])
 
-    const [category, setCategory] = useState(null);
-    const handleCategoryChange = value => {
-        // loadSubCategory(value.value)
-        setSubCategory(null);
-        setInputData({...inputData, subcategory_id:''})
-        setCategory(value);
-        setInputData({...inputData, category:value.value})
-    };
+    // const [category, setCategory] = useState(null);
+    // const handleCategoryChange = value => {
+    //     // loadSubCategory(value.value)
+    //     setSubCategory(null);
+    //     setInputData({...inputData, subcategory_id:''})
+    //     setCategory(value);
+    //     setInputData({...inputData, category:value.value})
+    // };
 
     //option
     //sub-categories option
-    const [subcategories, setSubCategories] = useState([{value: 'select category first', label: 'Select Category First', disabled: true}])
-    const loadSubCategory = async (parent) => {
-        setSubCategories([{value: 'select category first', label: 'Select Category First', disabled: true}])
-    const response = await axios.get(`/${parent}/subcategories?drop=1`)
-      .then((response) => {
-        setSubCategories(response.data.data)
-      }).catch((error) => {
-        console.log('failed to load subcategories')
-      })
+    // const [subcategories, setSubCategories] = useState([{value: 'select category first', label: 'Select Category First', disabled: true}])
+    // const loadSubCategory = async (parent) => {
+    //     setSubCategories([{value: 'select category first', label: 'Select Category First', disabled: true}])
+    // const response = await axios.get(`/${parent}/subcategories?drop=1`)
+    //   .then((response) => {
+    //     setSubCategories(response.data.data)
+    //   }).catch((error) => {
+    //     console.log('failed to load subcategories')
+    //   })
+    // }
+    // useEffect(() => {
+    //     loadSubCategory(category?.value)
+    // },[category])
 
-
-    }
-    useEffect(() => {
-        loadSubCategory(category?.value)
-    },[category])
-
-    const [subcategory, setSubCategory] = useState(null);
-    const handleSubCategoryChange = value => {
-        setSubCategory(value);
-        setInputData({...inputData, subcategory_id:value.value})
-    };
+    // const [subcategory, setSubCategory] = useState(null);
+    // const handleSubCategoryChange = value => {
+    //     setSubCategory(value);
+    //     setInputData({...inputData, subcategory_id:value.value})
+    // };
 
     //data search
     const [showImage, setShowImage] = useState()
@@ -185,7 +183,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                     Manufacture: result.Manufacture,
                     Description: result.Description,
                     dateCode: result.dateCode,
-                    subcategory_id: result.subcategory.id
+                    // subcategory_id: result.subcategory.id
                 })
                 setShowImage(result.img)
 
@@ -197,8 +195,8 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                     setPackaging({value: 'other', label: 'Other'})
                 }   
 
-                setCategory({value: result.subcategory.category.id, label: result.subcategory.category.name})  
-                setSubCategory({value: result.subcategory.id, label: result.subcategory.name}) 
+                // setCategory({value: result.subcategory.category.id, label: result.subcategory.category.name})  
+                // setSubCategory({value: result.subcategory.id, label: result.subcategory.name}) 
 
             }).catch((error) => {
                 toast.error("Something went wrong. Cannot load component.", toastOptions)
@@ -421,7 +419,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                         </div>
                     }
                 </div>
-                <div className="w-full lg:w-1/2 px-3 mb-6">
+                {/* <div className="w-full lg:w-1/2 px-3 mb-6">
                     <SelectInput
                         disabled={isLoading}                              
                         label="Category"
@@ -442,9 +440,9 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                         errorMsg={errorInfo?.subcategory_id}
                         onChange={handleSubCategoryChange}
                     />
-                </div> 
+                </div>  */}
                 <div className="w-full lg:w-1/2 px-3 mb-6">
-                    <Link href={`/admin/superadmin/components/details/${routeParam.componentSlug}`}>
+                    <Link href={`/admin/member/seller/product/details/${routeParam.componentSlug}`}>
                         <LightButton
                             className="w-full font-bold uppercase mb-2"
                             disabled={isLoading}

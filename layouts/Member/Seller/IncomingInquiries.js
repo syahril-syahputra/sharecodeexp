@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import classNames from "@/utils/classNames";
 
@@ -9,7 +8,7 @@ import { Disclosure } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import PrimaryBadges from "@/components/Interface/Badges/PrimaryBadges";
 
-export default function IncomingInquiries(){
+export default function IncomingInquiries({order}){    
     return (
         <li>
             <Disclosure as="div">
@@ -40,8 +39,8 @@ export default function IncomingInquiries(){
                             'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                             )}
                         >
-                            Incoming Inquiries 
-                            <PrimaryBadges title={222}/>
+                            Active
+                            <PrimaryBadges title={order.active}/>
                         </Link>                        
                         <Link
                             // as="a"
@@ -52,7 +51,7 @@ export default function IncomingInquiries(){
                             )}
                         >
                             Inquiries Rejected
-                            <PrimaryBadges title={222}/>
+                            <PrimaryBadges title={order.inquiries_rejected}/>
                         </Link>
                         <Link
                             // as="a"
@@ -63,7 +62,7 @@ export default function IncomingInquiries(){
                             )}
                         >
                             Quotations Rejected
-                            <PrimaryBadges title={222}/>
+                            <PrimaryBadges title={order.quotation_rejected}/>
                         </Link>
                         <Link
                             // as="a"
@@ -74,7 +73,7 @@ export default function IncomingInquiries(){
                             )}
                         >
                             Bad Test Result
-                            <PrimaryBadges title={222}/>
+                            <PrimaryBadges title={order.bad_result}/>
                         </Link>
                         <Link
                             // as="a"
@@ -85,7 +84,7 @@ export default function IncomingInquiries(){
                             )}
                         >
                             Complete Orders
-                            <PrimaryBadges title={222}/>
+                            <PrimaryBadges title={order.complete}/>
                         </Link>
                     </Disclosure.Panel>
                 </>

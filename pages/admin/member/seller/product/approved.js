@@ -12,7 +12,6 @@ import { toast } from 'react-toastify';
 import { toastOptions } from "@/lib/toastOptions"
 
 export default function MyProduct({session}) {
-  console.log('load')
 
   //data search
   const [isLoading, setIsLoading] = useState(true)
@@ -71,7 +70,7 @@ export default function MyProduct({session}) {
             <MiniSearchBar searchItem={handleSearch}/>
         </div>
         <ComponentList
-          title="Product List"
+          title="Approved Product"
           setPage={setPage}
           isLoading={isLoading}
           data={data}

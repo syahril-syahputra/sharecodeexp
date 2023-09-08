@@ -9,7 +9,7 @@ import { Disclosure } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import PrimaryBadges from "@/components/Interface/Badges/PrimaryBadges";
 
-export default function ComponentManagement(){
+export default function ComponentManagement({product}){
     return (
         <li>
             <Disclosure as="div">
@@ -40,7 +40,7 @@ export default function ComponentManagement(){
                             )}
                         >
                             Pending 
-                            <PrimaryBadges title="5000"/>
+                            <PrimaryBadges title={product.pending}/>
                         </Link>
                         <Link
                             href="/admin/superadmin/product/approved"
@@ -50,7 +50,7 @@ export default function ComponentManagement(){
                             )}
                         >
                             Approved
-                            <PrimaryBadges title="5000"/>
+                            <PrimaryBadges title={product.approved}/>
                         </Link>
                         <Link
                             href="/admin/superadmin/product/rejected"
@@ -60,7 +60,7 @@ export default function ComponentManagement(){
                             )}
                         >
                             Rejected
-                            <PrimaryBadges title="5000"/>
+                            <PrimaryBadges title={product.rejected}/>
                         </Link>
                     </Disclosure.Panel>
                 </>

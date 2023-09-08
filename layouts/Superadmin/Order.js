@@ -9,7 +9,7 @@ import { Disclosure } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import PrimaryBadges from "@/components/Interface/Badges/PrimaryBadges";
 
-export default function Registry(){
+export default function Order({order}){
     return (
         <li>
             <Disclosure as="div">
@@ -40,7 +40,7 @@ export default function Registry(){
                             )}
                         >
                             Active Orders 
-                            <PrimaryBadges title="5000"/>
+                            <PrimaryBadges title={order.active}/>
                         </Link>
                         <Link
                             href="/admin/superadmin/orders/allorders"
@@ -50,7 +50,7 @@ export default function Registry(){
                             )}
                         >
                             Inquiries Rejected
-                            <PrimaryBadges title="5000"/>
+                            <PrimaryBadges title={order.inquiries_rejected}/>
                         </Link>
                         <Link
                             href="/admin/superadmin/orders/allorders"
@@ -60,7 +60,7 @@ export default function Registry(){
                             )}
                         >
                             Quotation Rejected
-                            <PrimaryBadges title="5000"/>
+                            <PrimaryBadges title={order.quotation_rejected}/>
                         </Link>
                         <Link
                             href="/admin/superadmin/orders/allorders"
@@ -70,7 +70,7 @@ export default function Registry(){
                             )}
                         >
                             Complete Orders
-                            <PrimaryBadges title="5000"/>
+                            <PrimaryBadges title={order.complete}/>
                         </Link>
                         <Link
                             href="/admin/superadmin/orders/allorders"
@@ -80,7 +80,7 @@ export default function Registry(){
                             )}
                         >
                             Product not Arrived
-                            <PrimaryBadges title="5000"/>
+                            <PrimaryBadges title={order.not_arrived}/>
                         </Link>
                     </Disclosure.Panel>
                 </>
