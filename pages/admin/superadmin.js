@@ -74,7 +74,7 @@ export default function SuperadminDashboard({session, message}) {
             <span className="text-md italic">Pending Company</span>
           </div>
           <Link
-            href="/admin/superadmin/registry/company"
+            href="/admin/superadmin/registry/pendingcompany"
             className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4">
             <div className="">
                 <h1 className="text-md text-white">
@@ -96,7 +96,7 @@ export default function SuperadminDashboard({session, message}) {
             <span className="text-md italic">Pending Product</span>
           </div>
           <Link
-            href="/admin/superadmin/product-management"
+            href="/admin/superadmin/product/pending"
             className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4">
             <div className="">
                 <h1 className="text-md text-white">

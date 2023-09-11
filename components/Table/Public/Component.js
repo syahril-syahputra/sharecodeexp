@@ -50,7 +50,7 @@ export default function TableComponent(props){
                                 MOQ
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Country
+                                Stock Location
                             </th>
                             <th scope="col" className="px-6 py-3 text-right">
                                 Act.

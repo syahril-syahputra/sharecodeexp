@@ -51,7 +51,7 @@ export default function MemberDashboard({company, message}) {
                 <p>Your membership was rejected by Exepart registration expert</p>
               </h3>
               <h3 className="text-md font-semibold leading-normal text-blue-700 mb-2">
-                <i>If something is not agreeable, please contact Exepart registration expert. You can also check on <Link href="/admin/member/company/mycompany" className="underline text-black">My Company</Link></i>
+                <i>If something is not agreeable, please contact Exepart registration expert. You can also check on <Link href="/admin/member/company/my-company" className="underline text-black">My Company</Link></i>
               </h3>
             </div>
           </PrimaryWrapper> 

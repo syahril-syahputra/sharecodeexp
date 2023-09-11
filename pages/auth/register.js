@@ -42,9 +42,10 @@ export default function Index() {
             company_phone: "",
             company_country: "",
             company_address: "",
-            company_address_2: "",
-            postal_code: "",
-            province: "",
+            company_address2: "",
+            company_zip: "",
+            company_province: "",
+            company_city: "",
 
             //Documents
             company_img: "",
@@ -378,16 +379,27 @@ export default function Index() {
                                                     /> 
                                                 </div>
                                             </div>
-                                            <div className="flex flex-wrap mb-6">                                                
+                                            <div className="flex flex-wrap mb-6">  
+                                                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                                    <TextInput
+                                                        label="City"
+                                                        className="w-full"
+                                                        required
+                                                        name="company_city"
+                                                        value={registrationInfo.company_city}
+                                                        errorMsg={errorInfo?.company_city}
+                                                        onChange={(input) => handleStringValueChange(input)}
+                                                    /> 
+                                                </div>                                              
                                                 <div className="w-full md:w-1/2 px-3">
                                                     <div className="w-1/2 md:w-1/2">
                                                         <TextInput
                                                             label="Postal Code"
                                                             className="w-full"
                                                             required
-                                                            name="postal_code"
-                                                            value={registrationInfo.postal_code}
-                                                            errorMsg={errorInfo?.postal_code}
+                                                            name="company_zip"
+                                                            value={registrationInfo.company_zip}
+                                                            errorMsg={errorInfo?.company_zip}
                                                             onChange={(input) => handleStringValueChange(input)}
                                                         /> 
                                                     </div>
@@ -407,9 +419,9 @@ export default function Index() {
                                                         label="Province"
                                                         className="w-full"
                                                         required
-                                                        name="province"
-                                                        value={registrationInfo.province}
-                                                        errorMsg={errorInfo?.province}
+                                                        name="company_province"
+                                                        value={registrationInfo.company_province}
+                                                        errorMsg={errorInfo?.company_province}
                                                         onChange={(input) => handleStringValueChange(input)}
                                                     /> 
                                                 </div>
@@ -446,10 +458,10 @@ export default function Index() {
                                                         characterCount={secondAddressCharacterCount}
                                                         characterLimit={secondAddressCharacterLimit}
                                                         label="Address 2"
-                                                        name="company_address_2"
+                                                        name="company_address2"
                                                         required
-                                                        value={registrationInfo.company_address_2}
-                                                        errorMsg={errorInfo?.company_address_2}
+                                                        value={registrationInfo.company_address2}
+                                                        errorMsg={errorInfo?.company_address2}
                                                         onChange={(input) => secondAddressHandler(input)}
                                                     />
                                                 </div>

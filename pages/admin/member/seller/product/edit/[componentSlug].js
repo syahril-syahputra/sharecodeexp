@@ -361,7 +361,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                     <CountrySelector
                         setInisiate
                         disabled={isLoading}
-                        label="Country"
+                        label="Stock Country"
                         name="country"
                         value={inputData.country}
                         countryHandleChange={countryHandleChange}

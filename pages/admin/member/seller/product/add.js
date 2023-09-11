@@ -305,7 +305,7 @@ export default function MyProduct({session}) {
         <div className="w-full lg:w-1/2 px-3 mb-6">
             <CountrySelector
                 disabled={isLoading}
-                label="Country"
+                label="Stock Location"
                 name="country"
                 value={country}
                 countryHandleChange={countryHandleChange}

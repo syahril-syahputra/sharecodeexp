@@ -141,7 +141,7 @@ export default function MyCompany({session, sectorlist}) {
                     </h3>
                 }
                 rightTop={
-                    <Link href="/admin/member/company/mycompany">
+                    <Link href="/admin/member/company/my-company">
                         <LightButton
                             size="sm"
                         >   
@@ -297,7 +297,7 @@ export default function MyCompany({session, sectorlist}) {
                 </div>
                 <div className="px-3 mb-6 flex">
                     <div className="w-full pr-2">
-                        <Link href="/admin/member/company/mycompany">
+                        <Link href="/admin/member/company/my-company">
                             <LightButton
                                 className="w-full font-bold uppercase mb-2"
                                 disabled={isLoading}

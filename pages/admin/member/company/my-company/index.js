@@ -165,7 +165,7 @@ export default function MyCompany({session}) {
                 <i className="mr-2 ml-1 fas fa-folder text-white"></i>
                 Upload Aditional Documents
               </WarningButton>
-              <Link href="/admin/member/company/mycompany/edit">
+              <Link href="/admin/member/company/my-company/edit">
                 <WarningButton size="sm">
                   <i className="mr-2 ml-1 fas fa-pen text-white"></i>
                   Update Company
@@ -281,7 +281,7 @@ export default function MyCompany({session}) {
                 Additional Documents
               </div>
               <div className="m-2 p-2 text-sm text-center">
-                <Link href="/admin/member/company/mycompany/additionaldocs">
+                <Link href="/admin/member/company/my-company/additionaldocs">
                   <SecondaryButton size="sm">
                     View
                   </SecondaryButton>
