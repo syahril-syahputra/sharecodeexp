@@ -279,7 +279,7 @@ export default function ComponentDetails({session, routeParam}) {
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
                                     <th scope="col" className="px-6 py-3">
-                                        Country
+                                        Stock Location
                                     </th>
                                     <td scope="row" className="text-sm px-6 py-4">
                                         :
@@ -321,7 +321,7 @@ export default function ComponentDetails({session, routeParam}) {
                                         {component.packaging}
                                     </td>
                                 </tr>
-                                <tr className="text-black hover:bg-slate-100">
+                                {/* <tr className="text-black hover:bg-slate-100">
                                     <th scope="col" className="px-6 py-3">
                                         Category
                                     </th>
@@ -342,7 +342,7 @@ export default function ComponentDetails({session, routeParam}) {
                                     <td className="text-sm px-2 py-4">
                                         {component.subcategory?.name}
                                     </td>
-                                </tr>
+                                </tr> */}
                                 <tr className="text-black hover:bg-slate-100">
                                     <th scope="col" className="px-6 py-3">
                                         Status

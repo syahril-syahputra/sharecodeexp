@@ -68,7 +68,7 @@ export default function MyProduct({session, routeParam}) {
                             </SecondaryButton>
                         </Link>
                         {!!data.id && 
-                            <Link href={`/admin/member/sellcomponents/component/edit/${data.slug}`}>
+                            <Link href={`/admin/member/seller/product/edit/${data.slug}`}>
                                 <WarningButton 
                                     size="sm"
                                 >
@@ -154,7 +154,7 @@ export default function MyProduct({session, routeParam}) {
                                 </tr>
                                 <tr className="text-black hover:bg-slate-100">
                                     <th scope="col" className="px-6 py-3">
-                                        Country
+                                        Stock Location
                                     </th>
                                     <td scope="row" className="text-sm px-6 py-4">
                                         :
@@ -238,6 +238,17 @@ export default function MyProduct({session, routeParam}) {
                                     </td>
                                     <td className="text-sm px-2 py-4">
                                         {moment(data.created_at).format('dddd, D MMMM YYYY')}
+                                    </td>
+                                </tr>
+                                <tr className="text-black hover:bg-slate-100">
+                                    <th scope="col" className="px-6 py-3">
+                                        Note
+                                    </th>
+                                    <td scope="row" className="text-sm px-6 py-4">
+                                        :
+                                    </td>
+                                    <td className="text-sm px-2 py-4">
+                                        {data.note}
                                     </td>
                                 </tr>
                             </tbody>

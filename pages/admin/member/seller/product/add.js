@@ -35,7 +35,8 @@ export default function MyProduct({session}) {
     dateCode: '',
     category: '',
     // subcategory_id: '',
-    img: ''
+    img: '',
+    note: ''
   });
 
   const [errorInfo, setErrorInfo] = useState({})
@@ -385,6 +386,18 @@ export default function MyProduct({session}) {
                 onChange={handleSubCategoryChange}
             />
         </div>  */}
+        <div className="w-full lg:w-1/2 px-3 mb-6">
+          <TextInput
+              label="Note"
+              placeholder=""
+              className="w-full"
+              disabled={isLoading}                    
+              name="note"
+              value={inputData.note}
+              errorMsg={errorInfo?.note}
+              onChange={(input) => setDataHandler(input)}
+          /> 
+        </div>
         <div className="w-full lg:w-1/2 px-3 mb-6">
             <PrimaryButton
                 className="w-full font-bold uppercase"

@@ -37,7 +37,8 @@ export default function EditComponent({session, routeParam, packaginglist}) {
         dateCode: '',
         status: '',
         // subcategory_id: '',
-        img: ''
+        img: '',
+        note: ''
       });
     const [errorInfo, setErrorInfo] = useState({})
     const [errorMessage, setErrorMessage] = useState(null)
@@ -183,6 +184,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                     Manufacture: result.Manufacture,
                     Description: result.Description,
                     dateCode: result.dateCode,
+                    note: result.note,
                     // subcategory_id: result.subcategory.id
                 })
                 setShowImage(result.img)
@@ -361,7 +363,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                     <CountrySelector
                         setInisiate
                         disabled={isLoading}
-                        label="Stock Country"
+                        label="Stock Location"
                         name="country"
                         value={inputData.country}
                         countryHandleChange={countryHandleChange}
@@ -439,8 +441,20 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                         options={subcategories}
                         errorMsg={errorInfo?.subcategory_id}
                         onChange={handleSubCategoryChange}
-                    />
-                </div>  */}
+                    />                    
+                </div>  */}                
+                <div className="w-full lg:w-1/2 px-3 mb-6">
+                    <TextInput
+                        label="Note"
+                        placeholder=""
+                        className="w-full"
+                        disabled={isLoading}                    
+                        name="note"
+                        value={inputData.note}
+                        errorMsg={errorInfo?.note}
+                        onChange={(input) => setDataHandler(input)}
+                    /> 
+                </div>
                 <div className="w-full lg:w-1/2 px-3 mb-6">
                     <Link href={`/admin/member/seller/product/details/${routeParam.componentSlug}`}>
                         <LightButton

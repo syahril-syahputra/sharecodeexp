@@ -1,5 +1,5 @@
-import { right } from "@popperjs/core";
-import { Page, View, Text, Font, Document, Image, StyleSheet } from "@react-pdf/renderer";
+import moment from "moment";
+import { Page, View, Text, Font, Image, Document, StyleSheet } from "@react-pdf/renderer";
 
 const Quotation = ({quotation}) => (
     <Document pageMode="fullScreen">
@@ -10,9 +10,7 @@ const Quotation = ({quotation}) => (
                     src="/img/exepart-gradient.png"
                 />
                 <Text style={styles.title}>QUOTATION</Text>
-            </View>
-                
-
+            </View>         
             <View style={styles.quotationItemDetail}>
                 <View style={styles.leftColumn}>
                     <View style={styles.inlineItem}>
@@ -28,7 +26,7 @@ const Quotation = ({quotation}) => (
                             Date
                         </Text>
                         <Text style={styles.subItem}>
-                            : {quotation.quotation_date}
+                            : {moment(quotation.quotation_date).format('dddd, D MMMM YYYY')}
                         </Text>
                     </View>
                 </View>
@@ -80,7 +78,7 @@ const Quotation = ({quotation}) => (
                             Contact Name
                         </Text>
                         <Text style={styles.subItem}>
-                            : {quotation.buyer.name}
+                            : {quotation.user_buyer.name} ({quotation.user_buyer.email})
                         </Text>
                     </View>
                 </View>
@@ -94,6 +92,7 @@ const Quotation = ({quotation}) => (
                     <Text style={styles.description}>Description</Text>
                     <Text style={styles.mfg}>Mfg</Text>
                     <Text style={styles.dc}>DC</Text>
+                    <Text style={styles.qty}>Quantity</Text>
                     <Text style={styles.unitPrice}>Unit Price (USD)</Text>
                     <Text style={styles.total}>Total (USD)</Text>
                 </View>
@@ -102,8 +101,9 @@ const Quotation = ({quotation}) => (
                     <Text style={styles.description}>{quotation.companies_products.Description}</Text>
                     <Text style={styles.mfg}>{quotation.companies_products.Manufacture}</Text>
                     <Text style={styles.dc}>{quotation.companies_products.dateCode}</Text>
+                    <Text style={styles.qty}>{quotation.qty}</Text>
                     <Text style={styles.unitPrice}>{quotation.price_profite}</Text>
-                    <Text style={styles.total}>{quotation.price_profite}</Text>
+                    <Text style={styles.total}>{quotation.price_profite * quotation.qty}</Text>
                 </View>
                 <View style={{ margin: 5 }}></View>
                 <View style={styles.tableBody}>
@@ -111,8 +111,9 @@ const Quotation = ({quotation}) => (
                     <Text style={styles.description}></Text>
                     <Text style={styles.mfg}></Text>
                     <Text style={styles.dc}></Text>
+                    <Text style={styles.qty}></Text>
                     <Text style={styles.grandTotal}>TOTAL (USD)</Text>
-                    <Text style={styles.grandTotal}>{quotation.price_profite}</Text>
+                    <Text style={styles.grandTotal}>{quotation.price_profite * quotation.qty}</Text>
                 </View>
             </View>
 
@@ -135,7 +136,7 @@ Font.register({
 Font.register({
     family: 'Open Sans',
     src: `https://fonts.gstatic.com/s/opensans/v17/mem8YaGs126MiZpBA-UFVZ0e.ttf`,
-  });
+});
 
 const styles = StyleSheet.create({
     body: {
@@ -267,7 +268,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'grey',
         fontFamily: 'Oswald'
-      },
+    },
 
 });
 export default Quotation;

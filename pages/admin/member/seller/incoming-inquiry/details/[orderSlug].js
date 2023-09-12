@@ -728,13 +728,29 @@ export default function InquiryDetails({session, routeParam}) {
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Purchase Order</span>
-                                        <span className="underline text-blue-500">view</span>
+                                        {data.purchase_order_available ? 
+                                            <Link target="_blank" href={`pdf/purchase-order/${data.slug}`} className="underline text-blue-500">
+                                                view
+                                            </Link>
+                                            :
+                                            <span className="underline text-gray-500">
+                                                view
+                                            </span>                                        
+                                        }
                                     </div>
                                 </div>
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Packaging List</span>
-                                        <span className="underline text-blue-500">view</span>
+                                        {data.seller_packing_list_available ? 
+                                            <Link target="_blank" href={`pdf/seller-packing-list/${data.slug}`} className="underline text-blue-500">
+                                                view
+                                            </Link>
+                                            :
+                                            <span className="underline text-gray-500">
+                                                view
+                                            </span>                                        
+                                        }
                                     </div>
                                 </div> 
                                 <div className="mx-2 mt-1 text-sm">

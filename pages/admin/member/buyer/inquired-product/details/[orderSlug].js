@@ -6,7 +6,6 @@ import Image from "next/image"
 import moment from "moment";
 
 // components
-import OrderStatusStep from "@/components/Shared/Order/OrderStatusStep";
 import AcceptQuotationModal from "@/components/Modal/OrderComponent/Buyer/AcceptQuotation"
 import RejectQuotationModal from "@/components/Modal/OrderComponent/Buyer/RejectQuotation"
 import SendPaymentDocsModal from "@/components/Modal/OrderComponent/Buyer/SendPaymentDocs"
@@ -823,13 +822,29 @@ export default function InquiryDetails({session, routeParam}) {
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Proforma Invoice</span>
-                                        <span className="underline text-blue-500">view</span>
+                                        {data.proforma_invoice_available ? 
+                                            <Link target="_blank" href={`pdf/proforma-invoice/${data.slug}`} className="underline text-blue-500">
+                                                view
+                                            </Link>
+                                            :
+                                            <span className="underline text-gray-500">
+                                                view
+                                            </span>                                        
+                                        }
                                     </div>
                                 </div> 
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Buyer's Invoice</span>
-                                        <span className="underline text-blue-500">view</span>
+                                        {data.buyer_invoice_available ? 
+                                            <Link target="_blank" href={`pdf/buyer-invoice/${data.slug}`} className="underline text-blue-500">
+                                                view
+                                            </Link>
+                                            :
+                                            <span className="underline text-gray-500">
+                                                view
+                                            </span>                                        
+                                        }
                                     </div>
                                 </div>
                             </div>

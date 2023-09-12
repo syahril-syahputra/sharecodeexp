@@ -978,25 +978,57 @@ export default function OrderDetails({session, routeParam}) {
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Purchase Order</span>
-                                        <span className="underline text-blue-500">view</span>
+                                        {data.purchase_order_available ? 
+                                            <Link target="_blank" href={`pdf/purchase-order/${data.slug}`} className="underline text-blue-500">
+                                                view
+                                            </Link>
+                                            :
+                                            <span className="underline text-gray-500">
+                                                view
+                                            </span>                                        
+                                        }
                                     </div>
                                 </div>
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Proforma Invoice</span>
-                                        <span className="underline text-blue-500">view</span>
+                                        {data.proforma_invoice_available ? 
+                                            <Link target="_blank" href={`pdf/proforma-invoice/${data.slug}`} className="underline text-blue-500">
+                                                view
+                                            </Link>
+                                            :
+                                            <span className="underline text-gray-500">
+                                                view
+                                            </span>                                        
+                                        }
                                     </div>
                                 </div> 
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Buyer's Invoice</span>
-                                        <span className="underline text-blue-500">view</span>
+                                        {data.buyer_invoice_available ? 
+                                            <Link target="_blank" href={`pdf/buyer-invoice/${data.slug}`} className="underline text-blue-500">
+                                                view
+                                            </Link>
+                                            :
+                                            <span className="underline text-gray-500">
+                                                view
+                                            </span>                                        
+                                        }
                                     </div>
                                 </div>                            
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Packing List for Seller</span>
-                                        <span className="underline text-blue-500">view</span>
+                                        {data.seller_packing_list_available ? 
+                                            <Link target="_blank" href={`pdf/seller-packing-list/${data.slug}`} className="underline text-blue-500">
+                                                view
+                                            </Link>
+                                            :
+                                            <span className="underline text-gray-500">
+                                                view
+                                            </span>                                        
+                                        }
                                     </div>
                                 </div>
                                 <div className="mx-2 mt-1 text-sm">
@@ -1015,8 +1047,30 @@ export default function OrderDetails({session, routeParam}) {
                                 </div>
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
-                                        <span>Packing List for White Horse</span>
-                                        <span className="underline text-blue-500">view</span>
+                                        <span>Packing List for White Horse (Bad Result)</span>
+                                        {data.lab_to_seller_packing_list_available ? 
+                                            <Link target="_blank" href={`pdf/to-seller-packing-list/${data.slug}`} className="underline text-blue-500">
+                                                view
+                                            </Link>
+                                            :
+                                            <span className="underline text-gray-500">
+                                                view
+                                            </span>                                        
+                                        }
+                                    </div>
+                                </div>
+                                <div className="mx-2 mt-1 text-sm">
+                                    <div className="flex flex-wrap justify-between">
+                                        <span>Packing List for White Horse (Good Result)</span>
+                                        {data.lab_to_buyer_packing_list_available ? 
+                                            <Link target="_blank" href={`pdf/to-buyer-packing-list/${data.slug}`} className="underline text-blue-500">
+                                                view
+                                            </Link>
+                                            :
+                                            <span className="underline text-gray-500">
+                                                view
+                                            </span>                                        
+                                        }
                                     </div>
                                 </div>
                                 <div className="mx-2 mt-1 text-sm">
