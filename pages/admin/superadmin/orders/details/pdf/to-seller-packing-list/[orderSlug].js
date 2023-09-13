@@ -3,8 +3,8 @@ import axios from "@/lib/axios";
 import { useState, useEffect } from "react";
 import { PDFViewer } from "@react-pdf/renderer";
 
-import SellerPackingListPDFComp from "@/components/PDF/Order/SellerPackingList"
-export default function SellerPackingListPDF({sellerPackingList}){
+import ToSellerPackingListPDFComp from "@/components/PDF/Order/ToSellerPackingList"
+export default function ToSellerPackingListPDF({labPackingList}){
   const [isClient, setIsClient] = useState(false)
   useEffect(() => {
       setIsClient(true)
@@ -15,7 +15,7 @@ export default function SellerPackingListPDF({sellerPackingList}){
         <div>
           <div className="h-screen bg-gray-300 w-full grid place-items-center">
             <PDFViewer width={1000} height={750}>
-              <SellerPackingListPDFComp sellerPackingList={sellerPackingList}/>
+              <ToSellerPackingListPDFComp labPackingList={labPackingList}/>
             </PDFViewer>
           </div>
         </div>
@@ -34,8 +34,8 @@ export async function getServerSideProps(context) {
         },
         };
     }
-    let sellerPackingList = {}
-    const response = await axios.get(`/seller/order/${context.query.orderSlug}/detail`,
+    let labPackingList = {}
+    const response = await axios.get(`/document/order/${context.query.orderSlug}/to-seller-packing-list`,
     {
     headers: {
         "Authorization" : `Bearer ${session.accessToken}`
@@ -43,14 +43,14 @@ export async function getServerSideProps(context) {
     })
     .then((response) => {
         let result = response.data.data
-        sellerPackingList = result
+        labPackingList = result
     }).catch((error) => {
-        sellerPackingList = null
+        labPackingList = null
     })
 
     return {
         props: {
-            sellerPackingList
+            labPackingList
         }
     }
 }

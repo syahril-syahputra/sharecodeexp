@@ -18,15 +18,15 @@ const Quotation = ({quotation}) => (
                             Quotation Number
                         </Text>
                         <Text style={styles.subItem}>
-                            : {quotation.order_number}
+                            : {quotation.quotation_info.number}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
                         <Text style={styles.subTitleNumber}>
-                            Date
+                            Quotation Date
                         </Text>
                         <Text style={styles.subItem}>
-                            : {moment(quotation.quotation_date).format('dddd, D MMMM YYYY')}
+                            : {moment(quotation.quotation_info.date).format('dddd, D MMMM YYYY')}
                         </Text>
                     </View>
                 </View>
@@ -41,7 +41,7 @@ const Quotation = ({quotation}) => (
                             Shipping Term   
                         </Text>
                         <Text style={styles.subItem}>
-                            : EXW
+                            : {quotation.quotation_info.shipping_term}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -49,7 +49,7 @@ const Quotation = ({quotation}) => (
                             Payment Term 
                         </Text>
                         <Text style={styles.subItem}>
-                            : T/T in advance
+                            : {quotation.quotation_info.payment_term}
                         </Text>
                     </View>
                 </View>
@@ -62,7 +62,7 @@ const Quotation = ({quotation}) => (
                             From
                         </Text>
                         <Text style={styles.subItem}>
-                            : EXEpart Electronic INC.
+                            : {quotation.quotation_info.from}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -70,7 +70,7 @@ const Quotation = ({quotation}) => (
                             To
                         </Text>
                         <Text style={styles.subItem}>
-                            : {quotation.buyer.name}
+                            : {quotation.quotation_info.to_company}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -78,7 +78,7 @@ const Quotation = ({quotation}) => (
                             Contact Name
                         </Text>
                         <Text style={styles.subItem}>
-                            : {quotation.user_buyer.name} ({quotation.user_buyer.email})
+                            : {quotation.quotation_info.name_user_buyer} ({quotation.quotation_info.email_user_buyer})
                         </Text>
                     </View>
                 </View>
@@ -97,23 +97,34 @@ const Quotation = ({quotation}) => (
                     <Text style={styles.total}>Total (USD)</Text>
                 </View>
                 <View style={styles.tableBody}>
-                    <Text style={styles.pn}>{quotation.companies_products.ManufacturerNumber}</Text>
-                    <Text style={styles.description}>{quotation.companies_products.Description}</Text>
-                    <Text style={styles.mfg}>{quotation.companies_products.Manufacture}</Text>
-                    <Text style={styles.dc}>{quotation.companies_products.dateCode}</Text>
-                    <Text style={styles.qty}>{quotation.qty}</Text>
-                    <Text style={styles.unitPrice}>{quotation.price_profite}</Text>
-                    <Text style={styles.total}>{quotation.price_profite * quotation.qty}</Text>
+                    <Text style={styles.pn}>{quotation.table_data.pn}</Text>
+                    <Text style={styles.description}>{quotation.table_data.description}</Text>
+                    <Text style={styles.mfg}>{quotation.table_data.mfg}</Text>
+                    <Text style={styles.dc}>{quotation.table_data.datecode}</Text>
+                    <Text style={styles.qty}>{quotation.table_data.qty}</Text>
+                    <Text style={styles.unitPrice}>{quotation.table_data.unit_price}</Text>
+                    <Text style={styles.total}>{quotation.table_data.total}</Text>
                 </View>
                 <View style={{ margin: 5 }}></View>
-                <View style={styles.tableBody}>
+                {!quotation.test_free &&
+                    <View style={styles.tableBody}>
+                        <Text style={styles.pn}></Text>
+                        <Text style={styles.description}></Text>
+                        <Text style={styles.mfg}></Text>
+                        <Text style={styles.dc}></Text>
+                        <Text style={styles.qty}></Text>
+                        <Text style={styles.grandTotal}>Test LAB Fee (USD)</Text>
+                        <Text style={styles.grandTotal}>{quotation.test_fee}</Text>
+                    </View>
+                }
+                <View style={styles.tableSummary}>
                     <Text style={styles.pn}></Text>
                     <Text style={styles.description}></Text>
                     <Text style={styles.mfg}></Text>
                     <Text style={styles.dc}></Text>
                     <Text style={styles.qty}></Text>
                     <Text style={styles.grandTotal}>TOTAL (USD)</Text>
-                    <Text style={styles.grandTotal}>{quotation.price_profite * quotation.qty}</Text>
+                    <Text style={styles.grandTotal}>{quotation.grand_total}</Text>
                 </View>
             </View>
 
@@ -195,6 +206,13 @@ const styles = StyleSheet.create({
         fontSize: 8,
         fontFamily: 'Open Sans',     
         backgroundColor: '#ececec',
+        padding: 2,
+        marginBottom: 1
+    },
+    tableSummary: {
+        flexDirection: 'row',
+        fontSize: 8,   
+        backgroundColor: '#00C8FA',
         padding: 2,
         marginBottom: 1
     },

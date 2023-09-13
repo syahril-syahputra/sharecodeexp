@@ -26,6 +26,7 @@ import LightButton from "@/components/Interface/Buttons/LightButton";
 import PrimaryNotification from "@/components/Interface/Notification/PrimaryNotification";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import WarningNotification from "@/components/Interface/Notification/WarningNotification";
+import InfoNotification from "@/components/Interface/Notification/InfoNotification";
 
 export default function InquiryDetails({session, routeParam}) {
     const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -266,10 +267,6 @@ export default function InquiryDetails({session, routeParam}) {
                         message={data.order_status?.name} 
                         detail={data.order_status?.seller_notification?.message}
                     ></WarningNotification>
-                    <InfoNotification 
-                        message="Request Update" 
-                        detail={data.request_update_payment_reason}
-                    ></InfoNotification>
                 </>
             break;
         case 17: 
@@ -692,7 +689,13 @@ export default function InquiryDetails({session, routeParam}) {
                                         </div>
                                     }
                                 </div>
-                            </div>                                                      
+                            </div>
+                            <div className="mx-2 my-1 text-sm font-bold text-gray-500">
+                                Note: 
+                            </div>
+                            <div className="mx-2 text-sm text-gray-500 mb-5">
+                                Price is only for the product. The order type is Ex-works. The price you see on screen does not include logistic costs, customs, tax, insurance or any additional expenses that may occur.
+                            </div>                                                       
                         </PrimaryWrapper>
                     </div>
                 </div>

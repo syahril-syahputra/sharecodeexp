@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getSession } from "next-auth/react";
 import axios from "@/lib/axios";
-import { useRouter } from "next/router";
-import { VendorUrl } from "@/route/route-url";
 
 // components
 import { toast } from 'react-toastify';
@@ -17,7 +15,7 @@ import TextInput from "@/components/Interface/Form/TextInput";
 import SelectInput from "@/components/Interface/Form/SelectInput";
 import InfoButton from "@/components/Interface/Buttons/InfoButton";
 
-export default function InquiredProduct({session, routeParam}) {
+export default function ProductNotArrived({session}) {
     //data search
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
@@ -28,38 +26,16 @@ export default function InquiredProduct({session, routeParam}) {
         lastPage: 0
     })
 
-    let orderStatusFromRoute = routeParam
-    const [orderStatusOptions, setOrderStatusOption] = useState([])
-    const loadOrderStatusOption = async () => {
-        const request = await axios.get(`/allstatus`)
-        .then(response => {
-            let res = response.data.data
-            setOrderStatusOption(res)
-            res.filter(option => {
-                if(option.value === orderStatusFromRoute) {
-                    setOrderStatus({
-                        'label' : option.label,
-                        'value' : option.value
-                    })
-                }
-            })
-        })
-        .catch(() => {
-            toast.error("Cannot load order status.", toastOptions)
-        })
-    }
-
     const [pageNumber, setPageNumber] = useState('')
-    const [orderStatus, setOrderStatus] = useState({
-        'label': 'Select Order Status',
+    const orderStatus = {
+        'label': 'Product Is Not Arrived',
         'value': ''
-    })
+    }
     const [orderNumber, setOrderNumber] = useState('')
     const [manufacturerPartNumber, setManufacturerPartNumber] = useState('')
     const [orderDate, setOrderDate] = useState('')
     const loadData = async (
         page=1, 
-        orderStatusParam=orderStatusFromRoute ? orderStatusFromRoute : '', 
         orderNumberParam='', 
         manufacturerPartNumberParam='', 
         orderDateParam=''
@@ -68,11 +44,10 @@ export default function InquiredProduct({session, routeParam}) {
         setIsLoading(true)
         const response = await axios.get('/buyer/order/list'
         +`?page=${page}`
-        +`&status=${orderStatusParam}`
+        +`&status=product-not-arrived`
         +`&order_number=${orderNumberParam}`
         +`&manufacturer_part_number=${manufacturerPartNumberParam}`
-        +`&order_date=${orderDateParam}`
-        +`&active=1`,
+        +`&order_date=${orderDateParam}`,
             {
                 headers: {
                     "Authorization" : `Bearer ${session.accessToken}`
@@ -98,18 +73,9 @@ export default function InquiredProduct({session, routeParam}) {
         })
     }
     const handleSearchData = () => {
-        loadData(1, orderStatus?.value, orderNumber, manufacturerPartNumber, orderDate)
+        loadData(1, orderNumber, manufacturerPartNumber, orderDate)
     }
-    const router = useRouter()
     const handleResetSearchFilter = () => {
-        if(orderStatusFromRoute){
-            orderStatusFromRoute = ''
-            router.push(`${VendorUrl.buyingProduct.inquiredProduct.index}`)
-        }
-        setOrderStatus({
-        'label': 'Select Order Status',
-        'value': ''
-        })
         setManufacturerPartNumber('')
         setOrderNumber('')
         setOrderDate('')        
@@ -121,7 +87,6 @@ export default function InquiredProduct({session, routeParam}) {
 
     useEffect(() => {
         loadData()
-        loadOrderStatusOption()
     }, [])
 
     return (
@@ -132,7 +97,7 @@ export default function InquiredProduct({session, routeParam}) {
             </h1>
             <PrimaryWrapper className={`mt-5 p-5`}>
             <h2 className="text-xl text-center">
-                Search Active Order
+                Search Product Is Not Arrived
             </h2>
             <div className="grid grid-cols-2 gap-3 mt-2">
                 <div className="text-center">
@@ -153,9 +118,9 @@ export default function InquiredProduct({session, routeParam}) {
             <div className="grid grid-cols-2 gap-3 mt-4">
                 <div className="text-center">
                     <SelectInput
+                        disabled
                         value={orderStatus}
-                        options={orderStatusOptions}
-                        onChange={(input) => setOrderStatus(input)}
+                        options={[]}
                     />
                 </div>
                 <div className="text-center">
@@ -169,16 +134,16 @@ export default function InquiredProduct({session, routeParam}) {
             </div>
 
             <div className="mt-10 text-center">
-                    <PrimaryButton 
-                        onClick={handleSearchData}
-                        className="w-1/2 mr-2">
-                        Search
-                    </PrimaryButton>
-                    <InfoButton 
-                        onClick={handleResetSearchFilter}
-                        className="w-1/6">
-                        Reset
-                    </InfoButton>
+                <PrimaryButton 
+                    onClick={handleSearchData}
+                    className="w-1/2 mr-2">
+                    Search
+                </PrimaryButton>
+                <InfoButton 
+                    onClick={handleResetSearchFilter}
+                    className="w-1/6">
+                    Reset
+                </InfoButton>
             </div>
             </PrimaryWrapper>   
             <InquiredProductTable
@@ -194,15 +159,13 @@ export default function InquiredProduct({session, routeParam}) {
     );
 }
     
-InquiredProduct.layout = Admin;
+ProductNotArrived.layout = Admin;
 
 export async function getServerSideProps(context) {
     const session = await getSession(context)
-    const orderStatus = context.query.orderStatus ? context.query.orderStatus : null
     return {
         props: {
-            session,
-            routeParam: orderStatus
+            session
         }
     }
 }

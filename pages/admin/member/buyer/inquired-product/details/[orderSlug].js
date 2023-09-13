@@ -340,6 +340,9 @@ export default function InquiryDetails({session, routeParam}) {
                     <AcceptQuotationModal
                         isLoading={isLoading}
                         expirationDate={data.quotation_expiration_date}
+                        price={data.price_profite}
+                        quantity={data.qty}
+                        orderSlug={data.slug}
                         closeModal={() => setAcceptQuotationModal(false)}
                         acceptance={acceptQuotationModalHandle}
                     />
@@ -772,7 +775,15 @@ export default function InquiryDetails({session, routeParam}) {
                                         </div>
                                     }
                                 </div>
-                            </div>                                                      
+                            </div>
+                            {(parseFloat(data.price_profite) * parseInt(data.qty)) < 1000 &&
+                                <div className="mx-2 my-1 text-sm mb-5">
+                                    <div className="flex flex-wrap justify-between">
+                                        <span className="text-orange-500 font-bold">This order is charged for test lab separately</span>
+                                        <span className="text-orange-500">Check Quotation for more further</span>
+                                    </div>
+                                </div>
+                            }                                                                                   
                         </PrimaryWrapper>
                     </div>
                 </div>

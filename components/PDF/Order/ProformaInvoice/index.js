@@ -20,7 +20,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                     </View>
                     <View style={styles.inlineItem}>
                         <Text style={styles.subItem}>
-                            EXEpart Electronics INC
+                            {proformaInvoice.from.name}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -28,7 +28,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                             Address
                         </Text>
                         <Text style={styles.subItem}>
-                            : White Horse Lab
+                            : {proformaInvoice.from.address}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -36,7 +36,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                             Contact Name
                         </Text>
                         <Text style={styles.subItem}>
-                            : {'---'}
+                            : {proformaInvoice.from.contact_name}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -44,7 +44,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                             Phone Number
                         </Text>
                         <Text style={styles.subItem}>
-                            : {'---'}
+                            : {proformaInvoice.from.phone}
                         </Text>
                     </View>
                 </View>
@@ -54,7 +54,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                             PI Number  
                         </Text>
                         <Text style={styles.subItem}>
-                            : {proformaInvoice.order_number}
+                            : {proformaInvoice.proforma_invoice_info.number}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -62,7 +62,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                             PI Date
                         </Text>
                         <Text style={styles.subItem}>
-                            : {moment(proformaInvoice.order_date).format('dddd, D MMMM YYYY')}
+                            : {moment(proformaInvoice.proforma_invoice_info.date).format('dddd, D MMMM YYYY')}
                         </Text>
                     </View>
                 </View>
@@ -76,7 +76,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                     </View>
                     <View style={styles.inlineItem}>
                         <Text style={styles.subItem}>
-                            EXEpart Electronics INC
+                            {proformaInvoice.bill_to.name}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -84,7 +84,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                             Address
                         </Text>
                         <Text style={styles.subItem}>
-                            : 9051 STEVESTON HWY, V7A 1M6 Richmond BC Canada
+                            : {proformaInvoice.bill_to.address}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -92,7 +92,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                             Contact Name
                         </Text>
                         <Text style={styles.subItem}>
-                            : {proformaInvoice.user_buyer.name}
+                            : {proformaInvoice.bill_to.contact_name}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -100,7 +100,15 @@ const ProformaInvoice = ({proformaInvoice}) => (
                             Phone Number
                         </Text>
                         <Text style={styles.subItem}>
-                            : {proformaInvoice.buyer.phone}
+                            : {proformaInvoice.bill_to.phone}
+                        </Text>
+                    </View>
+                    <View style={styles.inlineItem}>
+                        <Text style={styles.sectionSubTitle}>
+                            E-mail
+                        </Text>
+                        <Text style={styles.subItem}>
+                            : {proformaInvoice.bill_to.email}
                         </Text>
                     </View>
                 </View>
@@ -115,7 +123,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                             Company Name
                         </Text>
                         <Text style={styles.subItem}>
-                            : White Horse Lab
+                            : {proformaInvoice.ship_to.name}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -123,7 +131,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                             Address
                         </Text>
                         <Text style={styles.subItem}>
-                            : {'---'}
+                            : {proformaInvoice.ship_to.address}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -131,7 +139,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                             Contact Name
                         </Text>
                         <Text style={styles.subItem}>
-                            : {'---'}
+                            : {proformaInvoice.ship_to.contact_name}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -139,7 +147,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                             Phone Number
                         </Text>
                         <Text style={styles.subItem}>
-                            : {'---'}
+                            : {proformaInvoice.ship_to.phone}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -147,7 +155,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                             E-mail
                         </Text>
                         <Text style={styles.subItem}>
-                            : {'---'}
+                            : {proformaInvoice.ship_to.email}
                         </Text>
                     </View>
                 </View>
@@ -165,13 +173,13 @@ const ProformaInvoice = ({proformaInvoice}) => (
                     <Text style={styles.total}>Total (USD)</Text>
                 </View>
                 <View style={styles.tableBody}>
-                    <Text style={styles.pn}>{proformaInvoice.companies_products.ManufacturerNumber}</Text>
-                    <Text style={styles.description}>{proformaInvoice.companies_products.Description}</Text>
-                    <Text style={styles.mfg}>{proformaInvoice.companies_products.Manufacture}</Text>
-                    <Text style={styles.dc}>{proformaInvoice.companies_products.dateCode}</Text>
-                    <Text style={styles.qty}>{proformaInvoice.qty}</Text>
-                    <Text style={styles.unitPrice}>{proformaInvoice.price_profite}</Text>
-                    <Text style={styles.total}>{proformaInvoice.price_profite * proformaInvoice.qty}</Text>
+                    <Text style={styles.pn}>{proformaInvoice.table_data.pn}</Text>
+                    <Text style={styles.description}>{proformaInvoice.table_data.description}</Text>
+                    <Text style={styles.mfg}>{proformaInvoice.table_data.mfg}</Text>
+                    <Text style={styles.dc}>{proformaInvoice.table_data.datecode}</Text>
+                    <Text style={styles.qty}>{proformaInvoice.table_data.qty}</Text>
+                    <Text style={styles.unitPrice}>{proformaInvoice.table_data.unit_price}</Text>
+                    <Text style={styles.total}>{proformaInvoice.table_data.total}</Text>
                 </View>
                 <View style={{ margin: 5 }}></View>
                 <View style={styles.tableBody}>
@@ -181,16 +189,27 @@ const ProformaInvoice = ({proformaInvoice}) => (
                     <Text style={styles.dc}></Text>
                     <Text style={styles.qty}></Text>
                     <Text style={styles.grandTotal}>Subtotal</Text>
-                    <Text style={styles.grandTotal}>{proformaInvoice.price_profite * proformaInvoice.qty}</Text>
+                    <Text style={styles.grandTotal}>{proformaInvoice.table_data.total}</Text>
                 </View>
-                <View style={styles.tableBody}>
+                {!proformaInvoice.test_free &&
+                    <View style={styles.tableSummary}>
+                        <Text style={styles.pn}></Text>
+                        <Text style={styles.description}></Text>
+                        <Text style={styles.mfg}></Text>
+                        <Text style={styles.dc}></Text>
+                        <Text style={styles.qty}></Text>
+                        <Text style={styles.grandTotal}>Test LAB Fee (USD)</Text>
+                        <Text style={styles.grandTotal}>{proformaInvoice.test_fee}</Text>
+                    </View>
+                }
+                <View style={styles.tableSummary}>
                     <Text style={styles.pn}></Text>
                     <Text style={styles.description}></Text>
                     <Text style={styles.mfg}></Text>
                     <Text style={styles.dc}></Text>
                     <Text style={styles.qty}></Text>
                     <Text style={styles.grandTotal}>TOTAL (USD)</Text>
-                    <Text style={styles.grandTotal}>{proformaInvoice.price_profite * proformaInvoice.qty}</Text>
+                    <Text style={styles.grandTotal}>{proformaInvoice.grand_total}</Text>
                 </View>
             </View>
 
@@ -208,7 +227,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                         Bank Name
                     </Text>
                     <Text style={styles.noteItem}>
-                        : {'---'}
+                        : {proformaInvoice.bank_info.name}
                     </Text>
                 </View> 
                 <View style={styles.inlineItem}>
@@ -216,7 +235,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                         Bank Address
                     </Text>
                     <Text style={styles.noteItem}>
-                        : {'---'}
+                        : {proformaInvoice.bank_info.address}
                     </Text>
                 </View>
                 <View style={styles.inlineItem}>
@@ -224,7 +243,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                         Account Holder's Name
                     </Text>
                     <Text style={styles.noteItem}>
-                        : {'---'}
+                        : {proformaInvoice.bank_info.holder}
                     </Text>
                 </View>
                 <View style={styles.inlineItem}>
@@ -232,7 +251,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                         Account Holder's Address
                     </Text>
                     <Text style={styles.noteItem}>
-                        : {'---'}
+                        : {proformaInvoice.bank_info.address_holder}
                     </Text>
                 </View>
                 <View style={styles.inlineItem}>
@@ -240,7 +259,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                         Account No
                     </Text>
                     <Text style={styles.noteItem}>
-                        : {'---'}
+                        : {proformaInvoice.bank_info.account_no}
                     </Text>
                 </View>
                 <View style={styles.inlineItem}>
@@ -248,7 +267,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                         ABA Routing No
                     </Text>
                     <Text style={styles.noteItem}>
-                        : {'---'}
+                        : {proformaInvoice.bank_info.routing_no}
                     </Text>
                 </View>
                 <View style={styles.inlineItem}>
@@ -256,7 +275,7 @@ const ProformaInvoice = ({proformaInvoice}) => (
                         BIC/SWIFT Code
                     </Text>
                     <Text style={styles.noteItem}>
-                        : {'---'}
+                        : {proformaInvoice.bank_info.swift_code}
                     </Text>
                 </View>                     
             </View>
@@ -335,6 +354,13 @@ const styles = StyleSheet.create({
         fontSize: 8,
         fontFamily: 'Open Sans',     
         backgroundColor: '#ececec',
+        padding: 2,
+        marginBottom: 1
+    },
+    tableSummary: {
+        flexDirection: 'row',
+        fontSize: 8,   
+        backgroundColor: '#00C8FA',
         padding: 2,
         marginBottom: 1
     },

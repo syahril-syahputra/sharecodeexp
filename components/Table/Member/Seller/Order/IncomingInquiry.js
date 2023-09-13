@@ -75,7 +75,7 @@ export default function IncomingInquiry(props) {
                                         {item.order_status?.name}
                                     </td>
                                     <td className="text-sm px-6 py-4">
-                                        {moment(item.created_at).format('dddd, D MMMM YYYY')}
+                                        {moment(item.order_date).format('dddd, D MMMM YYYY')}
                                     </td>
                                     <td className="text-sm px-6 py-4 text-right">
                                         <div className="inline-flex">

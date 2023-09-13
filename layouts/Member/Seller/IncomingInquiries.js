@@ -44,7 +44,7 @@ export default function IncomingInquiries({order}){
                         </Link>                        
                         <Link
                             // as="a"
-                            href="/admin/member/seller/incoming-inquiry"
+                            href="/admin/member/seller/incoming-inquiry/inquiry-rejected"
                             className={classNames(
                             false ? 'bg-gray-50' : 'hover:bg-gray-50',
                             'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
@@ -55,7 +55,7 @@ export default function IncomingInquiries({order}){
                         </Link>
                         <Link
                             // as="a"
-                            href="/admin/member/seller/incoming-inquiry"
+                            href="/admin/member/seller/incoming-inquiry/quotation-rejected"
                             className={classNames(
                             false ? 'bg-gray-50' : 'hover:bg-gray-50',
                             'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
@@ -66,7 +66,7 @@ export default function IncomingInquiries({order}){
                         </Link>
                         <Link
                             // as="a"
-                            href="/admin/member/seller/incoming-inquiry"
+                            href="/admin/member/seller/incoming-inquiry/bad-test-result"
                             className={classNames(
                             false ? 'bg-gray-50' : 'hover:bg-gray-50',
                             'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
@@ -77,7 +77,7 @@ export default function IncomingInquiries({order}){
                         </Link>
                         <Link
                             // as="a"
-                            href="/admin/member/seller/incoming-inquiry"
+                            href="/admin/member/seller/incoming-inquiry/order-completed"
                             className={classNames(
                             false ? 'bg-gray-50' : 'hover:bg-gray-50',
                             'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'

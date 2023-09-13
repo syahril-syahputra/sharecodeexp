@@ -81,7 +81,7 @@ export default function OrderList(props) {
                                         {item.order_status.name}
                                     </td>
                                     <td className="text-xs px-6 py-4">
-                                        {item.start_order_date ? moment(item.start_order_date).format('dddd, D MMMM YYYY') : '-'}
+                                        {item.order_date ? moment(item.order_date).format('dddd, D MMMM YYYY') : '-'}
                                     </td>
                                     <td className="text-xs px-6 py-4 text-right">
                                         <div className="inline-flex">
@@ -92,7 +92,7 @@ export default function OrderList(props) {
                             )
                         })}
                         {!props.isLoading && props.metaData.total === 0 &&
-                            <NoData colSpan={9}/>
+                            <NoData colSpan={10}/>
                         }
                     </>
                     }                

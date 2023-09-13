@@ -1,7 +1,7 @@
 import moment from "moment";
 import { Page, View, Text, Font, Document, Image, StyleSheet } from "@react-pdf/renderer";
 
-const PurchaseOrder = ({purchaseOrder}) => (
+const PackingList = ({labPackingList}) => (
     <Document>
         <Page size="A4" style={styles.body}>            
             <View>
@@ -9,225 +9,229 @@ const PurchaseOrder = ({purchaseOrder}) => (
                     style={styles.imageLogo}
                     src="/img/exepart-gradient.png"
                 />
-                <Text style={styles.title}>PURCHASE ORDER</Text>
+                <Text style={styles.title}>PACKING LIST</Text>
             </View>
             <View style={styles.sectionItemDetail}>
-                <View style={styles.leftColumn}>
-                    <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
-                            Vendor
-                        </Text>
-                    </View>
-                    <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
-                            Company Name
-                        </Text>
-                        <Text style={styles.subItem}>
-                            : {purchaseOrder.vendor.name}
-                        </Text>
-                    </View>
-                    <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
-                            Address
-                        </Text>
-                        <Text style={styles.subItem}>
-                            : {purchaseOrder.vendor.address}
-                        </Text>
-                    </View>
-                    <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
-                            Contact Name
-                        </Text>
-                        <Text style={styles.subItem}>
-                            : {purchaseOrder.vendor.contact_name}
-                        </Text>
-                    </View>
-                    <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
-                            Phone Number
-                        </Text>
-                        <Text style={styles.subItem}>
-                            : {purchaseOrder.vendor.phone}
-                        </Text>
-                    </View>
-                    <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
-                            E-mail
-                        </Text>
-                        <Text style={styles.subItem}>
-                            : {purchaseOrder.vendor.email}
-                        </Text>
-                    </View>
+                <View style={[styles.sectionColumn, {width: '60%'}]}>
                 </View>
-                <View style={styles.rightColumn}>
+                <View style={styles.sectionColumn}>
                     <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
-                            Order Number  
+                        <Text style={styles.sectionSubTitle}>
+                            SALES ORDER
                         </Text>
                         <Text style={styles.subItem}>
-                            : {purchaseOrder.purchase_order_info.number}
+                            : {labPackingList.packing_list_info.sales_order}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
-                            Order Date
+                        <Text style={styles.sectionSubTitle}>
+                            ORDER DATE
                         </Text>
                         <Text style={styles.subItem}>
-                            : {moment(purchaseOrder.purchase_order_info.date).format('dddd, D MMMM YYYY')}
+                            : {moment(labPackingList.packing_list_info.order_date).format('dddd, D MMMM YYYY')}
+                        </Text>
+                    </View>
+                    <View style={[styles.inlineItem, {marginTop: '10'}]}>
+                        <Text style={styles.sectionSubTitle}>
+                            CARRIER
+                        </Text>
+                        <Text style={styles.subItem}>
+                            : {labPackingList.packing_list_info.carrier}
+                        </Text>
+                    </View>
+                    <View style={styles.inlineItem}>
+                        <Text style={styles.sectionSubTitle}>
+                            PACKAGE TYPE
+                        </Text>
+                        <Text style={styles.subItem}>
+                            : {labPackingList.packing_list_info.package_type}
+                        </Text>
+                    </View>
+                    <View style={styles.inlineItem}>
+                        <Text style={styles.sectionSubTitle}>
+                            TRACKING
+                        </Text>
+                        <Text style={styles.subItem}>
+                            : {labPackingList.packing_list_info.tracking}
                         </Text>
                     </View>
                 </View>
             </View>
             <View style={styles.sectionItemDetail}>
-                <View style={styles.leftColumn}>
+                <View style={[styles.sectionColumn]}>
                     <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
-                            Bill To
+                        <Text style={styles.sectionSubTitle}>
+                            SHIP FROM
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
-                        <Text style={styles.subItem}>
-                            {purchaseOrder.bill_to.name}
-                        </Text>
-                    </View>
-                    <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
-                            Address
-                        </Text>
-                        <Text style={styles.subItem}>
-                            : {purchaseOrder.bill_to.address}
-                        </Text>
-                    </View>
-                    <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
-                            Contact Name
-                        </Text>
-                        <Text style={styles.subItem}>
-                            : {purchaseOrder.bill_to.contact_name}
-                        </Text>
-                    </View>
-                    <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
-                            Phone Number
-                        </Text>
-                        <Text style={styles.subItem}>
-                            : {purchaseOrder.bill_to.phone}
-                        </Text>
-                    </View>
-                    <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
-                            E-mail
-                        </Text>
-                        <Text style={styles.subItem}>
-                            : {purchaseOrder.bill_to.email}
-                        </Text>
-                    </View>
-                </View>
-                <View style={styles.rightColumn}>
-                    <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
-                            Ship To
-                        </Text>
-                    </View>
-                    <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
+                        <Text style={styles.sectionSubTitle}>
                             Company Name
                         </Text>
                         <Text style={styles.subItem}>
-                            : {purchaseOrder.ship_to.name}
+                            : {labPackingList.ship_from.name}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
+                        <Text style={styles.sectionSubTitle}>
                             Address
                         </Text>
                         <Text style={styles.subItem}>
-                            : {purchaseOrder.ship_to.address}
+                            : {labPackingList.ship_from.address}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
-                            Contact Name
+                        <Text style={styles.sectionSubTitle}>
+                            City/Country
                         </Text>
                         <Text style={styles.subItem}>
-                            : {purchaseOrder.ship_to.contact_name}
+                            : {labPackingList.ship_from.city} / {labPackingList.ship_from.country}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
+                        <Text style={styles.sectionSubTitle}>
                             Phone Number
                         </Text>
                         <Text style={styles.subItem}>
-                            : {purchaseOrder.ship_to.phone}
+                            : {labPackingList.ship_from.phone}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
-                        <Text style={styles.subTitleNumber}>
+                        <Text style={styles.sectionSubTitle}>
                             E-mail
                         </Text>
                         <Text style={styles.subItem}>
-                            : {purchaseOrder.ship_to.email}
+                            : {labPackingList.ship_from.email}
                         </Text>
                     </View>
                 </View>
-            </View>
-            {/* table */}
-            <View>
-                <View style={styles.tableHead}>
-                    <Text style={styles.pn}>P/N</Text>
-                    <Text style={styles.description}>Description</Text>
-                    <Text style={styles.mfg}>Mfg</Text>
-                    <Text style={styles.dc}>DC</Text>
-                    <Text style={styles.qty}>Quantity</Text>
-                    <Text style={styles.unitPrice}>Unit Price (USD)</Text>
-                    <Text style={styles.total}>Total (USD)</Text>
+                <View style={[styles.sectionColumn]}>
+                    <View style={styles.inlineItem}>
+                        <Text style={styles.sectionSubTitle}>
+                            SHIP TO DESTINATION
+                        </Text>
+                    </View>
+                    <View style={styles.inlineItem}>
+                        <Text style={styles.sectionSubTitle}>
+                            Company Name
+                        </Text>
+                        <Text style={styles.subItem}>
+                            : {labPackingList.ship_and_sold.name}
+                        </Text>
+                    </View>
+                    <View style={styles.inlineItem}>
+                        <Text style={styles.sectionSubTitle}>
+                            Address
+                        </Text>
+                        <Text style={styles.subItem}>
+                            : {labPackingList.ship_and_sold.address}
+                        </Text>
+                    </View>
+                    <View style={styles.inlineItem}>
+                        <Text style={styles.sectionSubTitle}>
+                            City/Country
+                        </Text>
+                        <Text style={styles.subItem}>
+                            : {labPackingList.ship_and_sold.city} / {labPackingList.ship_and_sold.country}
+                        </Text>
+                    </View>
+                    <View style={styles.inlineItem}>
+                        <Text style={styles.sectionSubTitle}>
+                            Phone Number
+                        </Text>
+                        <Text style={styles.subItem}>
+                            : {labPackingList.ship_and_sold.phone}
+                        </Text>
+                    </View>
+                    <View style={styles.inlineItem}>
+                        <Text style={styles.sectionSubTitle}>
+                            E-mail
+                        </Text>
+                        <Text style={styles.subItem}>
+                            : {labPackingList.ship_and_sold.email}
+                        </Text>
+                    </View>
                 </View>
-                <View style={styles.tableBody}>
-                    <Text style={styles.pn}>{purchaseOrder.table_data.pn}</Text>
-                    <Text style={styles.description}>{purchaseOrder.table_data.description}</Text>
-                    <Text style={styles.mfg}>{purchaseOrder.table_data.mfg}</Text>
-                    <Text style={styles.dc}>{purchaseOrder.table_data.datecode}</Text>
-                    <Text style={styles.qty}>{purchaseOrder.table_data.qty}</Text>
-                    <Text style={styles.unitPrice}>{purchaseOrder.table_data.unit_price}</Text>
-                    <Text style={styles.total}>{purchaseOrder.table_data.total}</Text>
-                </View>
-                <View style={{ margin: 5 }}></View>
-                <View style={styles.tableSummary}>
-                    <Text style={styles.pn}></Text>
-                    <Text style={styles.description}></Text>
-                    <Text style={styles.mfg}></Text>
-                    <Text style={styles.dc}></Text>
-                    <Text style={styles.qty}></Text>
-                    <Text style={styles.grandTotal}>TOTAL (USD)</Text>
-                    <Text style={styles.grandTotal}>{purchaseOrder.grand_total}</Text>
+                <View style={[styles.sectionColumn]}>
+                    <View style={styles.inlineItem}>
+                        <Text style={styles.sectionSubTitle}>
+                            SOLD TO
+                        </Text>
+                    </View>
+                    <View style={styles.inlineItem}>
+                        <Text style={styles.sectionSubTitle}>
+                            Company Name
+                        </Text>
+                        <Text style={styles.subItem}>
+                            : {labPackingList.ship_and_sold.name}
+                        </Text>
+                    </View>
+                    <View style={styles.inlineItem}>
+                        <Text style={styles.sectionSubTitle}>
+                            Address
+                        </Text>
+                        <Text style={styles.subItem}>
+                            : {labPackingList.ship_and_sold.address}
+                        </Text>
+                    </View>
+                    <View style={styles.inlineItem}>
+                        <Text style={styles.sectionSubTitle}>
+                            City/Country
+                        </Text>
+                        <Text style={styles.subItem}>
+                            : {labPackingList.ship_and_sold.city} / {labPackingList.ship_and_sold.country}
+                        </Text>
+                    </View>
+                    <View style={styles.inlineItem}>
+                        <Text style={styles.sectionSubTitle}>
+                            Phone Number
+                        </Text>
+                        <Text style={styles.subItem}>
+                            : {labPackingList.ship_and_sold.phone}
+                        </Text>
+                    </View>
+                    <View style={styles.inlineItem}>
+                        <Text style={styles.sectionSubTitle}>
+                            E-mail
+                        </Text>
+                        <Text style={styles.subItem}>
+                            : {labPackingList.ship_and_sold.email}
+                        </Text>
+                    </View>
                 </View>
             </View>
 
-            <View style={{marginTop: 15}}>
-                <Text style={styles.noteTitle}>Terms & Conditions</Text>
-                <View style={styles.inlineItem}>
-                    <Text style={[styles.noteItem, {width: '20%'}]}>
-                        SHIPPED VIA
-                    </Text>
-                    <Text style={styles.noteItem}>
-                        : {purchaseOrder.shipped_via}
-                    </Text>
-                </View> 
-                <View style={styles.inlineItem}>
-                    <Text style={[styles.noteItem, {width: '20%'}]}>
-                        SHIPPING DATE
-                    </Text>
-                    <Text style={styles.noteItem}>
-                        : {purchaseOrder.shipping_date}
-                    </Text>
-                </View> 
-            </View>
-            <View style={{marginTop: 5}}>
-                <Text style={styles.noteTitle}>PURCHASING CONDITIONS:</Text>
-                <Text style={styles.noteItem}>1. By signing this Purchase Order, Seller approves to reimburse the full amount due to the warranty of 90 days. The warranty period starts with the receipt of shipment by the Purchaser. Exepart only accepts %100 original and new products. Any item that is not new or original will be returned and full refund will be done by the Seller.</Text>
-                <Text style={styles.noteItem}>2. In cases where testing is applied, full reimbursement (excluding the testing costs) is considered as adopted by the Seller, if test results are not accepted by the customer for any reason.</Text>
-                <Text style={styles.noteItem}>3. Via this PO, it is accepted by the Seller to make the refunding within 3 business days after receiving their products at their premises.</Text>
-                <Text style={styles.noteItem}>4. Seller agrees to follow the shipping date strictly and Exepart reserves the rights to cancel the order and request the refunding of full amount in case of delays.</Text>
+            {/* table */}
+            <View>
+                <View style={styles.tableHead}>
+                    <Text style={styles.item}>Item</Text>
+                    <Text style={styles.description}>Description</Text>
+                    <Text style={styles.qty}>Quantity</Text>
+                    <Text style={styles.weight}>Weight (Net)</Text>
+                    <Text style={styles.size}>CTN Size (L/W/H)</Text>
+                </View>
+                <View style={styles.tableBody}>
+                    <Text style={styles.item}>{labPackingList.table_data.item}</Text>
+                    <Text style={styles.description}>{labPackingList.table_data.description}</Text>
+                    <Text style={styles.qty}>{labPackingList.table_data.qty}</Text>
+                    <Text style={styles.weight}>{labPackingList.table_data.weight}</Text>
+                    <Text style={styles.size}>{labPackingList.table_data.size}</Text>
+                </View>
+                <View style={{ margin: 5 }}></View>
+                <View style={styles.tableBody}>
+                    <Text style={styles.item}></Text>
+                    <Text style={styles.description}></Text>
+                    <Text style={styles.qty}></Text>
+                    <Text style={styles.grossWeight}>Gross Weight</Text>
+                    <Text style={styles.grossWeight}>{labPackingList.gross_weight}</Text>
+                </View>
+                <View style={styles.tableBody}>
+                    <Text style={styles.item}></Text>
+                    <Text style={styles.description}></Text>
+                    <Text style={styles.qty}></Text>
+                    <Text style={styles.totalWeight}>Total Weight</Text>
+                    <Text style={styles.totalWeight}>{labPackingList.total_weight}</Text>
+                </View>
             </View>
 
             <Text style={styles.pageNumber} fixed>Copyright {new Date().getFullYear()} EXEpart Electronics Inc.</Text>
@@ -250,7 +254,7 @@ const styles = StyleSheet.create({
     body: {
         paddingTop: 35,
         paddingBottom: 65,
-        paddingHorizontal: 35,
+        paddingHorizontal: 25,
     },
     imageLogo: {
         width: 200,
@@ -264,7 +268,7 @@ const styles = StyleSheet.create({
     inlineItem: {
         flexDirection: 'row'
     },
-    subTitleNumber: {
+    sectionSubTitle: {
         width: '30%',
         fontSize: 9,
         fontFamily: 'Oswald',
@@ -287,8 +291,9 @@ const styles = StyleSheet.create({
     leftColumn: {
         flexDirection: 'column',
     },
-    rightColumn: {
+    sectionColumn: {
         flexDirection: 'column',
+        margin: '5',
     },
     
     tableHead: {
@@ -307,33 +312,13 @@ const styles = StyleSheet.create({
         padding: 2,
         marginBottom: 1
     },
-    tableSummary: {
-        flexDirection: 'row',
-        fontSize: 8,
-        fontFamily: 'Open Sans',     
-        backgroundColor: '#00C8FA',
-        padding: 2,
-        marginBottom: 1
-    },
-    pn: {
-        width: '20%',
+    item: {
+        width: '30%',
         fontSize: 7,
         padding: 2,
     },
     description: {
-        width: '30%',
-        fontSize: 7,
-        padding: 2,
-        flexDirection: 'column',
-    },
-    mfg: {
-        width: '20%',
-        fontSize: 7,
-        padding: 2,
-        flexDirection: 'column',
-    },
-    dc: {
-        width: '10%',
+        width: '40%',
         fontSize: 7,
         padding: 2,
         flexDirection: 'column',
@@ -345,21 +330,29 @@ const styles = StyleSheet.create({
         padding: 2,
         flexDirection: 'column',
     },
-    unitPrice: {
+    weight: {
         width: '10%',
         textAlign: 'right',
         fontSize: 7,
         padding: 2,
         flexDirection: 'column',
     },
-    total: {
+    size: {
         width: '10%',
         textAlign: 'right',
         fontSize: 7,
         padding: 2,
         flexDirection: 'column',
     },
-    grandTotal: {
+    grossWeight: {
+        fontFamily: 'Oswald',
+        width: '20%',
+        textAlign: 'right',
+        fontSize: 10,
+        padding: 2,
+        flexDirection: 'column',
+    },
+    totalWeight: {
         fontFamily: 'Oswald',
         width: '20%',
         textAlign: 'right',
@@ -387,4 +380,5 @@ const styles = StyleSheet.create({
         fontFamily: 'Oswald'
       },
 });
-export default PurchaseOrder;
+
+export default PackingList;

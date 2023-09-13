@@ -20,7 +20,7 @@ const Invoice = ({buyerInvoice}) => (
                     </View>
                     <View style={styles.inlineItem}>
                         <Text style={styles.subItem}>
-                            EXEpart Electronics INC
+                            {buyerInvoice.from.name}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -28,7 +28,7 @@ const Invoice = ({buyerInvoice}) => (
                             Address
                         </Text>
                         <Text style={styles.subItem}>
-                            : White Horse Lab
+                            : {buyerInvoice.from.address}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -36,7 +36,7 @@ const Invoice = ({buyerInvoice}) => (
                             Contact Name
                         </Text>
                         <Text style={styles.subItem}>
-                            : {'---'}
+                            : {buyerInvoice.from.contact_name}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -44,7 +44,7 @@ const Invoice = ({buyerInvoice}) => (
                             Phone Number
                         </Text>
                         <Text style={styles.subItem}>
-                            : {'---'}
+                            : {buyerInvoice.from.phone}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -52,7 +52,7 @@ const Invoice = ({buyerInvoice}) => (
                             E-mail
                         </Text>
                         <Text style={styles.subItem}>
-                            : {'---'}
+                            : {buyerInvoice.from.email}
                         </Text>
                     </View>
                 </View>
@@ -62,7 +62,7 @@ const Invoice = ({buyerInvoice}) => (
                             Invoice Date 
                         </Text>
                         <Text style={styles.subItem}>
-                            : {moment(buyerInvoice.invoice_date).format('dddd, D MMMM YYYY')}
+                            : {moment(buyerInvoice.invoice_info.date).format('dddd, D MMMM YYYY')}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -70,7 +70,7 @@ const Invoice = ({buyerInvoice}) => (
                             Invoice Number
                         </Text>
                         <Text style={styles.subItem}>
-                            : {buyerInvoice.invoice_number}
+                            : {buyerInvoice.invoice_info.number}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -78,7 +78,7 @@ const Invoice = ({buyerInvoice}) => (
                             Order Number
                         </Text>
                         <Text style={styles.subItem}>
-                            : {buyerInvoice.order_number}
+                            : {buyerInvoice.invoice_info.order_number}
                         </Text>
                     </View>
                 </View>
@@ -95,7 +95,7 @@ const Invoice = ({buyerInvoice}) => (
                             Buyer
                         </Text>
                         <Text style={styles.subItem}>
-                            : {buyerInvoice.buyer.name}
+                            : {buyerInvoice.bill_to.name}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -103,7 +103,7 @@ const Invoice = ({buyerInvoice}) => (
                             Address
                         </Text>
                         <Text style={styles.subItem}>
-                            : {buyerInvoice.buyer.address}
+                            : {buyerInvoice.bill_to.address}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -111,7 +111,7 @@ const Invoice = ({buyerInvoice}) => (
                             Contact Name
                         </Text>
                         <Text style={styles.subItem}>
-                            : {buyerInvoice.user_buyer.name}
+                            : {buyerInvoice.bill_to.name}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -119,7 +119,7 @@ const Invoice = ({buyerInvoice}) => (
                             Phone Number
                         </Text>
                         <Text style={styles.subItem}>
-                            : {buyerInvoice.buyer.phone}
+                            : {buyerInvoice.bill_to.phone}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -127,7 +127,7 @@ const Invoice = ({buyerInvoice}) => (
                             E-mail
                         </Text>
                         <Text style={styles.subItem}>
-                            : {buyerInvoice.user_buyer.email}
+                            : {buyerInvoice.bill_to.email}
                         </Text>
                     </View>
                 </View>
@@ -142,7 +142,7 @@ const Invoice = ({buyerInvoice}) => (
                             Company Name
                         </Text>
                         <Text style={styles.subItem}>
-                            : White Horse Lab
+                            : {buyerInvoice.ship_to.email}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -150,7 +150,7 @@ const Invoice = ({buyerInvoice}) => (
                             Address
                         </Text>
                         <Text style={styles.subItem}>
-                            : {'---'}
+                            : {buyerInvoice.ship_to.address}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -158,7 +158,7 @@ const Invoice = ({buyerInvoice}) => (
                             Contact Name
                         </Text>
                         <Text style={styles.subItem}>
-                            : {'---'}
+                            : {buyerInvoice.ship_to.contact_name}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -166,7 +166,7 @@ const Invoice = ({buyerInvoice}) => (
                             Phone Number
                         </Text>
                         <Text style={styles.subItem}>
-                            : {'---'}
+                            : {buyerInvoice.ship_to.phone}
                         </Text>
                     </View>
                     <View style={styles.inlineItem}>
@@ -174,7 +174,7 @@ const Invoice = ({buyerInvoice}) => (
                             E-mail
                         </Text>
                         <Text style={styles.subItem}>
-                            : {'---'}
+                            : {buyerInvoice.ship_to.email}
                         </Text>
                     </View>
                 </View>
@@ -192,13 +192,13 @@ const Invoice = ({buyerInvoice}) => (
                     <Text style={styles.total}>Total (USD)</Text>
                 </View>
                 <View style={styles.tableBody}>
-                    <Text style={styles.pn}>{buyerInvoice.companies_products.ManufacturerNumber}</Text>
-                    <Text style={styles.description}>{buyerInvoice.companies_products.Description}</Text>
-                    <Text style={styles.mfg}>{buyerInvoice.companies_products.Manufacture}</Text>
-                    <Text style={styles.dc}>{buyerInvoice.companies_products.dateCode}</Text>
-                    <Text style={styles.qty}>{buyerInvoice.qty}</Text>
-                    <Text style={styles.unitPrice}>{buyerInvoice.price_profite}</Text>
-                    <Text style={styles.total}>{buyerInvoice.price_profite * buyerInvoice.qty}</Text>
+                    <Text style={styles.pn}>{buyerInvoice.table_data.pn}</Text>
+                    <Text style={styles.description}>{buyerInvoice.table_data.description}</Text>
+                    <Text style={styles.mfg}>{buyerInvoice.table_data.mfg}</Text>
+                    <Text style={styles.dc}>{buyerInvoice.table_data.datecode}</Text>
+                    <Text style={styles.qty}>{buyerInvoice.table_data.qty}</Text>
+                    <Text style={styles.unitPrice}>{buyerInvoice.table_data.unit_price}</Text>
+                    <Text style={styles.total}>{buyerInvoice.table_data.total}</Text>
                 </View>
                 <View style={{ margin: 5 }}></View>
                 <View style={styles.tableBody}>
@@ -208,16 +208,27 @@ const Invoice = ({buyerInvoice}) => (
                     <Text style={styles.dc}></Text>
                     <Text style={styles.qty}></Text>
                     <Text style={styles.grandTotal}>Subtotal</Text>
-                    <Text style={styles.grandTotal}>{buyerInvoice.price_profite * buyerInvoice.qty}</Text>
+                    <Text style={styles.grandTotal}>{buyerInvoice.table_data.total}</Text>
                 </View>
-                <View style={styles.tableBody}>
+                {!buyerInvoice.test_free &&
+                    <View style={styles.tableSummary}>
+                        <Text style={styles.pn}></Text>
+                        <Text style={styles.description}></Text>
+                        <Text style={styles.mfg}></Text>
+                        <Text style={styles.dc}></Text>
+                        <Text style={styles.qty}></Text>
+                        <Text style={styles.grandTotal}>Test LAB Fee (USD)</Text>
+                        <Text style={styles.grandTotal}>{buyerInvoice.test_fee}</Text>
+                    </View>
+                }
+                <View style={styles.tableSummary}>
                     <Text style={styles.pn}></Text>
                     <Text style={styles.description}></Text>
                     <Text style={styles.mfg}></Text>
                     <Text style={styles.dc}></Text>
                     <Text style={styles.qty}></Text>
                     <Text style={styles.grandTotal}>TOTAL (USD)</Text>
-                    <Text style={styles.grandTotal}>{buyerInvoice.price_profite * buyerInvoice.qty}</Text>
+                    <Text style={styles.grandTotal}>{buyerInvoice.grand_total}</Text>
                 </View>
             </View>
 
@@ -295,6 +306,13 @@ const styles = StyleSheet.create({
         fontSize: 8,
         fontFamily: 'Open Sans',     
         backgroundColor: '#ececec',
+        padding: 2,
+        marginBottom: 1
+    },
+    tableSummary: {
+        flexDirection: 'row',
+        fontSize: 8,   
+        backgroundColor: '#00C8FA',
         padding: 2,
         marginBottom: 1
     },

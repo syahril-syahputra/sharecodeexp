@@ -43,7 +43,7 @@ export default function Order({order}){
                             <PrimaryBadges title={order.active}/>
                         </Link>
                         <Link
-                            href="/admin/superadmin/orders/allorders"
+                            href="/admin/superadmin/orders/inquiry-rejected"
                             className={classNames(
                             false ? 'bg-gray-50' : 'hover:bg-gray-50',
                             'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
@@ -53,7 +53,7 @@ export default function Order({order}){
                             <PrimaryBadges title={order.inquiries_rejected}/>
                         </Link>
                         <Link
-                            href="/admin/superadmin/orders/allorders"
+                            href="/admin/superadmin/orders/quotation-rejected"
                             className={classNames(
                             false ? 'bg-gray-50' : 'hover:bg-gray-50',
                             'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
@@ -63,7 +63,7 @@ export default function Order({order}){
                             <PrimaryBadges title={order.quotation_rejected}/>
                         </Link>
                         <Link
-                            href="/admin/superadmin/orders/allorders"
+                            href="/admin/superadmin/orders/order-completed"
                             className={classNames(
                             false ? 'bg-gray-50' : 'hover:bg-gray-50',
                             'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
@@ -73,7 +73,7 @@ export default function Order({order}){
                             <PrimaryBadges title={order.complete}/>
                         </Link>
                         <Link
-                            href="/admin/superadmin/orders/allorders"
+                            href="/admin/superadmin/orders/product-not-arrived"
                             className={classNames(
                             false ? 'bg-gray-50' : 'hover:bg-gray-50',
                             'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'

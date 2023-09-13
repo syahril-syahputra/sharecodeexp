@@ -35,7 +35,7 @@ export async function getServerSideProps(context) {
         };
     }
     let buyerInvoice = {}
-    const response = await axios.get(`/buyer/order/${context.query.orderSlug}/detail`,
+    const response = await axios.get(`/document/order/${context.query.orderSlug}/buyer-invoice`,
     {
     headers: {
         "Authorization" : `Bearer ${session.accessToken}`

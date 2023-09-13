@@ -385,7 +385,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
                     />
                 </div>
                 <div className="w-full lg:w-1/2 px-3 mb-6">
-                    <NumberInput
+                    <TextInput
                         label="Date Code"
                         placeholder="eg. 2023, 2023+"
                         className="w-full"

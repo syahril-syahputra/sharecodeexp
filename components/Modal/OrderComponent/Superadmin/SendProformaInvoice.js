@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 import { toastOptions } from "@/lib/toastOptions";
 import axios from "@/lib/axios";
 import { useState } from "react";
+import Link from "next/link";
+import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
 
 export default function SendProformaInvoice(props){
     return (
@@ -14,9 +16,15 @@ export default function SendProformaInvoice(props){
                 onClick={() => props.closeModal()}
                 body={
                     <>  
-                        <span className="italic text-sm">*previewing PDF</span>
-                        <br></br>
-                        <span className="italic text-sm">*download link</span>
+                        <p className="mb-5 text-blueGray-500 text-lg leading-relaxed">
+                            Do you agree to <span className="text-blueGray-700 font-bold">send</span> Proforma Invoice to buyer?
+                        </p>
+                        <Link target="_blank" href={`/admin/superadmin/orders/details/pdf/proforma-invoice/${props.orderSlug}`} className="underline text-blue-500">
+                            <SecondaryButton size="sm" outline className='mr-2'>Open Proforma Invoice</SecondaryButton>
+                        </Link>
+                        <Link target="_blank" href={`/admin/superadmin/orders/details/pdf/purchase-order/${props.orderSlug}`} className="underline text-blue-500">
+                            <SecondaryButton size="sm" outline>Open Purchase Order</SecondaryButton>
+                        </Link>
                         {/* <div className="mt-5 w-full border-2 border-blue-200 p-5">
                             <ImageLogo className="ml-0" size={200}></ImageLogo>
                             <label className="block uppercase tracking-wide text-gray-700 text-md font-bold my-4" htmlFor="grid-last-name">

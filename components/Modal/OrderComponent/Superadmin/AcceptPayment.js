@@ -10,12 +10,8 @@ export default function AcceptPayment(props){
                 <>
                     <div className="">
                         <p className="text-blueGray-500 text-lg leading-relaxed">
-                            Do you agree to <span className="text-blueGray-700 font-bold">accept</span> this payment?
+                            Do you agree to <span className="text-blueGray-700 font-bold">accept</span> the payment?
                         </p>
-
-                        <div>
-                            *showing payment document
-                        </div>
                     </div>
                 </>
             }

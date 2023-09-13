@@ -347,6 +347,7 @@ export default function OrderDetails({session, routeParam}) {
                 {sendProformaInvoiceModal &&
                     <SendProformaInvoiceModal
                         isLoading={isLoading}
+                        orderSlug={data.slug}
                         closeModal={() => setSendProformaInvoiceModal(false)}
                         acceptance={sendProformaInvoiceHandler}
                         errorInfo={errorInfo}
@@ -906,6 +907,14 @@ export default function OrderDetails({session, routeParam}) {
                                     }
                                 </div>
                             </div>
+                            {(parseFloat(data.price_profite) * parseInt(data.qty)) < 1000 &&
+                                <div className="mx-2 my-1 text-sm mb-5">
+                                    <div className="flex flex-wrap justify-between">
+                                        <span className="text-orange-500 font-bold">This order is charged for test lab separately</span>
+                                        <span className="text-orange-500">Check Quotation for more further</span>
+                                    </div>
+                                </div>
+                            } 
                             <div className="mx-2 my-1 text-sm font-bold text-gray-500">
                                 Note: 
                             </div>

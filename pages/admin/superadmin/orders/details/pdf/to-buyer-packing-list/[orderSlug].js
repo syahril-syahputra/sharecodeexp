@@ -3,8 +3,8 @@ import axios from "@/lib/axios";
 import { useState, useEffect } from "react";
 import { PDFViewer } from "@react-pdf/renderer";
 
-import ProformaInvoicePDFComp from "@/components/PDF/Order/ProformaInvoice"
-export default function ProformaInvoicePDF({proformaInvoice}){
+import ToBuyerPackingListComp from "@/components/PDF/Order/ToBuyerPackingList"
+export default function ToBuyerPackingList({labPackingList}){
   const [isClient, setIsClient] = useState(false)
   useEffect(() => {
       setIsClient(true)
@@ -15,7 +15,7 @@ export default function ProformaInvoicePDF({proformaInvoice}){
         <div>
           <div className="h-screen bg-gray-300 w-full grid place-items-center">
             <PDFViewer width={1000} height={750}>
-              <ProformaInvoicePDFComp proformaInvoice={proformaInvoice}/>
+              <ToBuyerPackingListComp labPackingList={labPackingList}/>
             </PDFViewer>
           </div>
         </div>
@@ -34,8 +34,8 @@ export async function getServerSideProps(context) {
         },
         };
     }
-    let proformaInvoice = {}
-    const response = await axios.get(`/document/order/${context.query.orderSlug}/proforma-invoice`,
+    let labPackingList = {}
+    const response = await axios.get(`/document/order/${context.query.orderSlug}/to-buyer-packing-list`,
     {
     headers: {
         "Authorization" : `Bearer ${session.accessToken}`
@@ -43,14 +43,14 @@ export async function getServerSideProps(context) {
     })
     .then((response) => {
         let result = response.data.data
-        proformaInvoice = result
+        labPackingList = result
     }).catch((error) => {
-        proformaInvoice = null
+        labPackingList = null
     })
 
     return {
         props: {
-            proformaInvoice
+            labPackingList
         }
     }
 }

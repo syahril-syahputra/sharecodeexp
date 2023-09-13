@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "lib/axios"
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { VendorUrl } from "@/route/route-url";
 
 // layout for page
 import Admin from "layouts/Admin.js";
@@ -15,7 +14,7 @@ import IncomingInquiryTable from "@/components/Table/Member/Seller/Order/Incomin
 import { toast } from 'react-toastify';
 import { toastOptions } from "@/lib/toastOptions"
 
-export default function IncomingInquiry({session, routeParam}) {
+export default function BadTestResult({session}) {
   //data search
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
@@ -26,38 +25,16 @@ export default function IncomingInquiry({session, routeParam}) {
       lastPage: 0
   })
 
-  let orderStatusFromRoute = routeParam
-  const [orderStatusOptions, setOrderStatusOption] = useState([])
-  const loadOrderStatusOption = async () => {
-      const request = await axios.get(`/allstatus`)
-      .then(response => {
-          let res = response.data.data
-          setOrderStatusOption(res)
-          res.filter(option => {
-              if(option.value === orderStatusFromRoute) {
-                  setOrderStatus({
-                      'label' : option.label,
-                      'value' : option.value
-                  })
-              }
-          })
-      })
-      .catch(() => {
-          toast.error("Cannot load order status.", toastOptions)
-      })
-  }
-
   const [pageNumber, setPageNumber] = useState('')
-  const [orderStatus, setOrderStatus] = useState({
-      'label': 'Select Order Status',
-      'value': ''
-  })
+  const orderStatus = {
+    'label': 'Bad Test Result Uploaded',
+    'value': ''
+  }
   const [orderNumber, setOrderNumber] = useState('')
   const [manufacturerPartNumber, setManufacturerPartNumber] = useState('')
   const [orderDate, setOrderDate] = useState('')
   const loadData = async (
       page=1, 
-      orderStatusParam=orderStatusFromRoute ? orderStatusFromRoute : '', 
       orderNumberParam='', 
       manufacturerPartNumberParam='', 
       orderDateParam=''
@@ -66,11 +43,10 @@ export default function IncomingInquiry({session, routeParam}) {
       setIsLoading(true)
       const response = await axios.get('/seller/order/list'
       +`?page=${page}`
-      +`&status=${orderStatusParam}`
+      +`&status=bad-test-result`
       +`&order_number=${orderNumberParam}`
       +`&manufacturer_part_number=${manufacturerPartNumberParam}`
-      +`&order_date=${orderDateParam}`
-      +`&active=1`,
+      +`&order_date=${orderDateParam}`,
           {
               headers: {
                   "Authorization" : `Bearer ${session?.accessToken}`
@@ -96,18 +72,9 @@ export default function IncomingInquiry({session, routeParam}) {
       })
   }
   const handleSearchData = () => {
-      loadData(1, orderStatus?.value, orderNumber, manufacturerPartNumber, orderDate)
+      loadData(1, orderNumber, manufacturerPartNumber, orderDate)
   }
-  const router = useRouter()
   const handleResetSearchFilter = () => {
-      if(orderStatusFromRoute){
-          orderStatusFromRoute = ''
-          router.push(`${VendorUrl.sellingProduct.incomingInquiries.index}`)
-      }
-      setOrderStatus({
-      'label': 'Select Order Status',
-      'value': ''
-      })
       setManufacturerPartNumber('')
       setOrderNumber('')
       setOrderDate('')        
@@ -119,7 +86,6 @@ export default function IncomingInquiry({session, routeParam}) {
 
   useEffect(() => {
       loadData()
-      loadOrderStatusOption()
   }, [])
 
   return (
@@ -130,7 +96,7 @@ export default function IncomingInquiry({session, routeParam}) {
         </h1>
         <PrimaryWrapper className={`mt-5 p-5`}>
         <h2 className="text-xl text-center">
-            Search Active Order
+            Search Bad Test Result
         </h2>
         <div className="grid grid-cols-2 gap-3 mt-2">
             <div className="text-center">
@@ -151,9 +117,9 @@ export default function IncomingInquiry({session, routeParam}) {
         <div className="grid grid-cols-2 gap-3 mt-4">
             <div className="text-center">
                 <SelectInput
+                    disabled
                     value={orderStatus}
-                    options={orderStatusOptions}
-                    onChange={(input) => setOrderStatus(input)}
+                    options={[]}
                 />
             </div>
             <div className="text-center">
@@ -192,7 +158,7 @@ export default function IncomingInquiry({session, routeParam}) {
 );
 }
 
-IncomingInquiry.layout = Admin;
+BadTestResult.layout = Admin;
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)

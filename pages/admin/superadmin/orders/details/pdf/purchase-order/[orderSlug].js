@@ -28,14 +28,14 @@ export async function getServerSideProps(context) {
     const session = await getSession(context)
     if(!session){
         return {
-        redirect: {
-            permanent: false,
-            destination: '/admin/dashboard',
-        },
+          redirect: {
+              permanent: false,
+              destination: '/admin/dashboard',
+          },
         };
     }
     let purchaseOrder = {}
-    const response = await axios.get(`/admin/orders/${context.query.orderSlug}/detail`,
+    const response = await axios.get(`/document/order/${context.query.orderSlug}/purchase-order`,
     {
     headers: {
         "Authorization" : `Bearer ${session.accessToken}`
@@ -47,7 +47,7 @@ export async function getServerSideProps(context) {
     }).catch((error) => {
         purchaseOrder = null
     })
-
+  
     return {
         props: {
             purchaseOrder
