@@ -819,7 +819,7 @@ export default function InquiryDetails({session, routeParam}) {
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Quotation</span>
-                                        {data.quotation_available ? 
+                                        {data.quotation_available == 1 ? 
                                             <Link target="_blank" href={`pdf/quotation/${data.slug}`} className="underline text-blue-500">
                                                 view
                                             </Link>
@@ -833,7 +833,7 @@ export default function InquiryDetails({session, routeParam}) {
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Proforma Invoice</span>
-                                        {data.proforma_invoice_available ? 
+                                        {data.proforma_invoice_available == 1 ? 
                                             <Link target="_blank" href={`pdf/proforma-invoice/${data.slug}`} className="underline text-blue-500">
                                                 view
                                             </Link>
@@ -847,7 +847,7 @@ export default function InquiryDetails({session, routeParam}) {
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Buyer's Invoice</span>
-                                        {data.buyer_invoice_available ? 
+                                        {data.buyer_invoice_available == 1 ? 
                                             <Link target="_blank" href={`pdf/buyer-invoice/${data.slug}`} className="underline text-blue-500">
                                                 view
                                             </Link>

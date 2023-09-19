@@ -731,7 +731,7 @@ export default function InquiryDetails({session, routeParam}) {
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Purchase Order</span>
-                                        {data.purchase_order_available ? 
+                                        {data.purchase_order_available == 1 ? 
                                             <Link target="_blank" href={`pdf/purchase-order/${data.slug}`} className="underline text-blue-500">
                                                 view
                                             </Link>
@@ -745,7 +745,7 @@ export default function InquiryDetails({session, routeParam}) {
                                 <div className="mx-2 mt-1 text-sm">
                                     <div className="flex flex-wrap justify-between">
                                         <span>Packaging List</span>
-                                        {data.seller_packing_list_available ? 
+                                        {data.seller_packing_list_available == 1 ? 
                                             <Link target="_blank" href={`pdf/seller-packing-list/${data.slug}`} className="underline text-blue-500">
                                                 view
                                             </Link>
