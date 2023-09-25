@@ -1,14 +1,15 @@
-import { dahsboard, navigation} from "./navigation";
-import Link from "next/link";
-import classNames from "@/utils/classNames";
-import { Disclosure } from '@headlessui/react';
-import { ChevronRightIcon } from '@heroicons/react/20/solid';
-import { HomeIcon } from '@heroicons/react/24/outline'
-import { AdminUrl } from "@/route/route-url";
+import {dahsboard, navigation} from './navigation';
+import Link from 'next/link';
+import classNames from '@/utils/classNames';
+import {Disclosure} from '@headlessui/react';
+import {ChevronRightIcon} from '@heroicons/react/20/solid';
+import {HomeIcon} from '@heroicons/react/24/outline';
+import {AdminUrl} from '@/route/route-url';
 
-import MainSidebar from "./MainSidebar";
+import MainSidebar from './MainSidebar';
 
-function SideNavigation(){
+function SideNavigation({...props}) {
+  const {session} = props;
   return (
     <nav className="">
       {/* dashboard */}
@@ -17,14 +18,17 @@ function SideNavigation(){
           <ul role="list" className="-mx-2 space-y-1">
             <li>
               <Link
-                  href={AdminUrl.dahsboard}
-                  className={classNames(
+                href={AdminUrl.dahsboard}
+                className={classNames(
                   false ? 'bg-gray-50' : 'hover:bg-gray-50',
                   'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-700'
-                  )}
+                )}
               >
-                  <HomeIcon className="h-6 w-6 shrink-0 text-gray-400" aria-hidden="true" />
-                  Dashboard
+                <HomeIcon
+                  className="h-6 w-6 shrink-0 text-gray-400"
+                  aria-hidden="true"
+                />
+                Dashboard
               </Link>
             </li>
           </ul>
@@ -33,7 +37,7 @@ function SideNavigation(){
       {/* Divider */}
       <hr className="md:min-w-full my-5" />
 
-      <MainSidebar/>
+      <MainSidebar />
 
       {/* main nav */}
       <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -49,12 +53,15 @@ function SideNavigation(){
                       'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-700'
                     )}
                   >
-                    <item.icon className="h-6 w-6 shrink-0 text-gray-400" aria-hidden="true" />
+                    <item.icon
+                      className="h-6 w-6 shrink-0 text-gray-400"
+                      aria-hidden="true"
+                    />
                     {item.name}
                   </Link>
                 ) : (
                   <Disclosure as="div">
-                    {({ open }) => (
+                    {({open}) => (
                       <>
                         <Disclosure.Button
                           className={classNames(
@@ -62,11 +69,16 @@ function SideNavigation(){
                             'flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold text-gray-700'
                           )}
                         >
-                          <item.icon className="h-6 w-6 shrink-0 text-gray-400" aria-hidden="true" />
+                          <item.icon
+                            className="h-6 w-6 shrink-0 text-gray-400"
+                            aria-hidden="true"
+                          />
                           {item.name}
                           <ChevronRightIcon
                             className={classNames(
-                              open ? 'rotate-90 text-gray-500' : 'text-gray-400',
+                              open
+                                ? 'rotate-90 text-gray-500'
+                                : 'text-gray-400',
                               'ml-auto h-5 w-5 shrink-0'
                             )}
                             aria-hidden="true"
@@ -80,7 +92,9 @@ function SideNavigation(){
                                 // as="a"
                                 href={subItem.href}
                                 className={classNames(
-                                  subItem.current ? 'bg-gray-50' : 'hover:bg-gray-50',
+                                  subItem.current
+                                    ? 'bg-gray-50'
+                                    : 'hover:bg-gray-50',
                                   'block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700'
                                 )}
                               >
@@ -99,7 +113,7 @@ function SideNavigation(){
         </li>
       </ul>
     </nav>
-  )
+  );
 }
 
 export default SideNavigation;
