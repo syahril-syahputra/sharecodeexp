@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import Link from 'next/link';
 import axios from 'lib/axios';
 import {getSession} from 'next-auth/react';
@@ -23,12 +23,18 @@ import PageHeader from '@/components/Interface/Page/PageHeader';
 import LoadingState from '@/components/Interface/Loader/LoadingState';
 import {CompanyStatusesIcon} from '@/components/Shared/Company/Statuses';
 import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton';
+import {useSideBarStatus} from '@/domain/states/user_control/admin/hook';
+import GlobalContext from '@/store/global-context';
 
 export default function ComponentDetails({session, routeParam}) {
   //data search
   const publicDir = process.env.NEXT_PUBLIC_DIR;
+  const context = useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(true);
   const [component, setComponent] = useState({});
+  const [stateError, setStateError] = useState(false);
+  const [stateStatus, setStateStatus] = useState({});
+
   const getData = async () => {
     setIsLoading(true);
     const response = await axios
@@ -49,11 +55,21 @@ export default function ComponentDetails({session, routeParam}) {
         setIsLoading(false);
       });
   };
+
+  // This code for update sidebar state
+  const updateState = () => {
+    context.loadAdminSidebarCounter(session.accessToken);
+  };
   useEffect(() => {
     getData();
   }, []);
 
+  useEffect(() => {
+    updateState();
+  }, [session]);
+
   const [showAcceptModal, setShowAcceptModal] = useState(false);
+
   const handleAcceptComponent = async () => {
     setShowAcceptModal(false);
     setIsLoading(true);
@@ -80,6 +96,7 @@ export default function ComponentDetails({session, routeParam}) {
       })
       .finally(() => {
         getData();
+        updateState();
       });
   };
 
@@ -111,6 +128,7 @@ export default function ComponentDetails({session, routeParam}) {
       })
       .finally(() => {
         getData();
+        updateState();
       });
   };
 
@@ -144,6 +162,7 @@ export default function ComponentDetails({session, routeParam}) {
       })
       .finally(() => {
         getData();
+        updateState();
       });
   };
 

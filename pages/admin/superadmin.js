@@ -43,7 +43,7 @@ function ComponentCardAdminDashboard({dataName, name, url}) {
 }
 
 export default function SuperadminDashboard({session, message}) {
-  const {status_id} = session.user.userDetail;
+  const {status_id} = session?.user?.userDetail;
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({
     pending_companies: 0,
