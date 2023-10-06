@@ -1,113 +1,117 @@
-import React, { useState, useEffect } from "react";
-import axios from "lib/axios"
-import { getSession } from "next-auth/react";
+import React, {useState, useEffect} from 'react';
+import axios from 'lib/axios';
+import {getSession} from 'next-auth/react';
 
 // layout for page
-import Admin from "layouts/Admin.js";
+import Admin from 'layouts/Admin.js';
 
 // components
-import UsersList from "components/Table/Member/Users/UsersList"
-import MiniSearchBar from "@/components/Shared/MiniSearchBar";
-import DeleteUserModal from "@/components/Modal/Member/User/DeleteUser";
-import { toast } from 'react-toastify';
-import { toastOptions } from "@/lib/toastOptions"
+import UsersList from 'components/Table/Member/Users/UsersList';
+import MiniSearchBar from '@/components/Shared/MiniSearchBar';
+import DeleteUserModal from '@/components/Modal/Member/User/DeleteUser';
+import {toast} from 'react-toastify';
+import {toastOptions} from '@/lib/toastOptions';
 
 export default function Users({session}) {
-
   //data search
-  const [isLoading, setIsLoading] = useState(true)
-  const [data, setData] = useState([])
-  const getData = async () =>{
-      setIsLoading(true)
-      const response = await axios.get(`/master/users`,
-          {
-            headers: {
-              "Authorization" : `Bearer ${session.accessToken}`
-            }
-          }
-        )
-        .then((response) => {
-          let result = response.data.data
-          setData(result)
-        }).catch((error) => {
-          setData([])
-        }).finally(() => {
-          setIsLoading(false)
-        })
-  }
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const getData = async () => {
+    setIsLoading(true);
+    const response = await axios
+      .get(`/master/users`, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      })
+      .then((response) => {
+        let result = response.data.data;
+        setData(result);
+      })
+      .catch((error) => {
+        setData([]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
   useEffect(() => {
-    getData()
-  }, [])
+    getData();
+  }, []);
 
-  const [selectedUser, setSelectedUser] = useState()
+  const [selectedUser, setSelectedUser] = useState();
 
-  const [showDeleteUserModal, setShowDeleteUserModal] = useState(false)
+  const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
   const openDeleteModalHandler = (item) => {
-    setSelectedUser(item)
-    setShowDeleteUserModal(true)
-  }
+    setSelectedUser(item);
+    setShowDeleteUserModal(true);
+  };
   const handleDeleteAccount = async (userId) => {
-    setIsLoading(true)
-    const response = await axios.delete(`/master/users/delete`, {
-      headers: {
-        "Authorization" : `Bearer ${session.accessToken}`,
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      data: {
-        id: userId
-      }
-    })
-    .then(() => {
-      toast.success("Your users successfully deleted.", toastOptions)
-      setShowDeleteUserModal(false)
-      getData()
-    }).catch((error) => {
-      toast.error("Something went wrong. Cannot delete user.", toastOptions)
-    }).finally(() => {
-      setIsLoading(false)
-    })
-  }
+    setIsLoading(true);
+    const response = await axios
+      .delete(`/master/users/delete`, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        data: {
+          id: userId,
+        },
+      })
+      .then(() => {
+        toast.success('Your users successfully deleted.', toastOptions);
+        setShowDeleteUserModal(false);
+        getData();
+      })
+      .catch((error) => {
+        toast.error('Something went wrong. Cannot delete user.', toastOptions);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
-  const handleSearch = (item) =>{
-    getData()
-  }
+  const handleSearch = (item) => {
+    getData();
+  };
 
-  return(
+  return (
     <>
       <div className="">
-          <div className="mb-5 w-full lg:w-1/2">
-              {/* <MiniSearchBar searchItem={handleSearch}/> */}
-          </div>
-          <UsersList
-              title="Contributors"
-              isLoading={isLoading}
-              data={data}
-              deleteAccount={openDeleteModalHandler}
-          ></UsersList>
+        <div className="mb-5 w-full lg:w-1/2">
+          {/* <MiniSearchBar searchItem={handleSearch}/> */}
+        </div>
+        <UsersList
+          // title="Contributors"
+          title="Subscribers"
+          isLoading={isLoading}
+          data={data}
+          deleteAccount={openDeleteModalHandler}
+        ></UsersList>
       </div>
 
       {/* modal */}
       <>
         {showDeleteUserModal ? (
-            <DeleteUserModal
-                isLoading={isLoading}
-                item={selectedUser}
-                setShowModal={setShowDeleteUserModal}
-                acceptModal={handleDeleteAccount}
-            />
+          <DeleteUserModal
+            isLoading={isLoading}
+            item={selectedUser}
+            setShowModal={setShowDeleteUserModal}
+            acceptModal={handleDeleteAccount}
+          />
         ) : null}
       </>
     </>
-  )
+  );
 }
 
 Users.layout = Admin;
 
 export async function getServerSideProps(context) {
-  const session = await getSession(context)
+  const session = await getSession(context);
   return {
-      props: {
-          session
-      }
-  }
+    props: {
+      session,
+    },
+  };
 }
