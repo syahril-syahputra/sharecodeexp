@@ -80,7 +80,8 @@ export default function CreateContributor({session}) {
       <PageHeader
         leftTop={
           <h3 className="font-semibold text-lg text-blueGray-700">
-            Create Contributor
+            {/* Create Contributor */}
+            Create Subscriber
           </h3>
         }
         rightTop={

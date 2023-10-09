@@ -121,7 +121,7 @@ export default function EditContributor({session, routerParam}) {
         <PageHeader
           leftTop={
             <h3 className="font-semibold text-lg text-blueGray-700">
-              Edit Contributor
+              Edit Subscriber
             </h3>
           }
           rightTop={
