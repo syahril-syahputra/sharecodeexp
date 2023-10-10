@@ -198,7 +198,7 @@ export default function MyProduct({session}) {
           </h3>
         }
         rightTop={
-          <Link href="/admin/member/sellcomponents/component/bulkinsert">
+          <Link href="/admin/member/seller/product/bulkinsert">
             <SecondaryButton
               size="sm"
             >

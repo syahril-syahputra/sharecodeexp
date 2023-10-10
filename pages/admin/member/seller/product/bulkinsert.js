@@ -64,7 +64,7 @@ export default function BulkInsert({session}) {
                 Download Product Template
               </SecondaryButton>
             </Link>
-            <Link href="/admin/member/sellcomponents/component/add">
+            <Link href="/admin/member/seller/product/add">
               <LightButton
                 size="sm"
               >
