@@ -46,16 +46,6 @@ export default function DetailUploadedExcel({ session, data }) {
                         </tr>
                         <tr className="text-black hover:bg-slate-100">
                             <th scope="col" className="px-6 py-3">
-                                Company Name
-                            </th>
-                            <td scope="row" className="text-sm px-6 py-4">
-                                :
-                            </td>
-                            <td className="text-sm px-2 py-4">
-                                {data.company.name}
-                            </td>
-                        </tr><tr className="text-black hover:bg-slate-100">
-                            <th scope="col" className="px-6 py-3">
                                 Status
                             </th>
                             <td scope="row" className="text-sm px-6 py-4">
@@ -107,7 +97,7 @@ export default function DetailUploadedExcel({ session, data }) {
 }
 async function fetchData(context, accessToken) {
     try {
-        const data = await axios.get(`/admin/product/excel/${context.query.id}/details`, {
+        const data = await axios.get(`/seller/product/excel/${context.query.id}/details`, {
 
             headers: {
                 "Authorization": `Bearer ${accessToken}`
