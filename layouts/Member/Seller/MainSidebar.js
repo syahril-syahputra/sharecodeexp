@@ -7,8 +7,8 @@ import GlobalContext from "@/store/global-context";
 import ProductManagement from "./ProductManagement";
 import IncomingInquiries from "./IncomingInquiries";
 
-export default function MainSidebar(){
-  const session = useSession()
+export default function MainSidebar() {
+    const session = useSession()
 
     const {
         sellerSidebarCounter,
@@ -19,18 +19,18 @@ export default function MainSidebar(){
         loadSellerSidebarCounter(session.data.accessToken)
     }, [session])
 
-    return(
-      <>
-        <ul role="list" className="flex flex-1 flex-col gap-y-7">
-          <li>
-            <ul role="list" className="-mx-2 space-y-1">
-              <ProductManagement product={sellerSidebarCounter.product}/>
-              <IncomingInquiries order={sellerSidebarCounter.order}/>
+    return (
+        <>
+            <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                <li>
+                    <ul role="list" className="-mx-2 space-y-1">
+                        <ProductManagement product={sellerSidebarCounter.product} />
+                        <IncomingInquiries order={sellerSidebarCounter.order} />
+                    </ul>
+                </li>
             </ul>
-          </li>
-        </ul>
-        {/* Divider */}
-        <hr className="md:min-w-full my-5" />
-      </>
+            {/* Divider */}
+            <hr className="md:min-w-full my-5" />
+        </>
     )
 }
