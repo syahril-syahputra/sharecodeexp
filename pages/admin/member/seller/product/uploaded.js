@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { toastOptions } from "@/lib/toastOptions"
 import TableExcel from '@/components/Table/Member/Excel/ExcelUploadedList';
 import ExcelComponent from '@/components/Modal/Component/ExcelComponent';
+import MiniSearchBar from '@/components/Shared/MiniSearchBar';
 Uploaded.layout = Admin;
 
 export default function Uploaded({ session }) {
@@ -78,7 +79,9 @@ export default function Uploaded({ session }) {
         })
 
     }
+    const handleSearch = () => {
 
+    }
     return (
         <>
             <ExcelComponent
@@ -86,6 +89,9 @@ export default function Uploaded({ session }) {
                 delete={[isDeleting, setisDeleting]}
                 fileName={selectedData.name}
                 deleteHandler={deleteConfirmHandler} />
+            <div className="mb-5 w-full lg:w-1/2">
+                <MiniSearchBar searchItem={handleSearch} />
+            </div>
             <div className="mb-10">
                 <TableExcel
                     title="Uploaded File Excel"

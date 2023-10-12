@@ -8,6 +8,7 @@ import { toastOptions } from "@/lib/toastOptions"
 import ExcelComponent from '@/components/Modal/Component/ExcelComponent';
 import TableExcel from '@/components/Table/Superadmin/Excel/ExcelUploadedList';
 import ExcelDetail from '@/components/Modal/Component/ExcelDetail';
+import MiniSearchBar from '@/components/Shared/MiniSearchBar';
 Uploaded.layout = Admin;
 
 export default function Uploaded({ session }) {
@@ -170,6 +171,9 @@ export default function Uploaded({ session }) {
             setisDetailLoading(false)
         }
     }
+    const handleSearch = () => {
+
+    }
     return (
         <>
             <ExcelDetail
@@ -182,6 +186,9 @@ export default function Uploaded({ session }) {
                 reject={rejectHandler}
                 upload={file => uploadHandler(file)}
             />
+            <div className="mb-5 w-full lg:w-1/2">
+                <MiniSearchBar searchItem={handleSearch} />
+            </div>
             <div className="mb-10">
                 <TableExcel
                     title="Uploaded File Excel"
