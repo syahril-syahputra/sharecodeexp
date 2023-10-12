@@ -32,7 +32,18 @@ const BottomNavbar = (props) => {
             <ImageLogo size={100} />
           </div>
         </Link>
-        {!props.hideLogin && <LoginButton navBarV2={true} />}
+        <div className="flex space-x-4 items-center ">
+          <Link href="/auth/register" className="text-black font-bold text-sm">
+            REGISTER
+          </Link>
+          {!props.hideLogin && (
+            <LoginButton
+              navBarV2={true}
+              className="bg-[#3730A3
+     ] z-10"
+            />
+          )}
+        </div>
       </div>
     </nav>
   );

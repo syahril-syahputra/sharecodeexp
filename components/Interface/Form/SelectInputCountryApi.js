@@ -1,19 +1,6 @@
-import countryList from 'react-select-country-list';
-import {useMemo} from 'react';
-import SelectInput from '../Interface/Form/SelectInput';
-import useDataCountry from '@/hooks/useCountry';
+import ErrorInput from './ErrorInput';
 import Select from 'react-tailwindcss-select';
-
-export default function CountrySelector(props) {
-  const countries = useDataCountry();
-  const options =
-    countries?.map((e) => {
-      return {
-        value: e?.name || '',
-        label: e?.name || '',
-      };
-    }) || [];
-
+export default function SelectInputCountry(props) {
   return (
     <>
       <label
@@ -24,15 +11,12 @@ export default function CountrySelector(props) {
       </label>
       <Select
         isSearchable={props.searchable || false}
-        required={props.required || false}
-        autoComplete="off"
-        disabled={props.disabled}
         name={props.name}
+        isDisabled={props.disabled || false}
         value={props.value}
-        options={options}
-        errorMsg={props.errorMsg}
-        onBlur={props.onBlur}
         onChange={props.onChange}
+        options={props.options}
+        onBlur={props.onBlur}
         classNames={{
           menuButton: () =>
             `${

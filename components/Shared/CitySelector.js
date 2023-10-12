@@ -3,11 +3,13 @@ import {useMemo} from 'react';
 import SelectInput from '../Interface/Form/SelectInput';
 import useDataCountry from '@/hooks/useCountry';
 import Select from 'react-tailwindcss-select';
+import useDataCity from '@/hooks/useCity';
 
-export default function CountrySelector(props) {
-  const countries = useDataCountry();
+export default function CitySelector(props) {
+  const provinceId = props.provinceId;
+  const provinces = useDataCity(provinceId);
   const options =
-    countries?.map((e) => {
+    provinces?.map((e) => {
       return {
         value: e?.name || '',
         label: e?.name || '',

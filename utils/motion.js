@@ -8,14 +8,17 @@ export const textVariant = (delay) => ({
     opacity: 1,
     transition: {
       type: 'spring',
-      duration: 1.25,
+      duration: 0.25,
       delay,
     },
   },
 });
 
 export const staggerContainer = (staggerChildren, delayChildren) => ({
-  hidden: {},
+  hidden: {
+    opacity: 2,
+    y: 0,
+  },
   show: {
     transition: {
       staggerChildren,
@@ -43,8 +46,27 @@ export const slideIn = (direction, type, delay, duration) => ({
 
 export const fadeIn = (direction, type, delay, duration) => ({
   hidden: {
-    x: direction === 'left' ? 100 : direction === 'right' ? -100 : 0,
+    x: direction === 'left' ? 100 : direction === 'right' ? -20 : 0,
     y: direction === 'up' ? 100 : direction === 'down' ? -100 : 0,
+    opacity: 0,
+  },
+  show: {
+    x: 0,
+    y: 0,
+    opacity: 1,
+    transition: {
+      type,
+      delay,
+      duration,
+      ease: 'easeOut',
+    },
+  },
+});
+
+export const fadeInOperates = (direction, type, delay, duration) => ({
+  hidden: {
+    x: direction === 'left' ? 100 : direction === 'right' ? -20 : 0,
+    y: direction === 'up' ? 0 : direction === 'down' ? 0 : 0,
     opacity: 0,
   },
   show: {
@@ -101,7 +123,7 @@ export const footerVariants = {
     transition: {
       type: 'spring',
       stiffness: 80,
-      delay: 0.5,
+      delay: 0.25,
     },
   },
 };

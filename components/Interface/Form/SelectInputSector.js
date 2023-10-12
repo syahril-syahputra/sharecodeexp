@@ -16,6 +16,7 @@ export default function SelectInputSector(props) {
         value={props.value}
         onChange={props.onChange}
         options={props.options}
+        onBlur={props.onBlur}
         classNames={{
           menuButton: () =>
             `${
