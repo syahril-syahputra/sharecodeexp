@@ -1,7 +1,5 @@
 import React from 'react';
 import Image from 'next/image';
-import {motion} from 'framer-motion';
-import {footerVariants} from '@/utils/motion';
 
 import {PublicUrl} from '@/route/route-url';
 import Link from 'next/link';
@@ -9,12 +7,7 @@ import Link from 'next/link';
 export default function Footer() {
   return (
     <>
-      <motion.footer
-        variants={footerVariants}
-        initial="hidden"
-        whileInView="show"
-        className="relative bg-top-navbar pt-8"
-      >
+      <footer className="relative bg-top-navbar pt-8">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap text-center lg:text-left">
             <div className="w-full lg:w-6/12 px-4">
@@ -103,7 +96,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-      </motion.footer>
+      </footer>
     </>
   );
 }

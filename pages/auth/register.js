@@ -25,6 +25,15 @@ import SelectInputSector from '@/components/Interface/Form/SelectInputSector';
 import PhoneInputValidate from '@/components/Interface/Form/PhoneInputValidate';
 import PhoneInput from 'react-phone-number-input';
 import PhoneNumberInput from '@/components/Interface/Form/PhoneInputValidate2';
+import useSctor from '@/hooks/useSctor';
+import useCountry from '@/hooks/useCountry';
+import SelectInputCountry from '@/components/Interface/Form/SelectInputCountryApi';
+import ProvinceSelector from '@/components/Shared/ProvinceSelector';
+import useDataProvince from '@/hooks/useProvince';
+import CitySelector from '@/components/Shared/CitySelector';
+import useDataCity from '@/hooks/useCity';
+import {PostalCode} from '@/utils/postalCode';
+import AreaInputValidation from '@/components/Interface/Form/AreaInputValidation';
 
 export default function Index() {
   const [isAgreeTermCondtionOfSale, setIsAgreeTermCondtionOfSale] =
@@ -52,6 +61,7 @@ export default function Index() {
     // Company Information
     company_name: '',
     company_sector: '',
+    company_other: '',
     company_phone: '',
     company_country: '',
     company_address: '',
@@ -59,7 +69,8 @@ export default function Index() {
     company_zip: '',
     company_province: '',
     company_city: '',
-
+    company_province_other: '',
+    company_city_other: '',
     // Documents
     company_img: '',
     company_RegistrationDocument: '',
@@ -75,9 +86,17 @@ export default function Index() {
   }
 
   function isEmailCompany(email) {
-    return /^[a-zA-Z0-9._%+-]+@(?!gmail.com)(?!yahoo.com)(?!hotmail.com)(?!yahoo.co.id)(?!aol.com)(?!live.com)(?!outlook.com)[a-zA-Z0-9_-]+.[a-zA-Z0-9-.]{2,61}$/gm.test(
+    return /^[a-zA-Z0-9._%+-]+@(?!gmail.com)(?!yahoo.com)(?!hotmail.com)(?!yahoo.co.id)(?!aol.com)(?!live.com)(?!outlook.com)(?!inbox.com)(?!icloud.com)(?!mail.com)(?!gmx.com)(?!yandex.com)[a-zA-Z0-9_-]+.[a-zA-Z0-9-.]{2,61}$/gm.test(
       email
     );
+  }
+
+  function isMatchPostalCodePattern({id, Country, value}) {
+    const findCodeRegex = PostalCode?.find(
+      (e) => e?.id === id && e.country === Country
+    );
+    const regex = findCodeRegex?.Regex;
+    return regex.test(value);
   }
 
   const validationSchema = Yup.object({
@@ -104,9 +123,50 @@ export default function Index() {
     company_sector: Yup.mixed().required(
       'The company sector field is required'
     ),
+    company_other: Yup.mixed().when('company_sector', {
+      is: (value) => value?.value === 'other',
+      then: () =>
+        Yup.mixed().required('The company sector with other field is required'),
+      otherwise: () => Yup.mixed().notRequired(),
+    }),
     company_phone: Yup.mixed().required('The company phone field is required'),
     company_city: Yup.mixed().required('The company city field is required'),
-    company_zip: Yup.mixed().required('The company zip field is required'),
+
+    company_country: Yup.mixed().required(
+      'The company country field is required'
+    ),
+    company_province: Yup.mixed().required(
+      'The company province field is required'
+    ),
+    company_province_other: Yup.mixed().when('company_province', {
+      is: (value) => value?.value?.toLowerCase() === 'other',
+      then: () =>
+        Yup.mixed().required(
+          'The company province with other field is required'
+        ),
+      otherwise: () => Yup.mixed().notRequired(),
+    }),
+    company_city_other: Yup.mixed().when('company_city', {
+      is: (value) => value?.value?.toLowerCase() === 'other',
+      then: () =>
+        Yup.mixed().required('The company city with other field is required'),
+      otherwise: () => Yup.mixed().notRequired(),
+    }),
+    company_zip: Yup.mixed()
+      .required('The company zip field is required')
+      .test(
+        'is-valid-compant-zip',
+        `The company zip field should following country's zip code`,
+        (value) =>
+          isMatchPostalCodePattern({
+            id: stateCountry?.id,
+            country: stateCountry?.value,
+            value,
+          })
+      ),
+    company_address: Yup.mixed().required(
+      'The Company address 1 field is required'
+    ),
   });
 
   const [registrationInfo, setRegistrationInfo] = useState({
@@ -163,7 +223,13 @@ export default function Index() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [succesStatus, setSuccesStatus] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const handleSubmit = async (e) => {
+  const [stateCountry, setStatCountry] = useState(null);
+  const [stateProvince, setStateProvince] = useState(null);
+  const [companySector, setCompanySector] = useState(null);
+  const [companyCityOther, setCompanyCityOther] = useState(null);
+  const [companyProvince, setCompanyProvince] = useState(null);
+  const handleSubmit = async (values) => {
+    console.log(values, '<<<<value');
     e.preventDefault();
     if (!isAgreeTermCondtionOfSale) {
       setIsAgreeTermCondtionOfSaleMessage(
@@ -204,17 +270,34 @@ export default function Index() {
   };
 
   const [imageCompany, setImageCompany] = useState(null);
-
+  const handleSectorChange = (value) => {
+    setRegistrationInfo({...registrationInfo, company_sector: ''});
+    setSector(value);
+    if (value.value != 'other') {
+      setRegistrationInfo({...registrationInfo, company_sector: value.value});
+    }
+  };
   //option
   //sector option
-  const [sectors, setSectors] = useState([{value: 'other', label: 'Other'}]);
-  const loadSectors = async () => {};
-  useEffect(() => {
-    loadSectors();
-  }, []);
+  // const [stateSectors, setStateSectors] = useState(null);
+  // const loadSectors = async () => {
+  //   await axios
+  //     .get(`/sectorlist`)
+  //     .then((response) => {
+  //       setSectors([...response.data.data, {value: 'other', label: 'Other'}]);
+  //     })
+  //     .catch((error) => {
+  //       console.log('failed to load sectors');
+  //     });
+  // };
+  // useEffect(() => {
+  // loadSectors();
+  // }, []);
 
   const [sector, setSector] = useState(null);
-
+  const sectors = useSctor();
+  const countries = useCountry();
+  const provincies = useDataProvince(stateCountry?.id);
   //checking register button status enable or disable
 
   return (
@@ -419,22 +502,14 @@ export default function Index() {
                                 // onChange={companyImageHandler}
                                 onChange={(event) => {
                                   formikProps.handleChange(event);
-                                  console.log(event, '<<<event');
-                                  //   const companyImageHandler = (e) => {
                                   let file = event.target.files[0];
                                   formikProps.setFieldValue(
                                     'company_image',
                                     file
                                   );
-                                  console.log(file, '<<<file');
                                   const fileReader = new FileReader();
-                                  console.log(fileReader, '<<<fileReader');
                                   fileReader.onload = function (event) {
                                     setImageCompany(event.target.result);
-                                    // setRegistrationInfo({
-                                    //   ...registrationInfo,
-                                    //   company_img: file,
-                                    // });
                                   };
                                   if (
                                     event !== undefined &&
@@ -489,7 +564,14 @@ export default function Index() {
                                 options={sectors}
                                 required
                                 errorMsg={errorInfo?.company_sector}
-                                onChange={formikProps.handleChange}
+                                onChange={(value, newSector) => {
+                                  setCompanySector(value);
+                                  formikProps.setFieldValue(
+                                    'company_sector',
+                                    value
+                                  );
+                                }}
+                                onBlur={formikProps.onBlur}
                                 error={
                                   formikProps.touched.company_sector &&
                                   Boolean(errors.company_sector)
@@ -499,24 +581,24 @@ export default function Index() {
                                   errors.company_sector
                                 }
                               />
-                              {values.company_sector == 'other' && (
+                              {companySector?.value == 'other' && (
                                 <div className="mt-2">
                                   <TextInputValidate
-                                    id="company_sector"
+                                    id="company_other"
                                     className="w-full"
                                     required
                                     type="text"
-                                    name="company_sector"
-                                    value={values.company_sector}
-                                    errorMsg={errorInfo?.company_sector}
+                                    name="company_other"
+                                    value={values.company_other}
+                                    errorMsg={errorInfo?.company_other}
                                     onChange={formikProps.handleChange}
                                     error={
-                                      formikProps.touched.company_sector &&
-                                      Boolean(errors.company_sector)
+                                      formikProps.touched.company_other &&
+                                      Boolean(errors.company_other)
                                     }
                                     helperText={
-                                      formikProps.touched.company_sector &&
-                                      errors.company_sector
+                                      formikProps.touched.company_other &&
+                                      errors.company_other
                                     }
                                   />
                                 </div>
@@ -549,8 +631,108 @@ export default function Index() {
                             </div>
                           </div>
                           <div className="flex flex-wrap mb-6">
+                            <div className="w-full md:w-1/2 px-3">
+                              <CountrySelector
+                                name="company_country"
+                                label="Country"
+                                value={values.company_country}
+                                required
+                                onChange={(value) => {
+                                  formikProps.setFieldValue(
+                                    'company_country',
+                                    value
+                                  );
+                                  formikProps.setFieldValue(
+                                    'company_province',
+                                    ''
+                                  );
+                                  formikProps.setFieldValue(
+                                    'company_province_other',
+                                    ''
+                                  );
+                                  setCompanyProvince(null);
+                                  formikProps.setFieldValue('company_city', '');
+                                  const Country = countries?.find(
+                                    (e) => e?.name == value?.value
+                                  );
+                                  setStatCountry({...Country});
+                                }}
+                                onBlur={formikProps.onBlur}
+                                errorMsg={errorInfo?.company_country}
+                                error={
+                                  formikProps.touched.company_country &&
+                                  Boolean(errors.company_country)
+                                }
+                                helperText={
+                                  formikProps.touched.company_country &&
+                                  errors.company_country
+                                }
+                              />
+                            </div>
                             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                              <TextInputValidate
+                              <ProvinceSelector
+                                name="company_province"
+                                label="Province"
+                                value={values.company_province}
+                                required
+                                onChange={(value) => {
+                                  formikProps.setFieldValue(
+                                    'company_province',
+                                    value
+                                  );
+                                  formikProps.setFieldValue('company_city', '');
+                                  formikProps.setFieldValue(
+                                    'company_province_other',
+                                    ''
+                                  );
+                                  const province = provincies?.find(
+                                    (e) => e?.name == value.value
+                                  );
+                                  setStateProvince({...province});
+                                  setCompanyProvince(value);
+                                }}
+                                countryId={stateCountry?.id}
+                                onBlur={formikProps.onBlur}
+                                errorMsg={errorInfo?.company_province}
+                                error={
+                                  formikProps.touched.company_province &&
+                                  Boolean(errors.company_province)
+                                }
+                                helperText={
+                                  formikProps.touched.company_province &&
+                                  errors.company_province
+                                }
+                              />
+                              {companyProvince?.value?.toLowerCase() ==
+                                'other' && (
+                                <div className="mt-2">
+                                  <TextInputValidate
+                                    id="company_province_other"
+                                    className="w-full"
+                                    required
+                                    type="text"
+                                    name="company_province_other"
+                                    value={values.company_province_other}
+                                    errorMsg={errorInfo?.company_province_other}
+                                    onChange={formikProps.handleChange}
+                                    error={
+                                      formikProps.touched
+                                        .company_province_other &&
+                                      Boolean(errors.company_province_other)
+                                    }
+                                    helperText={
+                                      formikProps.touched
+                                        .company_province_other &&
+                                      errors.company_province_other
+                                    }
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap mb-6">
+                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                              <CitySelector
                                 label="City"
                                 className="w-full"
                                 required
@@ -558,7 +740,18 @@ export default function Index() {
                                 name="company_city"
                                 value={values.company_city}
                                 errorMsg={errorInfo?.company_city}
-                                onChange={formikProps.handleChange}
+                                provinceId={stateProvince?.id}
+                                onChange={(value) => {
+                                  formikProps.setFieldValue(
+                                    'company_city',
+                                    value
+                                  );
+                                  setCompanyCityOther(value);
+                                  formikProps.setFieldValue(
+                                    'company_city_other',
+                                    ''
+                                  );
+                                }}
                                 error={
                                   formikProps.touched.company_city &&
                                   Boolean(errors.company_city)
@@ -568,9 +761,32 @@ export default function Index() {
                                   errors.company_city
                                 }
                               />
+                              {companyCityOther?.value?.toLowerCase() ===
+                                'other' && (
+                                <div className="mt-2">
+                                  <TextInputValidate
+                                    id="company_city_other"
+                                    className="w-full"
+                                    required
+                                    type="text"
+                                    name="company_city_other"
+                                    value={values.company_city_other}
+                                    errorMsg={errorInfo?.company_city_other}
+                                    onChange={formikProps.handleChange}
+                                    error={
+                                      formikProps.touched.company_city_other &&
+                                      Boolean(errors.company_city_other)
+                                    }
+                                    helperText={
+                                      formikProps.touched.company_city_other &&
+                                      errors.company_city_other
+                                    }
+                                  />
+                                </div>
+                              )}
                             </div>
                             <div className="w-full md:w-1/2 px-3">
-                              <div className="w-1/2 md:w-1/2">
+                              <div className="w-full md:w-1/2 lg:w-1/2 2xl:w-1/2">
                                 <TextInputValidate
                                   id="company_zip"
                                   label="Postal Code"
@@ -580,6 +796,7 @@ export default function Index() {
                                   value={values.company_zip}
                                   errorMsg={errorInfo?.company_zip}
                                   onChange={formikProps.handleChange}
+                                  placeholder="Please enter company zip here..."
                                   error={
                                     formikProps.touched.company_zip &&
                                     Boolean(errors.company_zip)
@@ -592,41 +809,28 @@ export default function Index() {
                               </div>
                             </div>
                           </div>
-                          <div className="flex flex-wrap mb-6">
-                            <div className="w-full md:w-1/2 px-3">
-                              <CountrySelector
-                                name="country"
-                                value={country}
-                                countryHandleChange={countryHandleChange}
-                                errorMsg={errorInfo?.country}
-                              />
-                            </div>
-                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                              <TextInput
-                                label="Province"
-                                className="w-full"
-                                required
-                                name="company_province"
-                                value={registrationInfo.company_province}
-                                errorMsg={errorInfo?.company_province}
-                                onChange={(input) =>
-                                  handleStringValueChange(input)
-                                }
-                              />
-                            </div>
-                          </div>
+
                           <div className="flex flex-wrap mb-6">
                             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                              <AreaInput
+                              <AreaInputValidation
                                 rows={5}
                                 characterCount={firstAddressCharacterCount}
                                 characterLimit={firstAddressCharacterLimit}
                                 label="Address 1"
                                 name="company_address"
                                 required
-                                value={registrationInfo.company_address}
+                                placeholder="Please enter company zip here..."
+                                value={formikProps.company_address}
                                 errorMsg={errorInfo?.company_address}
-                                onChange={(input) => firstAddressHandler(input)}
+                                onChange={formikProps.handleChange}
+                                error={
+                                  formikProps.touched.company_address &&
+                                  Boolean(errors.company_address)
+                                }
+                                helperText={
+                                  formikProps.touched.company_address &&
+                                  errors.company_address
+                                }
                               />
                             </div>
                             <div className="w-full md:w-1/2 px-3">
@@ -849,7 +1053,6 @@ export default function Index() {
           </div>
         </div>
       </section>
-
       <Footer />
     </>
   );

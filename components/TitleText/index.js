@@ -6,7 +6,7 @@ export const TitleText = ({title, textStyle}) => (
     variants={textVariant2}
     initial="hidden"
     whileInView="show"
-    className={`font-normal text-[22px] text-black py-2 ${textStyle} `}
+    className={`font-normal text-[14x] xl:text-[22px] 2xl:text-[24px] lg:text-[22px] sm:text-[14px] md:text-[16px] text-black py-2 ${textStyle} `}
   >
     {title}
   </motion.p>

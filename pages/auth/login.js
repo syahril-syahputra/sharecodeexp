@@ -146,8 +146,8 @@ export default function Login() {
                           )}
                         </span>
                       </div>
-                      <div class="flex items-center justify-end mb-5 mt-2">
-                        <div class="text-blueGray-400 hover:underline hover:text-blueGray-700">
+                      <div className="flex items-center justify-end mb-5 mt-2">
+                        <div className="text-blueGray-400 hover:underline hover:text-blueGray-700">
                           <Link href="/auth/forgotpassword">
                             Forgot Password
                           </Link>{' '}
