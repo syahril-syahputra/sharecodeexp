@@ -183,9 +183,9 @@ export default function MyProduct({ session }) {
             setInputData({ ...inputData, img: file })
         }
         if (file) {
-            fileReader.readAsDataURL(file)
+            fileReader.readAsDataURL(file);
         } else {
-            setImage(null)
+            setImage(null);
         }
     }
 
