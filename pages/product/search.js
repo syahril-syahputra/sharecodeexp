@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import {getSession} from 'next-auth/react';
 import Link from "next/link";
 import { useRouter } from 'next/router'
 import { PageSEO } from '@/components/Utils/SEO'
@@ -13,7 +14,7 @@ import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
 import MiniSearchBar from "@/components/Shared/MiniSearchBar";
 import TextInput from "@/components/Interface/Form/TextInput";
 
-export default function Index() {
+export default function Index({session}) {
   const router = useRouter()
   const [search, setSearch] = useState(router.query.q ? router.query.q : '')
   const [category, setCategory] = useState(router.query.category ? router.query.category : '')
@@ -37,7 +38,14 @@ export default function Index() {
   })
   const searchData = async (srch, page=1) =>{
     setIsLoading(true)
-    const response = await axios.get(`/search?query=${srch}&page=${page}&cat=${category}&sub=${subcategory}`)
+    console.log(session.accessToken)
+    const response = await axios.get(`/search?query=${srch}&page=${page}`, 
+      {
+        headers: {
+        "Authorization" : `Bearer ${session.accessToken}`
+        }
+      }
+      )
       .then((response) => {
         let result = response.data.data
         setData(result.data)
@@ -51,7 +59,7 @@ export default function Index() {
           prevPage: result.prev_page_url ? true : false
         })
       }).catch((error) => {
-        // console.log(error.response)
+        console.log(error.response)
       }).finally(() => {
         setIsLoading(false)
       })
@@ -151,3 +159,12 @@ export default function Index() {
     </>
   );
   }
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  return {
+    props: {
+      session,
+    },
+  };
+}
