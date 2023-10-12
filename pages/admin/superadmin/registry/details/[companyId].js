@@ -44,7 +44,7 @@ export default function CompanyDetail({session, routeParam}) {
   const getData = async () => {
     setIsLoading(true);
     const response = await axios
-      .get(`admin/companies?id=${routeParam.companyName}`, {
+      .get(`admin/companies?id=${routeParam.companyId}`, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
         },
