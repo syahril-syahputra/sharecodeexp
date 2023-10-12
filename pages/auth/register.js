@@ -3,11 +3,14 @@ import * as Yup from 'yup';
 import React, {useState, useMemo, useEffect} from 'react';
 import axios from 'lib/axios';
 import Image from 'next/image';
-import {PageSEO} from '@/components/Utils/SEO';
-import siteMetadata from '@/utils/siteMetadata';
 import Link from 'next/link';
 import IndexNavbar from 'components/Navbars/IndexNavbar.js';
 import Footer from 'components/Footers/Footer.js';
+import countryList from 'react-select-country-list';
+import {Formik, Form} from 'formik';
+import PhoneInput from 'react-phone-number-input';
+import {PageSEO} from '@/components/Utils/SEO';
+import siteMetadata from '@/utils/siteMetadata';
 import ImageLogo from '@/components/ImageLogo/ImageLogo';
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton';
 import ErrorInput from '@/components/Shared/ErrorInput';
@@ -15,15 +18,12 @@ import TextInput from '@/components/Interface/Form/TextInput';
 import SelectInput from '@/components/Interface/Form/SelectInput';
 import AreaInput from '@/components/Interface/Form/AreaInput';
 import TextInputValidate from '@/components/Interface/Form/TextInputValidation';
-import countryList from 'react-select-country-list';
 import DangerNotification from '@/components/Interface/Notification/DangerNotification';
 import CountrySelector from '@/components/Shared/CountrySelector';
 import {PublicUrl} from '@/route/route-url';
-import {Formik, Form} from 'formik';
 import TextInputImage from '@/components/Interface/Form/TextInputImage';
 import SelectInputSector from '@/components/Interface/Form/SelectInputSector';
 import PhoneInputValidate from '@/components/Interface/Form/PhoneInputValidate';
-import PhoneInput from 'react-phone-number-input';
 import PhoneNumberInput from '@/components/Interface/Form/PhoneInputValidate2';
 import useSctor from '@/hooks/useSctor';
 import useCountry from '@/hooks/useCountry';
@@ -109,7 +109,7 @@ export default function Index() {
       .required('The email field is required'),
     password: Yup.string()
       .min(8, 'Password must have more than 8 characters')
-      .required(`The password field is required`),
+      .required('The password field is required'),
     password_confirmation: Yup.string()
       .min(8, 'Confirmation password must have more than 8 characters')
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
@@ -156,7 +156,7 @@ export default function Index() {
       .required('The company zip field is required')
       .test(
         'is-valid-compant-zip',
-        `The company zip field should following country's zip code`,
+        "The company zip field should following country's zip code",
         (value) =>
           isMatchPostalCodePattern({
             id: stateCountry?.id,
@@ -170,13 +170,13 @@ export default function Index() {
   });
 
   const [registrationInfo, setRegistrationInfo] = useState({
-    //Account Information
+    // Account Information
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
 
-    //Company Information
+    // Company Information
     company_name: '',
     company_sector: '',
     company_phone: '',
@@ -187,7 +187,7 @@ export default function Index() {
     company_province: '',
     company_city: '',
 
-    //Documents
+    // Documents
     company_img: '',
     company_RegistrationDocument: '',
     company_CertificationofActivity: '',
@@ -247,7 +247,7 @@ export default function Index() {
     setErrorInfo(null);
     setIsLoading(true);
 
-    let formData = new FormData();
+    const formData = new FormData();
     for (const key in registrationInfo) {
       formData.append(key, registrationInfo[key]);
     }
@@ -277,8 +277,8 @@ export default function Index() {
       setRegistrationInfo({...registrationInfo, company_sector: value.value});
     }
   };
-  //option
-  //sector option
+  // option
+  // sector option
   // const [stateSectors, setStateSectors] = useState(null);
   // const loadSectors = async () => {
   //   await axios
@@ -298,7 +298,7 @@ export default function Index() {
   const sectors = useSctor();
   const countries = useCountry();
   const provincies = useDataProvince(stateCountry?.id);
-  //checking register button status enable or disable
+  // checking register button status enable or disable
 
   return (
     <>
@@ -321,713 +321,694 @@ export default function Index() {
                     initialValues={initialValue}
                     validationSchema={validationSchema}
                   >
-                    {({values, errors, ...formikProps}) => {
-                      return (
-                        <Form
-                          className="pb-20"
-                          id="register-form"
-                          aria-label="form"
-                          noValidate
-                        >
-                          <h2 className="font-semibold text-2xl text-center">
-                            Registration
-                          </h2>
-                          {errorMessage && (
-                            <DangerNotification
-                              message={errorMessage}
-                              onCloseNotification={() => setErrorMessage(null)}
+                    {({values, errors, ...formikProps}) => (
+                      <Form
+                        className="pb-20"
+                        id="register-form"
+                        aria-label="form"
+                        noValidate
+                      >
+                        <h2 className="font-semibold text-2xl text-center">
+                          Registration
+                        </h2>
+                        {errorMessage && (
+                          <DangerNotification
+                            message={errorMessage}
+                            onCloseNotification={() => setErrorMessage(null)}
+                          />
+                        )}
+                        <div className="mt-8">
+                          <div className="relative flex py-5 items-center w-full mx-auto">
+                            <div className="flex-shrink mr-4">
+                              <h2 className="font-semibold text-xl text-blueGray-500">
+                                Main Account Information
+                              </h2>
+                            </div>
+                            <div className="flex-grow border-t border-blueGray-700" />
+                          </div>
+                          <div className="flex flex-wrap mb-6">
+                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                              <TextInputValidate
+                                id="name"
+                                label="Main Account Name"
+                                className="w-full"
+                                required
+                                name="name"
+                                placeholder="Please enter account name here..."
+                                value={values.name}
+                                errorMsg={errorInfo?.name}
+                                onChange={formikProps.handleChange}
+                                error={
+                                  formikProps.touched.name &&
+                                  Boolean(errors.name)
+                                }
+                                helperText={
+                                  formikProps.touched.name && errors.name
+                                }
+                              />
+                            </div>
+                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                              <TextInputValidate
+                                id="email"
+                                label="Main Account Email"
+                                type="email"
+                                className="w-full"
+                                required
+                                name="email"
+                                value={values.email}
+                                errorMsg={errorInfo?.email}
+                                onChange={formikProps.handleChange}
+                                placeholder="Please enter company email here..."
+                                error={
+                                  formikProps.touched.email &&
+                                  Boolean(errors.email)
+                                }
+                                helperText={
+                                  formikProps.touched.email && errors.email
+                                }
+                              />
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap mb-6">
+                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                              <div className="relative">
+                                <TextInputValidate
+                                  id="password"
+                                  label="Password"
+                                  type={showPassword ? 'text' : 'password'}
+                                  className="w-full"
+                                  required
+                                  name="password"
+                                  placeholder="Please enter password here..."
+                                  value={values.password}
+                                  errorMsg={errorInfo?.password}
+                                  onChange={formikProps.handleChange}
+                                  error={
+                                    formikProps.touched.password &&
+                                    Boolean(errors.password)
+                                  }
+                                  helperText={
+                                    formikProps.touched.password &&
+                                    errors.password
+                                  }
+                                />
+                                <div
+                                  className="absolute inset-y-0 right-4 top-9 flex items-start cursor-pointer"
+                                  onClick={() =>
+                                    setShowPassword((prev) => !prev)
+                                  }
+                                >
+                                  {showPassword ? (
+                                    <i className="fas fa-eye-slash text-slate-500" />
+                                  ) : (
+                                    <i className="fas fa-eye text-slate-500" />
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                              <div className="relative">
+                                <TextInputValidate
+                                  id="password_confirmation"
+                                  label="Confirm Password"
+                                  type={
+                                    showConfirmationPassword
+                                      ? 'text'
+                                      : 'password'
+                                  }
+                                  className="w-full"
+                                  required
+                                  placeholder="Please enter confirm password here..."
+                                  name="password_confirmation"
+                                  value={values.password_confirmation}
+                                  errorMsg={errorInfo?.password_confirmation}
+                                  onChange={formikProps.handleChange}
+                                  error={
+                                    formikProps.touched.password_confirmation &&
+                                    Boolean(errors.password_confirmation)
+                                  }
+                                  helperText={
+                                    formikProps.touched.password_confirmation &&
+                                    errors.password_confirmation
+                                  }
+                                />
+                                <div
+                                  className="absolute inset-y-0 right-4 top-9 flex items-start cursor-pointer"
+                                  onClick={() =>
+                                    setShowConfirmationPassword((prev) => !prev)
+                                  }
+                                >
+                                  {showConfirmationPassword ? (
+                                    <i className="fas fa-eye-slash text-slate-500" />
+                                  ) : (
+                                    <i className="fas fa-eye text-slate-500" />
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="mt-8">
+                          <div className="relative flex py-5 items-center w-full mx-auto">
+                            <div className="flex-shrink mr-4">
+                              <h2 className="font-semibold text-xl text-blueGray-500">
+                                Company Information
+                              </h2>
+                            </div>
+                            <div className="flex-grow border-t border-blueGray-700" />
+                          </div>
+                          <div className="flex flex-wrap mb-6">
+                            <TextInputImage
+                              id="company_img"
+                              name="company_img"
+                              className=""
+                              type="file"
+                              accept="image/png, image/jpeg, image/jpg, image/gif, image/svg, image/webp"
+                              required
+                              value={values.company_img}
+                              errorMsg={errorInfo?.company_img}
+                              // onChange={formikProps.handleChange}
+                              // onChange={companyImageHandler}
+                              onChange={(event) => {
+                                formikProps.handleChange(event);
+                                const file = event.target.files[0];
+                                formikProps.setFieldValue(
+                                  'company_image',
+                                  file
+                                );
+                                const fileReader = new FileReader();
+                                fileReader.onload = function (event) {
+                                  setImageCompany(event.target.result);
+                                };
+                                if (event !== undefined && file !== undefined) {
+                                  fileReader?.readAsDataURL(file);
+                                }
+                                //   };
+                              }}
+                              image={imageCompany}
+                              error={
+                                formikProps.touched.company_img &&
+                                Boolean(errors.company_img)
+                              }
+                              helperText={
+                                formikProps.touched.company_img &&
+                                errors.company_img
+                              }
                             />
-                          )}
-                          <div className="mt-8">
-                            <div className="relative flex py-5 items-center w-full mx-auto">
-                              <div className="flex-shrink mr-4">
-                                <h2 className="font-semibold text-xl text-blueGray-500">
-                                  Main Account Information
-                                </h2>
-                              </div>
-                              <div className="flex-grow border-t border-blueGray-700"></div>
-                            </div>
-                            <div className="flex flex-wrap mb-6">
-                              <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap mb-6">
+                          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                            <TextInputValidate
+                              id="company_name"
+                              label="Company Name"
+                              className="w-full"
+                              required
+                              placeholder="Please enter company name here..."
+                              name="company_name"
+                              value={values.company_name}
+                              errorMsg={errorInfo?.company_name}
+                              onChange={formikProps.handleChange}
+                              error={
+                                formikProps.touched.company_name &&
+                                Boolean(errors.company_name)
+                              }
+                              helperText={
+                                formikProps.touched.company_name &&
+                                errors.company_name
+                              }
+                            />
+                          </div>
+                          <div className="w-full md:w-1/2 px-3">
+                            <SelectInputSector
+                              searchable
+                              label="Sectors"
+                              name="company_sector"
+                              value={values.company_sector}
+                              options={sectors}
+                              required
+                              errorMsg={errorInfo?.company_sector}
+                              onChange={(value, newSector) => {
+                                setCompanySector(value);
+                                formikProps.setFieldValue(
+                                  'company_sector',
+                                  value
+                                );
+                              }}
+                              onBlur={formikProps.onBlur}
+                              error={
+                                formikProps.touched.company_sector &&
+                                Boolean(errors.company_sector)
+                              }
+                              helperText={
+                                formikProps.touched.company_sector &&
+                                errors.company_sector
+                              }
+                            />
+                            {companySector?.value == 'other' && (
+                              <div className="mt-2">
                                 <TextInputValidate
-                                  id="name"
-                                  label="Main Account Name"
+                                  id="company_other"
                                   className="w-full"
                                   required
-                                  name="name"
-                                  placeholder={
-                                    'Please enter account name here...'
-                                  }
-                                  value={values.name}
-                                  errorMsg={errorInfo?.name}
+                                  type="text"
+                                  name="company_other"
+                                  value={values.company_other}
+                                  errorMsg={errorInfo?.company_other}
                                   onChange={formikProps.handleChange}
                                   error={
-                                    formikProps.touched.name &&
-                                    Boolean(errors.name)
+                                    formikProps.touched.company_other &&
+                                    Boolean(errors.company_other)
                                   }
                                   helperText={
-                                    formikProps.touched.name && errors.name
+                                    formikProps.touched.company_other &&
+                                    errors.company_other
                                   }
                                 />
                               </div>
-                              <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap mb-6">
+                          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                            <TextInputValidate
+                              label="Phone"
+                              id="company_phone"
+                              className="w-full"
+                              required
+                              defaultCountry="TR"
+                              type="text"
+                              name="company_phone"
+                              value={values.company_phone}
+                              errorMsg={errorInfo?.company_phone}
+                              onChange={formikProps.handleChange}
+                              error={
+                                formikProps.touched.company_phone &&
+                                Boolean(errors.company_phone)
+                              }
+                              helperText={
+                                formikProps.touched.company_phone &&
+                                errors.company_phone
+                              }
+                              placeholder="Please enter company phone number here..."
+                            />
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap mb-6">
+                          <div className="w-full md:w-1/2 px-3">
+                            <CountrySelector
+                              name="company_country"
+                              label="Country"
+                              value={values.company_country}
+                              required
+                              onChange={(value) => {
+                                formikProps.setFieldValue(
+                                  'company_country',
+                                  value
+                                );
+                                formikProps.setFieldValue(
+                                  'company_province',
+                                  ''
+                                );
+                                formikProps.setFieldValue(
+                                  'company_province_other',
+                                  ''
+                                );
+                                setCompanyProvince(null);
+                                formikProps.setFieldValue('company_city', '');
+                                const Country = countries?.find(
+                                  (e) => e?.name == value?.value
+                                );
+                                setStatCountry({...Country});
+                              }}
+                              onBlur={formikProps.onBlur}
+                              errorMsg={errorInfo?.company_country}
+                              error={
+                                formikProps.touched.company_country &&
+                                Boolean(errors.company_country)
+                              }
+                              helperText={
+                                formikProps.touched.company_country &&
+                                errors.company_country
+                              }
+                            />
+                          </div>
+                          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                            <ProvinceSelector
+                              name="company_province"
+                              label="Province"
+                              value={values.company_province}
+                              required
+                              onChange={(value) => {
+                                formikProps.setFieldValue(
+                                  'company_province',
+                                  value
+                                );
+                                formikProps.setFieldValue('company_city', '');
+                                formikProps.setFieldValue(
+                                  'company_province_other',
+                                  ''
+                                );
+                                const province = provincies?.find(
+                                  (e) => e?.name == value.value
+                                );
+                                setStateProvince({...province});
+                                setCompanyProvince(value);
+                              }}
+                              countryId={stateCountry?.id}
+                              onBlur={formikProps.onBlur}
+                              errorMsg={errorInfo?.company_province}
+                              error={
+                                formikProps.touched.company_province &&
+                                Boolean(errors.company_province)
+                              }
+                              helperText={
+                                formikProps.touched.company_province &&
+                                errors.company_province
+                              }
+                            />
+                            {companyProvince?.value?.toLowerCase() ==
+                              'other' && (
+                              <div className="mt-2">
                                 <TextInputValidate
-                                  id="email"
-                                  label="Main Account Email"
-                                  type="email"
+                                  id="company_province_other"
                                   className="w-full"
                                   required
-                                  name="email"
-                                  value={values.email}
-                                  errorMsg={errorInfo?.email}
+                                  type="text"
+                                  name="company_province_other"
+                                  value={values.company_province_other}
+                                  errorMsg={errorInfo?.company_province_other}
                                   onChange={formikProps.handleChange}
-                                  placeholder="Please enter company email here..."
                                   error={
-                                    formikProps.touched.email &&
-                                    Boolean(errors.email)
+                                    formikProps.touched
+                                      .company_province_other &&
+                                    Boolean(errors.company_province_other)
                                   }
                                   helperText={
-                                    formikProps.touched.email && errors.email
+                                    formikProps.touched
+                                      .company_province_other &&
+                                    errors.company_province_other
                                   }
                                 />
                               </div>
-                            </div>
-                            <div className="flex flex-wrap mb-6">
-                              <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                <div className="relative">
-                                  <TextInputValidate
-                                    id="password"
-                                    label="Password"
-                                    type={showPassword ? 'text' : 'password'}
-                                    className="w-full"
-                                    required
-                                    name="password"
-                                    placeholder={
-                                      'Please enter password here...'
-                                    }
-                                    value={values.password}
-                                    errorMsg={errorInfo?.password}
-                                    onChange={formikProps.handleChange}
-                                    error={
-                                      formikProps.touched.password &&
-                                      Boolean(errors.password)
-                                    }
-                                    helperText={
-                                      formikProps.touched.password &&
-                                      errors.password
-                                    }
-                                  />
-                                  <div
-                                    className="absolute inset-y-0 right-4 top-9 flex items-start cursor-pointer"
-                                    onClick={() =>
-                                      setShowPassword((prev) => !prev)
-                                    }
-                                  >
-                                    {showPassword ? (
-                                      <i className="fas fa-eye-slash text-slate-500"></i>
-                                    ) : (
-                                      <i className="fas fa-eye text-slate-500"></i>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                <div className="relative">
-                                  <TextInputValidate
-                                    id="password_confirmation"
-                                    label="Confirm Password"
-                                    type={
-                                      showConfirmationPassword
-                                        ? 'text'
-                                        : 'password'
-                                    }
-                                    className="w-full"
-                                    required
-                                    placeholder={
-                                      'Please enter confirm password here...'
-                                    }
-                                    name="password_confirmation"
-                                    value={values.password_confirmation}
-                                    errorMsg={errorInfo?.password_confirmation}
-                                    onChange={formikProps.handleChange}
-                                    error={
-                                      formikProps.touched
-                                        .password_confirmation &&
-                                      Boolean(errors.password_confirmation)
-                                    }
-                                    helperText={
-                                      formikProps.touched
-                                        .password_confirmation &&
-                                      errors.password_confirmation
-                                    }
-                                  />
-                                  <div
-                                    className="absolute inset-y-0 right-4 top-9 flex items-start cursor-pointer"
-                                    onClick={() =>
-                                      setShowConfirmationPassword(
-                                        (prev) => !prev
-                                      )
-                                    }
-                                  >
-                                    {showConfirmationPassword ? (
-                                      <i className="fas fa-eye-slash text-slate-500"></i>
-                                    ) : (
-                                      <i className="fas fa-eye text-slate-500"></i>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                            )}
                           </div>
-                          <div className="mt-8">
-                            <div className="relative flex py-5 items-center w-full mx-auto">
-                              <div className="flex-shrink mr-4">
-                                <h2 className="font-semibold text-xl text-blueGray-500">
-                                  Company Information
-                                </h2>
-                              </div>
-                              <div className="flex-grow border-t border-blueGray-700"></div>
-                            </div>
-                            <div className="flex flex-wrap mb-6">
-                              <TextInputImage
-                                id="company_img"
-                                name="company_img"
-                                className=""
-                                type="file"
-                                accept="image/png, image/jpeg, image/jpg, image/gif, image/svg, image/webp"
-                                required
-                                value={values.company_img}
-                                errorMsg={errorInfo?.company_img}
-                                // onChange={formikProps.handleChange}
-                                // onChange={companyImageHandler}
-                                onChange={(event) => {
-                                  formikProps.handleChange(event);
-                                  let file = event.target.files[0];
-                                  formikProps.setFieldValue(
-                                    'company_image',
-                                    file
-                                  );
-                                  const fileReader = new FileReader();
-                                  fileReader.onload = function (event) {
-                                    setImageCompany(event.target.result);
-                                  };
-                                  if (
-                                    event !== undefined &&
-                                    file !== undefined
-                                  ) {
-                                    fileReader?.readAsDataURL(file);
+                        </div>
+                        <div className="flex flex-wrap mb-6">
+                          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                            <CitySelector
+                              label="City"
+                              className="w-full"
+                              required
+                              id="company_city"
+                              name="company_city"
+                              value={values.company_city}
+                              errorMsg={errorInfo?.company_city}
+                              provinceId={stateProvince?.id}
+                              onChange={(value) => {
+                                formikProps.setFieldValue(
+                                  'company_city',
+                                  value
+                                );
+                                setCompanyCityOther(value);
+                                formikProps.setFieldValue(
+                                  'company_city_other',
+                                  ''
+                                );
+                              }}
+                              error={
+                                formikProps.touched.company_city &&
+                                Boolean(errors.company_city)
+                              }
+                              helperText={
+                                formikProps.touched.company_city &&
+                                errors.company_city
+                              }
+                            />
+                            {companyCityOther?.value?.toLowerCase() ===
+                              'other' && (
+                              <div className="mt-2">
+                                <TextInputValidate
+                                  id="company_city_other"
+                                  className="w-full"
+                                  required
+                                  type="text"
+                                  name="company_city_other"
+                                  value={values.company_city_other}
+                                  errorMsg={errorInfo?.company_city_other}
+                                  onChange={formikProps.handleChange}
+                                  error={
+                                    formikProps.touched.company_city_other &&
+                                    Boolean(errors.company_city_other)
                                   }
-                                  //   };
-                                }}
-                                image={imageCompany}
-                                error={
-                                  formikProps.touched.company_img &&
-                                  Boolean(errors.company_img)
-                                }
-                                helperText={
-                                  formikProps.touched.company_img &&
-                                  errors.company_img
-                                }
-                              />
-                            </div>
+                                  helperText={
+                                    formikProps.touched.company_city_other &&
+                                    errors.company_city_other
+                                  }
+                                />
+                              </div>
+                            )}
                           </div>
-                          <div className="flex flex-wrap mb-6">
-                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                          <div className="w-full md:w-1/2 px-3">
+                            <div className="w-full md:w-1/2 lg:w-1/2 2xl:w-1/2">
                               <TextInputValidate
-                                id="company_name"
-                                label="Company Name"
+                                id="company_zip"
+                                label="Postal Code"
                                 className="w-full"
                                 required
-                                placeholder={
-                                  'Please enter company name here...'
-                                }
-                                name="company_name"
-                                value={values.company_name}
-                                errorMsg={errorInfo?.company_name}
+                                name="company_zip"
+                                value={values.company_zip}
+                                errorMsg={errorInfo?.company_zip}
                                 onChange={formikProps.handleChange}
-                                error={
-                                  formikProps.touched.company_name &&
-                                  Boolean(errors.company_name)
-                                }
-                                helperText={
-                                  formikProps.touched.company_name &&
-                                  errors.company_name
-                                }
-                              />
-                            </div>
-                            <div className="w-full md:w-1/2 px-3">
-                              <SelectInputSector
-                                searchable
-                                label="Sectors"
-                                name="company_sector"
-                                value={values.company_sector}
-                                options={sectors}
-                                required
-                                errorMsg={errorInfo?.company_sector}
-                                onChange={(value, newSector) => {
-                                  setCompanySector(value);
-                                  formikProps.setFieldValue(
-                                    'company_sector',
-                                    value
-                                  );
-                                }}
-                                onBlur={formikProps.onBlur}
-                                error={
-                                  formikProps.touched.company_sector &&
-                                  Boolean(errors.company_sector)
-                                }
-                                helperText={
-                                  formikProps.touched.company_sector &&
-                                  errors.company_sector
-                                }
-                              />
-                              {companySector?.value == 'other' && (
-                                <div className="mt-2">
-                                  <TextInputValidate
-                                    id="company_other"
-                                    className="w-full"
-                                    required
-                                    type="text"
-                                    name="company_other"
-                                    value={values.company_other}
-                                    errorMsg={errorInfo?.company_other}
-                                    onChange={formikProps.handleChange}
-                                    error={
-                                      formikProps.touched.company_other &&
-                                      Boolean(errors.company_other)
-                                    }
-                                    helperText={
-                                      formikProps.touched.company_other &&
-                                      errors.company_other
-                                    }
-                                  />
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap mb-6">
-                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                              <TextInputValidate
-                                label="Phone"
-                                id="company_phone"
-                                className="w-full"
-                                required
-                                defaultCountry="TR"
-                                type="text"
-                                name="company_phone"
-                                value={values.company_phone}
-                                errorMsg={errorInfo?.company_phone}
-                                onChange={formikProps.handleChange}
-                                error={
-                                  formikProps.touched.company_phone &&
-                                  Boolean(errors.company_phone)
-                                }
-                                helperText={
-                                  formikProps.touched.company_phone &&
-                                  errors.company_phone
-                                }
-                                placeholder="Please enter company phone number here..."
-                              />
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap mb-6">
-                            <div className="w-full md:w-1/2 px-3">
-                              <CountrySelector
-                                name="company_country"
-                                label="Country"
-                                value={values.company_country}
-                                required
-                                onChange={(value) => {
-                                  formikProps.setFieldValue(
-                                    'company_country',
-                                    value
-                                  );
-                                  formikProps.setFieldValue(
-                                    'company_province',
-                                    ''
-                                  );
-                                  formikProps.setFieldValue(
-                                    'company_province_other',
-                                    ''
-                                  );
-                                  setCompanyProvince(null);
-                                  formikProps.setFieldValue('company_city', '');
-                                  const Country = countries?.find(
-                                    (e) => e?.name == value?.value
-                                  );
-                                  setStatCountry({...Country});
-                                }}
-                                onBlur={formikProps.onBlur}
-                                errorMsg={errorInfo?.company_country}
-                                error={
-                                  formikProps.touched.company_country &&
-                                  Boolean(errors.company_country)
-                                }
-                                helperText={
-                                  formikProps.touched.company_country &&
-                                  errors.company_country
-                                }
-                              />
-                            </div>
-                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                              <ProvinceSelector
-                                name="company_province"
-                                label="Province"
-                                value={values.company_province}
-                                required
-                                onChange={(value) => {
-                                  formikProps.setFieldValue(
-                                    'company_province',
-                                    value
-                                  );
-                                  formikProps.setFieldValue('company_city', '');
-                                  formikProps.setFieldValue(
-                                    'company_province_other',
-                                    ''
-                                  );
-                                  const province = provincies?.find(
-                                    (e) => e?.name == value.value
-                                  );
-                                  setStateProvince({...province});
-                                  setCompanyProvince(value);
-                                }}
-                                countryId={stateCountry?.id}
-                                onBlur={formikProps.onBlur}
-                                errorMsg={errorInfo?.company_province}
-                                error={
-                                  formikProps.touched.company_province &&
-                                  Boolean(errors.company_province)
-                                }
-                                helperText={
-                                  formikProps.touched.company_province &&
-                                  errors.company_province
-                                }
-                              />
-                              {companyProvince?.value?.toLowerCase() ==
-                                'other' && (
-                                <div className="mt-2">
-                                  <TextInputValidate
-                                    id="company_province_other"
-                                    className="w-full"
-                                    required
-                                    type="text"
-                                    name="company_province_other"
-                                    value={values.company_province_other}
-                                    errorMsg={errorInfo?.company_province_other}
-                                    onChange={formikProps.handleChange}
-                                    error={
-                                      formikProps.touched
-                                        .company_province_other &&
-                                      Boolean(errors.company_province_other)
-                                    }
-                                    helperText={
-                                      formikProps.touched
-                                        .company_province_other &&
-                                      errors.company_province_other
-                                    }
-                                  />
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap mb-6">
-                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                              <CitySelector
-                                label="City"
-                                className="w-full"
-                                required
-                                id="company_city"
-                                name="company_city"
-                                value={values.company_city}
-                                errorMsg={errorInfo?.company_city}
-                                provinceId={stateProvince?.id}
-                                onChange={(value) => {
-                                  formikProps.setFieldValue(
-                                    'company_city',
-                                    value
-                                  );
-                                  setCompanyCityOther(value);
-                                  formikProps.setFieldValue(
-                                    'company_city_other',
-                                    ''
-                                  );
-                                }}
-                                error={
-                                  formikProps.touched.company_city &&
-                                  Boolean(errors.company_city)
-                                }
-                                helperText={
-                                  formikProps.touched.company_city &&
-                                  errors.company_city
-                                }
-                              />
-                              {companyCityOther?.value?.toLowerCase() ===
-                                'other' && (
-                                <div className="mt-2">
-                                  <TextInputValidate
-                                    id="company_city_other"
-                                    className="w-full"
-                                    required
-                                    type="text"
-                                    name="company_city_other"
-                                    value={values.company_city_other}
-                                    errorMsg={errorInfo?.company_city_other}
-                                    onChange={formikProps.handleChange}
-                                    error={
-                                      formikProps.touched.company_city_other &&
-                                      Boolean(errors.company_city_other)
-                                    }
-                                    helperText={
-                                      formikProps.touched.company_city_other &&
-                                      errors.company_city_other
-                                    }
-                                  />
-                                </div>
-                              )}
-                            </div>
-                            <div className="w-full md:w-1/2 px-3">
-                              <div className="w-full md:w-1/2 lg:w-1/2 2xl:w-1/2">
-                                <TextInputValidate
-                                  id="company_zip"
-                                  label="Postal Code"
-                                  className="w-full"
-                                  required
-                                  name="company_zip"
-                                  value={values.company_zip}
-                                  errorMsg={errorInfo?.company_zip}
-                                  onChange={formikProps.handleChange}
-                                  placeholder="Please enter company zip here..."
-                                  error={
-                                    formikProps.touched.company_zip &&
-                                    Boolean(errors.company_zip)
-                                  }
-                                  helperText={
-                                    formikProps.touched.company_zip &&
-                                    errors.company_zip
-                                  }
-                                />
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="flex flex-wrap mb-6">
-                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                              <AreaInputValidation
-                                rows={5}
-                                characterCount={firstAddressCharacterCount}
-                                characterLimit={firstAddressCharacterLimit}
-                                label="Address 1"
-                                name="company_address"
-                                required
                                 placeholder="Please enter company zip here..."
-                                value={formikProps.company_address}
-                                errorMsg={errorInfo?.company_address}
-                                onChange={formikProps.handleChange}
                                 error={
-                                  formikProps.touched.company_address &&
-                                  Boolean(errors.company_address)
+                                  formikProps.touched.company_zip &&
+                                  Boolean(errors.company_zip)
                                 }
                                 helperText={
-                                  formikProps.touched.company_address &&
-                                  errors.company_address
+                                  formikProps.touched.company_zip &&
+                                  errors.company_zip
                                 }
                               />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap mb-6">
+                          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                            <AreaInputValidation
+                              rows={5}
+                              characterCount={firstAddressCharacterCount}
+                              characterLimit={firstAddressCharacterLimit}
+                              label="Address 1"
+                              name="company_address"
+                              required
+                              placeholder="Please enter company zip here..."
+                              value={formikProps.company_address}
+                              errorMsg={errorInfo?.company_address}
+                              onChange={formikProps.handleChange}
+                              error={
+                                formikProps.touched.company_address &&
+                                Boolean(errors.company_address)
+                              }
+                              helperText={
+                                formikProps.touched.company_address &&
+                                errors.company_address
+                              }
+                            />
+                          </div>
+                          <div className="w-full md:w-1/2 px-3">
+                            <AreaInput
+                              rows={5}
+                              characterCount={secondAddressCharacterCount}
+                              characterLimit={secondAddressCharacterLimit}
+                              label="Address 2"
+                              name="company_address2"
+                              required
+                              value={registrationInfo.company_address2}
+                              errorMsg={errorInfo?.company_address2}
+                              onChange={(input) => secondAddressHandler(input)}
+                            />
+                          </div>
+                        </div>
+                        <div className="mt-8">
+                          <div className="relative flex py-5 items-center w-full mx-auto">
+                            <div className="flex-shrink mr-4">
+                              <h2 className="font-semibold text-xl text-blueGray-500">
+                                Documents
+                              </h2>
+                            </div>
+                            <div className="flex-grow border-t border-blueGray-700" />
+                          </div>
+                          <div className="flex flex-wrap mb-6">
+                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                              <label
+                                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                htmlFor="grid-last-name"
+                              >
+                                Company Registration Document
+                              </label>
+                              <div className="p-5 border-dashed border-2 border-indigo-200">
+                                <div className="grid gap-4 lg:grid-cols-2 md:grid-cols-1">
+                                  <div className="text-center my-auto">
+                                    <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl" />
+                                  </div>
+                                  <div className="text-xs ">
+                                    <p>PDF file size no more than 10MB</p>
+                                    <input
+                                      className="mt-3"
+                                      type="file"
+                                      name="company_RegistrationDocument"
+                                      accept=".pdf"
+                                      onChange={({target}) =>
+                                        setRegistrationInfo({
+                                          ...registrationInfo,
+                                          company_RegistrationDocument:
+                                            target.files[0],
+                                        })
+                                      }
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              {errorInfo?.company_RegistrationDocument && (
+                                <ErrorInput
+                                  error={
+                                    errorInfo?.company_RegistrationDocument
+                                  }
+                                />
+                              )}
                             </div>
                             <div className="w-full md:w-1/2 px-3">
-                              <AreaInput
-                                rows={5}
-                                characterCount={secondAddressCharacterCount}
-                                characterLimit={secondAddressCharacterLimit}
-                                label="Address 2"
-                                name="company_address2"
-                                required
-                                value={registrationInfo.company_address2}
-                                errorMsg={errorInfo?.company_address2}
-                                onChange={(input) =>
-                                  secondAddressHandler(input)
-                                }
-                              />
-                            </div>
-                          </div>
-                          <div className="mt-8">
-                            <div className="relative flex py-5 items-center w-full mx-auto">
-                              <div className="flex-shrink mr-4">
-                                <h2 className="font-semibold text-xl text-blueGray-500">
-                                  Documents
-                                </h2>
-                              </div>
-                              <div className="flex-grow border-t border-blueGray-700"></div>
-                            </div>
-                            <div className="flex flex-wrap mb-6">
-                              <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                <label
-                                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                  htmlFor="grid-last-name"
-                                >
-                                  Company Registration Document
-                                </label>
-                                <div className="p-5 border-dashed border-2 border-indigo-200">
-                                  <div className="grid gap-4 lg:grid-cols-2 md:grid-cols-1">
-                                    <div className="text-center my-auto">
-                                      <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
-                                    </div>
-                                    <div className="text-xs ">
-                                      <p>PDF file size no more than 10MB</p>
-                                      <input
-                                        className="mt-3"
-                                        type="file"
-                                        name="company_RegistrationDocument"
-                                        accept=".pdf"
-                                        onChange={({target}) =>
-                                          setRegistrationInfo({
-                                            ...registrationInfo,
-                                            company_RegistrationDocument:
-                                              target.files[0],
-                                          })
-                                        }
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                                {errorInfo?.company_RegistrationDocument && (
-                                  <ErrorInput
-                                    error={
-                                      errorInfo?.company_RegistrationDocument
-                                    }
-                                  />
-                                )}
-                              </div>
-                              <div className="w-full md:w-1/2 px-3">
-                                <label
-                                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                  htmlFor="grid-last-name"
-                                >
-                                  Certification of Activity
-                                </label>
-                                <div className="p-5 border-dashed border-2 border-indigo-200">
-                                  <div className="grid gap-4 lg:grid-cols-2 md:grid-cols-1">
-                                    <div className="text-center my-auto">
-                                      <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
-                                    </div>
-                                    <div className="text-xs ">
-                                      <p>PDF file size no more than 10MB</p>
-                                      <input
-                                        className="mt-3"
-                                        type="file"
-                                        name="company_CertificationofActivity"
-                                        accept=".pdf"
-                                        onChange={({target}) =>
-                                          setRegistrationInfo({
-                                            ...registrationInfo,
-                                            company_CertificationofActivity:
-                                              target.files[0],
-                                          })
-                                        }
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                                {errorInfo?.company_CertificationofActivity && (
-                                  <ErrorInput
-                                    error={
-                                      errorInfo?.company_CertificationofActivity
-                                    }
-                                  />
-                                )}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="text-center mb-6 mt-20">
-                            <div className="text-center">
-                              <div className="w-full">
-                                {isAgreeTermCondtionOfSaleMessage && (
-                                  <div>
-                                    <span className=" inline-block mr-2 align-middle">
-                                      <i className="text-red-500 fas fa-bell"></i>
-                                    </span>
-                                    <span className="font-light text-sm">
-                                      <i className="text-red-500 capitalize">
-                                        {isAgreeTermCondtionOfSaleMessage}
-                                      </i>
-                                    </span>
-                                  </div>
-                                )}
-                                <input
-                                  id="term"
-                                  type="checkbox"
-                                  checked={isAgreeTermCondtionOfSale}
-                                  onChange={handleisAgreeTermCondtionOfSale}
-                                  className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                                />
-                                <label
-                                  htmlFor="term"
-                                  className="ml-2 text-sm font-medium text-gray-900"
-                                >
-                                  I agree with the{' '}
-                                  <Link
-                                    target="_blank"
-                                    href={PublicUrl.conditionOfSale}
-                                    className="text-blue-600 hover:underline"
-                                  >
-                                    Terms and Conditions of Sale
-                                  </Link>
-                                  .
-                                </label>
-                              </div>
-                              <div className="w-full">
-                                {isAgreeTermCondtionOfExportMessage && (
-                                  <div>
-                                    <span className=" inline-block mr-2 align-middle">
-                                      <i className="text-red-500 fas fa-bell"></i>
-                                    </span>
-                                    <span className="font-light text-sm">
-                                      <i className="text-red-500 capitalize">
-                                        {isAgreeTermCondtionOfExportMessage}
-                                      </i>
-                                    </span>
-                                  </div>
-                                )}
-                                <input
-                                  id="policy"
-                                  type="checkbox"
-                                  checked={isAgreeTermCondtionOfExport}
-                                  onChange={handleisAgreeTermCondtionOfExport}
-                                  className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                                />
-                                <label
-                                  htmlFor="policy"
-                                  className="ml-2 text-sm font-medium text-gray-900"
-                                >
-                                  I agree with the{' '}
-                                  <Link
-                                    target="_blank"
-                                    href={PublicUrl.conditionOfExport}
-                                    className="text-blue-600 hover:underline"
-                                  >
-                                    Terms and Conditions of Export
-                                  </Link>
-                                  .
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="text-center">
-                            <div className="mt-5">
-                              <PrimaryButton
-                                type="submit"
-                                className="w-full md:w-6/12 font-bold uppercase"
+                              <label
+                                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                htmlFor="grid-last-name"
                               >
-                                {isLoading && (
-                                  <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
-                                )}
-                                Register
-                              </PrimaryButton>
+                                Certification of Activity
+                              </label>
+                              <div className="p-5 border-dashed border-2 border-indigo-200">
+                                <div className="grid gap-4 lg:grid-cols-2 md:grid-cols-1">
+                                  <div className="text-center my-auto">
+                                    <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl" />
+                                  </div>
+                                  <div className="text-xs ">
+                                    <p>PDF file size no more than 10MB</p>
+                                    <input
+                                      className="mt-3"
+                                      type="file"
+                                      name="company_CertificationofActivity"
+                                      accept=".pdf"
+                                      onChange={({target}) =>
+                                        setRegistrationInfo({
+                                          ...registrationInfo,
+                                          company_CertificationofActivity:
+                                            target.files[0],
+                                        })
+                                      }
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              {errorInfo?.company_CertificationofActivity && (
+                                <ErrorInput
+                                  error={
+                                    errorInfo?.company_CertificationofActivity
+                                  }
+                                />
+                              )}
                             </div>
                           </div>
-                        </Form>
-                      );
-                    }}
+                        </div>
+
+                        <div className="text-center mb-6 mt-20">
+                          <div className="text-center">
+                            <div className="w-full">
+                              {isAgreeTermCondtionOfSaleMessage && (
+                                <div>
+                                  <span className=" inline-block mr-2 align-middle">
+                                    <i className="text-red-500 fas fa-bell" />
+                                  </span>
+                                  <span className="font-light text-sm">
+                                    <i className="text-red-500 capitalize">
+                                      {isAgreeTermCondtionOfSaleMessage}
+                                    </i>
+                                  </span>
+                                </div>
+                              )}
+                              <input
+                                id="term"
+                                type="checkbox"
+                                checked={isAgreeTermCondtionOfSale}
+                                onChange={handleisAgreeTermCondtionOfSale}
+                                className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                              />
+                              <label
+                                htmlFor="term"
+                                className="ml-2 text-sm font-medium text-gray-900"
+                              >
+                                I agree with the{' '}
+                                <Link
+                                  target="_blank"
+                                  href={PublicUrl.conditionOfSale}
+                                  className="text-blue-600 hover:underline"
+                                >
+                                  Terms and Conditions of Sale
+                                </Link>
+                                .
+                              </label>
+                            </div>
+                            <div className="w-full">
+                              {isAgreeTermCondtionOfExportMessage && (
+                                <div>
+                                  <span className=" inline-block mr-2 align-middle">
+                                    <i className="text-red-500 fas fa-bell" />
+                                  </span>
+                                  <span className="font-light text-sm">
+                                    <i className="text-red-500 capitalize">
+                                      {isAgreeTermCondtionOfExportMessage}
+                                    </i>
+                                  </span>
+                                </div>
+                              )}
+                              <input
+                                id="policy"
+                                type="checkbox"
+                                checked={isAgreeTermCondtionOfExport}
+                                onChange={handleisAgreeTermCondtionOfExport}
+                                className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                              />
+                              <label
+                                htmlFor="policy"
+                                className="ml-2 text-sm font-medium text-gray-900"
+                              >
+                                I agree with the{' '}
+                                <Link
+                                  target="_blank"
+                                  href={PublicUrl.conditionOfExport}
+                                  className="text-blue-600 hover:underline"
+                                >
+                                  Terms and Conditions of Export
+                                </Link>
+                                .
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <div className="mt-5">
+                            <PrimaryButton
+                              type="submit"
+                              className="w-full md:w-6/12 font-bold uppercase"
+                            >
+                              {isLoading && (
+                                <i className="fas fa-hourglass fa-spin text-white mr-2" />
+                              )}
+                              Register
+                            </PrimaryButton>
+                          </div>
+                        </div>
+                      </Form>
+                    )}
                   </Formik>
                 )}
                 {succesStatus && (
