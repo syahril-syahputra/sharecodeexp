@@ -176,16 +176,7 @@ export default function Uploaded({ session }) {
     }
     return (
         <>
-            <ExcelDetail
-                show={[isOpenDetail, setisOpenDetail]}
-                loading={[isDetailLoading, setisDetailLoading]}
-                session={session}
-                data={selectedData}
-                download={downloadHandler}
-                delete={deleteHandler}
-                reject={rejectHandler}
-                upload={file => uploadHandler(file)}
-            />
+
             <div className="mb-5 w-full lg:w-1/2">
                 <MiniSearchBar searchItem={handleSearch} />
             </div>

@@ -29,7 +29,14 @@ export default function TableExcel(props) {
             <PrimaryWrapper>
                 <HeaderTable
                     title={props.title}
-
+                    action={
+                        <Link href="/admin/member/seller/product/bulkinsert">
+                            <PrimaryButton
+                                size="sm">
+                                Upload New File Excel
+                            </PrimaryButton>
+                        </Link>
+                    }
                 ></HeaderTable>
                 <BaseTable
                     isBusy={props.isLoading}
