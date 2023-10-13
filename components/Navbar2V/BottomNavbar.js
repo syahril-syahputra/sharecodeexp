@@ -23,7 +23,7 @@ const BottomNavbar = (props) => {
   return (
     <nav
       className={`${
-        navbar ? 'bg-slate-50' : 'bg-white opacity-[.69]'
+        navbar ? 'bg-slate-50' : 'bg-white bg-opacity-[.45]'
       } w-full fixed flex flex-wrap items-center justify-between  z-50 py-3 px-2 navbar-expand-lg`}
     >
       <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">

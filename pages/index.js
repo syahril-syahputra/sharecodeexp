@@ -369,7 +369,7 @@ export default function Index() {
           >
             <motion.div
               variants={staggerContainer}
-              initial="hidden"
+              initial="show"
               whileInView={'show'}
               className="container mx-auto lg:px-4 px-6 md:px-6"
               viewport={{once: true, amount: 0.05}}
