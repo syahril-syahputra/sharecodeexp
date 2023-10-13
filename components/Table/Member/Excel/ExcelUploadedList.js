@@ -27,6 +27,17 @@ export default function TableExcel(props) {
     return (
         <>
             <PrimaryWrapper>
+                <HeaderTable
+                    title={props.title}
+                    action={
+                        <Link href="/admin/member/seller/product/bulkinsert">
+                            <PrimaryButton
+                                size="sm">
+                                Upload New File Excel
+                            </PrimaryButton>
+                        </Link>
+                    }
+                ></HeaderTable>
                 <BaseTable
                     isBusy={props.isLoading}
                     header={
@@ -67,7 +78,12 @@ export default function TableExcel(props) {
                                             {moment(item.updated_at).format('dddd, D MMMM YYYY')}
                                         </td>
                                         <td className="text-sm px-6 py-4 text-right">
-                                            <div className="inline-flex">
+                                            <div className="inline-flex space-x-2">
+                                                <Link href={"/admin/member/seller/product/uploaded/" + item.id}>
+                                                    <PrimaryButton>
+                                                        View
+                                                    </PrimaryButton>
+                                                </Link>
                                                 <DangerButton
                                                     onClick={() => props.delete(item)}
                                                     size="sm"
