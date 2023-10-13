@@ -5,7 +5,7 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
-    './node_modules/flowbite-react/**/*.js',
+    // './node_modules/flowbite-react/**/*.js',
     // Or if using `src` directory:
     './src/**/*.{js,ts,jsx,tsx}',
     './node_modules/react-tailwindcss-select/dist/index.esm.js',
@@ -29,12 +29,6 @@ module.exports = {
         'sub-header': '#3730A3',
         'top-navbar': '#03072B',
         'footer-resources': '#3B82F6',
-        dark: '#1b1b1b',
-        light: '#fff',
-        accent: '#7B00D3',
-        accentDark: '#ffdb4d',
-        gray: '#747474',
-        purple: '#340135',
       },
       backgroundColor: {
         'sub-content': '#DCDEEE',

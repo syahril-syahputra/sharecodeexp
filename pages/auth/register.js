@@ -1,57 +1,61 @@
 /* eslint-disable react/jsx-no-target-blank */
-import * as Yup from 'yup';
-import React, {useState, useMemo, useEffect} from 'react';
-import axios from 'lib/axios';
-import Image from 'next/image';
-import Link from 'next/link';
-import IndexNavbar from 'components/Navbars/IndexNavbar.js';
-import Footer from 'components/Footers/Footer.js';
-import countryList from 'react-select-country-list';
-import {Formik, Form} from 'formik';
-import PhoneInput from 'react-phone-number-input';
-import {PageSEO} from '@/components/Utils/SEO';
-import siteMetadata from '@/utils/siteMetadata';
-import ImageLogo from '@/components/ImageLogo/ImageLogo';
-import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton';
-import ErrorInput from '@/components/Shared/ErrorInput';
-import TextInput from '@/components/Interface/Form/TextInput';
-import SelectInput from '@/components/Interface/Form/SelectInput';
-import AreaInput from '@/components/Interface/Form/AreaInput';
-import TextInputValidate from '@/components/Interface/Form/TextInputValidation';
-import DangerNotification from '@/components/Interface/Notification/DangerNotification';
-import CountrySelector from '@/components/Shared/CountrySelector';
-import {PublicUrl} from '@/route/route-url';
-import TextInputImage from '@/components/Interface/Form/TextInputImage';
-import SelectInputSector from '@/components/Interface/Form/SelectInputSector';
-import PhoneInputValidate from '@/components/Interface/Form/PhoneInputValidate';
-import PhoneNumberInput from '@/components/Interface/Form/PhoneInputValidate2';
-import useSctor from '@/hooks/useSctor';
-import useCountry from '@/hooks/useCountry';
-import SelectInputCountry from '@/components/Interface/Form/SelectInputCountryApi';
-import ProvinceSelector from '@/components/Shared/ProvinceSelector';
-import useDataProvince from '@/hooks/useProvince';
-import CitySelector from '@/components/Shared/CitySelector';
-import useDataCity from '@/hooks/useCity';
-import {PostalCode} from '@/utils/postalCode';
-import AreaInputValidation from '@/components/Interface/Form/AreaInputValidation';
+import * as Yup from 'yup'
+import React, { useState, useMemo, useEffect } from 'react'
+import axios from 'lib/axios'
+import Image from 'next/image'
+import Link from 'next/link'
+import IndexNavbar from 'components/Navbars/IndexNavbar.js'
+import Footer from 'components/Footers/Footer.js'
+import countryList from 'react-select-country-list'
+import { Formik, Form } from 'formik'
+import PhoneInput from 'react-phone-number-input'
+import { PageSEO } from '@/components/Utils/SEO'
+import siteMetadata from '@/utils/siteMetadata'
+import ImageLogo from '@/components/ImageLogo/ImageLogo'
+import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import ErrorInput from '@/components/Shared/ErrorInput'
+import TextInput from '@/components/Interface/Form/TextInput'
+import SelectInput from '@/components/Interface/Form/SelectInput'
+import AreaInput from '@/components/Interface/Form/AreaInput'
+import TextInputValidate from '@/components/Interface/Form/TextInputValidation'
+import DangerNotification from '@/components/Interface/Notification/DangerNotification'
+import CountrySelector from '@/components/Shared/CountrySelector'
+import { PublicUrl } from '@/route/route-url'
+import TextInputImage from '@/components/Interface/Form/TextInputImage'
+import SelectInputSector from '@/components/Interface/Form/SelectInputSector'
+import PhoneInputValidate from '@/components/Interface/Form/PhoneInputValidate'
+import PhoneNumberInput from '@/components/Interface/Form/PhoneInputValidate2'
+import useSctor from '@/hooks/useSctor'
+import useCountry from '@/hooks/useCountry'
+import SelectInputCountry from '@/components/Interface/Form/SelectInputCountryApi'
+import ProvinceSelector from '@/components/Shared/ProvinceSelector'
+import useDataProvince from '@/hooks/useProvince'
+import CitySelector from '@/components/Shared/CitySelector'
+import useDataCity from '@/hooks/useCity'
+import { PostalCode } from '@/utils/postalCode'
+import AreaInputValidation from '@/components/Interface/Form/AreaInputValidation'
+import TermAndConditionOfSaleModal from '@/components/Modal/Component/TermAndConditionOfSaleModal'
+import TermsandConditionofExportModal from '@/components/Modal/Component/TermsandConditionofExportModal'
+import TextInputPhoneValidate from '@/components/Interface/Form/TextInputPhoneValidate'
+import TextInputDocument from '@/components/Interface/Form/TextInputDocument'
 
 export default function Index() {
   const [isAgreeTermCondtionOfSale, setIsAgreeTermCondtionOfSale] =
-    useState(false);
+    useState(false)
   const [
     isAgreeTermCondtionOfSaleMessage,
     setIsAgreeTermCondtionOfSaleMessage,
-  ] = useState('');
+  ] = useState('')
   const [isAgreeTermCondtionOfExport, setIsAgreeTermCondtionOfExport] =
-    useState(false);
+    useState(false)
   const [
     isAgreeTermCondtionOfExportMessage,
     setIsAgreeTermCondtionOfExportMessage,
-  ] = useState('');
+  ] = useState('')
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
   const [showConfirmationPassword, setShowConfirmationPassword] =
-    useState(false);
+    useState(false)
   const initialValue = {
     name: '',
     email: '',
@@ -63,6 +67,7 @@ export default function Index() {
     company_sector: '',
     company_other: '',
     company_phone: '',
+    company_code_country: '',
     company_country: '',
     company_address: '',
     company_address2: '',
@@ -75,32 +80,24 @@ export default function Index() {
     company_img: '',
     company_RegistrationDocument: '',
     company_CertificationofActivity: '',
-  };
-
-  const validFileExtensions = {
-    image: ['jpg', 'gif', 'png', 'jpeg', 'svg', 'webp'],
-  };
-
-  function isImage(url) {
-    return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
   }
 
   function isEmailCompany(email) {
     return /^[a-zA-Z0-9._%+-]+@(?!gmail.com)(?!yahoo.com)(?!hotmail.com)(?!yahoo.co.id)(?!aol.com)(?!live.com)(?!outlook.com)(?!inbox.com)(?!icloud.com)(?!mail.com)(?!gmx.com)(?!yandex.com)[a-zA-Z0-9_-]+.[a-zA-Z0-9-.]{2,61}$/gm.test(
       email
-    );
+    )
   }
 
-  function isMatchPostalCodePattern({id, Country, value}) {
+  function isMatchPostalCodePattern({ id, Country, value }) {
     const findCodeRegex = PostalCode?.find(
       (e) => e?.id === id && e.country === Country
-    );
-    const regex = findCodeRegex?.Regex;
-    return regex.test(value);
+    )
+    const regex = findCodeRegex?.Regex
+    return regex.test(value)
   }
 
   const validationSchema = Yup.object({
-    name: Yup.string().required('The name field is required'),
+    name: Yup.string().required('The user name field is required'),
     email: Yup.string()
       .email('Must be a valid email address')
       .test('is-valid-email', 'The email field should email company', (value) =>
@@ -114,11 +111,6 @@ export default function Index() {
       .min(8, 'Confirmation password must have more than 8 characters')
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
       .required('The confirmation password field is required'),
-    company_img: Yup.mixed()
-      .required('The image company field is required')
-      .test('is-valid-type', 'Not a valid image type', (value) =>
-        isImage(value)
-      ),
     company_name: Yup.string().required('The company name field is required'),
     company_sector: Yup.mixed().required(
       'The company sector field is required'
@@ -164,10 +156,31 @@ export default function Index() {
             value,
           })
       ),
-    company_address: Yup.mixed().required(
-      'The Company address 1 field is required'
-    ),
-  });
+    company_address: Yup.mixed()
+      .test(
+        'len',
+        'The Company address 1 field is required at least 2 characters and not more than 100',
+        (val) => {
+          if (val === undefined) {
+            return true
+          }
+          return val.length === 0 || (val.length >= 2 && val.length <= 100)
+        }
+      )
+      .required('The Company address 1 field is required'),
+    company_address2: Yup.mixed()
+      .test(
+        'len',
+        'The Company address 2 field is required at least 2 characters and not more than 100 characters',
+        (val) => {
+          if (val === undefined) {
+            return true
+          }
+          return val.length === 0 || (val.length >= 2 && val.length <= 100)
+        }
+      )
+      .notRequired(),
+  })
 
   const [registrationInfo, setRegistrationInfo] = useState({
     // Account Information
@@ -191,113 +204,104 @@ export default function Index() {
     company_img: '',
     company_RegistrationDocument: '',
     company_CertificationofActivity: '',
-  });
-
-  const handleStringValueChange = (input) => {
-    setRegistrationInfo({...registrationInfo, [input.name]: input.value});
-  };
+  })
 
   const [firstAddressCharacterCount, setFirstAddressCharacterCount] =
-    useState(0);
-  const firstAddressCharacterLimit = 100;
-  const firstAddressHandler = (input) => {
-    setFirstAddressCharacterCount(input.value.length);
-    setRegistrationInfo({...registrationInfo, [input.name]: input.value});
-  };
+    useState(0)
 
   const [secondAddressCharacterCount, setSecondAddressCharacterCount] =
-    useState(0);
-  const secondAddressCharacterLimit = 100;
+    useState(0)
+  const secondAddressCharacterLimit = 100
   const secondAddressHandler = (input) => {
-    setSecondAddressCharacterCount(input.value.length);
-    setRegistrationInfo({...registrationInfo, [input.name]: input.value});
-  };
+    setSecondAddressCharacterCount(input.value.length)
+    setRegistrationInfo({ ...registrationInfo, [input.name]: input.value })
+  }
 
-  const [country, setCountry] = useState(null);
-  const countryHandleChange = (value) => {
-    setCountry(value);
-    setRegistrationInfo({...registrationInfo, company_country: value.label});
-  };
+  const [country, setCountry] = useState(null)
 
-  const [errorInfo, setErrorInfo] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [succesStatus, setSuccesStatus] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [stateCountry, setStatCountry] = useState(null);
-  const [stateProvince, setStateProvince] = useState(null);
-  const [companySector, setCompanySector] = useState(null);
-  const [companyCityOther, setCompanyCityOther] = useState(null);
-  const [companyProvince, setCompanyProvince] = useState(null);
+  const [errorInfo, setErrorInfo] = useState({})
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [succesStatus, setSuccesStatus] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [stateCountry, setStatCountry] = useState(null)
+  const [stateProvince, setStateProvince] = useState(null)
+  const [companySector, setCompanySector] = useState(null)
+  const [companyCityOther, setCompanyCityOther] = useState(null)
+  const [companyProvince, setCompanyProvince] = useState(null)
+  //Terms and Conditions of Sale.
+  const [stateTOCSale, setStateTOCSale] = useState(false)
+  const [stateTOCExport, setStateTOCExport] = useState(false)
   const handleSubmit = async (values) => {
-    console.log(values, '<<<<value');
-    e.preventDefault();
-    if (!isAgreeTermCondtionOfSale) {
-      setIsAgreeTermCondtionOfSaleMessage(
-        'Please agreed the Term and Conditions of Sale before continue.'
-      );
-      return;
+    console.log(values, '<<<Values')
+    const payload = {
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      password_confirmation: values.password_confirmation,
+      company_name: values.company_name,
+      company_address: values.company_address,
+      company_address2: values.company_address2,
+      company_phone: `${values.company_code_country?.value}${values.company_phone}`,
+      company_sector:
+        companySector?.value?.toLowerCase() === 'other'
+          ? values.company_other
+          : values.company_sector?.value || '',
+      country: values.company_country?.value,
+      state:
+        companyProvince?.value?.toLowerCase() === 'other'
+          ? values.company_province_other
+          : values.company_province?.value,
+      city:
+        companyCityOther?.value?.toLowerCase() === 'other'
+          ? values.company_city_other
+          : values.company_city?.value,
+      company_zip: values.company_zip,
+      company_RegistrationDocument: values.company_RegistrationDocument,
+      company_CertificationofActivity: values.company_CertificationofActivity,
+      company_img: values.company_img,
     }
-    if (!isAgreeTermCondtionOfExport) {
-      setIsAgreeTermCondtionOfExportMessage(
-        'Please agreed the Term and Conditions of Export before continue.'
-      );
-      return;
-    }
-    setErrorMessage(null);
-    setErrorInfo(null);
-    setIsLoading(true);
+    // if (!isAgreeTermCondtionOfSale) {
+    //   setIsAgreeTermCondtionOfSaleMessage(
+    //     'Please agreed the Term and Conditions of Sale before continue.'
+    //   )
+    //   return
+    // }
+    // if (!isAgreeTermCondtionOfExport) {
+    //   setIsAgreeTermCondtionOfExportMessage(
+    //     'Please agreed the Term and Conditions of Export before continue.'
+    //   )
+    //   return
+    // }
+    setErrorMessage(null)
+    setErrorInfo(null)
+    setIsLoading(true)
 
-    const formData = new FormData();
-    for (const key in registrationInfo) {
-      formData.append(key, registrationInfo[key]);
-    }
-  };
+    await axios
+      .post('/registration', payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then(() => {
+        setSuccesStatus(true)
+        setErrorMessage(null)
+        setErrorInfo(null)
+      })
+      .catch((error) => {
+        setErrorInfo(error.data.data)
+        setErrorMessage('Please fill your form correctly')
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }
 
-  const handleisAgreeTermCondtionOfSale = () => {
-    setIsAgreeTermCondtionOfSale((prev) => !prev);
+  const [imageCompany, setImageCompany] = useState(null)
 
-    if (!isAgreeTermCondtionOfSale) {
-      setIsAgreeTermCondtionOfSaleMessage();
-    }
-  };
-
-  const handleisAgreeTermCondtionOfExport = () => {
-    setIsAgreeTermCondtionOfExport((prev) => !prev);
-
-    if (!isAgreeTermCondtionOfExport) {
-      setIsAgreeTermCondtionOfExportMessage();
-    }
-  };
-
-  const [imageCompany, setImageCompany] = useState(null);
-  const handleSectorChange = (value) => {
-    setRegistrationInfo({...registrationInfo, company_sector: ''});
-    setSector(value);
-    if (value.value != 'other') {
-      setRegistrationInfo({...registrationInfo, company_sector: value.value});
-    }
-  };
-  // option
-  // sector option
-  // const [stateSectors, setStateSectors] = useState(null);
-  // const loadSectors = async () => {
-  //   await axios
-  //     .get(`/sectorlist`)
-  //     .then((response) => {
-  //       setSectors([...response.data.data, {value: 'other', label: 'Other'}]);
-  //     })
-  //     .catch((error) => {
-  //       console.log('failed to load sectors');
-  //     });
-  // };
-  // useEffect(() => {
-  // loadSectors();
-  // }, []);
-
-  const [sector, setSector] = useState(null);
-  const sectors = useSctor();
-  const countries = useCountry();
-  const provincies = useDataProvince(stateCountry?.id);
+  const [sector, setSector] = useState(null)
+  const sectors = useSctor()
+  const countries = useCountry()
+  const provincies = useDataProvince(stateCountry?.id)
   // checking register button status enable or disable
 
   return (
@@ -321,7 +325,7 @@ export default function Index() {
                     initialValues={initialValue}
                     validationSchema={validationSchema}
                   >
-                    {({values, errors, ...formikProps}) => (
+                    {({ values, errors, ...formikProps }) => (
                       <Form
                         className="pb-20"
                         id="register-form"
@@ -350,7 +354,7 @@ export default function Index() {
                             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                               <TextInputValidate
                                 id="name"
-                                label="Main Account Name"
+                                label="User Name"
                                 className="w-full"
                                 required
                                 name="name"
@@ -484,36 +488,21 @@ export default function Index() {
                               className=""
                               type="file"
                               accept="image/png, image/jpeg, image/jpg, image/gif, image/svg, image/webp"
-                              required
-                              value={values.company_img}
                               errorMsg={errorInfo?.company_img}
-                              // onChange={formikProps.handleChange}
-                              // onChange={companyImageHandler}
                               onChange={(event) => {
-                                formikProps.handleChange(event);
-                                const file = event.target.files[0];
-                                formikProps.setFieldValue(
-                                  'company_image',
-                                  file
-                                );
-                                const fileReader = new FileReader();
+                                formikProps.handleChange(event)
+                                const file = event.target.files[0]
+                                formikProps.setFieldValue('company_img', file)
+                                const fileReader = new FileReader()
                                 fileReader.onload = function (event) {
-                                  setImageCompany(event.target.result);
-                                };
+                                  setImageCompany(event.target.result)
+                                }
                                 if (event !== undefined && file !== undefined) {
-                                  fileReader?.readAsDataURL(file);
+                                  fileReader?.readAsDataURL(file)
                                 }
                                 //   };
                               }}
                               image={imageCompany}
-                              error={
-                                formikProps.touched.company_img &&
-                                Boolean(errors.company_img)
-                              }
-                              helperText={
-                                formikProps.touched.company_img &&
-                                errors.company_img
-                              }
                             />
                           </div>
                         </div>
@@ -548,12 +537,12 @@ export default function Index() {
                               options={sectors}
                               required
                               errorMsg={errorInfo?.company_sector}
-                              onChange={(value, newSector) => {
-                                setCompanySector(value);
+                              onChange={(value) => {
+                                setCompanySector(value)
                                 formikProps.setFieldValue(
                                   'company_sector',
                                   value
-                                );
+                                )
                               }}
                               onBlur={formikProps.onBlur}
                               error={
@@ -591,17 +580,25 @@ export default function Index() {
                         </div>
                         <div className="flex flex-wrap mb-6">
                           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <TextInputValidate
+                            <TextInputPhoneValidate
                               label="Phone"
                               id="company_phone"
                               className="w-full"
+                              searchable
                               required
-                              defaultCountry="TR"
                               type="text"
                               name="company_phone"
+                              name2="company_code_country"
                               value={values.company_phone}
+                              value2={values.company_code_country}
                               errorMsg={errorInfo?.company_phone}
                               onChange={formikProps.handleChange}
+                              onChange2={(event) => {
+                                formikProps.setFieldValue(
+                                  'company_code_country',
+                                  event
+                                )
+                              }}
                               error={
                                 formikProps.touched.company_phone &&
                                 Boolean(errors.company_phone)
@@ -617,6 +614,7 @@ export default function Index() {
                         <div className="flex flex-wrap mb-6">
                           <div className="w-full md:w-1/2 px-3">
                             <CountrySelector
+                              searchable
                               name="company_country"
                               label="Country"
                               value={values.company_country}
@@ -625,21 +623,21 @@ export default function Index() {
                                 formikProps.setFieldValue(
                                   'company_country',
                                   value
-                                );
+                                )
                                 formikProps.setFieldValue(
                                   'company_province',
                                   ''
-                                );
+                                )
                                 formikProps.setFieldValue(
                                   'company_province_other',
                                   ''
-                                );
-                                setCompanyProvince(null);
-                                formikProps.setFieldValue('company_city', '');
+                                )
+                                setCompanyProvince(null)
+                                formikProps.setFieldValue('company_city', '')
                                 const Country = countries?.find(
                                   (e) => e?.name == value?.value
-                                );
-                                setStatCountry({...Country});
+                                )
+                                setStatCountry({ ...Country })
                               }}
                               onBlur={formikProps.onBlur}
                               errorMsg={errorInfo?.company_country}
@@ -655,6 +653,7 @@ export default function Index() {
                           </div>
                           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <ProvinceSelector
+                              searchable
                               name="company_province"
                               label="Province"
                               value={values.company_province}
@@ -663,17 +662,17 @@ export default function Index() {
                                 formikProps.setFieldValue(
                                   'company_province',
                                   value
-                                );
-                                formikProps.setFieldValue('company_city', '');
+                                )
+                                formikProps.setFieldValue('company_city', '')
                                 formikProps.setFieldValue(
                                   'company_province_other',
                                   ''
-                                );
+                                )
                                 const province = provincies?.find(
                                   (e) => e?.name == value.value
-                                );
-                                setStateProvince({...province});
-                                setCompanyProvince(value);
+                                )
+                                setStateProvince({ ...province })
+                                setCompanyProvince(value)
                               }}
                               countryId={stateCountry?.id}
                               onBlur={formikProps.onBlur}
@@ -717,6 +716,7 @@ export default function Index() {
                         <div className="flex flex-wrap mb-6">
                           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <CitySelector
+                              searchable
                               label="City"
                               className="w-full"
                               required
@@ -726,15 +726,12 @@ export default function Index() {
                               errorMsg={errorInfo?.company_city}
                               provinceId={stateProvince?.id}
                               onChange={(value) => {
-                                formikProps.setFieldValue(
-                                  'company_city',
-                                  value
-                                );
-                                setCompanyCityOther(value);
+                                formikProps.setFieldValue('company_city', value)
+                                setCompanyCityOther(value)
                                 formikProps.setFieldValue(
                                   'company_city_other',
                                   ''
-                                );
+                                )
                               }}
                               error={
                                 formikProps.touched.company_city &&
@@ -798,12 +795,10 @@ export default function Index() {
                           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <AreaInputValidation
                               rows={5}
-                              characterCount={firstAddressCharacterCount}
-                              characterLimit={firstAddressCharacterLimit}
                               label="Address 1"
                               name="company_address"
                               required
-                              placeholder="Please enter company zip here..."
+                              placeholder="Please enter company address 1 here..."
                               value={formikProps.company_address}
                               errorMsg={errorInfo?.company_address}
                               onChange={formikProps.handleChange}
@@ -818,16 +813,35 @@ export default function Index() {
                             />
                           </div>
                           <div className="w-full md:w-1/2 px-3">
-                            <AreaInput
+                            {/* <AreaInput
                               rows={5}
                               characterCount={secondAddressCharacterCount}
                               characterLimit={secondAddressCharacterLimit}
                               label="Address 2"
                               name="company_address2"
                               required
+                              placeholder="Please enter company address 2 here..."
                               value={registrationInfo.company_address2}
                               errorMsg={errorInfo?.company_address2}
                               onChange={(input) => secondAddressHandler(input)}
+                            /> */}
+                            <AreaInputValidation
+                              rows={5}
+                              label="Address 2"
+                              name="company_address2"
+                              required
+                              placeholder="Please enter company address 1 here..."
+                              value={formikProps.company_address2}
+                              errorMsg={errorInfo?.company_address2}
+                              onChange={formikProps.handleChange}
+                              error={
+                                formikProps.touched.company_address2 &&
+                                Boolean(errors.company_address2)
+                              }
+                              helperText={
+                                formikProps.touched.company_address2 &&
+                                errors.company_address2
+                              }
                             />
                           </div>
                         </div>
@@ -841,7 +855,7 @@ export default function Index() {
                             <div className="flex-grow border-t border-blueGray-700" />
                           </div>
                           <div className="flex flex-wrap mb-6">
-                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                            {/* <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                               <label
                                 className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 htmlFor="grid-last-name"
@@ -860,7 +874,7 @@ export default function Index() {
                                       type="file"
                                       name="company_RegistrationDocument"
                                       accept=".pdf"
-                                      onChange={({target}) =>
+                                      onChange={({ target }) =>
                                         setRegistrationInfo({
                                           ...registrationInfo,
                                           company_RegistrationDocument:
@@ -878,8 +892,43 @@ export default function Index() {
                                   }
                                 />
                               )}
-                            </div>
-                            <div className="w-full md:w-1/2 px-3">
+                            </div> */}
+                            <TextInputDocument
+                              label="                                Company Registration Document
+                            "
+                              id="company_RegistrationDocument"
+                              name="company_RegistrationDocument"
+                              className=""
+                              type="file"
+                              onChange={({ target }) => {
+                                console.log(target.files[0])
+                                formikProps.setFieldValue(
+                                  'company_RegistrationDocument',
+                                  target?.files[0]
+                                )
+                              }}
+                              errorMsg={errorInfo?.company_RegistrationDocument}
+                            />
+                            <TextInputDocument
+                              label="                                                              Certification of Activity
+                                "
+                              id="company_CertificationofActivity"
+                              name="company_CertificationofActivity"
+                              className=""
+                              type="file"
+                              onChange={({ target }) => {
+                                console.log(target.files[0])
+                                formikProps.setFieldValue(
+                                  'company_CertificationofActivity',
+                                  target?.files[0]
+                                )
+                              }}
+                              errorMsg={
+                                errorInfo?.company_CertificationofActivity
+                              }
+                            />
+
+                            {/* <div className="w-full md:w-1/2 px-3">
                               <label
                                 className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 htmlFor="grid-last-name"
@@ -898,7 +947,7 @@ export default function Index() {
                                       type="file"
                                       name="company_CertificationofActivity"
                                       accept=".pdf"
-                                      onChange={({target}) =>
+                                      onChange={({ target }) =>
                                         setRegistrationInfo({
                                           ...registrationInfo,
                                           company_CertificationofActivity:
@@ -916,7 +965,7 @@ export default function Index() {
                                   }
                                 />
                               )}
-                            </div>
+                            </div> */}
                           </div>
                         </div>
 
@@ -939,7 +988,7 @@ export default function Index() {
                                 id="term"
                                 type="checkbox"
                                 checked={isAgreeTermCondtionOfSale}
-                                onChange={handleisAgreeTermCondtionOfSale}
+                                // onChange={handleisAgreeTermCondtionOfSale}
                                 className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                               />
                               <label
@@ -947,13 +996,12 @@ export default function Index() {
                                 className="ml-2 text-sm font-medium text-gray-900"
                               >
                                 I agree with the{' '}
-                                <Link
-                                  target="_blank"
-                                  href={PublicUrl.conditionOfSale}
+                                <a
                                   className="text-blue-600 hover:underline"
+                                  onClick={() => setStateTOCSale(true)}
                                 >
                                   Terms and Conditions of Sale
-                                </Link>
+                                </a>
                                 .
                               </label>
                             </div>
@@ -974,7 +1022,7 @@ export default function Index() {
                                 id="policy"
                                 type="checkbox"
                                 checked={isAgreeTermCondtionOfExport}
-                                onChange={handleisAgreeTermCondtionOfExport}
+                                // onChange={handleisAgreeTermCondtionOfExport}
                                 className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                               />
                               <label
@@ -982,13 +1030,12 @@ export default function Index() {
                                 className="ml-2 text-sm font-medium text-gray-900"
                               >
                                 I agree with the{' '}
-                                <Link
-                                  target="_blank"
-                                  href={PublicUrl.conditionOfExport}
+                                <a
                                   className="text-blue-600 hover:underline"
+                                  onClick={() => setStateTOCExport(true)}
                                 >
                                   Terms and Conditions of Export
-                                </Link>
+                                </a>
                                 .
                               </label>
                             </div>
@@ -1035,6 +1082,22 @@ export default function Index() {
         </div>
       </section>
       <Footer />
+      {stateTOCSale ? (
+        <TermAndConditionOfSaleModal
+          title="Terms and Conditions of Sale
+        "
+          acceptModal={setIsAgreeTermCondtionOfSale}
+          setShowModal={setStateTOCSale}
+        />
+      ) : null}
+
+      {stateTOCExport ? (
+        <TermsandConditionofExportModal
+          title="Terms and Condition of Export"
+          acceptModal={setIsAgreeTermCondtionOfExport}
+          setShowModal={setStateTOCExport}
+        />
+      ) : null}
     </>
-  );
+  )
 }

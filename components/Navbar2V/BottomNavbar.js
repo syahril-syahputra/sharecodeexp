@@ -1,24 +1,35 @@
-import {Navbar} from 'flowbite-react';
-import Image from 'next/image';
-import ImageLogo from '../ImageLogo/ImageLogo';
-import Link from 'next/link';
-import LoginButton from '../Navbars/LoginButton';
-import {useEffect, useState} from 'react';
+import { Navbar } from 'flowbite-react'
+import Image from 'next/image'
+import ImageLogo from '../ImageLogo/ImageLogo'
+import Link from 'next/link'
+import LoginButton from '../Navbars/LoginButton'
+import { useContext, useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
+import GlobalContext from '@/store/global-context'
 
 const BottomNavbar = (props) => {
-  const [navbar, setNavbar] = useState(false);
+  console.log(props, '<<<props')
+  const session = useSession()
+  const { username, loadUsername } = useContext(GlobalContext)
+  useEffect(() => {
+    if (session?.data) {
+      loadUsername(session?.data?.accessToken)
+    }
+  }, [session])
+
+  const [navbar, setNavbar] = useState(false)
   const changeBackground = () => {
     if (window.scrollY >= 80) {
-      setNavbar(true);
+      setNavbar(true)
     } else {
-      setNavbar(false);
+      setNavbar(false)
     }
-  };
+  }
 
   useEffect(() => {
-    window.addEventListener('scroll', changeBackground);
-    return () => window.removeEventListener('scroll', changeBackground);
-  });
+    window.addEventListener('scroll', changeBackground)
+    return () => window.removeEventListener('scroll', changeBackground)
+  })
 
   return (
     <nav
@@ -33,9 +44,14 @@ const BottomNavbar = (props) => {
           </div>
         </Link>
         <div className="flex space-x-4 items-center ">
-          <Link href="/auth/register" className="text-black font-bold text-sm">
-            REGISTER
-          </Link>
+          {session?.data ? undefined : (
+            <Link
+              href="/auth/register"
+              className="text-black font-bold text-sm"
+            >
+              <>REGISTER</>
+            </Link>
+          )}
           {!props.hideLogin && (
             <LoginButton
               navBarV2={true}
@@ -46,7 +62,7 @@ const BottomNavbar = (props) => {
         </div>
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default BottomNavbar;
+export default BottomNavbar
