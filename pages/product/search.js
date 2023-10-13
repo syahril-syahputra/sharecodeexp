@@ -38,11 +38,10 @@ export default function Index({session}) {
   })
   const searchData = async (srch, page=1) =>{
     setIsLoading(true)
-    console.log(session.accessToken)
     const response = await axios.get(`/search?query=${srch}&page=${page}`, 
       {
         headers: {
-        "Authorization" : `Bearer ${session.accessToken}`
+        "Authorization" : `Bearer ${session?.accessToken}`
         }
       }
       )
