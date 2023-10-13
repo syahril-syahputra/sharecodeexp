@@ -46,7 +46,7 @@ export default function DetailUploadedExcel({ session, data }) {
                         </tr>
                         <tr className="text-black hover:bg-slate-100">
                             <th scope="col" className="px-6 py-3">
-                                Status
+                                Excel Status
                             </th>
                             <td scope="row" className="text-sm px-6 py-4">
                                 :

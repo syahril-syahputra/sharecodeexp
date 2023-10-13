@@ -182,7 +182,7 @@ export default function Uploaded({ session }) {
             </div>
             <div className="mb-10">
                 <TableExcel
-                    title="Uploaded File Excel"
+                    title="Uploaded Excel File"
                     setPage={setPage}
                     isLoading={isLoading}
                     data={data}

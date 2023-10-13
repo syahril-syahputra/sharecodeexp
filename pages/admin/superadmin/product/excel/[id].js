@@ -15,6 +15,8 @@ import DangerButton from '@/components/Interface/Buttons/DangerButton';
 import SuccessButton from '@/components/Interface/Buttons/SuccessButton';
 import { FileInput, Spinner } from 'flowbite-react';
 import ExcelComponent from '@/components/Modal/Component/ExcelComponent';
+import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses';
+import Link from 'next/link';
 
 DetailUploadedExcel.layout = Admin;
 export default function DetailUploadedExcel({ session, data }) {
@@ -160,12 +162,12 @@ export default function DetailUploadedExcel({ session, data }) {
                             className={
                                 "font-semibold text-lg text-blueGray-700"
                             }>
-                            Detail File Excel
+                            Details
                         </h3>
                     }
                     rightTop={
 
-                        <div className='flex justify-around py-8 space-x-4'>
+                        <div className='flex justify-around space-x-4'>
                             <PrimaryButton onClick={() => downloadHandler()}>Download</PrimaryButton>
                             <DangerButton onClick={() => setisOpenConfirmDelete(true)}>Delete</DangerButton>
                             <DangerButton onClick={() => rejectHandler()}>Reject</DangerButton>
@@ -201,11 +203,22 @@ export default function DetailUploadedExcel({ session, data }) {
                                     :
                                 </td>
                                 <td className="text-sm px-2 py-4">
-                                    {data.company.name}
+                                    {/* {data.company.name} */}
+                                    <Link
+                                        href={`/admin/superadmin/registry/details/${encodeURIComponent(
+                                            data.company?.id
+                                        )}`}
+                                        className="text-blueGray-700 underline"
+                                        >
+                                        {data.company?.name}
+                                    </Link>
+                                    <CompanyStatusesIcon
+                                        status={data.company?.is_confirmed}
+                                    />
                                 </td>
                             </tr><tr className="text-black hover:bg-slate-100">
                                 <th scope="col" className="px-6 py-3">
-                                    Status
+                                    Excel Status
                                 </th>
                                 <td scope="row" className="text-sm px-6 py-4">
                                     :
@@ -271,9 +284,9 @@ export default function DetailUploadedExcel({ session, data }) {
                             }
 
                         </div> :
-                            <div className='p-8'>
-                                <SuccessButton onClick={() => setuploadForm(true)}>Upload</SuccessButton>
-                            </div>
+                        <div className='p-5'>
+                            <SuccessButton onClick={() => setuploadForm(true)}>Upload</SuccessButton>
+                        </div>
                     }
                 </div>
             </PrimaryWrapper>

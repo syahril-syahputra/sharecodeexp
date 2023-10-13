@@ -278,7 +278,7 @@ export default function ComponentDetails({session, routeParam}) {
                   <td className="text-sm px-2 py-4">
                     <Link
                       href={`/admin/superadmin/registry/details/${encodeURIComponent(
-                        component.company?.name
+                        component.company?.id
                       )}`}
                       className="text-blueGray-700 underline"
                     >

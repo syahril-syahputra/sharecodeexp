@@ -84,7 +84,7 @@ export default function TableExcel(props) {
                                                 <PrimaryButton
                                                     // onClick={() => props.view(item)}
                                                     size="sm"
-                                                >Views</PrimaryButton>
+                                                >View</PrimaryButton>
                                             </Link>
                                         </td>
                                     </tr>
