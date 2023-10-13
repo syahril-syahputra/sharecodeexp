@@ -1,3 +1,6 @@
+{
+}
+
 const BackDrop = () => {
   return <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
 }
@@ -63,9 +66,7 @@ export function BaseModalXLarge(props) {
         <div className="relative w-full max-w-7xl max-h-full md:h-auto">
           <div className="border-0 shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200">
-              <h3 className={`text-xl ${props.classNameTitle}`}>
-                {props.title}
-              </h3>
+              <h3 className="text-xl">{props.title}</h3>
               <div
                 className="cursor-pointer p-1 ml-auto bg-transparent border-0 float-right leading-none font-semibold outline-none focus:outline-none"
                 onClick={props.onClick}

@@ -3,7 +3,7 @@ import ErrorInput from './ErrorInput'
 import React from 'react'
 import Image from 'next/image'
 
-export default function TextInputImage(props) {
+export default function TextInputDocument(props) {
   return (
     <>
       <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -14,26 +14,18 @@ export default function TextInputImage(props) {
           {props.label}
         </label>
 
-        <div
-          className={`${
-            props?.errorMsg || props.helperText
-              ? 'border-red-500'
-              : 'border-blue-200'
-          } p-10 border-dashed border-2 border-indigo-200`}
-        >
+        <div className="p-5 border-dashed border-2 border-indigo-200">
           <div className="grid gap-4 lg:grid-cols-2 md:grid-cols-1">
             <div className="text-center my-auto">
-              <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
+              <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl" />
             </div>
             <div className="text-xs ">
-              <p>JPG, JPEG, PNG file size no more than 10MB</p>
+              <p>PDF file size no more than 10MB</p>
               <input
                 type={props.type}
                 name={props.name}
-                required={props.required || false}
-                disabled={props.disabled || false}
                 value={props.value}
-                // accept=".png, .jpeg, .jpg"
+                accept=".pdf"
                 onChange={props.onChange}
                 onKeyDown={props.onKeyDown}
                 className={classNames(
@@ -53,27 +45,6 @@ export default function TextInputImage(props) {
           </span>
         )}
       </div>
-      {props?.value !== '' && props.image && (
-        <div className="w-full md:w-1/2 px-3">
-          <label
-            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-            htmlFor="grid-last-name"
-          >
-            {props.result}
-          </label>
-          <div className="p-2 border-dashed border-2 border-indigo-200">
-            <div className="text-center grid gap-4 lg:grid-cols-1 md:grid-cols-1">
-              <Image
-                src={props.image}
-                alt="image_logo"
-                className="mx-auto"
-                height={180}
-                width={180}
-              ></Image>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   )
 }
