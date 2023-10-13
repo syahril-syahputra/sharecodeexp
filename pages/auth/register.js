@@ -232,7 +232,6 @@ export default function Index() {
   const [stateTOCSale, setStateTOCSale] = useState(false)
   const [stateTOCExport, setStateTOCExport] = useState(false)
   const handleSubmit = async (values) => {
-    console.log(values, '<<<Values')
     const payload = {
       name: values.name,
       email: values.email,
@@ -600,12 +599,16 @@ export default function Index() {
                                 )
                               }}
                               error={
-                                formikProps.touched.company_phone &&
-                                Boolean(errors.company_phone)
+                                (formikProps.touched.company_phone &&
+                                  Boolean(errors.company_phone)) ||
+                                (formikProps.touched.company_code_country &&
+                                  Boolean(errors.company_code_country))
                               }
                               helperText={
-                                formikProps.touched.company_phone &&
-                                errors.company_phone
+                                (formikProps.touched.company_phone &&
+                                  errors.company_phone) ||
+                                (formikProps.touched.company_code_country &&
+                                  errors.company_code_country)
                               }
                               placeholder="Please enter company phone number here..."
                             />
@@ -987,7 +990,7 @@ export default function Index() {
                               <input
                                 id="term"
                                 type="checkbox"
-                                checked={isAgreeTermCondtionOfSale}
+                                defaultChecked={isAgreeTermCondtionOfSale}
                                 // onChange={handleisAgreeTermCondtionOfSale}
                                 className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                               />
@@ -1021,7 +1024,7 @@ export default function Index() {
                               <input
                                 id="policy"
                                 type="checkbox"
-                                checked={isAgreeTermCondtionOfExport}
+                                defaultChecked={isAgreeTermCondtionOfExport}
                                 // onChange={handleisAgreeTermCondtionOfExport}
                                 className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                               />
