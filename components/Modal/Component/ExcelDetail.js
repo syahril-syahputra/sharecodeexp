@@ -48,6 +48,10 @@ export default function ExcelDetail(props) {
                                 <td className='p-1'>Status</td>
                                 <td className='p-1'>{props.data?.status}</td>
                             </tr>
+                            <tr>
+                                <td className='p-1 align-top'>Log</td>
+                                <td className='p-1'>{props.data?.log || '-'}</td>
+                            </tr>
                         </table>
 
                     </div>

@@ -28,6 +28,11 @@ export default function TableExcel(props) {
     return (
         <>
             <PrimaryWrapper>
+                <HeaderTable
+                    title={props.title}
+
+                ></HeaderTable>
+
                 <BaseTable
                     isBusy={props.isLoading}
                     header={
@@ -74,10 +79,13 @@ export default function TableExcel(props) {
                                             {moment(item.updated_at).format('dddd, D MMMM YYYY')}
                                         </td>
                                         <td nowrap className=" space-x-4 flex-nowrap whitespace-nowrap text-sm px-6 py-4 text-right">
-                                            <PrimaryButton
-                                                onClick={() => props.view(item)}
-                                                size="sm"
-                                            >View</PrimaryButton>
+                                            <Link href={"/admin/superadmin/product/excel/" + item.id}>
+
+                                                <PrimaryButton
+                                                    // onClick={() => props.view(item)}
+                                                    size="sm"
+                                                >Views</PrimaryButton>
+                                            </Link>
                                         </td>
                                     </tr>
                                 )

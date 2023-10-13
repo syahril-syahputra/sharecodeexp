@@ -72,10 +72,9 @@ export default function Index() {
     email: '',
     message: '',
   });
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [errorInfo, setErrorInfo] = useState({});
-
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -366,11 +365,11 @@ export default function Index() {
         <section className="w-full bg-sub-content  lg:pt-[4px] lg:pb-4 py-4">
           <motion.div
             variants={staggerContainer}
-            className="justify-start text-left flex flex-wrap"
+            className="justify-start text-left flex flex-wrap mt-8"
           >
             <motion.div
               variants={staggerContainer}
-              initial="hidden"
+              initial="show"
               whileInView={'show'}
               className="container mx-auto lg:px-4 px-6 md:px-6"
               viewport={{once: true, amount: 0.05}}
@@ -608,7 +607,7 @@ export default function Index() {
                 className="w-full flex items-center justify-center "
               >
                 <form onSubmit={handleSubmit}>
-                  <div className="bg-white rounded-lg shadow-lg py-5 my-8 lg:px-28 px-8">
+                  <div className="bg-white shadow-lg py-5 my-8 lg:px-28 px-8">
                     <div className="md:flex items-center mt-12">
                       <div className="md:w-72 flex flex-col">
                         <label className="text-base font-semibold leading-none text-gray-800">
@@ -657,7 +656,7 @@ export default function Index() {
                       </div>
                     </div>
                     <div className="flex items-center justify-center w-full">
-                      <button
+                      {/* <button
                         className="mt-9 text-base font-semibold leading-none text-white py-4 px-10 bg-indigo-700  hover:bg-indigo-600 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 focus:outline-none"
                         disabled={
                           !dataContact.email &&
@@ -666,7 +665,22 @@ export default function Index() {
                         }
                       >
                         SUBMIT
-                      </button>
+                      </button> */}
+                      <PrimaryButton
+                        className="mt-8 px-8 py-3 font-semibold"
+                        type="submit"
+                        disabled={
+                          !dataContact.email &&
+                          !dataContact.message &&
+                          !dataContact.subject &&
+                          !isLoading
+                        }
+                      > 
+                        {isLoading && (
+                          <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
+                        )}
+                        SUBMIT 
+                      </PrimaryButton>
                     </div>
                   </div>
                 </form>

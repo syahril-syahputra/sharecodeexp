@@ -29,6 +29,12 @@ module.exports = {
         'sub-header': '#3730A3',
         'top-navbar': '#03072B',
         'footer-resources': '#3B82F6',
+        // dark: '#1b1b1b',
+        light: '#fff',
+        // accent: '#7B00D3',
+        // accentDark: '#ffdb4d',
+        // gray: '#747474',
+        purple: '#340135',
       },
       backgroundColor: {
         'sub-content': '#DCDEEE',
