@@ -904,7 +904,6 @@ export default function Index() {
                               className=""
                               type="file"
                               onChange={({ target }) => {
-                                console.log(target.files[0])
                                 formikProps.setFieldValue(
                                   'company_RegistrationDocument',
                                   target?.files[0]
@@ -920,7 +919,6 @@ export default function Index() {
                               className=""
                               type="file"
                               onChange={({ target }) => {
-                                console.log(target.files[0])
                                 formikProps.setFieldValue(
                                   'company_CertificationofActivity',
                                   target?.files[0]

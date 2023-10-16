@@ -8,7 +8,7 @@ import { getSession } from "next-auth/react";
 import Admin from "layouts/Admin.js";
 
 // components
-import ComponentStatus from "@/components/Shared/Component/Statuses";
+import ComponentStatus from "/components/Shared/Component/Statuses";
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper';
 import PageHeader from '@/components/Interface/Page/PageHeader';
 import DangerNotification from '@/components/Interface/Notification/DangerNotification';

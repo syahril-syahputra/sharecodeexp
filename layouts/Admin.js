@@ -1,26 +1,21 @@
-import Link from 'next/link';
-import {useState} from 'react';
-import {useSession} from 'next-auth/react';
+import Link from 'next/link'
+import { useSession } from 'next-auth/react'
+import FooterAdmin from '@/components/Footers/FooterAdmin'
+import { PageSEO } from '@/components/Utils/SEO'
+import siteMetadata from '@/utils/siteMetadata'
+import React, { useState } from 'react'
+import TopNavigation from './TopNavigation'
+import ImageLogo from '@/components/ImageLogo/ImageLogo'
+import SuperadminNav from './Superadmin/SideNavigation'
+import MemberNav from './Member/SideNavigation'
+import SmallSideSuperadminNav from './Superadmin/SmallSideNavigation'
+import SmallSideMemberNav from './Member/SmallSideNavigation'
+import MyAccount from './MyAccount'
 
-import FooterAdmin from '@/components/Footers/FooterAdmin';
-import {PageSEO} from '@/components/Utils/SEO';
-import siteMetadata from '@/utils/siteMetadata';
+export default function Admin({ children }) {
+  const session = useSession()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
-import TopNavigation from './TopNavigation';
-import ImageLogo from '@/components/ImageLogo/ImageLogo';
-
-//sidenavigation
-import SuperadminNav from './Superadmin/SideNavigation';
-import MemberNav from './Member/SideNavigation';
-
-//small side navigation
-import SmallSideSuperadminNav from './Superadmin/SmallSideNavigation';
-import SmallSideMemberNav from './Member/SmallSideNavigation';
-
-import MyAccount from './MyAccount';
-
-export default function Admin({children}) {
-  const session = useSession();
   if (!session.data) {
     return (
       <div className="relative p-2 bg-white">
@@ -42,10 +37,9 @@ export default function Admin({children}) {
           </h3>
         </div>
       </div>
-    );
+    )
   }
-  const role = session.data.user.userDetail.role_id;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const role = session.data.user.userDetail.role_id
 
   return (
     <>
@@ -97,5 +91,5 @@ export default function Admin({children}) {
         </div>
       </div>
     </>
-  );
+  )
 }

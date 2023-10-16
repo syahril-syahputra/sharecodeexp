@@ -1,111 +1,110 @@
-/* eslint-disable react/jsx-no-target-blank */
-import React, {useState, useEffect} from 'react';
-import Link from 'next/link';
-import {useRouter} from 'next/router';
-import {PageSEO} from '@/components/Utils/SEO';
-import siteMetadata from '@/utils/siteMetadata';
-import axios from 'lib/axios';
-import Image from 'next/image';
-import {motion} from 'framer-motion';
+import React, { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { PageSEO } from '@/components/Utils/SEO'
+import siteMetadata from '@/utils/siteMetadata'
+import axios from 'lib/axios'
+import Image from 'next/image'
+import { motion } from 'framer-motion'
 import {
   fadeIn,
   staggerContainer,
   textVariant,
   fadeInOperates,
-} from '@/utils/motion';
+} from '@/utils/motion'
 //components
-import Footer from 'components/Footers/Footer.js';
-import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton';
-import TextInput from '@/components/Interface/Form/TextInput';
-import Navbar from '@/components/Navbar2V';
-import {TypingText} from '@/components/TypeText';
-import {TitleText} from '@/components/TitleText';
-import {toastOptions} from '@/lib/toastOptions';
-import {toast} from 'react-toastify';
-import TextInputSearchComponent from '@/components/Interface/Form/TextInputForSearchComponent';
-import Container from '@/components/Container';
+import Footer from 'components/Footers/Footer.js'
+import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import TextInput from '@/components/Interface/Form/TextInput'
+import Navbar from '@/components/Navbar2V'
+import { TypingText } from '@/components/TypeText'
+import { TitleText } from '@/components/TitleText'
+import { toastOptions } from '@/lib/toastOptions'
+import { toast } from 'react-toastify'
+import TextInputSearchComponent from '@/components/Interface/Form/TextInputForSearchComponent'
+import Container from '@/components/Container'
 
 export default function Index() {
-  const router = useRouter();
-  const [search, setSearch] = useState('');
+  const router = useRouter()
+  const [search, setSearch] = useState('')
 
   function searchComponent(event) {
     if (event.key === 'Enter' && !!search) {
-      event.preventDefault();
-      router.replace(`/product/search?q=${search}`);
+      event.preventDefault()
+      router.replace(`/product/search?q=${search}`)
     }
   }
 
   //search suggestion
-  const [suggestion, setSuggestion] = useState([]);
-  const [isSuggestionLoading, setSuggestionLoading] = useState(false);
+  const [suggestion, setSuggestion] = useState([])
+  const [isSuggestionLoading, setSuggestionLoading] = useState(false)
   useEffect(() => {
     if (search) {
-      setSuggestionLoading(true);
+      setSuggestionLoading(true)
       const getData = setTimeout(() => {
         axios
           .get(`/search/suggest/${search}`)
           .then((response) => {
-            setSuggestion(response.data.data);
+            setSuggestion(response.data.data)
           })
-          .finally(() => setSuggestionLoading(false));
-      }, 1000);
+          .finally(() => setSuggestionLoading(false))
+      }, 1000)
 
-      return () => clearTimeout(getData);
+      return () => clearTimeout(getData)
     }
-  }, [search]);
+  }, [search])
 
   const [statisticCounter, setStatisticCounter] = useState({
     memberCounter: 0,
     productCounter: 0,
-  });
+  })
   const loadStatisticCounter = async () => {
     const request = await axios.get(`/statistic-counter`).then((respose) => {
       setStatisticCounter({
         memberCounter: respose.data.data.member,
         productCounter: respose.data.data.product,
-      });
-    });
-  };
+      })
+    })
+  }
   const [dataContact, setDataContact] = useState({
     subject: '',
     email: '',
     message: '',
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [errorInfo, setErrorInfo] = useState({});
+  })
+  const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [errorInfo, setErrorInfo] = useState({})
   const handleChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    setDataContact({...dataContact, [name]: value});
-  };
+    const name = e.target.name
+    const value = e.target.value
+    setDataContact({ ...dataContact, [name]: value })
+  }
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrorInfo({});
-    setErrorMessage(null);
-    setIsLoading(true);
+    e.preventDefault()
+    setErrorInfo({})
+    setErrorMessage(null)
+    setIsLoading(true)
     await axios
       .post('/contact-us', dataContact)
       .then(() => {
-        toast.success('Your message has been send successfully.', toastOptions);
-        setDataContact({subject: '', email: '', message: ''});
+        toast.success('Your message has been send successfully.', toastOptions)
+        setDataContact({ subject: '', email: '', message: '' })
       })
       .catch((error) => {
-        toast.error('Something went wrong.', error.message);
-        setErrorMessage('Please fill your form correctly');
-        setErrorInfo(error.data.data);
-        setDataContact({subject: '', email: '', message: ''});
+        toast.error('Something went wrong.', error.message)
+        setErrorMessage('Please fill your form correctly')
+        setErrorInfo(error.data.data)
+        setDataContact({ subject: '', email: '', message: '' })
       })
       .finally(() => {
-        setIsLoading(false);
-        setDataContact({subject: '', email: '', message: ''});
-      });
-  };
+        setIsLoading(false)
+        setDataContact({ subject: '', email: '', message: '' })
+      })
+  }
 
   useEffect(() => {
-    loadStatisticCounter();
-  }, []);
+    loadStatisticCounter()
+  }, [])
 
   return (
     <>
@@ -125,13 +124,12 @@ export default function Index() {
               sizes="100vw"
               priority
             />
-            {/* lg:w-3/4 p-6 sm:p-8 md:p-5 lg:p-20  flex flex-col flex-wrap items-start justify-center z-999 */}
             <Container className="flex flex-wrap absolute lg:top-1/4 2xl:top-1/3 md:top-1/3 sm:top-1/3 top-1/4 bottom-0">
               <motion.div
                 variants={staggerContainer}
                 initial="hidden"
                 whileInView={'show'}
-                viewport={{once: true, amount: 0.05}}
+                viewport={{ once: true, amount: 0.05 }}
               >
                 <div className=" w-full md:w-3/4 sm:w-3/4 lg:w-full 2xl:w-3/4 xl:w-3/4 px-2 lg:px-0 md:px-0   text-light">
                   <motion.h1
@@ -239,129 +237,6 @@ export default function Index() {
             </Container>
           </section>
         </div>
-
-        {/* <div className="w-full inline-block">
-          <section className=" flex flex-col items-start justify-end relative h-[90vh] sm:h-[85.79vh] bg-gradient-to-b from-transparent from-69% to-purple ">
-            <div className="container absolute inset-y-0 left-0 h-full z-0" />
-            <Image
-              src="/img/lukas-tennie-DAWnMmUSMdU-unsplash.png"
-              alt="exepart.png"
-              fill
-              className="w-full h-full object-center object-cover -z-10"
-              sizes="100vw"
-              priority
-            />
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView={'show'}
-              viewport={{once: true, amount: 0.05}}
-            >
-              <div className=" w-full  lg:w-3/4 p-6 sm:p-8 md:p-5 lg:p-20  flex flex-col flex-wrap items-start justify-center z-999 text-light">
-                <motion.h1
-                  variants={textVariant(0.5)}
-                  className="font-bold uppercase lg:px-[6px] md:px-0 text-[44px] sm:text-[40px] md:text-[40px] 2xl:text-[110px] lg:text-[110px]"
-                >
-                  <span className="bg-gradient-to-r from-amber-300 to-amber-400 bg-[length:0px_6px] hover:bg-[length:100%_6px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500">
-                    <>EXEPART</>
-                  </span>
-                </motion.h1>
-                <motion.p
-                  variants={fadeIn('up', 'tween', 0.05, 1)}
-                  className="inline-block py-4 md:px-1 lg:px-3 sm:text-[12px] md:text-[14px] lg:text-[20px] font-normal leading-relaxed text-white font-in"
-                >
-                  <>
-                    EXEpart is a closed sales platform that only allows verified
-                    industrial manufacturers to list their excess stocks and buy
-                    stocks from fellow manufacturers. It is a great tool to
-                    overcome the shortage crisis while enabling the
-                    manufacturers to capitalize their unused stocks. No brokers
-                    are allowed to register at EXEpart.
-                  </>
-                </motion.p>
-                <motion.div
-                  variants={fadeIn('up', 'tween', 0.2, 1)}
-                  className="w-full ml-auto mr-auto xs:pb-10 xs:pt-8 "
-                >
-                  <div className="pt-2 sm:pt-0 pb-4 md:pb-1 lg:px-3 md:px-[3px]">
-                    <form className="flex items-center">
-                      <label for="voice-search" className="sr-only">
-                        Search
-                      </label>
-                      <div className="relative w-full">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                          <svg
-                            className="w-4 h-4 text-footer-resources"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              stroke="currentColor"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                            />
-                          </svg>
-                        </div>
-                        <TextInputSearchComponent
-                          value={search}
-                          onChange={(target) => setSearch(target.value)}
-                          onKeyDown={searchComponent}
-                          type="text"
-                          placeholder="Search for the components"
-                        />
-                      </div>
-                      <button
-                        type="button"
-                        className="inline-flex items-center py-2.5 px-4 lg:px-40 sm:px-16 text-sm font-medium text-white bg-sub-header border-sub-header hover:bg-top-navbar focus:ring-4 focus:outline-none focus:ring-blue-300"
-                      >
-                        <Link
-                          href={!!search ? `/product/search?q=${search}` : ''}
-                        >
-                          SEARCH
-                        </Link>
-                      </button>
-                    </form>
-                    <div className="text-left ">
-                      {suggestion && suggestion.length > 0 && (
-                        <div>
-                          {isSuggestionLoading && (
-                            <div className="text-blueGray-500">
-                              Suggestion :
-                              <i className="ml-2 fas fa-circle-notch fa-spin"></i>
-                            </div>
-                          )}
-                          {!isSuggestionLoading && (
-                            <div className="flex justify-start">
-                              <span className="text-blueGray-500">
-                                Suggestion :
-                              </span>
-                              {suggestion.map((name, index) => (
-                                <Link
-                                  key={`${name}--${index}`}
-                                  href={`/product/search?q=${name}`}
-                                  className="mx-1 underline text-blue-500 italic"
-                                >
-                                  {name}
-                                </Link>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      )}
-                      {isSuggestionLoading && suggestion.length === 0 && (
-                        <i className="ml-2 fas fa-circle-notch fa-spin"></i>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
-          </section>
-        </div> */}
         <section className="w-full bg-sub-content  lg:pt-[4px] lg:pb-4 py-4">
           <motion.div
             variants={staggerContainer}
@@ -372,7 +247,7 @@ export default function Index() {
               initial="show"
               whileInView={'show'}
               className="container mx-auto lg:px-4 px-6 md:px-6"
-              viewport={{once: true, amount: 0.05}}
+              viewport={{ once: true, amount: 0.05 }}
             >
               <motion.div variants={fadeInOperates('right', 'tween', 0.2, 1)}>
                 <TypingText title="/ HOW EXEPART OPERATES" />
@@ -482,7 +357,7 @@ export default function Index() {
               variants={staggerContainer}
               initial="hidden"
               whileInView={'show'}
-              viewport={{once: true, amount: 0.05}}
+              viewport={{ once: true, amount: 0.05 }}
               className="container mx-auto lg:px-4 px-6 md:px-6"
             >
               <motion.div
@@ -563,7 +438,7 @@ export default function Index() {
               variants={staggerContainer}
               initial="hidden"
               whileInView={'show'}
-              viewport={{once: true, amount: 0.05}}
+              viewport={{ once: true, amount: 0.05 }}
               className="container mx-auto lg:px-4 px-6 md:px-6"
             >
               <motion.div
@@ -675,11 +550,11 @@ export default function Index() {
                           !dataContact.subject &&
                           !isLoading
                         }
-                      > 
+                      >
                         {isLoading && (
                           <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                         )}
-                        SUBMIT 
+                        SUBMIT
                       </PrimaryButton>
                     </div>
                   </div>
@@ -715,5 +590,5 @@ export default function Index() {
       </div>
       <Footer />
     </>
-  );
+  )
 }

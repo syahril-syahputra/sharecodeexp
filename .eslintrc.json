@@ -8,10 +8,12 @@
     "next",
     "next/core-web-vitals",
     "plugin:react/recommended",
-    "airbnb",
     "prettier"
   ],
   "parserOptions": {
+    "ecmaFeatures": {
+      "js": true
+    },
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
@@ -23,10 +25,7 @@
     "require-jsdoc": "off",
     "react/react-in-jsx-scope": "off",
     "react-hooks/exhaustive-deps": "off",
-    "react/jsx-filename-extension": [
-      1,
-      { "extensions": [".js", ".jsx", "ts", "tsx"] }
-    ],
+    "react/jsx-filename-extension": [1, { "extensions": [".js"] }],
     "react/prop-types": "off",
     "camelcase": "off"
   }
