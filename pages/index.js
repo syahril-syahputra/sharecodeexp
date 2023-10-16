@@ -159,7 +159,7 @@ export default function Index() {
                   >
                     <div className="pt-2 sm:pt-0 pb-4 md:pb-1 lg:px-3 md:px-[3px]">
                       <form className="flex items-center">
-                        <label for="voice-search" className="sr-only">
+                        <label htmlFor="voice-search" className="sr-only">
                           Search
                         </label>
                         <div className="relative w-full">
@@ -173,9 +173,9 @@ export default function Index() {
                             >
                               <path
                                 stroke="currentColor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
                                 d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
                               />
                             </svg>
@@ -237,20 +237,20 @@ export default function Index() {
             </Container>
           </section>
         </div>
-        <section className="w-full bg-sub-content  lg:pt-[4px] lg:pb-4 py-4">
+        <section className="w-full bg-sub-content  lg:pt-[4px] xl:pt-[2px] lg:pb-4 py-4">
           <motion.div
             variants={staggerContainer}
             className="justify-start text-left flex flex-wrap mt-8"
           >
             <motion.div
               variants={staggerContainer}
-              initial="show"
+              initial="hidden"
               whileInView={'show'}
               className="container mx-auto lg:px-4 px-6 md:px-6"
               viewport={{ once: true, amount: 0.05 }}
             >
-              <motion.div variants={fadeInOperates('right', 'tween', 0.2, 1)}>
-                <TypingText title="/ HOW EXEPART OPERATES" />
+              <motion.div variants={fadeIn('right', 'tween', 0.2, 1)}>
+                <TypingText title="/ HOW EXEPART OPERATES" textStyle={''} />
                 <TitleText
                   title={
                     <>
@@ -303,7 +303,7 @@ export default function Index() {
                       <span className="bg-gradient-to-r from-amber-300 to-amber-400 bg-[length:0px_2px] hover:bg-[length:100%_2px] bg-left-bottom bg-no-repeat transition-[background-size] hover:text-footer-resources duration-500 ">
                         <a
                           href="mailto:purchasing@exepart.com?subject=%5BYour%20Purpose!%5D&body=Hi!"
-                          arget="_blank"
+                          target="_blank"
                           rel="noopener noreferrer"
                         >
                           purchasing@exepart.com.
@@ -489,7 +489,6 @@ export default function Index() {
                           Subject
                         </label>
                         <input
-                          arial-label="Please input subject"
                           type="text"
                           name="subject"
                           value={dataContact.subject}
@@ -503,7 +502,6 @@ export default function Index() {
                           Email Address
                         </label>
                         <input
-                          arial-label="Please input email address"
                           type="email"
                           name="email"
                           value={dataContact.email}
@@ -573,7 +571,7 @@ export default function Index() {
                       <span className="bg-gradient-to-r from-amber-300 to-amber-400 bg-[length:0px_2px] hover:bg-[length:100%_2px] bg-left-bottom bg-no-repeat transition-[background-size] hover:text-footer-resources duration-500 ">
                         <a
                           href="mailto:purchasing@exepart.com?subject=%5BYour%20Purpose!%5D&body=Hi!"
-                          arget="_blank"
+                          target="_blank"
                           rel="noopener noreferrer"
                         >
                           purchasing@exepart.com.
