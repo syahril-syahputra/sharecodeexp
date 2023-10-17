@@ -15,9 +15,12 @@ export default function TableComponent(props) {
   const router = useRouter()
 
   const [isInquiryClicked, setIsInquiryClicked] = useState(false)
+  const [cartLoading, setCartLoading] = useState({ id: 0 })
+  console.log(cartLoading, '<<cartLoading>>')
   const [showModal, setShowModal] = useState(false)
+  const [stateDetailRow, setStateDetailRow] = useState(false)
   const inquiryItem = (item) => {
-    setIsInquiryClicked(true)
+    // setIsInquiryClicked(true)
     if (status === 'unauthenticated') {
       router.push(`/product/detail/${item}`)
       //   setShowModal(true)
@@ -60,9 +63,11 @@ export default function TableComponent(props) {
           tableData={
             <>
               {props.data.map((item, index) => {
+                console.log(item, '<<<item')
+
                 return (
                   <tr
-                    key={index}
+                    key={item?.id + `${index}`}
                     className="bg-white border-b hover:bg-gray-50"
                   >
                     <th
@@ -78,15 +83,25 @@ export default function TableComponent(props) {
                     <td className="px-6 py-4">{item.country}</td>
                     <td className="px-6 py-4 text-right">
                       <PrimaryButton
+                        id={item?.id}
+                        key={item?.id}
                         disabled={isInquiryClicked}
                         size="sm"
-                        onClick={() => inquiryItem(item.slug)}
+                        onClick={async () => {
+                          setIsInquiryClicked(true)
+                          setCartLoading((previouse) => ({
+                            ...previouse,
+                            id: item.id,
+                          }))
+                          inquiryItem(item.slug)
+                        }}
                       >
-                        {isInquiryClicked && (
+                        {cartLoading?.id === item?.id && (
                           <i className="px-3 fas fa-hourglass fa-spin"></i>
                         )}
-                        {!isInquiryClicked && 'Inquire'}
+                        {cartLoading?.id !== item?.id && 'Inquire'}
                       </PrimaryButton>
+                      {console.log(cartLoading, '<<<isInquiryClicked')}
                     </td>
                   </tr>
                 )

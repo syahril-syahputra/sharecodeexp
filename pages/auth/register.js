@@ -1,37 +1,25 @@
 /* eslint-disable react/jsx-no-target-blank */
 import * as Yup from 'yup'
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState } from 'react'
 import axios from 'lib/axios'
-import Image from 'next/image'
 import Link from 'next/link'
 import IndexNavbar from 'components/Navbars/IndexNavbar.js'
 import Footer from 'components/Footers/Footer.js'
-import countryList from 'react-select-country-list'
 import { Formik, Form } from 'formik'
-import PhoneInput from 'react-phone-number-input'
 import { PageSEO } from '@/components/Utils/SEO'
 import siteMetadata from '@/utils/siteMetadata'
 import ImageLogo from '@/components/ImageLogo/ImageLogo'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
-import ErrorInput from '@/components/Shared/ErrorInput'
-import TextInput from '@/components/Interface/Form/TextInput'
-import SelectInput from '@/components/Interface/Form/SelectInput'
-import AreaInput from '@/components/Interface/Form/AreaInput'
 import TextInputValidate from '@/components/Interface/Form/TextInputValidation'
 import DangerNotification from '@/components/Interface/Notification/DangerNotification'
 import CountrySelector from '@/components/Shared/CountrySelector'
-import { PublicUrl } from '@/route/route-url'
 import TextInputImage from '@/components/Interface/Form/TextInputImage'
 import SelectInputSector from '@/components/Interface/Form/SelectInputSector'
-import PhoneInputValidate from '@/components/Interface/Form/PhoneInputValidate'
-import PhoneNumberInput from '@/components/Interface/Form/PhoneInputValidate2'
 import useSctor from '@/hooks/useSctor'
 import useCountry from '@/hooks/useCountry'
-import SelectInputCountry from '@/components/Interface/Form/SelectInputCountryApi'
 import ProvinceSelector from '@/components/Shared/ProvinceSelector'
 import useDataProvince from '@/hooks/useProvince'
 import CitySelector from '@/components/Shared/CitySelector'
-import useDataCity from '@/hooks/useCity'
 import { PostalCode } from '@/utils/postalCode'
 import AreaInputValidation from '@/components/Interface/Form/AreaInputValidation'
 import TermAndConditionOfSaleModal from '@/components/Modal/Component/TermAndConditionOfSaleModal'
@@ -93,6 +81,7 @@ export default function Index() {
       (e) => e?.id === id && e.country === Country
     )
     const regex = findCodeRegex?.Regex
+
     return regex.test(value)
   }
 
@@ -164,6 +153,7 @@ export default function Index() {
           if (val === undefined) {
             return true
           }
+
           return val.length === 0 || (val.length >= 2 && val.length <= 100)
         }
       )
@@ -176,13 +166,14 @@ export default function Index() {
           if (val === undefined) {
             return true
           }
+
           return val.length === 0 || (val.length >= 2 && val.length <= 100)
         }
       )
       .notRequired(),
   })
 
-  const [registrationInfo, setRegistrationInfo] = useState({
+  const [, setRegistrationInfo] = useState({
     // Account Information
     name: '',
     email: '',
@@ -212,9 +203,13 @@ export default function Index() {
   const [secondAddressCharacterCount, setSecondAddressCharacterCount] =
     useState(0)
   const secondAddressCharacterLimit = 100
+  const firstAddressCharacterLimit = 100
   const secondAddressHandler = (input) => {
-    setSecondAddressCharacterCount(input.value.length)
-    setRegistrationInfo({ ...registrationInfo, [input.name]: input.value })
+    setSecondAddressCharacterCount(input.length)
+  }
+
+  const firstAddressHandler = (input) => {
+    setFirstAddressCharacterCount(input.length)
   }
 
   const [country, setCountry] = useState(null)
@@ -296,12 +291,9 @@ export default function Index() {
   }
 
   const [imageCompany, setImageCompany] = useState(null)
-
-  const [sector, setSector] = useState(null)
   const sectors = useSctor()
   const countries = useCountry()
   const provincies = useDataProvince(stateCountry?.id)
-  // checking register button status enable or disable
 
   return (
     <>
@@ -801,10 +793,20 @@ export default function Index() {
                               label="Address 1"
                               name="company_address"
                               required
+                              characterCount={firstAddressCharacterCount}
+                              characterLimit={firstAddressCharacterLimit}
                               placeholder="Please enter company address 1 here..."
                               value={formikProps.company_address}
                               errorMsg={errorInfo?.company_address}
-                              onChange={formikProps.handleChange}
+                              onChange={(event) => {
+                                const value = event?.target?.value
+                                formikProps.handleChange(event)
+                                formikProps.setFieldValue(
+                                  'company_address',
+                                  value
+                                )
+                                firstAddressHandler(value)
+                              }}
                               error={
                                 formikProps.touched.company_address &&
                                 Boolean(errors.company_address)
@@ -831,12 +833,22 @@ export default function Index() {
                             <AreaInputValidation
                               rows={5}
                               label="Address 2"
+                              characterCount={secondAddressCharacterCount}
+                              characterLimit={secondAddressCharacterLimit}
                               name="company_address2"
                               required
-                              placeholder="Please enter company address 1 here..."
+                              placeholder="Please enter company address 2 here..."
                               value={formikProps.company_address2}
                               errorMsg={errorInfo?.company_address2}
-                              onChange={formikProps.handleChange}
+                              onChange={(event) => {
+                                const value = event?.target?.value
+                                formikProps.handleChange(event)
+                                formikProps.setFieldValue(
+                                  'company_address2',
+                                  value
+                                )
+                                secondAddressHandler(value)
+                              }}
                               error={
                                 formikProps.touched.company_address2 &&
                                 Boolean(errors.company_address2)

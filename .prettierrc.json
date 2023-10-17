@@ -5,6 +5,5 @@
   "trailingComma": "es5",
   "endOfLine": "auto",
   "printWidth": 80,
-  "bracketSpacing": true,
-  "htmlWhitespaceSensitivity": "css"
+  "bracketSpacing": true
 }

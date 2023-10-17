@@ -1,5 +1,7 @@
+import React from 'react'
 import ErrorInput from './ErrorInput'
 import classNames from '@/utils/classNames'
+
 export default function AreaInput(props) {
   return (
     <>

@@ -11,6 +11,7 @@ import IndexNavbar from 'components/Navbars/IndexNavbar.js'
 import Footer from 'components/Footers/Footer.js'
 import TableComponent from '@/components/Table/Public/Component'
 import TextInputSearchComponent from '@/components/Interface/Form/TextInputForSearchComponent'
+import { Router } from 'next/router'
 
 export default function Index({ session }) {
   const router = useRouter()
@@ -94,8 +95,8 @@ export default function Index({ session }) {
         description={siteMetadata.description}
       />
       <IndexNavbar fixed />
-      <section className="relative bg-white pb-36 overflow-hidden h-3/6 bg-gradient-to-b from-indigo-50 via-white">
-        <div className="container mx-auto mt-10 xs:pb-10 xs:pt-8">
+      <section className=" container mx-auto  relative bg-white pb-36 overflow-hidden h-3/6 bg-gradient-to-b from-indigo-50 via-white">
+        <div className="mt-10 xs:pb-10 xs:pt-8 px-4 xl:px-0 lg:px-0 2xl:px-0">
           <div className="flex flex-wrap">
             <div className="w-full mt-16">
               <h2 className="font-semibold text-4xl">Search Components</h2>
