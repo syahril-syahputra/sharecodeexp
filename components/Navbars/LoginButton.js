@@ -1,30 +1,63 @@
-import {MyAccountUrl, VendorUrl} from '@/route/route-url';
-import {useSession, signIn, signOut} from 'next-auth/react';
-import React, {Fragment, useEffect, useState, useContext} from 'react';
-import Link from 'next/link';
-import classNames from '@/utils/classNames';
-import GlobalContext from '@/store/global-context';
-
-import {Menu, Transition} from '@headlessui/react';
-import {ChevronDownIcon} from '@heroicons/react/20/solid';
-import LogoutModal from '@/components/Modal/Logout/Logout';
-import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton';
+import { MyAccountUrl } from '@/route/route-url'
+import { useSession, signIn, signOut } from 'next-auth/react'
+import React, { Fragment, useEffect, useState, useContext } from 'react'
+import Link from 'next/link'
+import classNames from '@/utils/classNames'
+import GlobalContext from '@/store/global-context'
+import { Menu, Transition } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import LogoutModal from '@/components/Modal/Logout/Logout'
+import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 
 const userNavigation = [
-  {name: 'Dashboard', href: '/admin/dashboard'},
-  {name: 'My Profile', href: MyAccountUrl.view},
-];
+  { name: 'Dashboard', href: '/admin/dashboard' },
+  { name: 'My Profile', href: MyAccountUrl.view },
+]
+
+const userEmailUnverifyNavigation = [
+  {
+    name: 'Verify Email',
+    href: '/verify/email',
+  },
+]
+
+const subNavigation = (navigationArr) => {
+  return navigationArr.map((item) => (
+    <Menu.Item key={item.name}>
+      {({ active }) => (
+        <Link
+          href={item.href}
+          className={classNames(
+            active ? 'bg-gray-50' : '',
+            'block px-3 py-1 text-sm leading-6 text-gray-900'
+          )}
+        >
+          {item.name}
+        </Link>
+      )}
+    </Menu.Item>
+  ))
+}
+
+const multipleNotificationWithSessions = (s) => {
+  switch (true) {
+    case s === null:
+      return subNavigation(userEmailUnverifyNavigation)
+    default:
+      return subNavigation(userNavigation)
+  }
+}
 
 export default function LoginButton(navBarV2 = false) {
-  const session = useSession();
-  const {username, loadUsername} = useContext(GlobalContext);
-  const [logoutModal, setLogoutModal] = useState(false);
+  const session = useSession()
+  const { username, loadUsername } = useContext(GlobalContext)
+  const [logoutModal, setLogoutModal] = useState(false)
 
   useEffect(() => {
     if (session.data) {
-      loadUsername(session.data.accessToken);
+      loadUsername(session.data.accessToken)
     }
-  }, [session]);
+  }, [session])
 
   if (!session.data) {
     return (
@@ -33,14 +66,14 @@ export default function LoginButton(navBarV2 = false) {
           size="sm"
           className="uppercase px-4"
           onClick={() => {
-            signIn();
+            signIn()
           }}
         >
           {navBarV2 ? undefined : <i className="fas fa-user mr-2"></i>}
           Sign In
         </PrimaryButton>
       </>
-    );
+    )
   }
 
   if (session.data) {
@@ -73,23 +106,11 @@ export default function LoginButton(navBarV2 = false) {
             leaveTo="transform opacity-0 scale-95"
           >
             <Menu.Items className="absolute right-0 z-10 mt-2.5 w-52 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
-              {userNavigation.map((item) => (
-                <Menu.Item key={item.name}>
-                  {({active}) => (
-                    <Link
-                      href={item.href}
-                      className={classNames(
-                        active ? 'bg-gray-50' : '',
-                        'block px-3 py-1 text-sm leading-6 text-gray-900'
-                      )}
-                    >
-                      {item.name}
-                    </Link>
-                  )}
-                </Menu.Item>
-              ))}
+              {multipleNotificationWithSessions(
+                session?.data?.user?.userDetail?.email_verified_at
+              )}
               <Menu.Item>
-                {({active}) => (
+                {({ active }) => (
                   <span
                     onClick={() => setLogoutModal(true)}
                     className={classNames(
@@ -110,11 +131,11 @@ export default function LoginButton(navBarV2 = false) {
             acceptance={() => {
               signOut({
                 callbackUrl: `${window.location.origin}`,
-              });
+              })
             }}
           />
         )}
       </div>
-    );
+    )
   }
 }

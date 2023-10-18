@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useSession, getSession, signOut } from 'next-auth/react'
 import axios from '@/lib/axios'
 import { useRouter } from 'next/router'
@@ -11,9 +11,11 @@ import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses'
 import Link from 'next/link'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import ImageLogo from '@/components/ImageLogo/ImageLogo'
+import ResendEmailVerification from '@/components/Modal/ResendEmail'
+import GlobalContext from '@/store/global-context'
+import WarningNotification from '@/components/Interface/Notification/WarningNotification'
 
-export default function MemberDashboard({ company, message }) {
-  const [logoutModal, setLogoutModal] = useState(false)
+export default function MemberDashboard({ company, message, session }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   useEffect(() => {
     if (!!message) {
@@ -36,9 +38,29 @@ export default function MemberDashboard({ company, message }) {
     }
   }
 
+  const handleResendEmail = async () => {
+    await axios
+      .post(
+        `/email/resend`,
+        {},
+        {
+          headers: {
+            Authorization: `${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(`${response?.message}`, toastOptions)
+      })
+      .catch((error) => {
+        toast.error(`${error.message}`, toastOptions)
+      })
+  }
+
   return (
     <>
       <div>
+        {/* Rejected */}
         {company.is_confirmed == 'rejected' && (
           <PrimaryWrapper>
             <div className="text-center pb-10 mt-10">
@@ -68,7 +90,7 @@ export default function MemberDashboard({ company, message }) {
             </div>
           </PrimaryWrapper>
         )}
-
+        {/* Pending */}
         {company.is_confirmed == 'pending' && (
           <PrimaryWrapper>
             <div className="text-center pb-10 mt-10">
@@ -106,100 +128,61 @@ export default function MemberDashboard({ company, message }) {
             </div>
           </PrimaryWrapper>
         } */}
+        {/* Accepted */}
         {company.is_confirmed == 'accepted' && (
-          <PrimaryWrapper>
-            <div className="text-center pb-20 pt-20">
-              <img
-                className="object-contain mb-3 h-40 mx-auto"
-                alt={company.name}
-                src={publicDir + '/companies_images/' + company.img}
+          <div className="container mx-auto mt-10 xs:pb-10 xs:pt-8 px-4">
+            {company?.RegistrationDocument === '' ? (
+              <WarningNotification
+                message={'Update Needed'}
+                detail={
+                  'Please send additional document to complete your registration'
+                }
               />
-              <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
-                {company.name}
-                <CompanyStatusesIcon status={company.is_confirmed} />
-              </h3>
-              <div className="mt-20">
-                <PrimaryButton
-                  className="m-2"
-                  size="lg"
-                  outline
-                  onClick={() => handleDashboard('buyer')}
-                >
-                  Buyer
-                </PrimaryButton>
-                <PrimaryButton
-                  className="m-2"
-                  size="lg"
-                  outline
-                  onClick={() => handleDashboard('seller')}
-                >
-                  Seller
-                </PrimaryButton>
+            ) : null}
+            <PrimaryWrapper>
+              <div className="text-center pb-20 pt-20">
+                <img
+                  className="object-contain mb-3 h-40 mx-auto"
+                  alt={company.name}
+                  src={publicDir + '/companies_images/' + company.img}
+                />
+                <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
+                  {company.name}
+                  <CompanyStatusesIcon status={company.is_confirmed} />
+                </h3>
+                <div className="mt-20">
+                  <PrimaryButton
+                    className="m-2"
+                    size="lg"
+                    outline
+                    onClick={() => handleDashboard('buyer')}
+                  >
+                    Buyer
+                  </PrimaryButton>
+                  <PrimaryButton
+                    className="m-2"
+                    size="lg"
+                    outline
+                    onClick={() => handleDashboard('seller')}
+                  >
+                    Seller
+                  </PrimaryButton>
+                </div>
               </div>
-            </div>
-          </PrimaryWrapper>
-        )}
-
-        {company.is_confirmed === undefined && (
-          <PrimaryWrapper>
-            <div className="text-center pb-20 pt-20">
-              <div className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-                <ImageLogo size={250} />
-              </div>
-              <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
-                Your email verification has been sent,
-                <br />
-                please verify the email.
-              </h3>
-              <div className="mt-20">
-                <PrimaryButton
-                  className="m-2"
-                  size="lg"
-                  outline
-                  onClick={() => handleSendEmail()}
-                >
-                  Resend
-                </PrimaryButton>
-                <PrimaryButton
-                  className="m-2"
-                  size="lg"
-                  outline
-                  onClick={() => setLogoutModal(true)}
-                >
-                  Logout
-                </PrimaryButton>
-              </div>
-            </div>
-          </PrimaryWrapper>
+            </PrimaryWrapper>
+          </div>
         )}
       </div>
-      {logoutModal && (
-        <LogoutModal
-          closeModal={() => setLogoutModal(false)}
-          acceptance={() => {
-            signOut({
-              callbackUrl: `${window.location.origin}`,
-            })
-          }}
-        />
-      )}
     </>
   )
-}
-
-async function handleSendEmail() {
-  try {
-    const res = await axios.post(`/email/resend`)
-    console.log(res, '<<<res')
-  } catch (error) {
-    throw error
-  }
 }
 
 MemberDashboard.layout = Admin
 
 export async function getServerSideProps(context) {
+  console.log(context, '<<<context')
   const session = await getSession(context)
+  console.log(session, '<<<session')
   if (!session) {
     return {
       redirect: {
@@ -219,6 +202,7 @@ export async function getServerSideProps(context) {
       },
     }
   }
+
   const loadCompany = await axios
     .get(`/company`, {
       headers: {
@@ -231,6 +215,8 @@ export async function getServerSideProps(context) {
     .catch((err) => {
       redirectedMessage = err.data.message
     })
+
+  console.log(loadCompany, company, '<<<loadCompany')
 
   if (!!context.query.redirect) {
     redirectedMessage = 'Waiting for your company approval'

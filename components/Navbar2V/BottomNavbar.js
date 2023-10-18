@@ -1,5 +1,4 @@
-import { Navbar } from 'flowbite-react'
-import Image from 'next/image'
+import React from 'react'
 import ImageLogo from '../ImageLogo/ImageLogo'
 import Link from 'next/link'
 import LoginButton from '../Navbars/LoginButton'
@@ -8,7 +7,6 @@ import { useSession } from 'next-auth/react'
 import GlobalContext from '@/store/global-context'
 
 const BottomNavbar = (props) => {
-  console.log(props, '<<<props')
   const session = useSession()
   const { username, loadUsername } = useContext(GlobalContext)
   useEffect(() => {
@@ -28,6 +26,7 @@ const BottomNavbar = (props) => {
 
   useEffect(() => {
     window.addEventListener('scroll', changeBackground)
+
     return () => window.removeEventListener('scroll', changeBackground)
   })
 

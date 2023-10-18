@@ -1,6 +1,6 @@
-import React from 'react';
-import {faEnvelope, faPhoneFlip} from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import React from 'react'
+import { faEnvelope, faPhoneFlip } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const TopNavBar = () => {
   return (
@@ -20,7 +20,7 @@ const TopNavBar = () => {
                   {
                     <a
                       href="mailto:sales@exepart.com?subject=%5BYour%20Purpose!%5D&body=Hi!"
-                      arget="_blank"
+                      target="_blank"
                       rel="noopener noreferrer"
                     >
                       sales@exepart.com
@@ -44,7 +44,7 @@ const TopNavBar = () => {
         </div>
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default TopNavBar;
+export default TopNavBar
