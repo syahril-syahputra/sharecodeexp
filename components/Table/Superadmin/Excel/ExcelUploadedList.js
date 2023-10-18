@@ -72,10 +72,7 @@ export default function TableExcel(props) {
                     <td className="text-sm px-6 py-4">
                       {moment(item.updated_at).format('dddd, D MMMM YYYY')}
                     </td>
-                    <td
-                      nowrap
-                      className=" space-x-4 flex-nowrap whitespace-nowrap text-sm px-6 py-4 text-right"
-                    >
+                    <td className=" space-x-4 flex-nowrap whitespace-nowrap text-sm px-6 py-4 text-right">
                       <Link href={'/admin/superadmin/product/excel/' + item.id}>
                         <PrimaryButton
                           // onClick={() => props.view(item)}
