@@ -79,7 +79,7 @@ export default function UploadedCompany({ session }) {
           <MiniSearchBar searchItem={handleSearch} />
         </div>
         <CompanyList
-          title="Uploaded Companies"
+          title="Review Additional Documents"
           setPage={setPage}
           isLoading={isLoading}
           data={data}

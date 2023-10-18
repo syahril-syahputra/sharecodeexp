@@ -101,22 +101,33 @@ export default function MyProduct({ session, notification }) {
             title="List product with low quantity"
             onClick={() => setlistLowProduct(false)}
             body={
-              <table className="w-full">
+              <table className="w-full bg-gray-400 border text-xs ">
+                <thead>
+                  <tr className="bg-gray-200">
+                    <th className="p-2">No</th>
+                    <th className="p-2">Part Number</th>
+                    <th className="p-2">Available Quantity</th>
+                    <th className="p-2">Country</th>
+                    <th className="p-2">Action</th>
+                  </tr>
+                </thead>
                 <tbody>
                   {notification.data.products.map((product, number) => (
                     <tr
                       key={number}
-                      className="border-b border-gray-200 hover:bg-gray-50 "
+                      className="border-b text-center border-gray-200 hover:bg-gray-50 "
                     >
-                      <td className="p-1">{number + 1}</td>
-                      <td className="p-1">{product.part_number}</td>
-                      <td className="p-1">{product.available_quantity}</td>
-                      <td className="p-1">{product.country}</td>
-                      <td className="p-1 text-right">
+                      <td className="p-1 bg-white">{number + 1}</td>
+                      <td className="p-1 bg-white">{product.part_number}</td>
+                      <td className="p-1 bg-white">
+                        {product.available_quantity}
+                      </td>
+                      <td className="p-1 bg-white">{product.country}</td>
+                      <td className="p-1 bg-white">
                         <Link
                           href={`/admin/member/seller/product/details/${product.slug}`}
                         >
-                          <PrimaryButton>View</PrimaryButton>
+                          <PrimaryButton size="sm">View</PrimaryButton>
                         </Link>
                       </td>
                     </tr>

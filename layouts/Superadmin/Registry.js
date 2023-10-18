@@ -49,7 +49,7 @@ export default function Registry({ registry }) {
                   'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                 )}
               >
-                Uploaded
+                Review Documents
                 <PrimaryBadges title={registry.uploaded_additional_documents} />
               </Link>
               <Link

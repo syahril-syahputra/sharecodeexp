@@ -321,7 +321,7 @@ export default function CompanyDetail({ session, routeParam }) {
         companyData.is_confirmed === 'pending' && (
           <>
             <InfoNotification
-              message="Update Needed"
+              message="Review Needed"
               detail={'Additional Document are Uploaded'}
             ></InfoNotification>
           </>

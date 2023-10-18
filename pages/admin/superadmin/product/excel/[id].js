@@ -28,6 +28,7 @@ export default function DetailUploadedExcel({ session, data }) {
   const [isOpenConfirmDelete, setisOpenConfirmDelete] = useState(false)
   const [isDeleting, setisDeleting] = useState(false)
   const [RequestModal, setRequestModal] = useState(false)
+  const [isLoadingRequest, setisLoadingRequest] = useState(false)
   const handleFileChange = (e) => {
     setFile(e)
   }
@@ -150,6 +151,7 @@ export default function DetailUploadedExcel({ session, data }) {
     }
   }
   const requestHandler = async (value) => {
+    setisLoadingRequest(true)
     try {
       await axios.post(
         `/admin/product/excel/update-request`,
@@ -171,6 +173,7 @@ export default function DetailUploadedExcel({ session, data }) {
       toast.error(error.data.message, toastOptions)
     } finally {
       setisDetailLoading(false)
+      setisLoadingRequest(false)
     }
   }
 
@@ -185,6 +188,7 @@ export default function DetailUploadedExcel({ session, data }) {
       {RequestModal && (
         <ExcelRequestUpdate
           setShowModal={setRequestModal}
+          isLoading={isLoadingRequest}
           // itemName={component.ManufacturerNumber}
           acceptModal={(value) => requestHandler(value)}
         />

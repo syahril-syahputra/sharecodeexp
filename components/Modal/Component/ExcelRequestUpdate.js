@@ -34,6 +34,7 @@ export default function ExcelRequestUpdate(props) {
       action={
         <>
           <LightButton
+            disabled={props.isLoading}
             className="font-bold uppercase mr-2"
             onClick={() => props.setShowModal(false)}
           >
