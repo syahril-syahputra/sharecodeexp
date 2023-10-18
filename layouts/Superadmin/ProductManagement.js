@@ -70,7 +70,7 @@ export default function ComponentManagement({ product }) {
                                     'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                                 )}
                             >
-                                Uploaded File Excel
+                                Uploaded Excel File
                             </Link>
                         </Disclosure.Panel>
                     </>

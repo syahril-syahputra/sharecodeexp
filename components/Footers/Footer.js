@@ -59,7 +59,7 @@ export default function Footer() {
                         href={PublicUrl.privacyPolicy}
                       >
                         <span className="bg-gradient-to-r from-amber-300 to-amber-400 bg-[length:0px_2px] hover:bg-[length:100%_2px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 ">
-                          {<> Privacy Policy e</>}
+                          {<> Privacy Policy</>}
                         </span>
                       </Link>
                     </li>

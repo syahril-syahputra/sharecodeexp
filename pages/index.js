@@ -117,7 +117,7 @@ export default function Index() {
         <div className="w-full inline-block">
           <section className="flex flex-col items-center justify-end relative h-[90vh] sm:h-[85.79vh] bg-gradient-to-b from-transparent from-69% to-purple ">
             <Image
-              src="/img/lukas-tennie-DAWnMmUSMdU-unsplash.png"
+              src="/img/landing-pages/hero.png"
               alt="exepart.png"
               fill
               className="w-full h-full object-center object-cover -z-10"
