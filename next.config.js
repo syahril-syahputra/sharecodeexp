@@ -1,5 +1,22 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+// /** @type {import('next').NextConfig} */
+// const nextConfig = {
+//   reactStrictMode: false,
+//   exportPathMap: async function (
+//     defaultPathMap,
+//     { dev, dir, outDir, distDir, buildId }
+//   ) {
+//     return {
+//       '/': { page: '/' },
+//     }
+//   },
+//   images: {
+//     unoptimized: true,
+//   },
+// }
+
+// module.exports = nextConfig
+
+module.exports = {
   reactStrictMode: false,
   exportPathMap: async function (
     defaultPathMap,
@@ -13,5 +30,3 @@ const nextConfig = {
     unoptimized: true,
   },
 }
-
-module.exports = nextConfig

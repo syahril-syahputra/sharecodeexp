@@ -11,9 +11,8 @@ import IndexNavbar from 'components/Navbars/IndexNavbar.js'
 import Footer from 'components/Footers/Footer.js'
 import TableComponent from '@/components/Table/Public/Component'
 import TextInputSearchComponent from '@/components/Interface/Form/TextInputForSearchComponent'
-import { Router } from 'next/router'
 
-export default function Index({ session }) {
+export default function Index() {
   const router = useRouter()
   const [search, setSearch] = useState(router.query.q ? router.query.q : '')
   const [category, setCategory] = useState(
@@ -29,7 +28,6 @@ export default function Index({ session }) {
     }
   }
 
-  //data search
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
@@ -56,12 +54,13 @@ export default function Index({ session }) {
         })
       })
       .catch((error) => {
-        console.log(error.response)
+        // console.log(error.response)
       })
       .finally(() => {
         setIsLoading(false)
       })
   }
+
   const setPage = (page) => {
     searchData(search, page)
   }

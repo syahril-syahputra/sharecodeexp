@@ -8,6 +8,7 @@ import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import LogoutModal from '@/components/Modal/Logout/Logout'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import { useRouter } from 'next/router'
 
 const userNavigation = [
   { name: 'Dashboard', href: '/admin/dashboard' },
@@ -50,9 +51,9 @@ const multipleNotificationWithSessions = (s) => {
 
 export default function LoginButton(navBarV2 = false) {
   const session = useSession()
+  const router = useRouter()
   const { username, loadUsername } = useContext(GlobalContext)
   const [logoutModal, setLogoutModal] = useState(false)
-
   useEffect(() => {
     if (session.data) {
       loadUsername(session.data.accessToken)
@@ -66,7 +67,8 @@ export default function LoginButton(navBarV2 = false) {
           size="sm"
           className="uppercase px-4"
           onClick={() => {
-            signIn()
+            // signIn()
+            router.push('/auth/login')
           }}
         >
           {navBarV2 ? undefined : <i className="fas fa-user mr-2"></i>}

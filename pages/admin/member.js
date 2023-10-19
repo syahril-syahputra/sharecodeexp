@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { useSession, getSession, signOut } from 'next-auth/react'
+import React, { useEffect } from 'react'
+import { useSession, getSession } from 'next-auth/react'
 import axios from '@/lib/axios'
 import { useRouter } from 'next/router'
-import LogoutModal from '@/components/Modal/Logout/Logout'
 import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
 import Admin from 'layouts/Admin.js'
@@ -10,9 +9,6 @@ import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses'
 import Link from 'next/link'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
-import ImageLogo from '@/components/ImageLogo/ImageLogo'
-import ResendEmailVerification from '@/components/Modal/ResendEmail'
-import GlobalContext from '@/store/global-context'
 import WarningNotification from '@/components/Interface/Notification/WarningNotification'
 
 export default function MemberDashboard({ company, message, session }) {
@@ -92,27 +88,37 @@ export default function MemberDashboard({ company, message, session }) {
         )}
         {/* Pending */}
         {company.is_confirmed == 'pending' && (
-          <PrimaryWrapper>
-            <div className="text-center pb-10 mt-10">
-              <h3 className="text-4xl font-semibold leading-normal text-blueGray-700">
-                <i
-                  title="Member Pending"
-                  className="mr-2 ml-1 fas fa-clock text-orange-500"
-                ></i>
-              </h3>
-              <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2">
-                <p>
-                  Wait for your confirmation from Exepart registration expert
-                </p>
-              </h3>
-              <h3 className="text-md font-semibold leading-normal text-blue-700 mb-2">
-                <i>
-                  Please refresh if Exepart registration expert is accepted your
-                  member status
-                </i>
-              </h3>
-            </div>
-          </PrimaryWrapper>
+          <div className="container mx-auto mt-10 xs:pb-10 xs:pt-8 px-4">
+            {company?.reason !== null ? (
+              <WarningNotification
+                message={'Update Needed'}
+                detail={
+                  'Please send additional document to complete your registration'
+                }
+              />
+            ) : null}
+            <PrimaryWrapper>
+              <div className="text-center pb-10 mt-10">
+                <h3 className="text-4xl font-semibold leading-normal text-blueGray-700">
+                  <i
+                    title="Member Pending"
+                    className="mr-2 ml-1 fas fa-clock text-orange-500"
+                  ></i>
+                </h3>
+                <h3 className="text-4xl font-semibold leading-normal text-blueGray-700 mb-2">
+                  <p>
+                    Wait for your confirmation from Exepart registration expert
+                  </p>
+                </h3>
+                <h3 className="text-md font-semibold leading-normal text-blue-700 mb-2">
+                  <i>
+                    Please refresh if Exepart registration expert is accepted
+                    your member status
+                  </i>
+                </h3>
+              </div>
+            </PrimaryWrapper>
+          </div>
         )}
 
         {/* {company.is_confirmed == "accepted" &&
@@ -131,14 +137,6 @@ export default function MemberDashboard({ company, message, session }) {
         {/* Accepted */}
         {company.is_confirmed == 'accepted' && (
           <div className="container mx-auto mt-10 xs:pb-10 xs:pt-8 px-4">
-            {company?.RegistrationDocument === '' ? (
-              <WarningNotification
-                message={'Update Needed'}
-                detail={
-                  'Please send additional document to complete your registration'
-                }
-              />
-            ) : null}
             <PrimaryWrapper>
               <div className="text-center pb-20 pt-20">
                 <img
@@ -180,9 +178,7 @@ export default function MemberDashboard({ company, message, session }) {
 MemberDashboard.layout = Admin
 
 export async function getServerSideProps(context) {
-  console.log(context, '<<<context')
   const session = await getSession(context)
-  console.log(session, '<<<session')
   if (!session) {
     return {
       redirect: {
@@ -215,8 +211,6 @@ export async function getServerSideProps(context) {
     .catch((err) => {
       redirectedMessage = err.data.message
     })
-
-  console.log(loadCompany, company, '<<<loadCompany')
 
   if (!!context.query.redirect) {
     redirectedMessage = 'Waiting for your company approval'

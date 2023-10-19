@@ -8,7 +8,7 @@ import GlobalContext from '@/store/global-context'
 
 const BottomNavbar = (props) => {
   const session = useSession()
-  const { username, loadUsername } = useContext(GlobalContext)
+  const { loadUsername } = useContext(GlobalContext)
   useEffect(() => {
     if (session?.data) {
       loadUsername(session?.data?.accessToken)

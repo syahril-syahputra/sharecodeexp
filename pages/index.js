@@ -237,7 +237,7 @@ export default function Index() {
             </Container>
           </section>
         </div>
-        <section className="w-full bg-sub-content  lg:pt-[4px] xl:pt-[2px] lg:pb-4 py-4">
+        <section className="w-full bg-sub-content  py-2">
           <motion.div
             variants={staggerContainer}
             className="justify-start text-left flex flex-wrap xl:mt-2 2xl:mt-2 lg:mt-2 mt-2"

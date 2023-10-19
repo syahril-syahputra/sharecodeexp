@@ -20,7 +20,9 @@ function SideNavigation() {
   const session = useSession()
   const status = session.data.user.userDetail.status_id
   const is_company_uploaded =
-    session.data.user?.userDetail?.company?.RegistrationDocument
+    session.data.user?.userDetail?.company?.additional_documents
+  const is_confirmed_company =
+    session?.data?.user?.userDetail?.company?.is_confirmed
   const company = useCompany(
     session.data.user.userDetail,
     session.data.accessToken
@@ -85,8 +87,6 @@ function SideNavigation() {
           <li>
             <ul role="list" className="-mx-2 space-y-1">
               {vendorsNavigation.map((item) => {
-                console.log(item, '<<<item')
-
                 return (
                   <li key={item.name}>
                     {!item.children ? (
@@ -120,14 +120,11 @@ function SideNavigation() {
                                 aria-hidden="true"
                               />
                               {item.name}
-                              {is_company_uploaded === '' ? (
-                                <WarningBadges
-                                  title={item.children?.reduce(
-                                    (e, { name }) =>
-                                      name === 'My Company' ? (e += 1) : e,
-                                    0
-                                  )}
-                                />
+                              {is_company_uploaded?.toLowerCase() ===
+                                'uploaded' &&
+                              is_confirmed_company?.toLowerCase() ===
+                                'pending' ? (
+                                <WarningBadges />
                               ) : null}
                               <ChevronRightIcon
                                 className={classNames(
@@ -156,7 +153,10 @@ function SideNavigation() {
                                     {/* name === 'My Company' */}
                                     {subItem.name === 'My Company' ? (
                                       <>
-                                        {is_company_uploaded === '' ? (
+                                        {is_company_uploaded?.toLowerCase() ===
+                                          'uploaded' &&
+                                        is_confirmed_company?.toLowerCase() ===
+                                          'pending' ? (
                                           <>
                                             <div className="transition-all flex justify-between items-center pr-4 space-x-4">
                                               <div className="w-full">
@@ -165,17 +165,9 @@ function SideNavigation() {
                                                 </span>
                                               </div>
                                               <span className="relative flex text-xl">
-                                                <span className="animate-ping absolute inline-flex opacity-75">
-                                                  <i
-                                                    className="fas fa-bell"
-                                                    style={{
-                                                      color: 'rgb(249 115 22)',
-                                                    }}
-                                                  ></i>
-                                                </span>
                                                 <span className="relative inline-flex">
                                                   <i
-                                                    className="fas fa-bell"
+                                                    className="fa-solid fa-circle"
                                                     style={{
                                                       color: 'rgb(249 115 22)',
                                                     }}

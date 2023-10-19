@@ -8,6 +8,8 @@ import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import PrimaryBadges from '@/components/Interface/Badges/PrimaryBadges'
 
 export default function ComponentManagement({ product }) {
+  const publicDir = process.env.NEXT_PUBLIC_DIR
+
   return (
     <li>
       <Disclosure as="div">
@@ -74,7 +76,7 @@ export default function ComponentManagement({ product }) {
                 Uploaded Excel File
               </Link>
               <Link
-                href="/admin/superadmin/product/bulkInsert"
+                href={publicDir + '/template/exepart_template.xlsx'}
                 className={classNames(
                   false ? 'bg-gray-50' : 'hover:bg-gray-50',
                   'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'

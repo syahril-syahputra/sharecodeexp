@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-
 import NeedLoginModal from '@/components/Modal/NeedLogin/NeedLogin'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import BaseTable from '@/components/Interface/Table/BaseTable'
@@ -9,24 +8,35 @@ import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import NoData from '@/components/Interface/Table/NoData'
 import MetaData from '@/components/Interface/Table/MetaData'
 import Pagination from '@/components/Shared/Component/Pagination'
+import DetailProdutModal from '@/components/Modal/DetailProdutModal/DetailProdutModal'
 
 export default function TableComponent(props) {
   const { status } = useSession()
   const router = useRouter()
-
   const [isInquiryClicked, setIsInquiryClicked] = useState(false)
+  const [isDetailClicked, setIsDetailClicked] = useState(false)
   const [cartLoading, setCartLoading] = useState({ id: 0 })
-  console.log(cartLoading, '<<cartLoading>>')
+  const [cartLoadingDetail, setCartLoadingDetail] = useState({
+    id: 0,
+    slug: '',
+  })
   const [showModal, setShowModal] = useState(false)
-  const [stateDetailRow, setStateDetailRow] = useState(false)
+  const [showModalDetail, setShowModalDetail] = useState(false)
   const inquiryItem = (item) => {
-    // setIsInquiryClicked(true)
     if (status === 'unauthenticated') {
-      router.push(`/product/detail/${item}`)
-      //   setShowModal(true)
-      //   setIsInquiryClicked(false)
-    } else {
+      setShowModal(true)
+      setIsInquiryClicked(false)
+    }
+
+    if (status === 'authenticated') {
       router.push(`/admin/member/buyer/product/details/${item}`)
+    }
+  }
+
+  const detailItem = () => {
+    if (status === 'unauthenticated') {
+      setShowModalDetail(true)
+      setIsDetailClicked(false)
     }
   }
 
@@ -63,8 +73,6 @@ export default function TableComponent(props) {
           tableData={
             <>
               {props.data.map((item, index) => {
-                console.log(item, '<<<item')
-
                 return (
                   <tr
                     key={item?.id + `${index}`}
@@ -82,26 +90,57 @@ export default function TableComponent(props) {
                     <td className="px-6 py-4">{item.moq}</td>
                     <td className="px-6 py-4">{item.country}</td>
                     <td className="px-6 py-4 text-right">
-                      <PrimaryButton
-                        id={item?.id}
-                        key={item?.id}
-                        disabled={isInquiryClicked}
-                        size="sm"
-                        onClick={async () => {
-                          setIsInquiryClicked(true)
-                          setCartLoading((previouse) => ({
-                            ...previouse,
-                            id: item.id,
-                          }))
-                          inquiryItem(item.slug)
-                        }}
+                      <div
+                        className={`items-center  ${
+                          status === 'unauthenticated' ? 'flex-1 space-x-2' : ''
+                        }`}
                       >
-                        {cartLoading?.id === item?.id && (
-                          <i className="px-3 fas fa-hourglass fa-spin"></i>
-                        )}
-                        {cartLoading?.id !== item?.id && 'Inquire'}
-                      </PrimaryButton>
-                      {console.log(cartLoading, '<<<isInquiryClicked')}
+                        <PrimaryButton
+                          id={item?.id}
+                          key={item?.id}
+                          disabled={isInquiryClicked}
+                          size="sm"
+                          onClick={async () => {
+                            setIsInquiryClicked(true)
+                            setCartLoading((previouse) => ({
+                              ...previouse,
+                              id: item.id,
+                            }))
+                            inquiryItem(item.slug)
+                          }}
+                        >
+                          {showModal === true &&
+                          cartLoading?.id === item?.id ? (
+                            <i className="px-3 fas fa-hourglass fa-spin"></i>
+                          ) : (
+                            'Inquire'
+                          )}
+                        </PrimaryButton>
+                        {status === 'unauthenticated' ? (
+                          <PrimaryButton
+                            id={item?.id}
+                            key={item?.id}
+                            disabled={isInquiryClicked}
+                            size="sm"
+                            onClick={async () => {
+                              setIsDetailClicked(true)
+                              setCartLoadingDetail((previouse) => ({
+                                ...previouse,
+                                id: item.id,
+                                slug: item.slug,
+                              }))
+                              detailItem(item.slug)
+                            }}
+                          >
+                            {showModalDetail === true &&
+                            cartLoadingDetail?.id === item?.id ? (
+                              <i className="px-3 fas fa-hourglass fa-spin"></i>
+                            ) : (
+                              'Detail'
+                            )}
+                          </PrimaryButton>
+                        ) : null}
+                      </div>
                     </td>
                   </tr>
                 )
@@ -122,6 +161,12 @@ export default function TableComponent(props) {
         setPage={props.setPage}
       />
       {showModal ? <NeedLoginModal setShowModal={setShowModal} /> : null}
+      {showModalDetail ? (
+        <DetailProdutModal
+          setShowModal={setShowModalDetail}
+          item={cartLoadingDetail?.slug}
+        />
+      ) : null}
     </>
   )
 }

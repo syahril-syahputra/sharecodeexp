@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { AdminUrl } from '@/route/route-url'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import { Router } from 'next/router'
+import { signOut } from 'next-auth/react'
 import { getSession } from 'next-auth/react'
 import ImageLogo from '@/components/ImageLogo/ImageLogo'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
@@ -35,7 +36,6 @@ export default function DetailProduct({ session }) {
   const [data, setData] = useState(
     { date: new Date().getTime(), delay: 60000, is_completed: false } //10 seconds
   )
-  console.log(data, '<<<data')
   const wantedDelay = 60000
   useEffect(() => {
     const item_value = JSON.parse(sessionStorage.getItem('timer'))

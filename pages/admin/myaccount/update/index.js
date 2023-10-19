@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import Link from 'next/link'
 import axios from 'lib/axios'
 import * as Yup from 'yup'
@@ -7,8 +7,6 @@ import { getSession } from 'next-auth/react'
 import GlobalContext from '@/store/global-context'
 import { Tabs } from 'flowbite-react'
 import { UserIcon, LockClosedIcon } from '@heroicons/react/24/outline'
-
-// layout for page
 import Admin from 'layouts/Admin.js'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
@@ -20,6 +18,7 @@ import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
 import { useRouter } from 'next/router'
 import TextInputValidate from '@/components/Interface/Form/TextInputValidation'
+import { signOut } from 'next-auth/react'
 
 //data
 export default function EditMyAccount({ session, data }) {
@@ -38,6 +37,10 @@ export default function EditMyAccount({ session, data }) {
     return /^[a-zA-Z0-9._%+-]+@(?!gmail.com)(?!yahoo.com)(?!hotmail.com)(?!yahoo.co.id)(?!aol.com)(?!live.com)(?!outlook.com)(?!inbox.com)(?!icloud.com)(?!mail.com)(?!gmx.com)(?!yandex.com)[a-zA-Z0-9_-]+.[a-zA-Z0-9-.]{2,61}$/gm.test(
       email
     )
+  }
+
+  const logOutFunc = () => {
+    signOut({ callbackUrl: `${window.location.origin}` })
   }
 
   const validationSchemaProvile = Yup.object({
@@ -129,10 +132,11 @@ export default function EditMyAccount({ session, data }) {
         let result = response.data.data
         loadUsername(session.accessToken)
         toast.success(
-          'Your account have been updated successfully.',
+          'Your account have been updated successfully, and will direct to front page',
           toastOptions
         )
         setIsLoadingPassword(false)
+        logOutFunc()
       })
       .catch((error) => {
         toast.warning('Something went wrong.', toastOptions)

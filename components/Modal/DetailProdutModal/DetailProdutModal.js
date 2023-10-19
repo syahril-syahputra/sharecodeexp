@@ -4,17 +4,17 @@ import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
 
-export default function NeedLogin(props) {
+export default function DetailProdutModal(props) {
   const router = useRouter()
 
   return (
     <BaseModalMedium
-      title="Login Required"
+      title="Detail Page Required"
       onClick={() => props.setShowModal(false)}
       body={
         <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-          To inquire this product you should login, do you want to{' '}
-          <span className="text-blueGray-700 font-bold">login</span>?
+          To see more of this product you should go to detail page, do you want
+          to <span className="text-blueGray-700 font-bold">detail page</span>?
         </p>
       }
       action={
@@ -29,9 +29,9 @@ export default function NeedLogin(props) {
           <PrimaryButton
             className="uppercase font-bold"
             isLoading={props.isLoading}
-            onClick={() => router.push('/auth/login')}
+            onClick={() => router.push(`/product/detail/${props.item}`)}
           >
-            Yes, Login
+            Yes, go to detail
           </PrimaryButton>
         </>
       }

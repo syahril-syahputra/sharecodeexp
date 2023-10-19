@@ -1,12 +1,9 @@
 import { getSession } from 'next-auth/react'
 
-export default function Dashboard({ session }) {
-  console.log(session, '<<<session')
-}
+export default function Dashboard({ session }) {}
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
-  console.log(session, '<<<<sessionDashboard')
   if (!session) {
     return {
       redirect: {

@@ -91,7 +91,7 @@ export default function DetailUploadedExcel({ session, data }) {
       }
       window.location.href = process.env.NEXT_PUBLIC_DIR + data.path_dirty_file
     } catch (error) {
-      console.log(error)
+      //   console.log(error)
       toast.error(error, toastOptions)
     } finally {
       setisDetailLoading(false)
