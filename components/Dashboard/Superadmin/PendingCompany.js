@@ -1,42 +1,35 @@
-import React from "react";
-import Link from "next/link";
+import React from 'react'
+import Link from 'next/link'
 
 // components
-import BaseTable from "@/components/Interface/Table/BaseTable";
-import HeaderTable from "@/components/Interface/Table/HeaderTable";
-import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
-import SecondaryButton from "@/components/Interface/Buttons/SecondaryButton";
-import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
-import NoData from "@/components/Interface/Table/NoData";
+import BaseTable from '@/components/Interface/Table/BaseTable'
+import HeaderTable from '@/components/Interface/Table/HeaderTable'
+import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
+import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
+import NoData from '@/components/Interface/Table/NoData'
 
 export default function PendingCompany(props) {
-  const data = props.data? props.data.slice(0,5) : []
-  
+  const data = props.data ? props.data.slice(0, 5) : []
+
   return (
-    <PrimaryWrapper>      
+    <PrimaryWrapper>
       <HeaderTable
         title="Pending Companies Registry"
         action={
           <Link href="/admin/superadmin/registry/pendingcompany">
-            <PrimaryButton
-              size="sm">
-              See all
-            </PrimaryButton>
+            <PrimaryButton size="sm">See all</PrimaryButton>
           </Link>
         }
       />
-      <BaseTable  
+      <BaseTable
         isBusy={props.isLoading}
         header={
-            <>
-              <th className="px-6 py-3 text-left">
-                Company Name
-              </th>
-              <th className="px-6 py-3 text-left">
-                Country
-              </th>
-              <th className="px-6 py-3 text-right min-w-140-px">Act.</th>
-            </>
+          <>
+            <th className="px-6 py-3 text-left">Company Name</th>
+            <th className="px-6 py-3 text-left">Country</th>
+            <th className="px-6 py-3 text-right min-w-140-px">Action</th>
+          </>
         }
         tableData={
           <>
@@ -46,23 +39,21 @@ export default function PendingCompany(props) {
                   <th className="px-6 align-middle p-2 text-left">
                     {item.name}
                   </th>
-                  <td className="px-6 align-middle p-2">
-                    {item.country}
-                  </td>
+                  <td className="px-6 align-middle p-2">{item.country}</td>
                   <td className="px-6 align-middle p-2 text-right">
-                    <Link href={`/admin/superadmin/registry/company/${item.id}`}>                      
+                    <Link
+                      href={`/admin/superadmin/registry/company/${item.id}`}
+                    >
                       <SecondaryButton size="sm">Review Docs</SecondaryButton>
                     </Link>
                   </td>
                 </tr>
               )
             })}
-            {data.length === 0 &&
-                <NoData colSpan={3}/>
-            }
+            {data.length === 0 && <NoData colSpan={3} />}
           </>
-        }                
+        }
       />
     </PrimaryWrapper>
-  );
+  )
 }

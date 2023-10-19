@@ -1,24 +1,24 @@
-import React, {useState, useEffect} from 'react';
-import {getSession} from 'next-auth/react';
-import axios from '@/lib/axios';
-import {toast} from 'react-toastify';
-import {toastOptions} from '@/lib/toastOptions';
+import React, { useState, useEffect } from 'react'
+import { getSession } from 'next-auth/react'
+import axios from '@/lib/axios'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
 
-import Link from 'next/link';
+import Link from 'next/link'
 
 // superadmin
-import PendingCompany from '@/components/Dashboard/Superadmin/PendingCompany';
-import NewInquiries from '@/components/Dashboard/Superadmin/NewInquiries';
-import StatusUpdateOngoingOrder from '@/components/Dashboard/Superadmin/StatusUpdateOngoingOrder';
-import PendingShipment from '@/components/Dashboard/Superadmin/PendingShipment';
-import PendingPayment from '@/components/Dashboard/Superadmin/PendingPayment';
-import MemberStatistic from '@/components/Dashboard/Superadmin/MemberStatistic';
+import PendingCompany from '@/components/Dashboard/Superadmin/PendingCompany'
+import NewInquiries from '@/components/Dashboard/Superadmin/NewInquiries'
+import StatusUpdateOngoingOrder from '@/components/Dashboard/Superadmin/StatusUpdateOngoingOrder'
+import PendingShipment from '@/components/Dashboard/Superadmin/PendingShipment'
+import PendingPayment from '@/components/Dashboard/Superadmin/PendingPayment'
+import MemberStatistic from '@/components/Dashboard/Superadmin/MemberStatistic'
 
 // layout for page
-import Admin from 'layouts/Admin.js';
-import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper';
+import Admin from 'layouts/Admin.js'
+import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 
-function ComponentCardAdminDashboard({dataName, name, url}) {
+function ComponentCardAdminDashboard({ dataName, name, url }) {
   return (
     <PrimaryWrapper className="border border-blue-500">
       <div className="p-4 mb-auto">
@@ -39,12 +39,12 @@ function ComponentCardAdminDashboard({dataName, name, url}) {
         </div>
       </Link>
     </PrimaryWrapper>
-  );
+  )
 }
 
-export default function SuperadminDashboard({session, message}) {
-  const {status_id} = session?.user?.userDetail;
-  const [isLoading, setIsLoading] = useState(true);
+export default function SuperadminDashboard({ session, message }) {
+  const { status_id } = session?.user?.userDetail
+  const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({
     pending_companies: 0,
     pending_product: 0,
@@ -56,10 +56,10 @@ export default function SuperadminDashboard({session, message}) {
       pending_shipment: 0,
       release_payment: 0,
     },
-  });
+  })
   useEffect(() => {
     if (!!message) {
-      toast.warning(message, toastOptions);
+      toast.warning(message, toastOptions)
     }
     async function fetchData() {
       const response = await axios
@@ -69,19 +69,19 @@ export default function SuperadminDashboard({session, message}) {
           },
         })
         .then((response) => {
-          let result = response.data.data;
-          setData(result);
+          let result = response.data.data
+          setData(result)
         })
         .catch((error) => {
-          setData({});
-          toast.error(error.data.message, toastOptions);
+          setData({})
+          toast.error(error.data.message, toastOptions)
         })
         .finally(() => {
-          setIsLoading(false);
-        });
+          setIsLoading(false)
+        })
     }
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
   const componentDashboardCard = () => {
     switch (status_id) {
@@ -92,7 +92,7 @@ export default function SuperadminDashboard({session, message}) {
             url={'/admin/superadmin/registry/pendingcompany'}
             name={'Pending Company'}
           />
-        );
+        )
       case '4':
         return (
           <ComponentCardAdminDashboard
@@ -100,7 +100,7 @@ export default function SuperadminDashboard({session, message}) {
             url={'/admin/superadmin/product/pending'}
             name={'Pending Product'}
           />
-        );
+        )
       case '5':
         return (
           <>
@@ -117,7 +117,7 @@ export default function SuperadminDashboard({session, message}) {
               name={'Approve / Reject Payment'}
             />
           </>
-        );
+        )
       case '6':
         return (
           <>
@@ -136,7 +136,7 @@ export default function SuperadminDashboard({session, message}) {
               name={'Release Payment'}
             />
           </>
-        );
+        )
       default:
         return (
           <>
@@ -170,16 +170,21 @@ export default function SuperadminDashboard({session, message}) {
               name={'Pending Shipment'}
             />
             <ComponentCardAdminDashboard
-              dataName={data.order_process_two.release_payment}
+              dataName={data.order_process_two.release_payment || 0}
               url={
                 '/admin/superadmin/orders/allorders?orderStatus=invoice-uploaded'
               }
               name={'Release Payment'}
             />
+            <ComponentCardAdminDashboard
+              dataName={data.uploaded_additional_documents || 0}
+              url={'/admin/superadmin/registry/uploadedcompany'}
+              name={'Additional Document Need to Review'}
+            />
           </>
-        );
+        )
     }
-  };
+  }
 
   return (
     <>
@@ -192,16 +197,16 @@ export default function SuperadminDashboard({session, message}) {
         {componentDashboardCard()}
       </div>
     </>
-  );
+  )
 }
 
-SuperadminDashboard.layout = Admin;
+SuperadminDashboard.layout = Admin
 
 export async function getServerSideProps(context) {
-  const session = await getSession(context);
-  let redirectedMessage = '';
+  const session = await getSession(context)
+  let redirectedMessage = ''
   if (!!context.query.redirect) {
-    redirectedMessage = 'Superadmin cannot inquire any component!';
+    redirectedMessage = 'Superadmin cannot inquire any component!'
   }
 
   return {
@@ -209,5 +214,5 @@ export async function getServerSideProps(context) {
       session,
       message: redirectedMessage,
     },
-  };
+  }
 }

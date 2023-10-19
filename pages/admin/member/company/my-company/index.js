@@ -191,6 +191,15 @@ export default function MyCompany({ session }) {
             </>
           }
         ></PageHeader>
+        {companyData?.additional_documents === 'uploaded' &&
+          companyData.is_confirmed === 'pending' && (
+            <>
+              <InfoNotification
+                message="Review Needed"
+                detail={'Additional Document are Uploaded'}
+              ></InfoNotification>
+            </>
+          )}
         {companyData?.reason && companyData.is_confirmed == 'rejected' && (
           <>
             <DangerNotification

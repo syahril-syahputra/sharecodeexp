@@ -17,6 +17,7 @@ import { FileInput, Spinner } from 'flowbite-react'
 import ExcelComponent from '@/components/Modal/Component/ExcelComponent'
 import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses'
 import Link from 'next/link'
+import ExcelRequestUpdate from '@/components/Modal/Component/ExcelRequestUpdate'
 
 DetailUploadedExcel.layout = Admin
 export default function DetailUploadedExcel({ session, data }) {
@@ -26,6 +27,8 @@ export default function DetailUploadedExcel({ session, data }) {
   const [file, setFile] = useState(null)
   const [isOpenConfirmDelete, setisOpenConfirmDelete] = useState(false)
   const [isDeleting, setisDeleting] = useState(false)
+  const [RequestModal, setRequestModal] = useState(false)
+  const [isLoadingRequest, setisLoadingRequest] = useState(false)
   const handleFileChange = (e) => {
     setFile(e)
   }
@@ -146,6 +149,32 @@ export default function DetailUploadedExcel({ session, data }) {
       setisDetailLoading(false)
     }
   }
+  const requestHandler = async (value) => {
+    setisLoadingRequest(true)
+    try {
+      await axios.post(
+        `/admin/product/excel/update-request`,
+        {
+          id: data.id,
+          company_id: data.company.id,
+          update_request: value,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      toast.success('Send Request success', toastOptions)
+      setRequestModal(false)
+      router.replace(router.asPath)
+    } catch (error) {
+      toast.error(error.data.message, toastOptions)
+    } finally {
+      setisDetailLoading(false)
+      setisLoadingRequest(false)
+    }
+  }
 
   return (
     <>
@@ -155,6 +184,14 @@ export default function DetailUploadedExcel({ session, data }) {
         fileName={data.name}
         deleteHandler={deleteHandler}
       />
+      {RequestModal && (
+        <ExcelRequestUpdate
+          setShowModal={setRequestModal}
+          isLoading={isLoadingRequest}
+          // itemName={component.ManufacturerNumber}
+          acceptModal={(value) => requestHandler(value)}
+        />
+      )}
 
       <PrimaryWrapper>
         <PageHeader
@@ -165,9 +202,12 @@ export default function DetailUploadedExcel({ session, data }) {
           }
           rightTop={
             <div className="flex justify-around space-x-4">
-              <PrimaryButton onClick={() => downloadHandler()}>
-                Download
+              <PrimaryButton onClick={() => setRequestModal(true)}>
+                Request Update
               </PrimaryButton>
+              <SuccessButton onClick={() => downloadHandler()}>
+                Download
+              </SuccessButton>
               <DangerButton onClick={() => setisOpenConfirmDelete(true)}>
                 Delete
               </DangerButton>
@@ -215,14 +255,21 @@ export default function DetailUploadedExcel({ session, data }) {
                   <CompanyStatusesIcon status={data.company?.is_confirmed} />
                 </td>
               </tr>
-              <tr className="text-black hover:bg-slate-100">
-                <th scope="col" className="px-6 py-3">
+              <tr className="text-black hover:bg-slate-100 align-text-top">
+                <th scope="col" className="px-6 py-3 whitespace-nowrap">
                   Excel Status
                 </th>
                 <td scope="row" className="text-sm px-6 py-4">
                   :
                 </td>
-                <td className="text-sm px-2 py-4">{data.status}</td>
+                <td className="text-sm px-2 py-4">
+                  {data.status}
+                  {data.status_id === '7' && (
+                    <div className="italic py-2">
+                      {data.requested_for_update}
+                    </div>
+                  )}
+                </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
                 <th scope="col" className="px-6 py-3">
@@ -236,7 +283,7 @@ export default function DetailUploadedExcel({ session, data }) {
                 </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-6 py-3 whitespace-nowrap">
                   Last Updated at
                 </th>
                 <td scope="row" className="text-sm px-6 py-4">
@@ -305,7 +352,6 @@ async function fetchData(context, accessToken) {
         },
       }
     )
-
     return data
   } catch (error) {
     console.error(error)
@@ -315,7 +361,6 @@ async function fetchData(context, accessToken) {
 export async function getServerSideProps(context) {
   const session = await getSession(context)
   const result = await fetchData(context, session.accessToken)
-
   return {
     props: {
       session,

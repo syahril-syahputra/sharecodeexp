@@ -318,6 +318,15 @@ export default function CompanyDetail({ session, routeParam }) {
           ></DangerNotification>
         </>
       )}
+      {companyData?.additional_documents === 'uploaded' &&
+        companyData.is_confirmed === 'pending' && (
+          <>
+            <InfoNotification
+              message="Review Needed"
+              detail={'Additional Document are Uploaded'}
+            ></InfoNotification>
+          </>
+        )}
       {companyData?.reason && companyData.is_confirmed == 'pending' && (
         <>
           <InfoNotification
