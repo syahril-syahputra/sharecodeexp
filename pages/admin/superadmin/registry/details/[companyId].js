@@ -370,12 +370,12 @@ export default function CompanyDetail({ session, routeParam }) {
               <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{' '}
               {companyData.country}, {companyData.address}
             </div>
-            <Tooltip tooltipText={'Country and Address 2'}>
-              <div className="text-sm leading-normal mt-2 text-blueGray-400 font-bold uppercase">
-                <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{' '}
-                {companyData.country}, {companyData.address2},
-              </div>
-            </Tooltip>
+            {/* <Tooltip tooltipText={'Country and Address 2'}> */}
+            <div className="text-sm leading-normal mt-2 text-blueGray-400 font-bold uppercase">
+              <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{' '}
+              {companyData.country}, {companyData.address2 || '-'}
+            </div>
+            {/* </Tooltip> */}
             <div className="text-sm leading-normal mt-2 mb-2 text-blueGray-400 font-bold uppercase">
               <i className="fas fa-phone mr-2 text-lg text-blueGray-400"></i>{' '}
               {companyData.phone}
