@@ -1,48 +1,48 @@
-import React, {useState, useEffect} from 'react';
-import axios from 'lib/axios';
-import {getSession} from 'next-auth/react';
-import Link from 'next/link';
+import React, { useState, useEffect } from 'react'
+import axios from 'lib/axios'
+import { getSession } from 'next-auth/react'
+import Link from 'next/link'
 
 // layout for page
-import Admin from 'layouts/Admin.js';
+import Admin from 'layouts/Admin.js'
 
 //toast
-import {toast} from 'react-toastify';
-import {toastOptions} from '@/lib/toastOptions';
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
 
 // components
-import SendEmailModal from '@/components/Modal/Registry/SendEmail';
-import UpdateImageModal from '@/components/Modal/Registry/UpdateImage';
-import AcceptMembership from '@/components/Modal/Registry/AcceptMembership';
-import RejectMembership from '@/components/Modal/Registry/RejectMembership';
-import PendingMembership from '@/components/Modal/Registry/PendingMembership';
-import PageHeader from '@/components/Interface/Page/PageHeader';
-import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton';
-import LoadingState from '@/components/Interface/Loader/LoadingState';
-import WarningButton from '@/components/Interface/Buttons/WarningButton';
-import LightButton from '@/components/Interface/Buttons/LightButton';
-import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton';
-import DangerButton from '@/components/Interface/Buttons/DangerButton';
-import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper';
+import SendEmailModal from '@/components/Modal/Registry/SendEmail'
+import UpdateImageModal from '@/components/Modal/Registry/UpdateImage'
+import AcceptMembership from '@/components/Modal/Registry/AcceptMembership'
+import RejectMembership from '@/components/Modal/Registry/RejectMembership'
+import PendingMembership from '@/components/Modal/Registry/PendingMembership'
+import PageHeader from '@/components/Interface/Page/PageHeader'
+import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
+import LoadingState from '@/components/Interface/Loader/LoadingState'
+import WarningButton from '@/components/Interface/Buttons/WarningButton'
+import LightButton from '@/components/Interface/Buttons/LightButton'
+import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import DangerButton from '@/components/Interface/Buttons/DangerButton'
+import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import {
   CompanyStatusesIcon,
   CompanyStatusesText,
-} from '@/components/Shared/Company/Statuses';
-import {useRouter} from 'next/router';
-import RemoveCompany from '@/components/Modal/Registry/RemoveCompany';
-import InfoNotification from '@/components/Interface/Notification/InfoNotification';
-import DangerNotification from '@/components/Interface/Notification/DangerNotification';
-import {useContext} from 'react';
-import GlobalContext from '@/store/global-context';
+} from '@/components/Shared/Company/Statuses'
+import { useRouter } from 'next/router'
+import RemoveCompany from '@/components/Modal/Registry/RemoveCompany'
+import InfoNotification from '@/components/Interface/Notification/InfoNotification'
+import DangerNotification from '@/components/Interface/Notification/DangerNotification'
+import { useContext } from 'react'
+import GlobalContext from '@/store/global-context'
 
-export default function CompanyDetail({session, routeParam}) {
-  const publicDir = process.env.NEXT_PUBLIC_DIR;
-  const context = useContext(GlobalContext);
+export default function CompanyDetail({ session, routeParam }) {
+  const publicDir = process.env.NEXT_PUBLIC_DIR
+  const context = useContext(GlobalContext)
   //data search
-  const [isLoading, setIsLoading] = useState(false);
-  const [companyData, setCompanyData] = useState({});
+  const [isLoading, setIsLoading] = useState(false)
+  const [companyData, setCompanyData] = useState({})
   const getData = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
     const response = await axios
       .get(`admin/companies?id=${routeParam.companyId}`, {
         headers: {
@@ -50,32 +50,32 @@ export default function CompanyDetail({session, routeParam}) {
         },
       })
       .then((response) => {
-        let result = response.data.data;
-        setCompanyData(result);
+        let result = response.data.data
+        setCompanyData(result)
       })
       .catch((error) => {
-        toast.error('Something went wrong. Company not found.', toastOptions);
+        toast.error('Something went wrong. Company not found.', toastOptions)
       })
       .finally(() => {
-        setIsLoading(false);
-      });
-  };
+        setIsLoading(false)
+      })
+  }
   useEffect(() => {
-    getData();
-  }, []);
+    getData()
+  }, [])
 
   const updateState = () => {
-    context.loadAdminSidebarCounter(session.accessToken);
-  };
+    context.loadAdminSidebarCounter(session.accessToken)
+  }
 
   useEffect(() => {
-    updateState();
-  }, [session]);
+    updateState()
+  }, [session])
 
-  const [showAcceptModal, setShowAcceptModal] = useState(false);
+  const [showAcceptModal, setShowAcceptModal] = useState(false)
   const handleAcceptCompany = async () => {
-    setShowAcceptModal(false);
-    setIsLoading(true);
+    setShowAcceptModal(false)
+    setIsLoading(true)
     const request = await axios
       .post(
         `admin/companies/${companyData.id}/update`,
@@ -87,24 +87,24 @@ export default function CompanyDetail({session, routeParam}) {
         }
       )
       .then(() => {
-        toast.success('Company has been accepted successfully.', toastOptions);
+        toast.success('Company has been accepted successfully.', toastOptions)
       })
       .catch((error) => {
         toast.error(
           'Something went wrong. Cannot accept company.',
           toastOptions
-        );
+        )
       })
       .finally(() => {
-        getData();
-        updateState();
-      });
-  };
+        getData()
+        updateState()
+      })
+  }
 
-  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false)
   const handleRejectCompany = async (text) => {
-    setShowRejectModal(false);
-    setIsLoading(true);
+    setShowRejectModal(false)
+    setIsLoading(true)
     const request = await axios
       .post(
         `admin/companies/${companyData.id}/reject`,
@@ -119,24 +119,24 @@ export default function CompanyDetail({session, routeParam}) {
         }
       )
       .then(() => {
-        toast.success('Company has been rejected successfully.', toastOptions);
+        toast.success('Company has been rejected successfully.', toastOptions)
       })
       .catch((error) => {
         toast.error(
           'Something went wrong. Cannot reject company status.',
           toastOptions
-        );
+        )
       })
       .finally(() => {
-        getData();
-        updateState();
-      });
-  };
+        getData()
+        updateState()
+      })
+  }
 
-  const [showPendingModal, setShowPendingModal] = useState(false);
+  const [showPendingModal, setShowPendingModal] = useState(false)
   const handlePendingCompany = async (text) => {
-    setShowPendingModal(false);
-    setIsLoading(true);
+    setShowPendingModal(false)
+    setIsLoading(true)
     const request = await axios
       .post(
         `admin/companies/${companyData.id}/pending`,
@@ -154,23 +154,23 @@ export default function CompanyDetail({session, routeParam}) {
         toast.success(
           'The company status has been changed into pending.',
           toastOptions
-        );
+        )
       })
       .catch((error) => {
         toast.error(
           'Something went wrong. Cannot change company status into pending.',
           toastOptions
-        );
+        )
       })
       .finally(() => {
-        getData();
-        updateState();
-      });
-  };
+        getData()
+        updateState()
+      })
+  }
 
-  const [showSendEmailModal, setShowSendEmailModal] = useState(false);
+  const [showSendEmailModal, setShowSendEmailModal] = useState(false)
   const handleSendEmail = async (messages) => {
-    setIsLoading(true);
+    setIsLoading(true)
     const request = await axios
       .post(
         `/admin/companies/${companyData.id}/RequestAdditional`,
@@ -185,27 +185,27 @@ export default function CompanyDetail({session, routeParam}) {
       )
       .then((response) => {
         // toast.success(response.data.message || "Email sent successfully", toastOptions)
-        toast.success('Request sent.', toastOptions);
-        setShowSendEmailModal(false);
+        toast.success('Request sent.', toastOptions)
+        setShowSendEmailModal(false)
       })
       .catch((error) => {
         toast.error(
           'Something went wrong. Cannot request additional document.',
           toastOptions
-        );
+        )
       })
       .finally(() => {
-        getData();
-        setIsLoading(false);
-      });
-  };
+        getData()
+        setIsLoading(false)
+      })
+  }
 
-  const [showUpdateImageModal, setShowUpdateImageModal] = useState();
+  const [showUpdateImageModal, setShowUpdateImageModal] = useState()
   const handleUpdateImage = async (image) => {
-    setIsLoading(true);
-    let formData = new FormData();
-    formData.append('company_img', image);
-    formData.append('id', companyData.id);
+    setIsLoading(true)
+    let formData = new FormData()
+    formData.append('company_img', image)
+    formData.append('id', companyData.id)
     const request = await axios
       .post(`admin/companies/${companyData.id}/updateImage`, formData, {
         headers: {
@@ -213,24 +213,24 @@ export default function CompanyDetail({session, routeParam}) {
         },
       })
       .then(() => {
-        toast.success('Company logo has been updated.', toastOptions);
-        setShowUpdateImageModal(false);
+        toast.success('Company logo has been updated.', toastOptions)
+        setShowUpdateImageModal(false)
       })
       .catch((error) => {
         toast.error(
           "Something went wrong. Cannot update comapany's logo.",
           toastOptions
-        );
+        )
       })
       .finally(() => {
-        getData();
-      });
-  };
+        getData()
+      })
+  }
 
-  const router = useRouter();
-  const [showRemoveCompanyModal, setShowRemoveCompanyModal] = useState();
+  const router = useRouter()
+  const [showRemoveCompanyModal, setShowRemoveCompanyModal] = useState()
   const handleRemoveCompany = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
     const request = await axios
       .delete(`/admin/companies/${companyData.id}/delete`, {
         headers: {
@@ -238,19 +238,19 @@ export default function CompanyDetail({session, routeParam}) {
         },
       })
       .then(() => {
-        toast.success('The company has been deleted.', toastOptions);
-        router.push(`/admin/superadmin/registry/approvedcompany`);
+        toast.success('The company has been deleted.', toastOptions)
+        router.push(`/admin/superadmin/registry/approvedcompany`)
       })
       .catch((error) => {
         toast.error(
           'Something went wrong. Cannot delete the company.',
           toastOptions
-        );
+        )
       })
       .finally(() => {
-        getData();
-      });
-  };
+        getData()
+      })
+  }
 
   return (
     <PrimaryWrapper>
@@ -317,6 +317,15 @@ export default function CompanyDetail({session, routeParam}) {
           ></DangerNotification>
         </>
       )}
+      {companyData?.additional_documents === 'uploaded' &&
+        companyData.is_confirmed === 'pending' && (
+          <>
+            <InfoNotification
+              message="Review Needed"
+              detail={'Additional Document are Uploaded'}
+            ></InfoNotification>
+          </>
+        )}
       {companyData?.reason && companyData.is_confirmed == 'pending' && (
         <>
           <InfoNotification
@@ -499,17 +508,17 @@ export default function CompanyDetail({session, routeParam}) {
         />
       ) : null}
     </PrimaryWrapper>
-  );
+  )
 }
 
-CompanyDetail.layout = Admin;
+CompanyDetail.layout = Admin
 
 export async function getServerSideProps(context) {
-  const session = await getSession(context);
+  const session = await getSession(context)
   return {
     props: {
       session,
       routeParam: context.query,
     },
-  };
+  }
 }

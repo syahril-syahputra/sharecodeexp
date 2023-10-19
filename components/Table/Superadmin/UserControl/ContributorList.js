@@ -1,16 +1,16 @@
-import React, {useState} from 'react';
-import Link from 'next/link';
+import React, { useState } from 'react'
+import Link from 'next/link'
 
 // components
-import Pagination from '@/components/Shared/Component/Pagination';
-import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper';
-import HeaderTable from '@/components/Interface/Table/HeaderTable';
-import BaseTable from '@/components/Interface/Table/BaseTable';
-import NoData from '@/components/Interface/Table/NoData';
-import MetaData from '@/components/Interface/Table/MetaData';
-import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton';
-import WarningButton from '@/components/Interface/Buttons/WarningButton';
-import DangerButton from '@/components/Interface/Buttons/DangerButton';
+import Pagination from '@/components/Shared/Component/Pagination'
+import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
+import HeaderTable from '@/components/Interface/Table/HeaderTable'
+import BaseTable from '@/components/Interface/Table/BaseTable'
+import NoData from '@/components/Interface/Table/NoData'
+import MetaData from '@/components/Interface/Table/MetaData'
+import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
+import WarningButton from '@/components/Interface/Buttons/WarningButton'
+import DangerButton from '@/components/Interface/Buttons/DangerButton'
 
 export default function VendorList(props) {
   return (
@@ -40,7 +40,7 @@ export default function VendorList(props) {
               </th>
               {props.enableAction && (
                 <th scope="col" className="px-6 py-3 text-right">
-                  Act.
+                  Action
                 </th>
               )}
             </>
@@ -80,7 +80,7 @@ export default function VendorList(props) {
                       </td>
                     )}
                   </tr>
-                );
+                )
               })}
               {!props.isLoading && props.metaData.total === 0 && (
                 <NoData colSpan={5} />
@@ -98,5 +98,5 @@ export default function VendorList(props) {
         setPage={props.setPage}
       />
     </>
-  );
+  )
 }

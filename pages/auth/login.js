@@ -1,37 +1,37 @@
-import React, {useState} from 'react';
-import * as Yup from 'yup';
-import Link from 'next/link';
-import {signIn, useSession} from 'next-auth/react';
-import {PageSEO} from '@/components/Utils/SEO';
-import siteMetadata from '@/utils/siteMetadata';
-import {useRouter} from 'next/router';
-import {Form, Formik} from 'formik';
+import React, { useState } from 'react'
+import * as Yup from 'yup'
+import Link from 'next/link'
+import { signIn, useSession } from 'next-auth/react'
+import { PageSEO } from '@/components/Utils/SEO'
+import siteMetadata from '@/utils/siteMetadata'
+import { useRouter } from 'next/router'
+import { Form, Formik } from 'formik'
 
 //components
-import ImageLogo from '@/components/ImageLogo/ImageLogo';
-import IndexNavbar from 'components/Navbars/IndexNavbar.js';
-import Footer from 'components/Footers/Footer.js';
-import TextInput from '@/components/Interface/Form/TextInput';
-import TextInputValidate from '@/components/Interface/Form/TextInputValidation';
-import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton';
+import ImageLogo from '@/components/ImageLogo/ImageLogo'
+import IndexNavbar from 'components/Navbars/IndexNavbar.js'
+import Footer from 'components/Footers/Footer.js'
+import TextInput from '@/components/Interface/Form/TextInput'
+import TextInputValidate from '@/components/Interface/Form/TextInputValidation'
+import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 
 export default function Login() {
-  const router = useRouter();
-  const {status} = useSession();
+  const router = useRouter()
+  const { status } = useSession()
   if (status == 'authenticated') {
-    router.replace('/admin/dashboard');
+    router.replace('/admin/dashboard')
   }
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
   const [errMessage, setErrMessage] = useState({
     error: ' ',
     status: '',
-  });
+  })
 
   const initialValue = {
     email: '',
     password: '',
-  };
+  }
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -40,14 +40,14 @@ export default function Login() {
     password: Yup.string()
       .min(8, 'Password must have more than 8 characters')
       .required(`The password field is required`),
-  });
+  })
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [enteredEmail, setEnteredEmail] = useState('');
-  const [enteredPassword, setEnteredPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false)
+  const [enteredEmail, setEnteredEmail] = useState('')
+  const [enteredPassword, setEnteredPassword] = useState('')
   const handleSubmit = async (values) => {
-    setErrMessage({error: ' ', status: ''});
-    setIsLoading(true);
+    setErrMessage({ error: ' ', status: '' })
+    setIsLoading(true)
     const request = await signIn('credentials', {
       email: values.email,
       password: values.password,
@@ -55,14 +55,14 @@ export default function Login() {
     })
       .then((res) => {
         if (res?.error) {
-          setErrMessage(res);
-          setIsLoading(false);
+          setErrMessage(res)
+          setIsLoading(false)
         }
       })
       .catch((res) => {
-        console.log(res);
-      });
-  };
+        console.log(res)
+      })
+  }
 
   return (
     <>
@@ -80,7 +80,7 @@ export default function Login() {
                 onSubmit={handleSubmit}
                 validationSchema={validationSchema}
               >
-                {({values, errors, ...formikProps}) => {
+                {({ values, errors, ...formikProps }) => {
                   return (
                     <Form
                       className="space-y-4 md:space-y-6"
@@ -184,7 +184,7 @@ export default function Login() {
                         </p>
                       </div>
                     </Form>
-                  );
+                  )
                 }}
               </Formik>
             </div>
@@ -193,5 +193,5 @@ export default function Login() {
       </section>
       <Footer />
     </>
-  );
+  )
 }
