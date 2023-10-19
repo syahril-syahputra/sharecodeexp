@@ -42,6 +42,7 @@ export default function CompanyDetail({ session, routeParam }) {
   //data search
   const [isLoading, setIsLoading] = useState(false)
   const [companyData, setCompanyData] = useState({})
+  console.log(companyData, '<<<comandedata')
   const getData = async () => {
     setIsLoading(true)
     const response = await axios
@@ -66,7 +67,7 @@ export default function CompanyDetail({ session, routeParam }) {
   }, [])
 
   const updateState = () => {
-    context.loadAdminSidebarCounter(session.accessToken)
+    context.loadAdminSidebarCounter(session?.accessToken)
   }
 
   useEffect(() => {
@@ -372,8 +373,16 @@ export default function CompanyDetail({ session, routeParam }) {
             </div>
             {/* <Tooltip tooltipText={'Country and Address 2'}> */}
             <div className="text-sm leading-normal mt-2 text-blueGray-400 font-bold uppercase">
-              <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{' '}
-              {companyData.country}, {companyData.address2 || '-'}
+              {companyData.address2 === '' ||
+              companyData.address2 === undefined ||
+              companyData.address2 === null ? (
+                ''
+              ) : (
+                <>
+                  <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{' '}
+                  `${companyData.country}, ${companyData.address2 || '-'}`
+                </>
+              )}
             </div>
             {/* </Tooltip> */}
             <div className="text-sm leading-normal mt-2 mb-2 text-blueGray-400 font-bold uppercase">
