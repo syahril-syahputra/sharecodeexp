@@ -256,14 +256,21 @@ export default function DetailUploadedExcel({ session, data }) {
                   <CompanyStatusesIcon status={data.company?.is_confirmed} />
                 </td>
               </tr>
-              <tr className="text-black hover:bg-slate-100">
-                <th scope="col" className="px-6 py-3">
+              <tr className="text-black hover:bg-slate-100 align-text-top">
+                <th scope="col" className="px-6 py-3 whitespace-nowrap">
                   Excel Status
                 </th>
                 <td scope="row" className="text-sm px-6 py-4">
                   :
                 </td>
-                <td className="text-sm px-2 py-4">{data.status}</td>
+                <td className="text-sm px-2 py-4">
+                  {data.status}
+                  {data.status_id === '7' && (
+                    <div className="italic py-2">
+                      {data.requested_for_update}
+                    </div>
+                  )}
+                </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
                 <th scope="col" className="px-6 py-3">
@@ -277,7 +284,7 @@ export default function DetailUploadedExcel({ session, data }) {
                 </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-6 py-3 whitespace-nowrap">
                   Last Updated at
                 </th>
                 <td scope="row" className="text-sm px-6 py-4">

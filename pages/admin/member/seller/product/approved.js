@@ -167,7 +167,6 @@ const fetchNotification = async (token) => {
 export async function getServerSideProps(context) {
   const session = await getSession(context)
   const data = await fetchNotification(session.accessToken)
-  console.log(data.data.products)
   return {
     props: {
       session,

@@ -11,10 +11,12 @@ import Admin from 'layouts/Admin.js'
 import ComponentStatus from '@/components/Shared/Component/Statuses'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
+import { toastOptions } from '@/lib/toastOptions'
 import DangerNotification from '@/components/Interface/Notification/DangerNotification'
 import LoadingState from '@/components/Interface/Loader/LoadingState'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
 import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
+import { toast } from 'react-toastify'
 
 export default function MyProduct({ session, routeParam }) {
   //data search
@@ -35,10 +37,7 @@ export default function MyProduct({ session, routeParam }) {
       })
       .catch((error) => {
         // console.log(error.response)
-        toast.success(
-          'Something went wrong. Cannot load component.',
-          toastOptions
-        )
+        toast.error(error.data.message, toastOptions)
       })
       .finally(() => {
         setIsLoading(false)
@@ -190,28 +189,6 @@ export default function MyProduct({ session, routeParam }) {
                   </td>
                   <td className="text-sm px-2 py-4">{data.packaging}</td>
                 </tr>
-                {/* <tr className="text-black hover:bg-slate-100">
-                                    <th scope="col" className="px-6 py-3">
-                                        Category
-                                    </th>
-                                    <td scope="row" className="text-sm px-6 py-4">
-                                        :
-                                    </td>
-                                    <td className="text-sm px-2 py-4">
-                                        {data.subcategory?.category?.name}
-                                    </td>
-                                </tr>
-                                <tr className="text-black hover:bg-slate-100">
-                                    <th scope="col" className="px-6 py-3">
-                                        Sub-Category
-                                    </th>
-                                    <td scope="row" className="text-sm px-6 py-4">
-                                        :
-                                    </td>
-                                    <td className="text-sm px-2 py-4">
-                                        {data.subcategory?.name}
-                                    </td>
-                                </tr> */}
                 <tr className="text-black hover:bg-slate-100">
                   <th scope="col" className="px-6 py-3">
                     Status

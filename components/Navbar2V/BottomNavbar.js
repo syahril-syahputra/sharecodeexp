@@ -8,7 +8,7 @@ import { useSession } from 'next-auth/react'
 import GlobalContext from '@/store/global-context'
 
 const BottomNavbar = (props) => {
-  console.log(props, '<<<props')
+  //   console.log(props, '<<<props')
   const session = useSession()
   const { username, loadUsername } = useContext(GlobalContext)
   useEffect(() => {

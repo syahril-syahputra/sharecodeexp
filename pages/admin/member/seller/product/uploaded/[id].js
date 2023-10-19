@@ -207,7 +207,6 @@ async function fetchData(context, accessToken) {
 export async function getServerSideProps(context) {
   const session = await getSession(context)
   const result = await fetchData(context, session.accessToken)
-  console.log(result)
   return {
     props: {
       session,
