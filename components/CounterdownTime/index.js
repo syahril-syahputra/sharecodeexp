@@ -2,12 +2,13 @@ import React from 'react'
 import DateTimeDisplay from '../DateTimeDisplay'
 import { useCountdown } from '@/hooks/useCountdown'
 
-const ExpiredNotice = () => {
-  return (
-    <span>
-      <span>Expired!!!</span>
-    </span>
-  )
+const ExpiredNotice = ({ setDialogState }) => {
+  if (typeof window !== 'undefined') {
+    if (localStorage.getItem('end_date')?.length > 0) {
+      localStorage.removeItem('end_date')
+      setDialogState(false)
+    }
+  }
 }
 
 const ShowCounter = ({ days, hours, minutes, seconds }) => {
@@ -19,19 +20,16 @@ const ShowCounter = ({ days, hours, minutes, seconds }) => {
         rel="noopener noreferrer"
         className="countdown-link"
       >
-        <DateTimeDisplay value={minutes} type={'Mins'} isDanger={false} />
-        <p>:</p>
-        <DateTimeDisplay value={seconds} type={'Seconds'} isDanger={false} />
+        <span>{`${minutes} Minutes: ${seconds} seconds`}</span>
       </a>
     </span>
   )
 }
 
-const CountdownTimer = ({ targetDate }) => {
+const CountdownTimer = ({ targetDate, setDialogState }) => {
   const [days, hours, minutes, seconds] = useCountdown(targetDate)
-
   if (days + hours + minutes + seconds <= 0) {
-    return <ExpiredNotice />
+    return <ExpiredNotice setDialogState={setDialogState} />
   } else {
     return (
       <ShowCounter
@@ -44,4 +42,4 @@ const CountdownTimer = ({ targetDate }) => {
   }
 }
 
-export { ShowCounter, ExpiredNotice }
+export { CountdownTimer }

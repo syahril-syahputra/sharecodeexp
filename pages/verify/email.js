@@ -5,11 +5,6 @@ import { PageSEO } from '@/components/Utils/SEO'
 import siteMetadata from '@/utils/siteMetadata'
 import IndexNavbar from 'components/Navbars/IndexNavbar.js'
 import Footer from '@/components/Footers/Footer'
-import LoadingState from '@/components/Interface/Loader/LoadingState'
-import Link from 'next/link'
-import { AdminUrl } from '@/route/route-url'
-import LightButton from '@/components/Interface/Buttons/LightButton'
-import { Router } from 'next/router'
 import { signOut } from 'next-auth/react'
 import { getSession } from 'next-auth/react'
 import ImageLogo from '@/components/ImageLogo/ImageLogo'
@@ -18,88 +13,29 @@ import LogoutModal from '@/components/Modal/Logout/Logout'
 import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
 import ResendEmailVerification from '@/components/Modal/ResendEmail'
-import InfoNotification from '@/components/Interface/Notification/InfoNotification'
 import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
-// import CountdownTimer from '@/components/CounterdownTime'
-import { ShowCounter, ExpiredNotice } from '@/components/CounterdownTime'
-import { useCountdown } from '@/hooks/useCountdown'
-import Countdown from 'react-countdown'
+import { CountdownTimer } from '@/components/CounterdownTime'
 
 export default function DetailProduct({ session }) {
+  let time = 1
+  const [loading, setLoading] = useState(true)
   const [logoutModal, setLogoutModal] = useState(false)
   const [resendModal, setResendModal] = useState(false)
   const [dialogState, setDialogState] = useState(false)
+  const isServer = typeof window === 'undefined'
+  let initialValue = time
   const [isSucces, setIsSucces] = useState(false)
-  const [counter, setCounter] = useState(0)
-  const [timerObject, setTimerObj] = useState({})
+  const THREE_DAYS_IN_MS = 1 * 1 * 2 * 60 * 1000
   const NOW_IN_MS = new Date().getTime()
-  const [data, setData] = useState(
-    { date: new Date().getTime(), delay: 60000, is_completed: false } //10 seconds
-  )
-  const wantedDelay = 60000
-  useEffect(() => {
-    const item_value = JSON.parse(sessionStorage.getItem('timer'))
-    setCounter(item_value)
-    setTimerObj({
-      minutes: item_value?.minutes,
-      seconds: item_value?.seconds,
-    })
-  }, [isSucces])
-  const minutes = parseInt(counter?.minutes || 0)
-  const seconds = parseInt(counter?.seconds || 0)
-  const THREE_DAYS_IN_MS = 1 * 1 * minutes * seconds * 1000
-  const dateTimeAfterThreeDays = THREE_DAYS_IN_MS + NOW_IN_MS
+  const dateTimeAfterThreeDays = NOW_IN_MS + THREE_DAYS_IN_MS
 
-  // const getLocalStorageValue = (s) => localStorage.getItem(s)
-  // const savedDate = getLocalStorageValue('end_date')
-  // useEffect(() => {
-  //   const savedDate = getLocalStorageValue('end_date')
-  //   console.log(savedDate, '<<<savedDate')
-  //   if (savedDate != null && !isNaN(savedDate)) {
-  //     const currentTime = Date.now()
-  //     const delta = parseInt(savedDate, 10) - currentTime
-  //     console.log(delta, parseInt(savedDate, 10), '<<<delta')
-  //     if (delta > wantedDelay) {
-  //       console.log(delta, '<<delt')
-  //       if (localStorage.getItem('end_date').length > 0)
-  //         localStorage.removeItem('end_date')
-  //     }
-  //   } else {
-  //     setData({ date: currentTime, delay: delta })
-  //   }
-  // }, [])
-
-  useEffect(() => {}, [])
-
-  const Completionist = () => <span>You are good to go!</span>
-
-  const renderer = ({ hours, minutes, seconds, completed }) => {
-    if (completed) {
-      return <Completionist />
-    } else {
-      return (
-        <span>
-          {hours}:{minutes}:{seconds}
-        </span>
-      )
-    }
+  if (typeof window !== 'undefined') {
+    time = parseInt(localStorage.getItem('end_date'), 10)
   }
 
-  const CounterDataFunc = () => {
-    return (
-      <Countdown
-        date={data.date + data.delay}
-        renderer={renderer}
-        onComplete={() => {
-          // if (localStorage.getItem('end_date') != null) {
-          //   localStorage.removeItem('end_date')
-          //   setData({ ...data, is_completed: true })
-          // }
-        }}
-      />
-    )
+  const countDownData = () => {
+    return <CountdownTimer setDialogState={setDialogState} targetDate={time} />
   }
-
   const handleResendEmail = async () => {
     await axios
       .post(
@@ -116,7 +52,13 @@ export default function DetailProduct({ session }) {
         setIsSucces(true)
         setDialogState(true)
         setResendModal(false)
-        // localStorage.setItem('end_date', JSON.stringify(data.date + data.delay))
+        setLoading(true)
+        if (localStorage.getItem('end_date') === null) {
+          localStorage.setItem(
+            'end_date',
+            JSON.stringify(dateTimeAfterThreeDays)
+          )
+        }
       })
       .catch((error) => {
         toast.error(`${error?.data?.message}`, toastOptions)
@@ -134,7 +76,7 @@ export default function DetailProduct({ session }) {
           {dialogState ? (
             <PrimaryNotification
               message={'Email notification has been resend successfully'}
-              // timer={CounterDataFunc()}
+              timer={countDownData()}
             />
           ) : null}
           <PrimaryWrapper className={'mt-6'}>
