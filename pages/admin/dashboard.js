@@ -35,16 +35,10 @@ export async function getServerSideProps(context) {
   // redirection member or superadmin
   let nextDestination = '/admin/member'
 
-  if (
-    result.data?.data?.role_id === '1' ||
-    session.user.userDetail.role_id == 1
-  ) {
+  if (session.user.userDetail.role_id == 1) {
     nextDestination = '/admin/superadmin'
   }
-  if (
-    result.data?.data?.email_verified_at !== null ||
-    session.user?.userDetail?.email_verified_at === null
-  ) {
+  if (session.user?.userDetail?.email_verified_at === null) {
     nextDestination = '/verify/email'
   }
 
@@ -55,7 +49,6 @@ export async function getServerSideProps(context) {
     },
     props: {
       session: session,
-      data: result.data?.data,
     },
   }
 }

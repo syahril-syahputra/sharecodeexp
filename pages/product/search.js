@@ -136,6 +136,7 @@ export default function Index() {
               <Link href={!!search ? `/product/search?q=${search}` : ''}>
                 <button
                   type="button"
+                  disabled={!search}
                   className="inline-flex items-center py-2.5 px-4 lg:px-30 sm:px-16 text-sm font-medium text-white bg-sub-header border-sub-header hover:bg-top-navbar focus:ring-4 focus:outline-none focus:ring-blue-300"
                   onClick={() => setLoadingSearch(true)}
                 >

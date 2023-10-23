@@ -23,14 +23,6 @@ export async function middleware(request) {
     ) {
       return NextResponse.redirect(new URL('/admin/superadmin', request.url))
     }
-
-    if (
-      request.nextUrl.pathname.startsWith('/auth') ||
-      (request.nextUrl.pathname.startsWith('/verify/email') &&
-        session.user.userDetail?.email_verified_at !== null)
-    ) {
-      return NextResponse.redirect(new URL('/verify/email', request.url))
-    }
   }
 }
 

@@ -67,8 +67,8 @@ export default function LoginButton(navBarV2 = false) {
           size="sm"
           className="uppercase px-4"
           onClick={() => {
-            // signIn()
-            router.push('/auth/login')
+            signIn()
+            // router.push('/auth/login')
           }}
         >
           {navBarV2 ? undefined : <i className="fas fa-user mr-2"></i>}

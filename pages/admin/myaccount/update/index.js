@@ -17,10 +17,12 @@ import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
 import { useRouter } from 'next/router'
 import TextInputValidate from '@/components/Interface/Form/TextInputValidation'
-import { signOut } from 'next-auth/react'
+import { useSession, signIn, signOut } from 'next-auth/react'
 
 //data
 export default function EditMyAccount({ session, data }) {
+  console.log(session, data, '<<<sesion')
+  const { status } = useSession()
   const initialProvileValue = {
     name: data?.name || '',
     email: data?.email || '',
@@ -39,7 +41,7 @@ export default function EditMyAccount({ session, data }) {
   }
 
   const logOutFunc = () => {
-    signOut({ callbackUrl: `${window.location.origin}` })
+    signOut({ callbackUrl: '/auth/login' })
   }
 
   const validationSchemaProvile = Yup.object({
@@ -69,6 +71,7 @@ export default function EditMyAccount({ session, data }) {
   const [isLoadingPassword, setIsLoadingPassword] = useState(false)
   const [errorInfo, setErrorInfo] = useState({})
   const [errorMessage, setErrorMessage] = useState(null)
+  const [showOldPassword, setOldPassword] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmationPassword, setShowConfirmationPassword] =
     useState(false)
@@ -192,7 +195,7 @@ export default function EditMyAccount({ session, data }) {
                       placeholder="Please enter account name here..."
                       value={values.name}
                       onChange={formikProps.handleChange}
-                      errorMsg={errorInfo.name}
+                      errorMsg={errorInfo?.name}
                       error={formikProps.touched.name && Boolean(errors.name)}
                       helperText={formikProps.touched.name && errors.name}
                     />
@@ -278,7 +281,7 @@ export default function EditMyAccount({ session, data }) {
                         disabled={isLoadingPassword}
                         label="Old Password"
                         placeholder="Please enter old password here..."
-                        type={showPassword ? 'text' : 'password'}
+                        type={showOldPassword ? 'text' : 'password'}
                         required
                         name="old_password"
                         value={values.old_password}
@@ -295,9 +298,9 @@ export default function EditMyAccount({ session, data }) {
                       />
                       <div
                         className="absolute inset-y-0 right-4 top-9 flex items-start cursor-pointer"
-                        onClick={() => setShowPassword((prev) => !prev)}
+                        onClick={() => setOldPassword((prev) => !prev)}
                       >
-                        {showPassword ? (
+                        {showOldPassword ? (
                           <i className="fas fa-eye-slash text-slate-500"></i>
                         ) : (
                           <i className="fas fa-eye text-slate-500"></i>
@@ -414,6 +417,7 @@ async function loadData(context) {
         Authorization: `Bearer ${context?.accessToken}`,
       },
     })
+
     return data
   } catch (error) {
     throw error

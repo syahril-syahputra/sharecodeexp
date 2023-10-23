@@ -19,14 +19,12 @@ import BadgesWithBell from '@/components/Interface/Badges/BadgesWithBell'
 function SideNavigation() {
   const session = useSession()
   const status = session.data.user.userDetail.status_id
-  const is_company_uploaded =
-    session.data.user?.userDetail?.company?.additional_documents
-  const is_confirmed_company =
-    session?.data?.user?.userDetail?.company?.is_confirmed
   const company = useCompany(
     session.data.user.userDetail,
     session.data.accessToken
   )
+  const is_confirmed_company = company?.is_confirmed
+  const isReason_notNull = company?.reason
 
   return (
     <nav className="">
@@ -120,8 +118,7 @@ function SideNavigation() {
                                 aria-hidden="true"
                               />
                               {item.name}
-                              {is_company_uploaded?.toLowerCase() ===
-                                'uploaded' &&
+                              {isReason_notNull !== null &&
                               is_confirmed_company?.toLowerCase() ===
                                 'pending' ? (
                                 <WarningBadges />
@@ -153,8 +150,7 @@ function SideNavigation() {
                                     {/* name === 'My Company' */}
                                     {subItem.name === 'My Company' ? (
                                       <>
-                                        {is_company_uploaded?.toLowerCase() ===
-                                          'uploaded' &&
+                                        {isReason_notNull !== null &&
                                         is_confirmed_company?.toLowerCase() ===
                                           'pending' ? (
                                           <>

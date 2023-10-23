@@ -69,7 +69,7 @@ export default function TableComponent(props) {
                 Stock Location
               </th>
               <th scope="col" className="px-6 py-3 text-right">
-                Act.
+                Action
               </th>
             </>
           }

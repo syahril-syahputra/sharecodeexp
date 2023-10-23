@@ -24,8 +24,8 @@ export default function NeedLogin(props) {
 
           <div className="text-lg hover:underline hover:text-footer-resources">
             <Link href={`/product/detail/${props.item}`}>
-              <span className="inline-block animate-bounce ">
-                Go to detail component
+              <span className="text-blue-500 underline">
+                or go to details component
               </span>
             </Link>
           </div>

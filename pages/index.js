@@ -193,6 +193,7 @@ export default function Index() {
                         >
                           <button
                             type="submit"
+                            disabled={!search}
                             className="inline-flex items-center py-2.5 px-4 lg:px-40 sm:px-16 text-sm font-medium text-white bg-sub-header border-sub-header hover:bg-top-navbar focus:ring-4 focus:outline-none focus:ring-blue-300"
                             onClick={() => setLoadingSearch(true)}
                           >

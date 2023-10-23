@@ -6,12 +6,9 @@ import { PageSEO } from '@/components/Utils/SEO'
 import siteMetadata from '@/utils/siteMetadata'
 import { useRouter } from 'next/router'
 import { Form, Formik } from 'formik'
-
-//components
 import ImageLogo from '@/components/ImageLogo/ImageLogo'
 import IndexNavbar from 'components/Navbars/IndexNavbar.js'
 import Footer from 'components/Footers/Footer.js'
-import TextInput from '@/components/Interface/Form/TextInput'
 import TextInputValidate from '@/components/Interface/Form/TextInputValidation'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 
