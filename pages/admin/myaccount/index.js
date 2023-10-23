@@ -19,7 +19,7 @@ export default function Account({ session }) {
     const response = await axios
       .get(`/my-account`, {
         headers: {
-          Authorization: `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session?.accessToken}`,
         },
       })
       .then((response) => {

@@ -1,27 +1,23 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import axios from 'lib/axios'
-import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
-import { PageSEO } from '@/components/Utils/SEO'
-import siteMetadata from '@/utils/siteMetadata'
-import IndexNavbar from 'components/Navbars/IndexNavbar.js'
-import Footer from '@/components/Footers/Footer'
-import { signOut } from 'next-auth/react'
-import { getSession } from 'next-auth/react'
-import ImageLogo from '@/components/ImageLogo/ImageLogo'
+import { CountdownTimer } from '../CounterdownTime'
+import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import ImageLogo from '@/components/ImageLogo/ImageLogo'
+import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
+import axios from 'lib/axios'
 import LogoutModal from '@/components/Modal/Logout/Logout'
 import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
 import ResendEmailVerification from '@/components/Modal/ResendEmail'
-import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
-import { CountdownTimer } from '@/components/CounterdownTime'
 
-export default function VerifyEmail({ session }) {
-  let time = 1
+const VerifyComp = ({ session, signOut }) => {
+  let time = null
   const [loading, setLoading] = useState(true)
   const [logoutModal, setLogoutModal] = useState(false)
   const [resendModal, setResendModal] = useState(false)
   const [dialogState, setDialogState] = useState(false)
+  const isServer = typeof window === 'undefined'
+  let initialValue = time
   const [isSucces, setIsSucces] = useState(false)
   const THREE_DAYS_IN_MS = 1 * 1 * 2 * 60 * 1000
   const NOW_IN_MS = new Date().getTime()
@@ -34,6 +30,7 @@ export default function VerifyEmail({ session }) {
   const countDownData = () => {
     return <CountdownTimer setDialogState={setDialogState} targetDate={time} />
   }
+
   const handleResendEmail = async () => {
     await axios
       .post(
@@ -66,12 +63,10 @@ export default function VerifyEmail({ session }) {
   }
 
   return (
-    <Fragment>
-      <PageSEO title={siteMetadata?.title} />
-      <IndexNavbar fixed />
+    <>
       <section className="relative py-14 overflow-hidden h-3/6 ">
         <div className="container mx-auto mt-10 xs:pb-10 xs:pt-8 px-4">
-          {dialogState ? (
+          {dialogState || Boolean(time) ? (
             <PrimaryNotification
               message={'Email notification has been resend successfully'}
               timer={countDownData()}
@@ -93,7 +88,7 @@ export default function VerifyEmail({ session }) {
                     className="m-2"
                     size="lg"
                     outline
-                    disabled={dialogState}
+                    disabled={dialogState || Boolean(time)}
                     onClick={() => setResendModal(true)}
                   >
                     Resend
@@ -112,15 +107,10 @@ export default function VerifyEmail({ session }) {
           </PrimaryWrapper>
         </div>
       </section>
-      <Footer />
       {logoutModal && (
         <LogoutModal
           closeModal={() => setLogoutModal(false)}
-          acceptance={() => {
-            signOut({
-              callbackUrl: `${window.location.origin}`,
-            })
-          }}
+          acceptance={() => props.signOut()}
         />
       )}
       {resendModal ? (
@@ -129,25 +119,8 @@ export default function VerifyEmail({ session }) {
           acceptance={handleResendEmail}
         />
       ) : null}
-    </Fragment>
+    </>
   )
 }
 
-export async function getServerSideProps(context) {
-  const session = await getSession(context)
-
-  if (!session) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: '/',
-      },
-    }
-  }
-
-  return {
-    props: {
-      session,
-    },
-  }
-}
+export default VerifyComp

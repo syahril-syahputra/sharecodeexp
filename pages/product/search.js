@@ -15,6 +15,7 @@ import TextInputSearchComponent from '@/components/Interface/Form/TextInputForSe
 export default function Index() {
   const router = useRouter()
   const [search, setSearch] = useState(router.query.q ? router.query.q : '')
+  const [loadingSearch, setLoadingSearch] = useState(false)
   const [category, setCategory] = useState(
     router.query.category ? router.query.category : ''
   )
@@ -132,14 +133,19 @@ export default function Index() {
                   placeholder="Search for the components"
                 />
               </div>
-              <button
-                type="button"
-                className="inline-flex items-center py-2.5 px-4 lg:px-30 sm:px-16 text-sm font-medium text-white bg-sub-header border-sub-header hover:bg-top-navbar focus:ring-4 focus:outline-none focus:ring-blue-300"
-              >
-                <Link href={!!search ? `/product/search?q=${search}` : ''}>
-                  SEARCH
-                </Link>
-              </button>
+              <Link href={!!search ? `/product/search?q=${search}` : ''}>
+                <button
+                  type="button"
+                  className="inline-flex items-center py-2.5 px-4 lg:px-30 sm:px-16 text-sm font-medium text-white bg-sub-header border-sub-header hover:bg-top-navbar focus:ring-4 focus:outline-none focus:ring-blue-300"
+                  onClick={() => setLoadingSearch(true)}
+                >
+                  {loadingSearch ? (
+                    <i className="px-3 fas fa-hourglass fa-spin"></i>
+                  ) : (
+                    'SEARCH'
+                  )}
+                </button>
+              </Link>
             </form>
             <div className="text-left py-2">
               {suggestion && suggestion.length > 0 && (

@@ -13,7 +13,6 @@ import PageHeader from '@/components/Interface/Page/PageHeader'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import DangerNotification from '@/components/Interface/Notification/DangerNotification'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
-import TextInput from '@/components/Interface/Form/TextInput'
 import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
 import { useRouter } from 'next/router'
@@ -170,52 +169,6 @@ export default function EditMyAccount({ session, data }) {
 
           {errorMessage && <DangerNotification message={errorMessage} />}
 
-          {/* <form onSubmit={handleSubmit} className="pl-1 mt-6">
-            <div className="w-full lg:w-1/2 px-3 mb-6">
-              <TextInput
-                disabled={isLoading}
-                required
-                label="Name"
-                name="name"
-                value={inputData.name}
-                onChange={(input) => setDataHandler(input)}
-                errorMsg={errorInfo.name}
-              />
-            </div>
-            <div className="w-full lg:w-1/2 px-3 mb-6">
-              <TextInput
-                disabled={isLoading}
-                required
-                label="Email"
-                type="email"
-                name="email"
-                value={inputData.email}
-                onChange={(input) => setDataHandler(input)}
-                errorMsg={errorInfo.email}
-              />
-            </div>
-            <div className="w-full lg:w-1/2 px-3 mb-6">
-              <Link href={`/admin/superadmin/usercontrol/admin`}>
-                <LightButton
-                  className="w-full font-bold uppercase mb-2"
-                  disabled={isLoading}
-                >
-                  Cancel
-                </LightButton>
-              </Link>
-              <WarningButton
-                className="w-full font-bold uppercase"
-                disabled={isLoading}
-                type="submit"
-              >
-                {isLoading && (
-                  <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
-                )}
-                Update
-              </WarningButton>
-            </div>
-          </form> */}
-
           <Formik
             initialValues={initialProvileValue}
             onSubmit={handleSubmit}
@@ -246,7 +199,7 @@ export default function EditMyAccount({ session, data }) {
                   </div>
                   <div className="w-full lg:w-1/2 px-3 mb-6">
                     <TextInputValidate
-                      disabled={isLoading}
+                      disabled={true}
                       required
                       label="Email"
                       type="email"
@@ -257,6 +210,8 @@ export default function EditMyAccount({ session, data }) {
                       placeholder="Please enter company email here..."
                       error={formikProps.touched.email && Boolean(errors.email)}
                       helperText={formikProps.touched.email && errors.email}
+                      className={'bg-slate-400'}
+                      style={{ backgroundColor: '#d3d3d3' }}
                     />
                   </div>
                   <div className="w-full lg:w-1/2 px-3 mb-6">

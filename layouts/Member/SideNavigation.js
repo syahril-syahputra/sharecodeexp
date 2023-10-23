@@ -176,7 +176,9 @@ function SideNavigation() {
                                               </span>
                                             </div>
                                           </>
-                                        ) : null}
+                                        ) : (
+                                          subItem?.name
+                                        )}
                                       </>
                                     ) : (
                                       <>{subItem?.name}</>

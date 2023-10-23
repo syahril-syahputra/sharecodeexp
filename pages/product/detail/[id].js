@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import axios from 'lib/axios'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import { PageSEO } from '@/components/Utils/SEO'
@@ -7,33 +7,11 @@ import IndexNavbar from 'components/Navbars/IndexNavbar.js'
 import Footer from '@/components/Footers/Footer'
 import LoadingState from '@/components/Interface/Loader/LoadingState'
 import Link from 'next/link'
-import { AdminUrl } from '@/route/route-url'
 import LightButton from '@/components/Interface/Buttons/LightButton'
-import { Router } from 'next/router'
 
 export default function DetailProduct({ data, ...props }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   const [dataArr, setDataArr] = useState(data)
-  // const [loading, setLoading] = useState(false)
-  // useEffect(() => {
-  //   const start = () => {
-  //     setLoading(true)
-  //   }
-  //   const end = () => {
-  //     setLoading(false)
-  //   }
-  //   Router.events.on('beforeHistoryChange', start)
-  //   Router.events.on('routeChangeStart', start)
-  //   Router.events.on('routeChangeComplete', end)
-  //   Router.events.on('routeChangeError', end)
-
-  //   return () => {
-  //     Router.events.off('routeChangeStart', start)
-  //     Router.events.off('beforeHistoryChange', start)
-  //     Router.events.off('routeChangeComplete', end)
-  //     Router.events.off('routeChangeError', end)
-  //   }
-  // }, [])
 
   return (
     <Fragment>

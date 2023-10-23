@@ -15,6 +15,8 @@ export default function TableComponent(props) {
   const router = useRouter()
   const [isInquiryClicked, setIsInquiryClicked] = useState(false)
   const [isDetailClicked, setIsDetailClicked] = useState(false)
+  const [slugState, setSlugState] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const [cartLoading, setCartLoading] = useState({ id: 0 })
   const [cartLoadingDetail, setCartLoadingDetail] = useState({
     id: 0,
@@ -25,6 +27,7 @@ export default function TableComponent(props) {
   const inquiryItem = (item) => {
     if (status === 'unauthenticated') {
       setShowModal(true)
+      setSlugState(item)
       setIsInquiryClicked(false)
     }
 
@@ -109,37 +112,17 @@ export default function TableComponent(props) {
                             inquiryItem(item.slug)
                           }}
                         >
-                          {showModal === true &&
-                          cartLoading?.id === item?.id ? (
+                          {/* {cartLoading?.id === item?.id ? (
+                            <i className="px-3 fas fa-hourglass fa-spin"></i>
+                          ) : (
+                            'Inquire'
+                          )} */}
+                          {cartLoading?.id === item?.id ? (
                             <i className="px-3 fas fa-hourglass fa-spin"></i>
                           ) : (
                             'Inquire'
                           )}
                         </PrimaryButton>
-                        {status === 'unauthenticated' ? (
-                          <PrimaryButton
-                            id={item?.id}
-                            key={item?.id}
-                            disabled={isInquiryClicked}
-                            size="sm"
-                            onClick={async () => {
-                              setIsDetailClicked(true)
-                              setCartLoadingDetail((previouse) => ({
-                                ...previouse,
-                                id: item.id,
-                                slug: item.slug,
-                              }))
-                              detailItem(item.slug)
-                            }}
-                          >
-                            {showModalDetail === true &&
-                            cartLoadingDetail?.id === item?.id ? (
-                              <i className="px-3 fas fa-hourglass fa-spin"></i>
-                            ) : (
-                              'Detail'
-                            )}
-                          </PrimaryButton>
-                        ) : null}
                       </div>
                     </td>
                   </tr>
@@ -160,7 +143,14 @@ export default function TableComponent(props) {
         metaData={props.metaData}
         setPage={props.setPage}
       />
-      {showModal ? <NeedLoginModal setShowModal={setShowModal} /> : null}
+      {showModal ? (
+        <NeedLoginModal
+          setShowModal={setShowModal}
+          item={slugState}
+          isLoading={[isLoading, setIsLoading]}
+          setCartLoading={setCartLoading}
+        />
+      ) : null}
       {showModalDetail ? (
         <DetailProdutModal
           setShowModal={setShowModalDetail}

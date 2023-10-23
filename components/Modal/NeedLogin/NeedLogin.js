@@ -1,27 +1,43 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
+import Link from 'next/link'
 
 export default function NeedLogin(props) {
   const router = useRouter()
+  const [isLoading, setIsLoading] = props.isLoading
 
   return (
     <BaseModalMedium
       title="Login Required"
-      onClick={() => props.setShowModal(false)}
+      onClick={() => {
+        props.setShowModal(false), props.setCartLoading({ id: 0 })
+      }}
       body={
-        <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-          To inquire this product you should login, do you want to{' '}
-          <span className="text-blueGray-700 font-bold">login</span>?
-        </p>
+        <>
+          <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
+            To inquire this product you should login, do you want to{' '}
+            <span className="text-blueGray-700 font-bold">login</span>?
+          </p>
+
+          <div className="text-lg hover:underline hover:text-footer-resources">
+            <Link href={`/product/detail/${props.item}`}>
+              <span className="inline-block animate-bounce ">
+                Go to detail component
+              </span>
+            </Link>
+          </div>
+        </>
       }
       action={
         <>
           <LightButton
             className="uppercase mr-2 font-bold"
-            onClick={() => props.setShowModal(false)}
+            onClick={() => {
+              props.setShowModal(false), props.setCartLoading({ id: 0 })
+            }}
           >
             No, Close
           </LightButton>
@@ -29,9 +45,16 @@ export default function NeedLogin(props) {
           <PrimaryButton
             className="uppercase font-bold"
             isLoading={props.isLoading}
-            onClick={() => router.push('/auth/login')}
+            onClick={() => {
+              setIsLoading(true)
+              router.push('/auth/login')
+            }}
           >
-            Yes, Login
+            {isLoading ? (
+              <i className="px-3 fas fa-hourglass fa-spin"></i>
+            ) : (
+              ' Yes, Login'
+            )}
           </PrimaryButton>
         </>
       }

@@ -18,9 +18,7 @@ export async function getServerSideProps(context) {
 
   // redirection member or superadmin
   let nextDestination = '/admin/member'
-  if (session.user.email_verified_at === null) {
-    nextDestination = '/verify/email'
-  }
+
   if (session.user.userDetail.role_id == 1) {
     nextDestination = '/admin/superadmin'
   }

@@ -27,7 +27,7 @@ import Container from '@/components/Container'
 export default function Index() {
   const router = useRouter()
   const [search, setSearch] = useState('')
-
+  const [loadingSearch, setLoadingSearch] = useState(false)
   function searchComponent(event) {
     if (event.key === 'Enter' && !!search) {
       event.preventDefault()
@@ -188,16 +188,21 @@ export default function Index() {
                             placeholder="Search for the components"
                           />
                         </div>
-                        <button
-                          type="button"
-                          className="inline-flex items-center py-2.5 px-4 lg:px-40 sm:px-16 text-sm font-medium text-white bg-sub-header border-sub-header hover:bg-top-navbar focus:ring-4 focus:outline-none focus:ring-blue-300"
+                        <Link
+                          href={!!search ? `/product/search?q=${search}` : ''}
                         >
-                          <Link
-                            href={!!search ? `/product/search?q=${search}` : ''}
+                          <button
+                            type="submit"
+                            className="inline-flex items-center py-2.5 px-4 lg:px-40 sm:px-16 text-sm font-medium text-white bg-sub-header border-sub-header hover:bg-top-navbar focus:ring-4 focus:outline-none focus:ring-blue-300"
+                            onClick={() => setLoadingSearch(true)}
                           >
-                            SEARCH
-                          </Link>
-                        </button>
+                            {loadingSearch ? (
+                              <i className="px-3 fas fa-hourglass fa-spin"></i>
+                            ) : (
+                              'SEARCH'
+                            )}
+                          </button>
+                        </Link>
                       </form>
                       <div className="text-left py-2">
                         {suggestion && suggestion.length > 0 && (
