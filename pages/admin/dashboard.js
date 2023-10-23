@@ -1,9 +1,25 @@
+import axios from 'lib/axios'
 import { getSession } from 'next-auth/react'
 
 export default function Dashboard({ session }) {}
 
+async function fetchUser(context, accessToken) {
+  try {
+    const data = await axios.get(`/my-account`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+  const result = await fetchUser(context, session.accessToken)
   if (!session) {
     return {
       redirect: {
@@ -19,10 +35,16 @@ export async function getServerSideProps(context) {
   // redirection member or superadmin
   let nextDestination = '/admin/member'
 
-  if (session.user.userDetail.role_id == 1) {
+  if (
+    result.data?.data?.role_id === '1' ||
+    session.user.userDetail.role_id == 1
+  ) {
     nextDestination = '/admin/superadmin'
   }
-  if (session.user?.userDetail?.email_verified_at === null) {
+  if (
+    result.data?.data?.email_verified_at !== null ||
+    session.user?.userDetail?.email_verified_at === null
+  ) {
     nextDestination = '/verify/email'
   }
 
@@ -33,6 +55,7 @@ export async function getServerSideProps(context) {
     },
     props: {
       session: session,
+      data: result.data?.data,
     },
   }
 }
