@@ -4,6 +4,8 @@ import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
 
 export default function Logout(props) {
+  const [isLoading, setIsLoading] = props.isLoadingModal
+
   return (
     <>
       <BaseModalMedium
@@ -28,9 +30,15 @@ export default function Logout(props) {
             <PrimaryButton
               size="sm"
               isLoading={props.isLoading}
-              onClick={() => props.acceptance()}
+              onClick={() => {
+                props.acceptance(), setIsLoading(true)
+              }}
             >
-              Yes, Logout
+              {isLoading ? (
+                <i className="px-3 fas fa-hourglass fa-spin"></i>
+              ) : (
+                'Yes, Logout'
+              )}
             </PrimaryButton>
           </>
         }

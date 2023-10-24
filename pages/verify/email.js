@@ -19,6 +19,7 @@ import { CountdownTimer } from '@/components/CounterdownTime'
 export default function VerifyEmail({ session }) {
   let time = 1
   const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [logoutModal, setLogoutModal] = useState(false)
   const [resendModal, setResendModal] = useState(false)
   const [dialogState, setDialogState] = useState(false)
@@ -96,7 +97,11 @@ export default function VerifyEmail({ session }) {
                     disabled={dialogState}
                     onClick={() => setResendModal(true)}
                   >
-                    Resend
+                    {dialogState ? (
+                      <i className="px-3 fas fa-hourglass fa-spin"></i>
+                    ) : (
+                      'Resend'
+                    )}
                   </PrimaryButton>
                   <PrimaryButton
                     className="m-2"
@@ -116,6 +121,7 @@ export default function VerifyEmail({ session }) {
       {logoutModal && (
         <LogoutModal
           closeModal={() => setLogoutModal(false)}
+          isLoadingModal={[isLoading, setIsLoading]}
           acceptance={() => {
             signOut({
               callbackUrl: `${window.location.origin}`,
@@ -127,6 +133,7 @@ export default function VerifyEmail({ session }) {
         <ResendEmailVerification
           closeModal={setResendModal}
           acceptance={handleResendEmail}
+          isLoading={[isLoading, setIsLoading]}
         />
       ) : null}
     </Fragment>

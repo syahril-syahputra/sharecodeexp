@@ -21,7 +21,6 @@ import { useSession, signIn, signOut } from 'next-auth/react'
 
 //data
 export default function EditMyAccount({ session, data }) {
-  console.log(session, data, '<<<sesion')
   const { status } = useSession()
   const initialProvileValue = {
     name: data?.name || '',

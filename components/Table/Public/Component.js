@@ -112,11 +112,6 @@ export default function TableComponent(props) {
                             inquiryItem(item.slug)
                           }}
                         >
-                          {/* {cartLoading?.id === item?.id ? (
-                            <i className="px-3 fas fa-hourglass fa-spin"></i>
-                          ) : (
-                            'Inquire'
-                          )} */}
                           {cartLoading?.id === item?.id ? (
                             <i className="px-3 fas fa-hourglass fa-spin"></i>
                           ) : (

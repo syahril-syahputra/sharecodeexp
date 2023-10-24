@@ -4,11 +4,15 @@ import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
 
 export default function ResendEmailVerification(props) {
+  const [loadingEmail, setLoadingEmail] = props.isLoading
+
   return (
     <>
       <BaseModalMedium
         title="Resend Email Verification"
-        onClick={() => props.closeModal()}
+        onClick={() => {
+          props.closeModal(), setLoadingEmail(false)
+        }}
         body={
           <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
             Do you want to{' '}
@@ -31,9 +35,15 @@ export default function ResendEmailVerification(props) {
             <PrimaryButton
               size="sm"
               isLoading={props.isLoading}
-              onClick={() => props?.acceptance()}
+              onClick={() => {
+                props?.acceptance(), setLoadingEmail(true)
+              }}
             >
-              Yes, Resend
+              {loadingEmail ? (
+                <i className="px-3 fas fa-hourglass fa-spin"></i>
+              ) : (
+                'Yes, Resend'
+              )}
             </PrimaryButton>
           </>
         }
