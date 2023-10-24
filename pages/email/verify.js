@@ -187,6 +187,7 @@ export default function EmailVerify({ session }) {
       <Footer />
       {resendModal ? (
         <ResendEmailVerification
+          isLoadingDialog={[dialogState, setDialogState]}
           closeModal={setResendModal}
           acceptance={handleResendEmail}
           isLoading={[isLoadingButton, setIsLoadingButton]}

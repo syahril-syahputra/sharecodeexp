@@ -5,13 +5,16 @@ import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
 
 export default function ResendEmailVerification(props) {
   const [loadingEmail, setLoadingEmail] = props.isLoading
+  const [loadingDialogSuccess, setLoadingDialogSuccess] = props?.isLoadingDialog
 
   return (
     <>
       <BaseModalMedium
         title="Resend Email Verification"
         onClick={() => {
-          props.closeModal(), setLoadingEmail(false)
+          props.closeModal(),
+            setLoadingEmail(false),
+            setLoadingDialogSuccess(false)
         }}
         body={
           <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
@@ -36,10 +39,12 @@ export default function ResendEmailVerification(props) {
               size="sm"
               isLoading={props.isLoading}
               onClick={() => {
-                props?.acceptance(), setLoadingEmail(true)
+                props?.acceptance(),
+                  setLoadingEmail(true),
+                  setLoadingDialogSuccess(false)
               }}
             >
-              {loadingEmail ? (
+              {loadingEmail || loadingDialogSuccess ? (
                 <i className="px-3 fas fa-hourglass fa-spin"></i>
               ) : (
                 'Yes, Resend'

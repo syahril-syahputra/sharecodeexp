@@ -131,6 +131,7 @@ export default function VerifyEmail({ session }) {
       )}
       {resendModal ? (
         <ResendEmailVerification
+          isLoadingDialog={[dialogState, setDialogState]}
           closeModal={setResendModal}
           acceptance={handleResendEmail}
           isLoading={[isLoading, setIsLoading]}
