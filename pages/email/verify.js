@@ -113,19 +113,10 @@ export default function EmailVerify({ session }) {
   useEffect(() => {
     const params = window.location.search.substring(1).split('&')
     const data = getUrlQyueryParams(params)
-    // const getExpires =
-    //   decodeURIComponent(data[0]?.substring(1).split('expires')[1]) || ''
-    // const getExpiresValue = getExpires?.includes('=')
-    //   ? getExpires.split('=')[1]
-    //   : getExpires
     const getEmailVerifyValue = data[0]?.substring(1).split('=')[1] || ''
     const getExpiresValue = data[1]?.substring(1).split('=')[1] || ''
-    console.log(getExpiresValue, '<<<getExpiresValue')
-    console.log(data, '<<<Data')
     const getHashValue = data[2]?.substring(1).split('=')[1] || ''
-    console.log(getHashValue, '<<<getHashValue')
     const getSignatureValue = data[3]?.substring(1).split('=')[1] || ''
-    console.log(getSignatureValue, '<<<getSignatureValue')
     setEmailVerifyUrl(getEmailVerifyValue)
     setStateExpires(getExpiresValue)
     setStateHash(getHashValue)
