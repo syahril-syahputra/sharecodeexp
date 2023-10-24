@@ -18,6 +18,7 @@ import { getSession } from 'next-auth/react'
 export default function EmailVerify({ session }) {
   let time = 1
   const [stateExpires, setStateExpires] = useState('')
+  const [stateEmailVerifyUrl, setEmailVerifyUrl] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [isLoadingButton, setIsLoadingButton] = useState(false)
   const [stateHash, setStateHash] = useState('')
@@ -72,6 +73,7 @@ export default function EmailVerify({ session }) {
   }
 
   const verifyEmail = async (
+    emailVerifyUrl = '',
     expiresValue = '',
     hasValue = '',
     signatureValue = ''
@@ -80,7 +82,7 @@ export default function EmailVerify({ session }) {
       await timeoutPromise(
         5 * 60 * 1000,
         axios.get(
-          `/email/verify/17?expires=${expiresValue}&hash=${hasValue}h&signature=${signatureValue}`
+          `/email/verify/${emailVerifyUrl}?expires=${expiresValue}&hash=${hasValue}&signature=${signatureValue}`
         )
       )
       setVerified(true)
@@ -111,13 +113,20 @@ export default function EmailVerify({ session }) {
   useEffect(() => {
     const params = window.location.search.substring(1).split('&')
     const data = getUrlQyueryParams(params)
-    const getExpires =
-      decodeURIComponent(data[0]?.substring(1).split('expires')[1]) || ''
-    const getExpiresValue = getExpires?.includes('=')
-      ? getExpires.split('=')[1]
-      : getExpires
-    const getHashValue = data[1]?.substring(1).split('=')[1] || ''
-    const getSignatureValue = data[2]?.substring(2).split('=')[1] || ''
+    // const getExpires =
+    //   decodeURIComponent(data[0]?.substring(1).split('expires')[1]) || ''
+    // const getExpiresValue = getExpires?.includes('=')
+    //   ? getExpires.split('=')[1]
+    //   : getExpires
+    const getEmailVerifyValue = data[0]?.substring(1).split('=')[1] || ''
+    const getExpiresValue = data[1]?.substring(1).split('=')[1] || ''
+    console.log(getExpiresValue, '<<<getExpiresValue')
+    console.log(data, '<<<Data')
+    const getHashValue = data[2]?.substring(1).split('=')[1] || ''
+    console.log(getHashValue, '<<<getHashValue')
+    const getSignatureValue = data[3]?.substring(1).split('=')[1] || ''
+    console.log(getSignatureValue, '<<<getSignatureValue')
+    setEmailVerifyUrl(getEmailVerifyValue)
     setStateExpires(getExpiresValue)
     setStateHash(getHashValue)
     setStateSigniture(getSignatureValue)
@@ -125,11 +134,11 @@ export default function EmailVerify({ session }) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      verifyEmail(stateExpires, stateHash, stateSigniture)
+      verifyEmail(stateEmailVerifyUrl, stateExpires, stateHash, stateSigniture)
     }, 5000)
 
     return () => clearTimeout(timer)
-  }, [stateSigniture, stateExpires, stateHash])
+  }, [stateSigniture, stateExpires, stateHash, stateEmailVerifyUrl])
 
   return (
     <Fragment>

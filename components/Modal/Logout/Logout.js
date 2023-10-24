@@ -4,7 +4,7 @@ import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
 
 export default function Logout(props) {
-  const [isLoading, setIsLoading] = props.isLoadingModal
+  const [isLoading, setIsLoading] = props?.isLoadingModal
 
   return (
     <>

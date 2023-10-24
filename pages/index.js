@@ -529,7 +529,6 @@ export default function Index() {
                           value={dataContact.message}
                           onChange={handleChange}
                           className="h-36 text-base leading-none border-spacing-2 text-gray-900 p-3 focus:oultine-none focus:border-top-navbar mt-4 bg-gray-100 border border-indigo-700  placeholder-gray-500 "
-                          defaultValue={''}
                           placeholder="Please input message"
                         />
                       </div>
