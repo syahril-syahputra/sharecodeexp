@@ -35,11 +35,12 @@ export async function getServerSideProps(context) {
   // redirection member or superadmin
   let nextDestination = '/admin/member'
 
-  if (session.user.userDetail.role_id == 1) {
-    nextDestination = '/admin/superadmin'
-  }
   if (result?.data?.data?.email_verified_at === null) {
     nextDestination = '/verify/email'
+  }
+
+  if (session.user.userDetail.role_id == 1) {
+    nextDestination = '/admin/superadmin'
   }
 
   return {

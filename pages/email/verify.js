@@ -55,7 +55,6 @@ export default function EmailVerify({ session }) {
       )
       .then((response) => {
         toast.success(`${response?.data?.message}`, toastOptions)
-        setIsSucces(true)
         setDialogState(true)
         setResendModal(false)
         setLoading(true)
@@ -65,7 +64,7 @@ export default function EmailVerify({ session }) {
             JSON.stringify(dateTimeAfterThreeDays)
           )
         }
-        router.push('/verify/email')
+        setIsSucces(true)
       })
       .catch((error) => {
         toast.error(`${error?.data?.message}`, toastOptions)
@@ -133,6 +132,23 @@ export default function EmailVerify({ session }) {
     return () => clearTimeout(timer)
   }, [stateSigniture, stateExpires, stateHash, stateEmailVerifyUrl])
 
+  useEffect(() => {
+    if (isSucces === true) {
+      const timerToast = setTimeout(() => {
+        toast.success(`You will direct to verify email `)
+      }, 120000)
+
+      const timer = setTimeout(() => {
+        router.push('/verify/email')
+      }, 123000)
+
+      return () => {
+        clearTimeout(timer)
+        clearTimeout(timerToast)
+      }
+    }
+  }, [isSucces])
+
   return (
     <Fragment>
       <IndexNavbar fixed hideLogin={true} emailVerification={true} />
@@ -168,10 +184,10 @@ export default function EmailVerify({ session }) {
                           className="m-2"
                           size="lg"
                           outline
-                          disabled={dialogState}
+                          disabled={dialogState || isSucces}
                           onClick={() => setResendModal(true)}
                         >
-                          {dialogState ? (
+                          {dialogState || isSucces ? (
                             <i className="px-3 fas fa-hourglass fa-spin"></i>
                           ) : (
                             'Resend'
@@ -198,13 +214,27 @@ export default function EmailVerify({ session }) {
     </Fragment>
   )
 }
+async function fetchUser(context, accessToken) {
+  try {
+    const data = await axios.get(`/my-account`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
 
+    return data
+  } catch (error) {
+    throw error
+  }
+}
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+  const result = await fetchUser(context, session.accessToken)
 
   return {
     props: {
       session,
+      data: result.data.data,
     },
   }
 }
