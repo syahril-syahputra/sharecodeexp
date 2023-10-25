@@ -39,7 +39,10 @@ export async function getServerSideProps(context) {
     nextDestination = '/verify/email'
   }
 
-  if (session.user.userDetail.role_id == 1) {
+  if (
+    session.user.userDetail.role_id == 1 &&
+    result?.data?.data?.email_verified_at !== null
+  ) {
     nextDestination = '/admin/superadmin'
   }
 
