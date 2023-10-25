@@ -9,6 +9,8 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import LogoutModal from '@/components/Modal/Logout/Logout'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import { useRouter } from 'next/router'
+import { getSession } from 'next-auth/react'
+import axios from 'lib/axios'
 
 const userNavigation = [
   { name: 'Dashboard', href: '/admin/dashboard' },
@@ -54,9 +56,25 @@ export default function LoginButton(navBarV2 = false) {
   const router = useRouter()
   const { username, loadUsername } = useContext(GlobalContext)
   const [logoutModal, setLogoutModal] = useState(false)
+  const [data, setData] = useState()
+
+  async function fetchUser(accessToken) {
+    try {
+      const data = await axios.get(`/my-account`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      setData(data)
+    } catch (error) {
+      throw error
+    }
+  }
+
   useEffect(() => {
     if (session.data) {
       loadUsername(session.data.accessToken)
+      fetchUser(session?.data?.accessToken)
     }
   }, [session])
 
@@ -109,7 +127,7 @@ export default function LoginButton(navBarV2 = false) {
           >
             <Menu.Items className="absolute right-0 z-10 mt-2.5 w-52 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
               {multipleNotificationWithSessions(
-                session?.data?.user?.userDetail?.email_verified_at
+                data?.data?.data?.email_verified_at
               )}
               <Menu.Item>
                 {({ active }) => (

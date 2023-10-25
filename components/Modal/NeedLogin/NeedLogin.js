@@ -45,6 +45,7 @@ export default function NeedLogin(props) {
           <PrimaryButton
             className="uppercase font-bold"
             isLoading={props.isLoading}
+            disabled={isLoading}
             onClick={() => {
               setIsLoading(true)
               router.push('/auth/login')

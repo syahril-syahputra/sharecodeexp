@@ -38,6 +38,7 @@ export default function ResendEmailVerification(props) {
             <PrimaryButton
               size="sm"
               isLoading={props.isLoading}
+              disabled={loadingEmail || loadingDialogSuccess}
               onClick={() => {
                 props?.acceptance(),
                   setLoadingEmail(true),

@@ -149,6 +149,23 @@ export default function EmailVerify({ session }) {
     }
   }, [isSucces])
 
+  useEffect(() => {
+    if (verified) {
+      const timerToast = setTimeout(() => {
+        toast.success(`You will direct to dashboard`)
+      }, 5000)
+
+      const timer = setTimeout(() => {
+        router.push('/admin/dashboard')
+      }, 7000)
+
+      return () => {
+        clearTimeout(timer)
+        clearTimeout(timerToast)
+      }
+    }
+  }, [verified])
+
   return (
     <Fragment>
       <IndexNavbar fixed hideLogin={true} emailVerification={true} />
