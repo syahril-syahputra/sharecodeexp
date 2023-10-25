@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
 
 export default function Logout(props) {
-  const [isLoading, setIsLoading] = props?.isLoadingModal
+  const [isLoading, setIsLoading] = useState(false)
 
   return (
     <>
@@ -29,7 +29,7 @@ export default function Logout(props) {
 
             <PrimaryButton
               size="sm"
-              isLoading={props.isLoading}
+              isLoading={isLoading}
               onClick={() => {
                 props.acceptance(), setIsLoading(true)
               }}

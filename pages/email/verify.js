@@ -17,6 +17,7 @@ import { getSession } from 'next-auth/react'
 
 export default function EmailVerify({ session }) {
   let time = 1
+  const router = useRouter()
   const [stateExpires, setStateExpires] = useState('')
   const [stateEmailVerifyUrl, setEmailVerifyUrl] = useState('')
   const [isLoading, setIsLoading] = useState(true)
@@ -64,6 +65,7 @@ export default function EmailVerify({ session }) {
             JSON.stringify(dateTimeAfterThreeDays)
           )
         }
+        router.push('/verify/email')
       })
       .catch((error) => {
         toast.error(`${error?.data?.message}`, toastOptions)

@@ -20,6 +20,7 @@ export default function VerifyEmail({ session }) {
   let time = 1
   const [loading, setLoading] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingModal, setIsLoadingModal] = useState(false)
   const [logoutModal, setLogoutModal] = useState(false)
   const [resendModal, setResendModal] = useState(false)
   const [dialogState, setDialogState] = useState(false)
@@ -121,7 +122,6 @@ export default function VerifyEmail({ session }) {
       {logoutModal && (
         <LogoutModal
           closeModal={() => setLogoutModal(false)}
-          isLoadingModal={[isLoading, setIsLoading]}
           acceptance={() => {
             signOut({
               callbackUrl: `${window.location.origin}`,
