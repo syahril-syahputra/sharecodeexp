@@ -11,6 +11,9 @@
     "prettier"
   ],
   "parserOptions": {
+    "ecmaFeatures": {
+      "js": true
+    },
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
@@ -20,13 +23,29 @@
     "no-invalid-this": "off",
     "no-unused-vars": "off",
     "require-jsdoc": "off",
-    "react/react-in-jsx-scope": "off",
     "react-hooks/exhaustive-deps": "off",
-    "react/jsx-filename-extension": [
-      1,
-      { "extensions": [".js", ".jsx", "ts", "tsx"] }
-    ],
+    "@next/next/no-img-element": "off",
+    "react/no-unescaped-entities": "off",
     "react/prop-types": "off",
-    "camelcase": "off"
+    "camelcase": "off",
+    "lines-around-comment": [
+      "warn",
+      {
+        "beforeLineComment": false,
+        "beforeBlockComment": true,
+        "allowBlockStart": true,
+        "allowClassStart": true,
+        "allowObjectStart": true,
+        "allowArrayStart": true
+      }
+    ],
+    "newline-before-return": "warn", // Tech debts
+    // add new line below import
+    "import/newline-after-import": [
+      "warn", // Tech debts
+      {
+        "count": 1
+      }
+    ]
   }
 }

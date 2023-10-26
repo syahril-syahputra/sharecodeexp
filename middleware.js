@@ -6,11 +6,7 @@ export async function middleware(request) {
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   })
-  // if(!session){
-  //   if (request.nextUrl.pathname.startsWith('/admin')) {
-  //     return NextResponse.redirect(new URL('/auth/unauthenticated', request.url));
-  //   }
-  // }
+
   if (session) {
     if (
       (request.nextUrl.pathname.startsWith('/auth/') ||

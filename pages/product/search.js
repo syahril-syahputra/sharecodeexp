@@ -1,50 +1,46 @@
-import React, {useEffect, useState} from "react";
-import {getSession} from 'next-auth/react';
-import Link from "next/link";
+import React, { useEffect, useState } from 'react'
+import { getSession } from 'next-auth/react'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { PageSEO } from '@/components/Utils/SEO'
 import siteMetadata from '@/utils/siteMetadata'
-import axios from "lib/axios";
+import axios from 'lib/axios'
 
 //components
-import IndexNavbar from "components/Navbars/IndexNavbar.js";
-import Footer from "components/Footers/Footer.js";
-import TableComponent from "@/components/Table/Public/Component";
-import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
-import MiniSearchBar from "@/components/Shared/MiniSearchBar";
-import TextInput from "@/components/Interface/Form/TextInput";
+import IndexNavbar from 'components/Navbars/IndexNavbar.js'
+import Footer from 'components/Footers/Footer.js'
+import TableComponent from '@/components/Table/Public/Component'
+import TextInputSearchComponent from '@/components/Interface/Form/TextInputForSearchComponent'
 
-export default function Index({session}) {
+export default function Index() {
   const router = useRouter()
   const [search, setSearch] = useState(router.query.q ? router.query.q : '')
-  const [category, setCategory] = useState(router.query.category ? router.query.category : '')
-  const [subcategory, setSubcategory] = useState(router.query.subcategory ? router.query.subcategory : '')
-  
-  function searchComponent(event){
+  const [loadingSearch, setLoadingSearch] = useState(false)
+  const [category, setCategory] = useState(
+    router.query.category ? router.query.category : ''
+  )
+  const [subcategory, setSubcategory] = useState(
+    router.query.subcategory ? router.query.subcategory : ''
+  )
+
+  function searchComponent(event) {
     if (event.key === 'Enter' && !!search) {
       router.replace(`/product/search?q=${search}`)
-      // searchData(search)
     }
   }
 
-  //data search
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
   const [metaData, setMetaData] = useState({
     total: 0,
     perPage: 0,
-    lastPage: 0
+    lastPage: 0,
   })
-  const searchData = async (srch, page=1) =>{
+  const searchData = async (srch, page = 1) => {
     setIsLoading(true)
-    const response = await axios.get(`/search?query=${srch}&page=${page}`, 
-      {
-        headers: {
-        "Authorization" : `Bearer ${session?.accessToken}`
-        }
-      }
-      )
+    await axios
+      .get(`/search?query=${srch}&page=${page}`)
       .then((response) => {
         let result = response.data.data
         setData(result.data)
@@ -55,92 +51,132 @@ export default function Index({session}) {
           lastPage: result.last_page,
           currentPage: result.current_page,
           nextPage: result.next_page_url ? true : false,
-          prevPage: result.prev_page_url ? true : false
+          prevPage: result.prev_page_url ? true : false,
         })
-      }).catch((error) => {
-        console.log(error.response)
-      }).finally(() => {
+      })
+      .catch((error) => {
+        // console.log(error.response)
+      })
+      .finally(() => {
         setIsLoading(false)
       })
   }
+
   const setPage = (page) => {
     searchData(search, page)
   }
   useEffect(() => {
     searchData(search)
-  }, [])
+  }, [search])
 
   //search suggestion
   const [suggestion, setSuggestion] = useState([])
   const [isSuggestionLoading, setSuggestionLoading] = useState(false)
   useEffect(() => {
-    if(search){
+    if (search) {
       setSuggestionLoading(true)
       const getData = setTimeout(() => {
         axios
-        .get(`/search/suggest/${search}`)
-        .then((response) => {
-          setSuggestion(response.data.data)
-        })
-        .finally(() => setSuggestionLoading(false));
+          .get(`/search/suggest/${search}`)
+          .then((response) => {
+            setSuggestion(response.data.data)
+          })
+          .finally(() => setSuggestionLoading(false))
       }, 2000)
 
       return () => clearTimeout(getData)
     }
   }, [search])
 
-
   return (
     <>
-      <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
+      <PageSEO
+        title={siteMetadata.title}
+        description={siteMetadata.description}
+      />
       <IndexNavbar fixed />
-      <section className="relative bg-white pb-36 overflow-hidden h-3/6 bg-gradient-to-b from-indigo-50 via-white">
-        <div className="container mx-auto mt-10">
+      <section className=" container mx-auto  relative bg-white pb-36 overflow-hidden h-3/6 bg-gradient-to-b from-indigo-50 via-white">
+        <div className="mt-10 xs:pb-10 xs:pt-8 px-4 xl:px-0 lg:px-0 2xl:px-0">
           <div className="flex flex-wrap">
             <div className="w-full mt-16">
               <h2 className="font-semibold text-4xl">Search Components</h2>
             </div>
           </div>
-
-          <div className="mb-2 w-full lg:w-1/2 mt-4">
-            <div className="relative flex">
-              <TextInput
-                value={search} 
-                onChange={(input) => setSearch(input.value)}
-                onKeyDown={searchComponent}
-                placeholder="Search for the components"
-              ></TextInput>
-              <Link href={`/product/search?q=${search}`}>
-                <PrimaryButton
-                  className="uppercase"
-                >
-                  Search
-                </PrimaryButton>
-              </Link>
-            </div>
-          </div>
-
-          <div>
-            {suggestion && suggestion.length > 0 &&
-              <div>
-                {isSuggestionLoading && 
-                  <div className="text-slate-500">
-                    Suggestion : 
-                    <i className="ml-2 fas fa-circle-notch fa-spin"></i>
-                  </div>
-                }
-                {!isSuggestionLoading && 
-                  <div className="text-slate-500">Suggestion : {suggestion.map(name => (  
-                    <Link key={name} href={`/product/search?q=${name}`} className="mx-1 underline text-blue-500">  
-                      {name}  
-                    </Link>  
-                  ))}</div>
-                }
+          <div className="w-full mb-2 mt-4 pt-2 sm:pt-0 pb-4 md:pb-1 lg:px-3 md:px-[3px] lg:w-2/4 xl:w-2/4 2xl:w-2/4">
+            <form className="flex items-center">
+              <label htmlFor="voice-search" className="sr-only">
+                Search
+              </label>
+              <div className="relative w-full ">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <svg
+                    className="w-4 h-4 text-footer-resources"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                    />
+                  </svg>
+                </div>
+                <TextInputSearchComponent
+                  value={search}
+                  onChange={(target) => setSearch(target.value)}
+                  onKeyDown={searchComponent}
+                  type="text"
+                  placeholder="Search for the components"
+                />
               </div>
-            }
-            {isSuggestionLoading && suggestion.length === 0 && 
-              <i className="ml-2 fas fa-circle-notch fa-spin"></i>
-            }
+              <Link href={!!search ? `/product/search?q=${search}` : ''}>
+                <button
+                  type="button"
+                  disabled={!search}
+                  className="inline-flex items-center py-2.5 px-4 lg:px-30 sm:px-16 text-sm font-medium text-white bg-sub-header border-sub-header hover:bg-top-navbar focus:ring-4 focus:outline-none focus:ring-blue-300"
+                  onClick={() => setLoadingSearch(true)}
+                >
+                  {loadingSearch ? (
+                    <i className="px-3 fas fa-hourglass fa-spin"></i>
+                  ) : (
+                    'SEARCH'
+                  )}
+                </button>
+              </Link>
+            </form>
+            <div className="text-left py-2">
+              {suggestion && suggestion.length > 0 && (
+                <div>
+                  {isSuggestionLoading && (
+                    <div className="text-blueGray-500">
+                      Suggestion :
+                      <i className="ml-2 fas fa-circle-notch fa-spin"></i>
+                    </div>
+                  )}
+                  {!isSuggestionLoading && (
+                    <div className="flex justify-start">
+                      <span className="text-blueGray-500">Suggestion :</span>
+                      {suggestion.map((name, index) => (
+                        <Link
+                          key={`${name}--${index}`}
+                          href={`/product/search?q=${name}`}
+                          className="mx-1 underline text-blue-500 italic"
+                        >
+                          {name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+              {isSuggestionLoading && suggestion.length === 0 && (
+                <i className="ml-2 fas fa-circle-notch fa-spin"></i>
+              )}
+            </div>
           </div>
 
           <div className="bg-white mb-14 mt-10">
@@ -156,14 +192,15 @@ export default function Index({session}) {
       </section>
       <Footer />
     </>
-  );
-  }
+  )
+}
 
 export async function getServerSideProps(context) {
-  const session = await getSession(context);
+  const session = await getSession(context)
+
   return {
     props: {
       session,
     },
-  };
+  }
 }

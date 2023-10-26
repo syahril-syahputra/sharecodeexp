@@ -1,6 +1,6 @@
-import classNames from '@/utils/classNames';
-import ErrorInput from './ErrorInput';
-import React from 'react';
+import classNames from '@/utils/classNames'
+import ErrorInput from './ErrorInput'
+import React from 'react'
 
 export default function TextInputValidate(props) {
   return (
@@ -23,12 +23,18 @@ export default function TextInputValidate(props) {
         placeholder={props.placeholder || ''}
         autoComplete="off"
         type={props.type || 'text'}
+        style={props.style}
         className={classNames(
           props.errorMsg || props.helperText
             ? 'border-red-500'
             : 'border-blue-200',
           props.setIcon && 'pl-10',
-          `${props.className} shadow-sm placeholder-slate-500 appearance-none w-full bg-white text-gray-700 border py-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`
+
+          `${
+            props.className
+          } shadow-sm placeholder-slate-500 appearance-none w-full ${
+            props.disabled ? 'bg-slate-800' : 'bg-white'
+          } text-gray-700 border py-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`
         )}
       />
       {props.errorMsg && <ErrorInput errors={props.errorMsg} />}
@@ -38,5 +44,5 @@ export default function TextInputValidate(props) {
         </span>
       )}
     </>
-  );
+  )
 }
