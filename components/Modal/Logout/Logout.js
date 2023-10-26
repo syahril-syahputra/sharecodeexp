@@ -22,6 +22,7 @@ export default function Logout(props) {
             <LightButton
               className="mr-2"
               size="sm"
+              disabled={isLoading}
               onClick={() => props.closeModal()}
             >
               No, Stay
@@ -29,7 +30,7 @@ export default function Logout(props) {
 
             <PrimaryButton
               size="sm"
-              isLoading={isLoading}
+              disabled={isLoading}
               onClick={() => {
                 props.acceptance(), setIsLoading(true)
               }}

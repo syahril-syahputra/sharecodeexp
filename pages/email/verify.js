@@ -151,18 +151,7 @@ export default function EmailVerify({ session }) {
 
   useEffect(() => {
     if (verified) {
-      const timerToast = setTimeout(() => {
-        toast.success(`You will direct to dashboard`)
-      }, 5000)
-
-      const timer = setTimeout(() => {
-        router.push('/admin/dashboard')
-      }, 7000)
-
-      return () => {
-        clearTimeout(timer)
-        clearTimeout(timerToast)
-      }
+      router.push('/admin/dashboard')
     }
   }, [verified])
 
@@ -189,7 +178,7 @@ export default function EmailVerify({ session }) {
                 <div className="flex justify-center border w-1/2 flex-col mx-auto  py-12">
                   {verified ? (
                     <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
-                      Your email has been verified, please login
+                      Your email has been verified, please wait you will redirect to dashboard.
                     </h3>
                   ) : (
                     <>
