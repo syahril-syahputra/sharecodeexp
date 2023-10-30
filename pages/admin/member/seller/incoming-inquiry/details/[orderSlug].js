@@ -159,7 +159,7 @@ export default function InquiryDetails({ session, routeParam }) {
   const updateVerifiedInquiryHandle = async (inputData) => {
     setIsLoading(true)
     setErrorInfo({})
-    const response = await axios
+    axios
       .post(
         `/seller/order/update-verified-inquiry`,
         {
@@ -178,10 +178,7 @@ export default function InquiryDetails({ session, routeParam }) {
         loadData()
       })
       .catch((error) => {
-        toast.error(
-          'Something went wrong. Cannot update verified inquiry.',
-          toastOptions
-        )
+        toast.error(error.data.message, toastOptions)
         setErrorInfo(error.data.data)
       })
       .finally(() => {
@@ -190,7 +187,12 @@ export default function InquiryDetails({ session, routeParam }) {
   }
 
   const [shipProductModal, setShipProductModal] = useState(false)
-  const shipProductHanlde = async (trackingNumber) => {
+  const shipProductHanlde = async (
+    trackingNumber,
+    courier,
+    isDownloadedPerformaInvoice,
+    isDownloadedPackingList
+  ) => {
     setIsLoading(true)
     setErrorInfo({})
     const response = await axios
@@ -199,6 +201,9 @@ export default function InquiryDetails({ session, routeParam }) {
         {
           order_slug: data.slug,
           trackingSeller: trackingNumber,
+          courier: courier,
+          download_packing_list: isDownloadedPackingList,
+          download_proforma_invoice: isDownloadedPerformaInvoice,
         },
         {
           headers: {
@@ -213,7 +218,8 @@ export default function InquiryDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot ship the product.',
+          'Something went wrong. Cannot ship the product. ' +
+            error.data.message,
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -428,6 +434,7 @@ export default function InquiryDetails({ session, routeParam }) {
               isLoading={isLoading}
               closeModal={() => setShipProductModal(false)}
               acceptance={shipProductHanlde}
+              orderSlug={data.slug}
               errorInfo={errorInfo}
             />
           )}

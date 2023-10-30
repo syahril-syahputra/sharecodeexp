@@ -5,14 +5,46 @@ import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
 import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
 import Link from 'next/link'
 import { useState } from 'react'
+import { useSession } from 'next-auth/react'
+import axios from '@/lib/axios'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
+import { useRouter } from 'next/router'
+
 export default function VerifyOrder(props) {
   const test_free = parseFloat(props.price * props.quantity) > 1000
   const [isOpenend, setisOpenend] = useState(false)
   const [isShowMessage, setisShowMessage] = useState(false)
-
+  const { data: session } = useSession()
+  const router = useRouter()
+  const [isLoadingOpenQUotation, setisLoadingOpenQUotation] = useState(false)
   const acceptHandler = () => {
     setisShowMessage(false)
     isOpenend ? props.acceptance() : setisShowMessage(true)
+  }
+  const openQuotationHandler = async () => {
+    setisShowMessage(false)
+    try {
+      setisLoadingOpenQUotation(true)
+      await axios.post(
+        `/buyer/order/verification-action/open-quotation`,
+        {
+          order_slug: props.orderSlug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      setisOpenend(true)
+      const url = `/admin/member/buyer/inquired-product/details/pdf/quotation/${props.orderSlug}`
+      window.open(url, '_blank')
+    } catch (error) {
+      toast.error(error.data.message, toastOptions)
+    } finally {
+      setisLoadingOpenQUotation(false)
+    }
   }
   return (
     <BaseModalMedium
@@ -39,19 +71,26 @@ export default function VerifyOrder(props) {
               for more further.
             </p>
           )}
-          <Link
+          {/* <Link
             target="_blank"
             onClick={() => {
-              setisOpenend(true)
-              setisShowMessage(false)
+
             }}
             href={`/admin/member/buyer/inquired-product/details/pdf/quotation/${props.orderSlug}`}
             className="underline text-blue-500"
+          > */}
+          <SecondaryButton
+            onClick={() => openQuotationHandler()}
+            size="sm"
+            disabled={isLoadingOpenQUotation}
+            outline
           >
-            <SecondaryButton size="sm" outline>
-              Open Quotation
-            </SecondaryButton>
-          </Link>
+            {isLoadingOpenQUotation && (
+              <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
+            )}
+            Open Quotation
+          </SecondaryButton>
+          {/* </Link> */}
           {isShowMessage && (
             <div className="bg-red-400 rounded-lg text-white text-sm text-center p-1 mt-4">
               Please open the quotation document

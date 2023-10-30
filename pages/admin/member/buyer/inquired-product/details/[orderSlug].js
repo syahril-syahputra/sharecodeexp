@@ -27,6 +27,7 @@ import WarningNotification from '@/components/Interface/Notification/WarningNoti
 import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
 import { checkValue } from '@/utils/general'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import calculateTimeDifference from '@/lib/calculateTimeDifference'
 
 export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -121,10 +122,24 @@ export default function InquiryDetails({ session, routeParam }) {
         loadData()
       })
       .catch((error) => {
-        toast.error(
-          'Something went wrong. Can not accept the quotation.',
-          toastOptions
-        )
+        if (error.data.message === 'This inquiry is not yet available.') {
+          const timeDiference = calculateTimeDifference(
+            error.data.data.available_after
+          )
+          toast.error(
+            error.data.message + '\navailable in ' + timeDiference,
+            toastOptions
+          )
+        } else {
+          toast.error(error.data.message, toastOptions)
+        }
+
+        // console.log(error.data.data.available_after)
+        // const momentObject = moment.parse('2023-10-27 15:11:13')
+        // const localTimeZone = moment.local()
+        // momentObject.tz(localTimeZone)
+        // const localTime = momentObject.format('YYYY-MM-DD HH:mm:ss')
+
         setErrorInfo(error.data.data)
       })
       .finally(() => {
