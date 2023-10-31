@@ -531,7 +531,7 @@ export default function InquiryDetails({ session, routeParam }) {
             />
           )}
 
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center justify-center">
             <div className="mx-2 my-4">
               <PrimaryButton
                 outline
@@ -540,10 +540,17 @@ export default function InquiryDetails({ session, routeParam }) {
                 disabled={isLoading}
                 onClick={() => setAcceptOrderModal(true)}
               >
-                Accept Order
+                Confirm Receipt of Order
               </PrimaryButton>
             </div>
-            <div className="mx-2 my-4">
+            <div className="text-center text-sm text-gray-600 italic py-4">
+              In case have any concern with your order please contact exepart
+              admin :{' '}
+              <a className="font-bold" href="mailto:sales@exepart.com">
+                sales@exepart.com
+              </a>
+            </div>
+            {/* <div className="mx-2 my-4">
               <WarningButton
                 outline
                 className="mx-1"
@@ -553,7 +560,7 @@ export default function InquiryDetails({ session, routeParam }) {
               >
                 Didn&lsquo;t receive any
               </WarningButton>
-            </div>
+            </div> */}
           </div>
         </div>
       )

@@ -226,7 +226,7 @@ export default function OrderDetails({ session, routeParam }) {
     setErrorInfo({})
     const response = await axios
       .post(
-        `/admin/orders/shipping-product`,
+        `/admin/orders/shipping-product-to-buyer`,
         {
           order_slug: data.slug,
           tracking_number: trackingNumber,

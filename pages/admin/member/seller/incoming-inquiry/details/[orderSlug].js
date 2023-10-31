@@ -52,10 +52,10 @@ export default function InquiryDetails({ session, routeParam }) {
           },
         }
       )
-      window.open(`pdf/proforma-invoice/${data.slug}`, '_blank')
     } catch (error) {
       toast.error(error.data.message, toastOptions)
     } finally {
+      window.open(`pdf/proforma-invoice/${data.slug}`, '_blank')
       setisLoadingProformaInvoice(false)
     }
   }
@@ -73,10 +73,10 @@ export default function InquiryDetails({ session, routeParam }) {
           },
         }
       )
-      window.open(`pdf/seller-packing-list/${data.slug}`, '_blank')
     } catch (error) {
       toast.error(error.data.message, toastOptions)
     } finally {
+      window.open(`pdf/seller-packing-list/${data.slug}`, '_blank')
       setisLoadingPackingList(false)
     }
   }
