@@ -1,5 +1,5 @@
+import React from 'react'
 import Link from 'next/link'
-
 //component
 import Pagination from '@/components/Shared/Component/Pagination'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'

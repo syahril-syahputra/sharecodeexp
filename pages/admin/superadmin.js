@@ -3,7 +3,6 @@ import { getSession } from 'next-auth/react'
 import axios from '@/lib/axios'
 import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
-
 import Link from 'next/link'
 
 // superadmin
@@ -90,7 +89,7 @@ export default function SuperadminDashboard({ session, message }) {
           <ComponentCardAdminDashboard
             dataName={data.pending_companies}
             url={'/admin/superadmin/registry/pendingcompany'}
-            name={'Pending Company'}
+            name={'Pending Company Registry'}
           />
         )
       case '4':
@@ -98,7 +97,7 @@ export default function SuperadminDashboard({ session, message }) {
           <ComponentCardAdminDashboard
             dataName={data.pending_product}
             url={'/admin/superadmin/product/pending'}
-            name={'Pending Product'}
+            name={'Pending Product Approval'}
           />
         )
       case '5':
@@ -107,14 +106,14 @@ export default function SuperadminDashboard({ session, message }) {
             <ComponentCardAdminDashboard
               dataName={data?.order_process_one?.active_order || 0}
               url={'/admin/superadmin/orders/allorders'}
-              name={'Active Orders'}
+              name={'Status Update for Active Orders'}
             />
             <ComponentCardAdminDashboard
               dataName={data.order_process_one?.approve_reject_payment || 0}
               url={
                 '/admin/superadmin/orders/allorders?orderStatus=payment-uploaded'
               }
-              name={'Approve / Reject Payment'}
+              name={'Approve/Reject Payment of Buyer'}
             />
           </>
         )
@@ -133,7 +132,7 @@ export default function SuperadminDashboard({ session, message }) {
               url={
                 '/admin/superadmin/orders/allorders?orderStatus=invoice-uploaded'
               }
-              name={'Release Payment'}
+              name={'Release Payment to Seller'}
             />
           </>
         )
@@ -143,24 +142,24 @@ export default function SuperadminDashboard({ session, message }) {
             <ComponentCardAdminDashboard
               dataName={data.pending_companies}
               url={'/admin/superadmin/registry/pendingcompany'}
-              name={'Pending Company'}
+              name={'Pending Compan Registry'}
             />
             <ComponentCardAdminDashboard
               dataName={data.pending_product}
               url={'/admin/superadmin/product/pending'}
-              name={'Pending Product'}
+              name={'Pending Product Approval'}
             />
             <ComponentCardAdminDashboard
               dataName={data?.order_process_one?.active_order || 0}
               url={'/admin/superadmin/orders/allorders'}
-              name={'Active Orders'}
+              name={'Status Update for Active Orders'}
             />
             <ComponentCardAdminDashboard
               dataName={data.order_process_one?.approve_reject_payment || 0}
               url={
                 '/admin/superadmin/orders/allorders?orderStatus=payment-uploaded'
               }
-              name={'Approve / Reject Payment'}
+              name={'Approve/Reject Payment of Buyer'}
             />
             <ComponentCardAdminDashboard
               dataName={data.order_process_two?.pending_shipment || 0}
@@ -174,12 +173,17 @@ export default function SuperadminDashboard({ session, message }) {
               url={
                 '/admin/superadmin/orders/allorders?orderStatus=invoice-uploaded'
               }
-              name={'Release Payment'}
+              name={'Release Payment to Seller'}
             />
             <ComponentCardAdminDashboard
               dataName={data.uploaded_additional_documents || 0}
               url={'/admin/superadmin/registry/uploadedcompany'}
               name={'Additional Document Need to Review'}
+            />
+            <ComponentCardAdminDashboard
+              dataName={data.uploaded_additional_documents || 0}
+              url={'/admin/superadmin/registry/uploadedcompany'}
+              name={'Reimbursement'}
             />
           </>
         )

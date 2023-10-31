@@ -62,6 +62,7 @@ export default function DetailUploadedExcel({ session, data }) {
     }
     uploadHandler(file.target.files[0])
   }
+
   return (
     <PrimaryWrapper>
       {data.requested_for_update && (
@@ -198,6 +199,7 @@ async function fetchData(context, accessToken) {
         },
       }
     )
+
     return data
   } catch (error) {
     console.error(error)
@@ -207,6 +209,7 @@ async function fetchData(context, accessToken) {
 export async function getServerSideProps(context) {
   const session = await getSession(context)
   const result = await fetchData(context, session.accessToken)
+
   return {
     props: {
       session,

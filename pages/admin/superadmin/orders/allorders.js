@@ -1,23 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
-import axios from "lib/axios"
-import { getSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import React, { useState, useEffect, useRef } from 'react'
+import axios from 'lib/axios'
+import { getSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import Admin from 'layouts/Admin.js'
+import OrderList from '@/components/Table/Superadmin/Orders/OrderList'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
+import TextInput from '@/components/Interface/Form/TextInput'
+import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
+import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import InfoButton from '@/components/Interface/Buttons/InfoButton'
+import SelectInput from '@/components/Interface/Form/SelectInput'
+import { AdminUrl } from '@/route/route-url'
 
-// layout for page
-import Admin from "layouts/Admin.js";
-
-// components
-import OrderList from "@/components/Table/Superadmin/Orders/OrderList"
-import { toast } from 'react-toastify';
-import { toastOptions } from "@/lib/toastOptions"
-import TextInput from "@/components/Interface/Form/TextInput";
-import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
-import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
-import InfoButton from "@/components/Interface/Buttons/InfoButton";
-import SelectInput from "@/components/Interface/Form/SelectInput";
-import { AdminUrl } from "@/route/route-url";
-
-export default function FindByStatusOrder({session, routeParam}) {
+export default function FindByStatusOrder({ session, routeParam }) {
   //data search
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
@@ -25,58 +21,61 @@ export default function FindByStatusOrder({session, routeParam}) {
   const [metaData, setMetaData] = useState({
     total: 0,
     perPage: 0,
-    lastPage: 0
+    lastPage: 0,
   })
 
   let orderStatusFromRoute = routeParam
   const [orderStatusOptions, setOrderStatusOption] = useState([])
   const loadOrderStatusOption = async () => {
-    const request = await axios.get(`/allstatus`)
-      .then(response => {
+    const request = await axios
+      .get(`/allstatus`)
+      .then((response) => {
         let res = response.data.data
         setOrderStatusOption(res)
-        res.filter(option => {
-            if(option.value === orderStatusFromRoute) {
-                setOrderStatus({
-                    'label' : option.label,
-                    'value' : option.value
-                })
-            }
+        res.filter((option) => {
+          if (option.value === orderStatusFromRoute) {
+            setOrderStatus({
+              label: option.label,
+              value: option.value,
+            })
+          }
         })
       })
       .catch(() => {
-        toast.error("Cannot load order status.", toastOptions)
+        toast.error('Cannot load order status.', toastOptions)
       })
   }
 
   const [pageNumber, setPageNumber] = useState('')
   const [orderStatus, setOrderStatus] = useState({
-    'label': 'Select Order Status',
-    'value': ''
+    label: 'Select Order Status',
+    value: '',
   })
   const [orderNumber, setOrderNumber] = useState('')
   const [manufacturerPartNumber, setManufacturerPartNumber] = useState('')
   const [orderDate, setOrderDate] = useState('')
   const loadData = async (
-      page=1, 
-      orderStatusParam=orderStatusFromRoute ? orderStatusFromRoute : '', 
-      orderNumberParam='', 
-      manufacturerPartNumberParam='', 
-      orderDateParam=''
-    ) =>{
+    page = 1,
+    orderStatusParam = orderStatusFromRoute ? orderStatusFromRoute : '',
+    orderNumberParam = '',
+    manufacturerPartNumberParam = '',
+    orderDateParam = ''
+  ) => {
     setPageNumber(page)
     setIsLoading(true)
-    const response = await axios.get('/admin/orders/list'
-      +`?page=${page}`
-      +`&status=${orderStatusParam}`
-      +`&order_number=${orderNumberParam}`
-      +`&manufacturer_part_number=${manufacturerPartNumberParam}`
-      +`&order_date=${orderDateParam}`
-      +`&active=1`,
+    const response = await axios
+      .get(
+        '/admin/orders/list' +
+          `?page=${page}` +
+          `&status=${orderStatusParam}` +
+          `&order_number=${orderNumberParam}` +
+          `&manufacturer_part_number=${manufacturerPartNumberParam}` +
+          `&order_date=${orderDateParam}` +
+          `&active=1`,
         {
           headers: {
-            "Authorization" : `Bearer ${session.accessToken}`
-          }
+            Authorization: `Bearer ${session.accessToken}`,
+          },
         }
       )
       .then((response) => {
@@ -89,30 +88,38 @@ export default function FindByStatusOrder({session, routeParam}) {
           lastPage: result.last_page,
           currentPage: result.current_page,
           nextPage: result.next_page_url ? true : false,
-          prevPage: result.prev_page_url ? true : false
+          prevPage: result.prev_page_url ? true : false,
         })
-      }).catch((error) => {
-          toast.error("Something went wrong. Cannot load order.", toastOptions)
-      }).finally(() => {
+      })
+      .catch((error) => {
+        toast.error('Something went wrong. Cannot load order.', toastOptions)
+      })
+      .finally(() => {
         setIsLoading(false)
       })
   }
   const handleSearchData = () => {
-    loadData(1, orderStatus?.value, orderNumber, manufacturerPartNumber, orderDate)
+    loadData(
+      1,
+      orderStatus?.value,
+      orderNumber,
+      manufacturerPartNumber,
+      orderDate
+    )
   }
   const router = useRouter()
   const handleResetSearchFilter = () => {
-    if(orderStatusFromRoute){
+    if (orderStatusFromRoute) {
       orderStatusFromRoute = ''
       router.push(`${AdminUrl.orderProduct.allOrders}`)
     }
     setOrderStatus({
-      'label': 'Select Order Status',
-      'value': ''
+      label: 'Select Order Status',
+      value: '',
     })
     setManufacturerPartNumber('')
     setOrderNumber('')
-    setOrderDate('')        
+    setOrderDate('')
     loadData()
   }
   const setPage = (pageNumber) => {
@@ -127,16 +134,12 @@ export default function FindByStatusOrder({session, routeParam}) {
   return (
     <>
       <div className="mb-10">
-        <h1 className="font-semibold text-2xl">
-          Orders
-        </h1>
+        <h1 className="font-semibold text-2xl">Orders</h1>
         <PrimaryWrapper className={`mt-5 p-5`}>
-          <h2 className="text-xl text-center">
-            Search Active Order
-          </h2>
+          <h2 className="text-xl text-center">Search Active Order</h2>
           <div className="grid grid-cols-2 gap-3 mt-2">
             <div className="text-center">
-              <TextInput 
+              <TextInput
                 value={orderNumber}
                 onChange={(target) => setOrderNumber(target.value)}
                 placeholder="Order Number"
@@ -153,9 +156,9 @@ export default function FindByStatusOrder({session, routeParam}) {
           <div className="grid grid-cols-2 gap-3 mt-4">
             <div className="text-center">
               <SelectInput
-                  value={orderStatus}
-                  options={orderStatusOptions}
-                  onChange={(input) => setOrderStatus(input)}
+                value={orderStatus}
+                options={orderStatusOptions}
+                onChange={(input) => setOrderStatus(input)}
               />
             </div>
             <div className="text-center">
@@ -169,18 +172,14 @@ export default function FindByStatusOrder({session, routeParam}) {
           </div>
 
           <div className="mt-10 text-center">
-            <PrimaryButton 
-              onClick={handleSearchData}
-              className="w-1/2 mr-2">
+            <PrimaryButton onClick={handleSearchData} className="w-1/2 mr-2">
               Search
             </PrimaryButton>
-            <InfoButton 
-              onClick={handleResetSearchFilter}
-              className="w-1/6">
+            <InfoButton onClick={handleResetSearchFilter} className="w-1/6">
               Reset
             </InfoButton>
           </div>
-        </PrimaryWrapper>        
+        </PrimaryWrapper>
         <OrderList
           filterStatus
           setPage={setPage}
@@ -191,18 +190,21 @@ export default function FindByStatusOrder({session, routeParam}) {
         ></OrderList>
       </div>
     </>
-  );
+  )
 }
 
-FindByStatusOrder.layout = Admin;
+FindByStatusOrder.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
-  const orderStatus = context.query.orderStatus ? context.query.orderStatus : null
+  const orderStatus = context.query.orderStatus
+    ? context.query.orderStatus
+    : null
+
   return {
-      props: {
-          session,
-          routeParam: orderStatus
-      }
+    props: {
+      session,
+      routeParam: orderStatus,
+    },
   }
 }

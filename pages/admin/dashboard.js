@@ -19,7 +19,7 @@ async function fetchUser(context, accessToken) {
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
-  const result = await fetchUser(context, session.accessToken)
+  const result = await fetchUser(context, session?.accessToken)
   if (!session) {
     return {
       redirect: {
