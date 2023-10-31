@@ -35,7 +35,27 @@ export default function ShipProduct(props) {
     }
   }
 
-  const openProformaInvoice = () => {}
+  const openProformaInvoice = async () => {
+    try {
+      setisLoadingProformaInvoice(true)
+      await axios.post(
+        `/seller/order/verification-action/open-proforma-invoice`,
+        {
+          order_slug: props.orderSlug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      window.open(`pdf/proforma-invoice/${props.orderSlug}`, '_blank')
+    } catch (error) {
+      toast.error(error.data.message, toastOptions)
+    } finally {
+      setisLoadingProformaInvoice(false)
+    }
+  }
   const openPackingList = async () => {
     try {
       setisLoadingPackingList(true)
@@ -50,7 +70,7 @@ export default function ShipProduct(props) {
           },
         }
       )
-      window.open(`/pdf/seller-packing-list/${props.orderSlug}`, '_blank')
+      window.open(`pdf/seller-packing-list/${props.orderSlug}`, '_blank')
     } catch (error) {
       toast.error(error.data.message, toastOptions)
     } finally {

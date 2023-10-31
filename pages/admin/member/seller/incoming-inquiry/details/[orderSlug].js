@@ -34,10 +34,57 @@ export default function InquiryDetails({ session, routeParam }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({})
   const [isOrderValid, setIsOrderValid] = useState(true)
-  const loadData = async () => {
+
+  const [isLoadingPackingList, setisLoadingPackingList] = useState(false)
+  const [isLoadingProformaInvoice, setisLoadingProformaInvoice] =
+    useState(false)
+  const openProformaInvoice = async () => {
+    try {
+      setisLoadingProformaInvoice(true)
+      await axios.post(
+        `/seller/order/verification-action/open-proforma-invoice`,
+        {
+          order_slug: data.slug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      window.open(`pdf/proforma-invoice/${data.slug}`, '_blank')
+    } catch (error) {
+      toast.error(error.data.message, toastOptions)
+    } finally {
+      setisLoadingProformaInvoice(false)
+    }
+  }
+  const openPackingList = async () => {
+    try {
+      setisLoadingPackingList(true)
+      await axios.post(
+        `/seller/order/verification-action/open-packing-list`,
+        {
+          order_slug: data.slug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      window.open(`pdf/seller-packing-list/${data.slug}`, '_blank')
+    } catch (error) {
+      toast.error(error.data.message, toastOptions)
+    } finally {
+      setisLoadingPackingList(false)
+    }
+  }
+
+  const loadData = () => {
     setIsLoading(true)
     setErrorInfo({})
-    const response = await axios
+    axios
       .get(`/seller/order/${routeParam.orderSlug}/detail`, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -842,15 +889,39 @@ export default function InquiryDetails({ session, routeParam }) {
                 </div>
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
-                    <span>Packaging List</span>
+                    <span>Packaging Lists</span>
                     {data.seller_packing_list_available == 1 ? (
-                      <Link
-                        target="_blank"
-                        href={`pdf/seller-packing-list/${data.slug}`}
-                        className="underline text-blue-500"
+                      <label
+                        onClick={openPackingList}
+                        className={
+                          'underline ' +
+                          (isLoadingPackingList
+                            ? 'text-blue-300 cursor-wait'
+                            : 'text-blue-500 cursor-pointer')
+                        }
                       >
-                        view
-                      </Link>
+                        {isLoadingPackingList ? 'loading' : 'view'}
+                      </label>
+                    ) : (
+                      <span className="underline text-gray-500">view</span>
+                    )}
+                  </div>
+                </div>
+                <div className="mx-2 mt-1 text-sm">
+                  <div className="flex flex-wrap justify-between">
+                    <span>Proforma Invoice</span>
+                    {data.proforma_invoice_available == 1 ? (
+                      <label
+                        onClick={openProformaInvoice}
+                        className={
+                          'underline ' +
+                          (isLoadingProformaInvoice
+                            ? 'text-blue-300 cursor-wait'
+                            : 'text-blue-500 cursor-pointer')
+                        }
+                      >
+                        {isLoadingProformaInvoice ? 'loading' : 'view'}
+                      </label>
                     ) : (
                       <span className="underline text-gray-500">view</span>
                     )}
