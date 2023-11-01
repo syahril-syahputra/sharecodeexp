@@ -1,5 +1,6 @@
-import TopNavBar from '@/components/Navbar2V/TopNavbar';
-import BottomNavbar from './BottomNavbar';
+import React from 'react'
+import TopNavBar from '@/components/Navbar2V/TopNavbar'
+import BottomNavbar from './BottomNavbar'
 
 const Navbar = () => {
   return (
@@ -7,7 +8,7 @@ const Navbar = () => {
       <TopNavBar />
       <BottomNavbar />
     </div>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

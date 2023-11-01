@@ -1,10 +1,11 @@
-import * as routeUrl from '@/route/route-url';
+import * as routeUrl from '@/route/route-url'
 import {
   HomeIcon,
   Cog8ToothIcon,
   ShoppingCartIcon,
   FolderIcon,
-} from '@heroicons/react/24/outline';
+  lifebuoy,
+} from '@heroicons/react/24/outline'
 
 export const dahsboard = [
   {
@@ -13,7 +14,7 @@ export const dahsboard = [
     icon: HomeIcon,
     current: false,
   },
-];
+]
 
 export const sellerDahsboard = [
   {
@@ -22,7 +23,7 @@ export const sellerDahsboard = [
     icon: HomeIcon,
     current: false,
   },
-];
+]
 
 export const sellerNavigation = [
   {
@@ -37,7 +38,7 @@ export const sellerNavigation = [
     current: false,
     href: routeUrl.VendorUrl.sellingProduct.incomingInquiries.index,
   },
-];
+]
 
 export const buyerDahsboard = [
   {
@@ -46,7 +47,7 @@ export const buyerDahsboard = [
     icon: HomeIcon,
     current: false,
   },
-];
+]
 
 export const buyerNavigation = [
   {
@@ -55,7 +56,7 @@ export const buyerNavigation = [
     current: false,
     href: routeUrl.VendorUrl.buyingProduct.inquiredProduct.index,
   },
-];
+]
 
 export const vendorsNavigation = [
   {
@@ -73,4 +74,13 @@ export const vendorsNavigation = [
       },
     ],
   },
-];
+]
+
+export const help = [
+  {
+    name: 'Dashboard',
+    href: routeUrl.VendorUrl.dahsboard,
+    icon: HomeIcon,
+    current: false,
+  },
+]

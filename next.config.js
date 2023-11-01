@@ -1,9 +1,8 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+module.exports = {
+  reactStrictMode: false,
   eslint: {
     ignoreDuringBuilds: true,
   },
-  reactStrictMode: false,
   exportPathMap: async function (
     defaultPathMap,
     { dev, dir, outDir, distDir, buildId }
@@ -16,6 +15,3 @@ const nextConfig = {
     unoptimized: true,
   },
 }
-
-module.exports = nextConfig
-

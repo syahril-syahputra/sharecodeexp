@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-
-//comp
 import NeedLoginModal from '@/components/Modal/NeedLogin/NeedLogin'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import BaseTable from '@/components/Interface/Table/BaseTable'
@@ -10,20 +8,38 @@ import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import NoData from '@/components/Interface/Table/NoData'
 import MetaData from '@/components/Interface/Table/MetaData'
 import Pagination from '@/components/Shared/Component/Pagination'
+import DetailProdutModal from '@/components/Modal/DetailProdutModal/DetailProdutModal'
 
 export default function TableComponent(props) {
   const { status } = useSession()
   const router = useRouter()
-
   const [isInquiryClicked, setIsInquiryClicked] = useState(false)
+  const [isDetailClicked, setIsDetailClicked] = useState(false)
+  const [slugState, setSlugState] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [cartLoading, setCartLoading] = useState({ id: 0 })
+  const [cartLoadingDetail, setCartLoadingDetail] = useState({
+    id: 0,
+    slug: '',
+  })
   const [showModal, setShowModal] = useState(false)
+  const [showModalDetail, setShowModalDetail] = useState(false)
   const inquiryItem = (item) => {
-    setIsInquiryClicked(true)
     if (status === 'unauthenticated') {
       setShowModal(true)
+      setSlugState(item)
       setIsInquiryClicked(false)
-    } else {
+    }
+
+    if (status === 'authenticated') {
       router.push(`/admin/member/buyer/product/details/${item}`)
+    }
+  }
+
+  const detailItem = () => {
+    if (status === 'unauthenticated') {
+      setShowModalDetail(true)
+      setIsDetailClicked(false)
     }
   }
 
@@ -62,7 +78,7 @@ export default function TableComponent(props) {
               {props.data.map((item, index) => {
                 return (
                   <tr
-                    key={index}
+                    key={item?.id + `${index}`}
                     className="bg-white border-b hover:bg-gray-50"
                   >
                     <th
@@ -77,16 +93,32 @@ export default function TableComponent(props) {
                     <td className="px-6 py-4">{item.moq}</td>
                     <td className="px-6 py-4">{item.country}</td>
                     <td className="px-6 py-4 text-right">
-                      <PrimaryButton
-                        disabled={isInquiryClicked}
-                        size="sm"
-                        onClick={() => inquiryItem(item.slug)}
+                      <div
+                        className={`items-center  ${
+                          status === 'unauthenticated' ? 'flex-1 space-x-2' : ''
+                        }`}
                       >
-                        {isInquiryClicked && (
-                          <i className="px-3 fas fa-hourglass fa-spin"></i>
-                        )}
-                        {!isInquiryClicked && 'Inquire'}
-                      </PrimaryButton>
+                        <PrimaryButton
+                          id={item?.id}
+                          key={item?.id}
+                          disabled={isInquiryClicked}
+                          size="sm"
+                          onClick={async () => {
+                            setIsInquiryClicked(true)
+                            setCartLoading((previouse) => ({
+                              ...previouse,
+                              id: item.id,
+                            }))
+                            inquiryItem(item.slug)
+                          }}
+                        >
+                          {cartLoading?.id === item?.id ? (
+                            <i className="px-3 fas fa-hourglass fa-spin"></i>
+                          ) : (
+                            'Inquire'
+                          )}
+                        </PrimaryButton>
+                      </div>
                     </td>
                   </tr>
                 )
@@ -106,7 +138,20 @@ export default function TableComponent(props) {
         metaData={props.metaData}
         setPage={props.setPage}
       />
-      {showModal ? <NeedLoginModal setShowModal={setShowModal} /> : null}
+      {showModal ? (
+        <NeedLoginModal
+          setShowModal={setShowModal}
+          item={slugState}
+          isLoading={[isLoading, setIsLoading]}
+          setCartLoading={setCartLoading}
+        />
+      ) : null}
+      {showModalDetail ? (
+        <DetailProdutModal
+          setShowModal={setShowModalDetail}
+          item={cartLoadingDetail?.slug}
+        />
+      ) : null}
     </>
   )
 }

@@ -1,8 +1,14 @@
 const siteMetadata = {
-  title: "EXEpart - Search and find your components from top industry manufacturer's excess stocks.",
+  title:
+    "EXEpart - Search and find your components from top industry manufacturer's excess stocks.",
+  titleDetailSearch:
+    "EXEpart - detail component from top industry manufacturer's excess stocks.",
   author: 'Venatronics Developer',
-  headerTitle: "Search and find your components from top industry manufacturer's excess stocks.",
-  description: 'EXEpart is a closed sales platform that only allows verified industrial manufacturers to list their excess stocks and buy stocks from fellow manufacturers. It is a great tool to overcome the shortage crisis while enabling the manufacturers to capitalize their unused stocks. No brokers are allowed to register at EXEpart.com',
+  headerTitle:
+    "Search and find your components from top industry manufacturer's excess stocks.",
+  description:
+    'EXEpart is a closed sales platform that only allows verified industrial manufacturers to list their excess stocks and buy stocks from fellow manufacturers. It is a great tool to overcome the shortage crisis while enabling the manufacturers to capitalize their unused stocks. No brokers are allowed to register at EXEpart.com',
+  descriptionDetailSearch: '',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'exepart.com',

@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import axios from 'lib/axios'
 import { getSession } from 'next-auth/react'
-
+import ErrorInput from '@/components/Shared/ErrorInput'
 // layout for page
 import Admin from 'layouts/Admin.js'
 
@@ -21,7 +21,6 @@ import TextInput from '@/components/Interface/Form/TextInput'
 import NumberInput from '@/components/Interface/Form/NumberInput'
 import AreaInput from '@/components/Interface/Form/AreaInput'
 import SelectInput from '@/components/Interface/Form/SelectInput'
-import ErrorInput from '@/components/Shared/ErrorInput'
 
 export default function EditComponent({ session, routeParam, packaginglist }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -97,6 +96,7 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
         toast.success('Product has been updated.', toastOptions)
       })
       .catch((error) => {
+        // console.log(error)
         toast.error(
           'Something went wrong. Check your form correctly.',
           toastOptions
@@ -134,7 +134,7 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
         setCategories(response.data.data)
       })
       .catch((error) => {
-        console.log('failed to load categories')
+        // console.log('failed to load categories')
       })
   }
   useEffect(() => {
@@ -173,7 +173,7 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
         setSubCategories(response.data.data)
       })
       .catch((error) => {
-        console.log('failed to load subcategories')
+        // console.log('failed to load subcategories')
       })
   }
   useEffect(() => {

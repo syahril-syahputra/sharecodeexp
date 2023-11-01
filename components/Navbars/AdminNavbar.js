@@ -1,16 +1,17 @@
-import React, {useState, useEffect, useContext} from "react";
-import { useSession, signOut } from "next-auth/react"
+import React, { useState, useEffect, useContext } from 'react'
+import { useSession, signOut } from 'next-auth/react'
 
-import UserDropdown from "components/Dropdowns/UserDropdown.js";
-import LogoutModal from "@/components/Modal/Logout/Logout";
+import UserDropdown from 'components/Dropdowns/UserDropdown.js'
+import LogoutModal from '@/components/Modal/Logout/Logout'
 
 export default function Navbar() {
   const session = useSession()
   const [userDetail, setUserDetail] = useState()
-  useEffect(() => { 
-    setUserDetail(session.data?.user.userDetail) 
+  useEffect(() => {
+    setUserDetail(session.data?.user.userDetail)
   }, [session])
   const [logoutModal, setLogoutModal] = useState(false)
+
   return (
     <>
       {/* Navbar */}
@@ -22,9 +23,7 @@ export default function Navbar() {
             href="#pablo"
             onClick={(e) => e.preventDefault()}
           >
-            {userDetail?.role_id == 1 ? 
-              'STAFF ONLY'
-            : 'MEMBER AREA' }
+            {userDetail?.role_id == 1 ? 'STAFF ONLY' : 'MEMBER AREA'}
           </a>
           {/* User */}
           <ul className="flex-col md:flex-row list-none items-center hidden md:flex">
@@ -36,7 +35,9 @@ export default function Navbar() {
               //     callbackUrl: `${window.location.origin}`
               //   });
               // }}
-            className="ml-4" title="Logout">
+              className="ml-4"
+              title="Logout"
+            >
               <i className="fas fa-right-from-bracket text-white mr-2"></i>
             </button>
           </ul>
@@ -45,17 +46,17 @@ export default function Navbar() {
           </ul> */}
         </div>
       </nav>
-      {logoutModal && 
-        <LogoutModal 
-            closeModal={() => setLogoutModal(false)}
-            acceptance={() => {
-                signOut({
-                    callbackUrl: `${window.location.origin}`
-                });
-            }}
+      {logoutModal && (
+        <LogoutModal
+          closeModal={() => setLogoutModal(false)}
+          acceptance={() => {
+            signOut({
+              callbackUrl: `${window.location.origin}`,
+            })
+          }}
         />
-      }
+      )}
       {/* End Navbar */}
     </>
-  );
+  )
 }
