@@ -73,21 +73,29 @@ export default function AcceptPayment(props) {
                 <input
                   type="checkbox"
                   checked={isReviewd}
+                  id="reviewBuyerPayment"
                   onChange={(e) => setisReviewd(!isReviewd)}
                 />
-                <span className="ml-2 text-sm font-medium text-gray-900">
+                <label
+                  htmlFor="reviewBuyerPayment"
+                  className="ml-2 text-sm font-medium text-gray-900"
+                >
                   Reviewed Buyer&lsquo;s Payment
-                </span>
+                </label>
               </li>
               <li className="item-center flex space-x-2">
                 <input
                   type="checkbox"
                   checked={isAccept}
+                  id="acceptBuyerPayment"
                   onChange={(e) => setisAccept(!isAccept)}
                 />
-                <span className="ml-2 text-sm font-medium text-gray-900">
+                <label
+                  htmlFor="acceptBuyerPayment"
+                  className="ml-2 text-sm font-medium text-gray-900"
+                >
                   Accept Buyer&lsquo;s Payment
-                </span>
+                </label>
               </li>
             </ul>
           </div>

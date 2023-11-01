@@ -481,6 +481,7 @@ export default function InquiryDetails({ session, routeParam }) {
               isLoading={isLoading}
               closeModal={() => setShipProductModal(false)}
               acceptance={shipProductHanlde}
+              proformaDocs={data.proforma_doc}
               orderSlug={data.slug}
               errorInfo={errorInfo}
             />

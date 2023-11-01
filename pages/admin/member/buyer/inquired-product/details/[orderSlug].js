@@ -47,6 +47,8 @@ export default function InquiryDetails({ session, routeParam }) {
 
   const [acceptOrderModal, setAcceptOrderModal] = useState(false)
   const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
+  const [availabledDateAcceptQuotation, setavailabledDateAcceptQuotation] =
+    useState('')
   const loadData = async () => {
     setIsLoading(true)
     setErrorInfo({})
@@ -122,6 +124,7 @@ export default function InquiryDetails({ session, routeParam }) {
         loadData()
       })
       .catch((error) => {
+        setavailabledDateAcceptQuotation(error.data.data.available_after)
         if (error.data.message === 'This inquiry is not yet available.') {
           const timeDiference = calculateTimeDifference(
             error.data.data.available_after
@@ -416,6 +419,7 @@ export default function InquiryDetails({ session, routeParam }) {
               orderSlug={data.slug}
               closeModal={() => setAcceptQuotationModal(false)}
               acceptance={acceptQuotationModalHandle}
+              availableDate={availabledDateAcceptQuotation}
             />
           )}
 
