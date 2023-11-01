@@ -13,8 +13,8 @@ export default function PrimaryNotification(props) {
       </span>
       <div className="text-sm font-normal w-full">
         <span className="mb-1 text-sm font-semibold">{props.message}</span>
-        {props.timer && (
-          <div className="mb-1 text-sm font-normal">{props.timer}</div>
+        {props.detail && (
+          <div className="mb-1 text-sm font-normal">{props.detail}</div>
         )}
       </div>
       {props.onCloseNotification && (
