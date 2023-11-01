@@ -1,7 +1,6 @@
+import React from 'react'
 import moment from 'moment'
 import { checkValue } from '@/utils/general'
-
-// components
 import BaseTable from '@/components/Interface/Table/BaseTable'
 import Pagination from '@/components/Shared/Component/Pagination'
 import NoData from '@/components/Interface/Table/NoData'
@@ -21,6 +20,9 @@ export default function OrderList(props) {
             <>
               <th scope="col" className="px-6 py-3">
                 Order Number
+              </th>
+              <th scope="col" className="px-8 py-3">
+                Order Created On
               </th>
               <th scope="col" className="px-6 py-3">
                 Manufacturer Part Number (Country)
@@ -43,9 +45,9 @@ export default function OrderList(props) {
               <th scope="col" className="px-6 py-3">
                 Status
               </th>
-              <th scope="col" className="px-6 py-3">
+              {/* <th scope="col" className="px-6 py-3">
                 Order Created On
-              </th>
+              </th> */}
               <th scope="col" className="px-6 py-3 text-right">
                 Action
               </th>
@@ -59,10 +61,15 @@ export default function OrderList(props) {
                     key={index}
                     className="bg-white border-b hover:bg-gray-50"
                   >
-                    <td scope="row" className="text-xs px-6 py-4">
+                    <td scope="row" className="text-xs px-8 py-4">
                       {checkValue(item.order_number)}
                     </td>
-                    <td scope="row" className="text-xs px-6 py-4">
+                    <td className="text-xs px-6 py-4">
+                      {item.order_date
+                        ? moment(item.order_date).format('dddd, D MMMM YYYY')
+                        : '-'}
+                    </td>
+                    <td scope="row" className="text-xs px-8 py-4">
                       {item.companies_products.ManufacturerNumber}{' '}
                       <span className="text-xs">
                         ({item.companies_products.country})
@@ -88,14 +95,16 @@ export default function OrderList(props) {
                     <td className="text-xs px-6 py-4">
                       {item.order_status.name}
                     </td>
-                    <td className="text-xs px-6 py-4">
-                      {item.order_date
-                        ? moment(item.order_date).format('dddd, D MMMM YYYY')
-                        : '-'}
-                    </td>
                     <td className="text-xs px-6 py-4 text-right">
                       <div className="inline-flex">
-                        <NavigationViewButton navigationId={item.slug} />
+                        <NavigationViewButton
+                          disabled={
+                            +(item?.qty || '0') === 0 || item?.qty === null
+                              ? true
+                              : false
+                          }
+                          navigationId={item.slug}
+                        />
                       </div>
                     </td>
                   </tr>

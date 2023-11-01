@@ -29,6 +29,7 @@ import { checkValue } from '@/utils/general'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import calculateTimeDifference from '@/lib/calculateTimeDifference'
 
+
 export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   //data search
@@ -139,13 +140,13 @@ export default function InquiryDetails({ session, routeParam }) {
         // const localTimeZone = moment.local()
         // momentObject.tz(localTimeZone)
         // const localTime = momentObject.format('YYYY-MM-DD HH:mm:ss')
-
         setErrorInfo(error.data.data)
       })
       .finally(() => {
         setIsLoading(false)
       })
   }
+
 
   const loadRejectionReason = async () => {
     setIsLoading(true)
@@ -899,6 +900,15 @@ export default function InquiryDetails({ session, routeParam }) {
                   </div>
                 </div>
               )}
+              <div className="mx-2 my-1 text-sm font-bold text-gray-500">
+                Note:
+              </div>
+              <div className="mx-2 text-sm text-gray-500 mb-5">
+                Price is only for the product. The order type is Ex-works. The
+                price you see on screen does not include logistic costs,
+                customs, tax, insurance or any additional expenses that may
+                occur.
+              </div>
             </PrimaryWrapper>
           </div>
         </div>

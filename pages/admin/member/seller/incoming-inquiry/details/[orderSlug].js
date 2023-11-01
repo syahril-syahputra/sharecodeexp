@@ -167,6 +167,7 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
+
   const [rejectInquiryModal, setRejectInquiryModal] = useState(false)
   const rejectInquiryModalHandle = async (inputData) => {
     setIsLoading(true)
@@ -485,7 +486,6 @@ export default function InquiryDetails({ session, routeParam }) {
               errorInfo={errorInfo}
             />
           )}
-
           <div className="flex justify-center">
             <div className="mx-2 my-4">
               <PrimaryButton
@@ -595,7 +595,6 @@ export default function InquiryDetails({ session, routeParam }) {
             </div>
           )}
         </PrimaryWrapper>
-
         {/* seller tracking number */}
         <div className="flex">
           <div className="w-1/2 lg:w-1/3 mr-4">
@@ -605,6 +604,16 @@ export default function InquiryDetails({ session, routeParam }) {
               </div>
               <div className="mx-2 mb-5 text-xl">
                 {checkValue(data.trackingSeller)}
+              </div>
+            </PrimaryWrapper>
+          </div>
+          <div className="w-1/2 lg:w-1/3 mr-4">
+            <PrimaryWrapper className="p-1">
+              <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
+                Courier
+              </div>
+              <div className="mx-2 mb-5 text-xl">
+                {checkValue(data.courier)}
               </div>
             </PrimaryWrapper>
           </div>
