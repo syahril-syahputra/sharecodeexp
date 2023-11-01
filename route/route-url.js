@@ -76,6 +76,14 @@ export const VendorUrl = {
       detail: '/admin/member/buyer/inquired-product/details',
     },
   },
+  reimbursement: {
+    active: {
+      index: '/admin/member/buyer/reimbursement/active',
+    },
+    completed: {
+      index: '/admin/member/buyer/reimbursement/completed',
+    },
+  },
   // sellingComponent: {
   //     stocks : {
   //         approved: "/admin/member/sellcomponents/component",

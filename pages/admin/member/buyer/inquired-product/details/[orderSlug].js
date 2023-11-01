@@ -4,7 +4,6 @@ import axios from '@/lib/axios'
 import Link from 'next/link'
 import Image from 'next/image'
 import moment from 'moment'
-
 // components
 import AcceptQuotationModal from '@/components/Modal/OrderComponent/Buyer/AcceptQuotation'
 import RejectQuotationModal from '@/components/Modal/OrderComponent/Buyer/RejectQuotation'
@@ -14,7 +13,6 @@ import AcceptOrderModal from '@/components/Modal/OrderComponent/Buyer/AcceptOrde
 import DidntReceiveAnyModal from '@/components/Modal/OrderComponent/Buyer/DidntReceiveAny'
 import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
-
 // layout for page
 import Admin from 'layouts/Admin.js'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
@@ -35,6 +33,17 @@ export default function InquiryDetails({ session, routeParam }) {
   const [errorInfo, setErrorInfo] = useState({})
   const [data, setData] = useState([])
   const [isOrderValid, setIsOrderValid] = useState(true)
+  const [acceptQuotationModal, setAcceptQuotationModal] = useState(false)
+  const [rejectionReason, setRejectionReasons] = useState([
+    { value: 'other', label: 'Other' },
+  ])
+  const [rejectQuotationModal, setRejectQuotationModal] = useState(false)
+  const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
+  const [acceptOrderModal, setAcceptOrderModal] = useState(false)
+  const [sendUpdatedPaymentDocsModal, setSendUpdatedPaymentDocsModal] =
+    useState(false)
+  const [sendPaymentDocsModal, setSendPaymentDocsModal] = useState(false)
+
   const loadData = async () => {
     setIsLoading(true)
     setErrorInfo({})
@@ -59,6 +68,10 @@ export default function InquiryDetails({ session, routeParam }) {
   }
   useEffect(() => {
     loadData()
+  }, [])
+
+  useEffect(() => {
+    loadRejectionReason()
   }, [])
 
   if (!isOrderValid) {
@@ -86,7 +99,7 @@ export default function InquiryDetails({ session, routeParam }) {
     )
   }
 
-  const [acceptQuotationModal, setAcceptQuotationModal] = useState(false)
+  // const [acceptQuotationModal, setAcceptQuotationModal] = useState(false)
   const acceptQuotationModalHandle = async () => {
     setIsLoading(true)
     const response = await axios
@@ -118,9 +131,9 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
-  const [rejectionReason, setRejectionReasons] = useState([
-    { value: 'other', label: 'Other' },
-  ])
+  // const [rejectionReason, setRejectionReasons] = useState([
+  //   { value: 'other', label: 'Other' },
+  // ])
   const loadRejectionReason = async () => {
     setIsLoading(true)
     const response = await axios
@@ -139,11 +152,11 @@ export default function InquiryDetails({ session, routeParam }) {
         setIsLoading(false)
       })
   }
-  useEffect(() => {
-    loadRejectionReason()
-  }, [])
+  // useEffect(() => {
+  //   loadRejectionReason()
+  // }, [])
 
-  const [rejectQuotationModal, setRejectQuotationModal] = useState(false)
+  // const [rejectQuotationModal, setRejectQuotationModal] = useState(false)
   const rejectQuotationModalHandle = async (quotationRejectionReason) => {
     setIsLoading(true)
     const response = await axios
@@ -177,7 +190,9 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
-  const [sendPaymentDocsModal, setSendPaymentDocsModal] = useState(false)
+  // Hook linter error
+  // const [sendPaymentDocsModal, setSendPaymentDocsModal] = useState(false)
+
   const sendPaymentDocsModalHandle = async (paymentDocument) => {
     setIsLoading(true)
     setErrorInfo({})
@@ -208,8 +223,10 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
-  const [sendUpdatedPaymentDocsModal, setSendUpdatedPaymentDocsModal] =
-    useState(false)
+  // hooks errror linter
+  // const [sendUpdatedPaymentDocsModal, setSendUpdatedPaymentDocsModal] =
+  //   useState(false)
+
   const sendUpdatedPaymentDocsModalHandle = async (paymentDocument) => {
     setIsLoading(true)
     setErrorInfo({})
@@ -240,7 +257,8 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
-  const [acceptOrderModal, setAcceptOrderModal] = useState(false)
+  // Hook linter error
+  // const [acceptOrderModal, setAcceptOrderModal] = useState(false)
   const acceptOrderModalHandle = async () => {
     setIsLoading(true)
     const response = await axios
@@ -273,7 +291,7 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
-  const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
+  // const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
   const handleDidntReceiveAny = async () => {
     setIsLoading(true)
     const response = await axios
@@ -885,6 +903,15 @@ export default function InquiryDetails({ session, routeParam }) {
                   </div>
                 </div>
               )}
+              <div className="mx-2 my-1 text-sm font-bold text-gray-500">
+                Note:
+              </div>
+              <div className="mx-2 text-sm text-gray-500 mb-5">
+                Price is only for the product. The order type is Ex-works. The
+                price you see on screen does not include logistic costs,
+                customs, tax, insurance or any additional expenses that may
+                occur.
+              </div>
             </PrimaryWrapper>
           </div>
         </div>

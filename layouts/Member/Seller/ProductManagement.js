@@ -43,6 +43,16 @@ export default function ProductManagement({ product }) {
                 <PrimaryBadges title={product.approved} />
               </Link>
               <Link
+                href="/admin/member/seller/product/out-of-stock"
+                className={classNames(
+                  false ? 'bg-gray-50' : 'hover:bg-gray-50',
+                  'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
+                )}
+              >
+                Out of Stock
+                <PrimaryBadges title={product.out_of_stock} />
+              </Link>
+              <Link
                 href="/admin/member/seller/product/pending"
                 className={classNames(
                   false ? 'bg-gray-50' : 'hover:bg-gray-50',

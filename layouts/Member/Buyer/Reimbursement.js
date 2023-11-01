@@ -34,24 +34,28 @@ export default function Reimbursement({ reimbursement }) {
             </Disclosure.Button>
             <Disclosure.Panel as="ul" className="mt-1 px-2">
               <Link
-                href="/admin/member/buyer/reimbursement/reimbursement-active"
+                href="/admin/member/buyer/reimbursement/active"
                 className={classNames(
                   false ? 'bg-gray-50' : 'hover:bg-gray-50',
                   'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                 )}
               >
                 Active Reimbursement
-                <PrimaryBadges title={0} />
+                <PrimaryBadges
+                  title={reimbursement?.reimbursement_active || 0}
+                />
               </Link>
               <Link
-                href="/admin/member/buyer/reimbursement/reimbursement-closed"
+                href="/admin/member/buyer/reimbursement/completed"
                 className={classNames(
                   false ? 'bg-gray-50' : 'hover:bg-gray-50',
                   'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                 )}
               >
                 Closed Reimbursement
-                <PrimaryBadges title={0} />
+                <PrimaryBadges
+                  title={reimbursement?.reimbursement_complete || 0}
+                />
               </Link>
             </Disclosure.Panel>
           </>

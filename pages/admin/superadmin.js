@@ -56,6 +56,7 @@ export default function SuperadminDashboard({ session, message }) {
       release_payment: 0,
     },
   })
+
   useEffect(() => {
     if (!!message) {
       toast.warning(message, toastOptions)
@@ -181,8 +182,8 @@ export default function SuperadminDashboard({ session, message }) {
               name={'Additional Document Need to Review'}
             />
             <ComponentCardAdminDashboard
-              dataName={data.uploaded_additional_documents || 0}
-              url={'/admin/superadmin/registry/uploadedcompany'}
+              dataName={data.reimbursement || 0}
+              url={'/admin/superadmin/reimbursement/active'}
               name={'Reimbursement'}
             />
           </>

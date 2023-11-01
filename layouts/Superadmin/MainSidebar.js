@@ -6,7 +6,6 @@ import Registry from '@/layouts/Superadmin/Registry'
 import ProductManagement from '@/layouts/Superadmin/ProductManagement'
 import Order from '@/layouts/Superadmin/Order'
 import Reimbursment from '../Member/Buyer/Reimbursement'
-import Reimbursement from '../Member/Buyer/Reimbursement'
 
 export default function MainSidebar() {
   const session = useSession()

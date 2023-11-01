@@ -97,7 +97,14 @@ export default function OrderList(props) {
                     </td>
                     <td className="text-xs px-6 py-4 text-right">
                       <div className="inline-flex">
-                        <NavigationViewButton navigationId={item.slug} />
+                        <NavigationViewButton
+                          disabled={
+                            +(item?.qty || '0') === 0 || item?.qty === null
+                              ? true
+                              : false
+                          }
+                          navigationId={item.slug}
+                        />
                       </div>
                     </td>
                   </tr>

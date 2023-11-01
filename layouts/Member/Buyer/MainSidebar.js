@@ -13,7 +13,6 @@ export default function MainSidebar() {
 
   const { buyerSidebarCounter, loadBuyerSidebarCounter } =
     useContext(GlobalContext)
-
   useEffect(() => {
     loadBuyerSidebarCounter(session.data.accessToken)
   }, [session])
@@ -25,7 +24,7 @@ export default function MainSidebar() {
           <ul role="list" className="-mx-2 space-y-1">
             <SearchProduct />
             <InquiredProduct order={buyerSidebarCounter.order} />
-            <Reimbursment />
+            <Reimbursment reimbursement={buyerSidebarCounter?.order} />
           </ul>
         </li>
       </ul>
