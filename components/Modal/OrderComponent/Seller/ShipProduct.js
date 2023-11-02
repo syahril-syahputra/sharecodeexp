@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
 import TextInput from '@/components/Interface/Form/TextInput'
 import LightButton from '@/components/Interface/Buttons/LightButton'
@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
 import { useSession } from 'next-auth/react'
 import axios from '@/lib/axios'
+
 export default function ShipProduct(props) {
   const [trackingNumber, setTrackingNumber] = useState('')
   const [courier, setcourier] = useState('')
@@ -77,6 +78,7 @@ export default function ShipProduct(props) {
       setisLoadingPackingList(false)
     }
   }
+
   return (
     <BaseModalMedium
       title="Ship Product to LAB"
@@ -107,7 +109,10 @@ export default function ShipProduct(props) {
                 <SecondaryButton
                   onClick={openProformaInvoice}
                   size="sm"
-                  disabled={isLoadingProformaInvoice || !props.proformaDocs}
+                  disabled={
+                    isLoadingProformaInvoice ||
+                    props.proformaInvoiceAvailable === '0'
+                  }
                   outline
                 >
                   {isLoadingProformaInvoice && (
@@ -118,7 +123,10 @@ export default function ShipProduct(props) {
                 <SecondaryButton
                   onClick={openPackingList}
                   size="sm"
-                  disabled={isLoadingPackingList}
+                  disabled={
+                    isLoadingPackingList ||
+                    props.sellerPackingListAvailable === '0'
+                  }
                   outline
                 >
                   {isLoadingPackingList && (

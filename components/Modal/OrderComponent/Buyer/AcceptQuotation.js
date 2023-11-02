@@ -1,3 +1,4 @@
+import React from 'react'
 import moment from 'moment'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
@@ -13,7 +14,7 @@ import { useRouter } from 'next/router'
 
 export default function VerifyOrder(props) {
   const test_free = parseFloat(props.price * props.quantity) > 1000
-  const [isOpenend, setisOpenend] = useState(false)
+  const [isOpenend, setisOpenend] = useState(props.openedQuotation)
   const [isShowMessage, setisShowMessage] = useState(false)
   const { data: session } = useSession()
   const router = useRouter()
@@ -51,8 +52,10 @@ export default function VerifyOrder(props) {
     if (availableDate) {
       const utcMoment = moment.utc(availableDate, 'YYYY-MM-DD HH:mm:ss')
       const localMoment = utcMoment.local()
+
       return localMoment.format('dddd, D MMMM YYYY, HH:mm:ss')
     }
+
     return ''
   }
 
@@ -120,6 +123,7 @@ export default function VerifyOrder(props) {
             onClick={() => acceptHandler()}
           >
             {props.isLoading && (
+              // eslint-disable-next-line react/react-in-jsx-scope
               <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
             )}
             Yes, Accept

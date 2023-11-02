@@ -125,14 +125,15 @@ export default function InquiryDetails({ session, routeParam }) {
       })
       .catch((error) => {
         setavailabledDateAcceptQuotation(error.data.data.available_after)
+
         if (error.data.message === 'This inquiry is not yet available.') {
           const timeDiference = calculateTimeDifference(
             error.data.data.available_after
           )
-          toast.error(
-            error.data.message + '\navailable in ' + timeDiference,
-            toastOptions
-          )
+          const timer = error.data.data.available_after
+            ? '\navailable in ' + timeDiference
+            : ''
+          toast.error(error.data.message + timer, toastOptions)
         } else {
           toast.error(error.data.message, toastOptions)
         }
@@ -420,6 +421,7 @@ export default function InquiryDetails({ session, routeParam }) {
               closeModal={() => setAcceptQuotationModal(false)}
               acceptance={acceptQuotationModalHandle}
               availableDate={availabledDateAcceptQuotation}
+              openedQuotation={data.is_quotation_opened === '1' ? true : false}
             />
           )}
 

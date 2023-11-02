@@ -481,7 +481,8 @@ export default function InquiryDetails({ session, routeParam }) {
               isLoading={isLoading}
               closeModal={() => setShipProductModal(false)}
               acceptance={shipProductHanlde}
-              proformaDocs={data.proforma_doc}
+              proformaInvoiceAvailable={data.proforma_invoice_available}
+              sellerPackingListAvailable={data.seller_packing_list_available}
               orderSlug={data.slug}
               errorInfo={errorInfo}
             />
@@ -981,6 +982,7 @@ InquiryDetails.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+
   return {
     props: {
       session: session,

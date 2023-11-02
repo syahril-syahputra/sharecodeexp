@@ -1125,11 +1125,27 @@ export default function OrderDetails({ session, routeParam }) {
                 </div>
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
-                    <span>Proforma Invoice</span>
+                    <span>Proforma Invoice for Buyer</span>
                     {data.proforma_invoice_available == 1 ? (
                       <Link
                         target="_blank"
                         href={`pdf/proforma-invoice/${data.slug}`}
+                        className="underline text-blue-500"
+                      >
+                        view
+                      </Link>
+                    ) : (
+                      <span className="underline text-gray-500">view</span>
+                    )}
+                  </div>
+                </div>
+                <div className="mx-2 mt-1 text-sm">
+                  <div className="flex flex-wrap justify-between">
+                    <span>Proforma Invoice for Seller</span>
+                    {data.proforma_invoice_available == 1 ? (
+                      <Link
+                        target="_blank"
+                        href={`pdf/proforma-invoice-seller/${data.slug}`}
                         className="underline text-blue-500"
                       >
                         view
@@ -1245,6 +1261,23 @@ export default function OrderDetails({ session, routeParam }) {
               </div>
               {actionToTake}
             </PrimaryWrapper>
+            <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Event History
+              </div>
+              <ul className="space-y-2 p-2 text-sm">
+                {data.event_history.map((item) => (
+                  <li key={item.id} className="flex">
+                    <span className="text-cyan-700 mr-2 w-1/5 ">
+                      {moment(item.updated_at)
+                        .local()
+                        .format('DD MMM YYYY hh:mm')}
+                    </span>
+                    <span>{item.description}</span>
+                  </li>
+                ))}
+              </ul>
+            </PrimaryWrapper>
           </div>
         </div>
       </div>
@@ -1256,6 +1289,7 @@ OrderDetails.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+
   return {
     props: {
       session,
