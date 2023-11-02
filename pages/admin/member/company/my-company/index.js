@@ -27,7 +27,6 @@ import UpdateRegistrationDocumentModal from '@/components/Modal/Member/Company/U
 
 export default function MyCompany({ session }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
-
   //data search
   const [isLoading, setIsLoading] = useState(true)
   const [companyData, setCompanyData] = useState()
@@ -242,6 +241,14 @@ export default function MyCompany({ session }) {
                 <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{' '}
                 {companyData.country}, {companyData.address}
               </div>
+              {companyData?.address2 === '' ||
+              companyData.address2 === null ||
+              companyData.address2 === undefined ? null : (
+                <div className="text-sm leading-normal mt-2 mb-2 text-blueGray-400 font-bold uppercase">
+                  <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{' '}
+                  {companyData.address2}
+                </div>
+              )}
               <div className="text-sm leading-normal mt-2 mb-2 text-blueGray-400 font-bold uppercase">
                 <i className="fas fa-phone mr-2 text-lg text-blueGray-400"></i>{' '}
                 {companyData.phone}

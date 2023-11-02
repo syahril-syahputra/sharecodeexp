@@ -34,6 +34,7 @@ import InfoNotification from '@/components/Interface/Notification/InfoNotificati
 import DangerNotification from '@/components/Interface/Notification/DangerNotification'
 import { useContext } from 'react'
 import GlobalContext from '@/store/global-context'
+import { Tooltip } from '@/components/Tooltip'
 
 export default function CompanyDetail({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -65,7 +66,7 @@ export default function CompanyDetail({ session, routeParam }) {
   }, [])
 
   const updateState = () => {
-    context.loadAdminSidebarCounter(session.accessToken)
+    context.loadAdminSidebarCounter(session?.accessToken)
   }
 
   useEffect(() => {
@@ -378,6 +379,16 @@ export default function CompanyDetail({ session, routeParam }) {
               <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{' '}
               {companyData.country}, {companyData.address}
             </div>
+            {/* <Tooltip tooltipText={'Country and Address 2'}> */}
+            {companyData?.address2 === '' ||
+            companyData.address2 === null ||
+            companyData.address2 === undefined ? null : (
+              <div className="text-sm leading-normal mt-2 mb-2 text-blueGray-400 font-bold uppercase">
+                <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{' '}
+                {companyData.address2}
+              </div>
+            )}
+            {/* </Tooltip> */}
             <div className="text-sm leading-normal mt-2 mb-2 text-blueGray-400 font-bold uppercase">
               <i className="fas fa-phone mr-2 text-lg text-blueGray-400"></i>{' '}
               {companyData.phone}

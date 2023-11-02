@@ -1,58 +1,53 @@
-import React, { useEffect, useState } from "react";
-import { createPopper } from "@popperjs/core";
-import { useSession, signIn, signOut } from "next-auth/react"
-import { useRouter } from "next/router";
-import PrimaryButton from "../Interface/Buttons/PrimaryButton";
+import React, { useEffect, useState } from 'react'
+import { createPopper } from '@popperjs/core'
+import { useSession, signIn, signOut } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import PrimaryButton from '../Interface/Buttons/PrimaryButton'
 
 const UserDropdown = () => {
   // dropdown props
   const router = useRouter()
   const session = useSession()
   const [user, setUser] = useState({
-    name: '...'
+    name: '...',
   })
-  useEffect(() => { setUser({name: session.data?.name}) }, [session])
+  useEffect(() => {
+    setUser({ name: session.data?.name })
+  }, [session])
 
-  const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
-  const btnDropdownRef = React.createRef();
-  const popoverDropdownRef = React.createRef();
+  const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false)
+  const btnDropdownRef = React.createRef()
+  const popoverDropdownRef = React.createRef()
   const openDropdownPopover = () => {
     createPopper(btnDropdownRef.current, popoverDropdownRef.current, {
-      placement: "bottom-end",
-    });
-    setDropdownPopoverShow(true);
-  };
+      placement: 'bottom-end',
+    })
+    setDropdownPopoverShow(true)
+  }
   const closeDropdownPopover = () => {
-    setDropdownPopoverShow(false);
-  };
+    setDropdownPopoverShow(false)
+  }
+
   return (
     <>
-      <a
-        className="text-blueGray-500 block"
-        ref={btnDropdownRef}
-      >
+      <a className="text-blueGray-500 block" ref={btnDropdownRef}>
         <div className="items-center flex">
-            
-            <PrimaryButton
-              size="sm"
-              className="cursor-default"
-              type="button"
-              >
-                Hi, {user?.name}
-            </PrimaryButton>
+          <PrimaryButton size="sm" className="cursor-default" type="button">
+            Hi, {user?.name}
+          </PrimaryButton>
         </div>
       </a>
       <div
         ref={popoverDropdownRef}
         className={
-          (dropdownPopoverShow ? "block " : "hidden ") +
-          "bg-white text-base z-50 float-left py-2 list-none text-left shadow-lg min-w-48"
+          (dropdownPopoverShow ? 'block ' : 'hidden ') +
+          'bg-white text-base z-50 float-left py-2 list-none text-left shadow-lg min-w-48'
         }
       >
         <a
           href="#pablo"
           className={
-            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+            'text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700'
           }
           onClick={(e) => e.preventDefault()}
         >
@@ -62,19 +57,19 @@ const UserDropdown = () => {
         <a
           href="#pablo"
           className={
-            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+            'text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700'
           }
           onClick={() => {
             signOut({
-              callbackUrl: `${window.location.origin}`
-            });
+              callbackUrl: `${window.location.origin}`,
+            })
           }}
         >
           Logout
         </a>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default UserDropdown;
+export default UserDropdown

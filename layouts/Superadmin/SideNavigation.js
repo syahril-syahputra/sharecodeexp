@@ -1,15 +1,17 @@
-import {dahsboard, navigation} from './navigation';
-import Link from 'next/link';
-import classNames from '@/utils/classNames';
-import {Disclosure} from '@headlessui/react';
-import {ChevronRightIcon} from '@heroicons/react/20/solid';
-import {HomeIcon} from '@heroicons/react/24/outline';
-import {AdminUrl} from '@/route/route-url';
+import React from 'react'
+import { dahsboard, navigation } from './navigation'
+import Link from 'next/link'
+import classNames from '@/utils/classNames'
+import { Disclosure } from '@headlessui/react'
+import { ChevronRightIcon } from '@heroicons/react/20/solid'
+import { HomeIcon } from '@heroicons/react/24/outline'
+import { AdminUrl } from '@/route/route-url'
 
-import MainSidebar from './MainSidebar';
+import MainSidebar from './MainSidebar'
 
-function SideNavigation({...props}) {
-  const {session} = props;
+function SideNavigation({ ...props }) {
+  const { session } = props
+
   return (
     <nav className="">
       {/* dashboard */}
@@ -61,7 +63,7 @@ function SideNavigation({...props}) {
                   </Link>
                 ) : (
                   <Disclosure as="div">
-                    {({open}) => (
+                    {({ open }) => (
                       <>
                         <Disclosure.Button
                           className={classNames(
@@ -113,7 +115,7 @@ function SideNavigation({...props}) {
         </li>
       </ul>
     </nav>
-  );
+  )
 }
 
-export default SideNavigation;
+export default SideNavigation

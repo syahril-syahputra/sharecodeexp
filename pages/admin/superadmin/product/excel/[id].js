@@ -34,7 +34,6 @@ export default function DetailUploadedExcel({ session, data }) {
   }
 
   const router = useRouter()
-
   const uploadHandler = async (file) => {
     setisOnUploading(true)
     const formData = new FormData()
@@ -95,7 +94,7 @@ export default function DetailUploadedExcel({ session, data }) {
       }
       window.location.href = process.env.NEXT_PUBLIC_DIR + data.path_dirty_file
     } catch (error) {
-      console.log(error)
+      //   console.log(error)
       toast.error(error, toastOptions)
     } finally {
       setisDetailLoading(false)
@@ -353,6 +352,7 @@ async function fetchData(context, accessToken) {
         },
       }
     )
+
     return data
   } catch (error) {
     console.error(error)
@@ -362,6 +362,7 @@ async function fetchData(context, accessToken) {
 export async function getServerSideProps(context) {
   const session = await getSession(context)
   const result = await fetchData(context, session.accessToken)
+
   return {
     props: {
       session,

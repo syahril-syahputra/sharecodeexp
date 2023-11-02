@@ -57,7 +57,8 @@ export default function MyProduct({ session, routeParam }) {
         }
         rightTop={
           <>
-            <Link
+            {/* /this line code unused due to task https://venatronics-dev.atlassian.net/jira/software/projects/EX/boards/2?assignee=712020%3A7e9286ec-874a-4a10-826a-81ccef33c4c3&selectedIssue=EX-106 */}
+            {/* <Link
               target="_blank"
               href={publicDir + '/product_datasheet/' + data.datasheet}
             >
@@ -69,7 +70,7 @@ export default function MyProduct({ session, routeParam }) {
                 <i className="mr-2 ml-1 fas fa-eye"></i>
                 View Datasheet
               </SecondaryButton>
-            </Link>
+            </Link> */}
             {!!data.id && (
               <Link href={`/admin/member/seller/product/edit/${data.slug}`}>
                 <WarningButton size="sm">
