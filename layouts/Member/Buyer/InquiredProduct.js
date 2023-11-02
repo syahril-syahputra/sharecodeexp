@@ -76,20 +76,6 @@ export default function IncomingInquiries({ order }) {
                 Complete Orders
                 <PrimaryBadges title={order.complete} />
               </Link>
-
-              {/* This link comment due to change request on cart task 
-              https://venatronics-dev.atlassian.net/jira/software/projects/EX/boards/2?assignee=712020%3A7e9286ec-874a-4a10-826a-81ccef33c4c3&selectedIssue=EX-145
-              */}
-              {/* <Link
-                href="/admin/member/buyer/inquired-product/product-not-arrived"
-                className={classNames(
-                  false ? 'bg-gray-50' : 'hover:bg-gray-50',
-                  'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
-                )}
-              >
-                Didn't Receive Any
-                <PrimaryBadges title={order.not_arrived} />
-              </Link> */}
             </Disclosure.Panel>
           </>
         )}

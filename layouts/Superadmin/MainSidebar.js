@@ -12,6 +12,7 @@ export default function MainSidebar() {
   const { data } = session
   const { adminSidebarCounter, loadAdminSidebarCounter } =
     useContext(GlobalContext)
+  console.log(adminSidebarCounter, '<<<adminSidebarCounter')
   useEffect(() => {
     loadAdminSidebarCounter(session.data.accessToken)
   }, [session])

@@ -1,24 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import { getSession } from 'next-auth/react'
-import axios from '@/lib/axios'
-import { useRouter } from 'next/router'
-import { VendorUrl } from '@/route/route-url'
-
-// components
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
-
-// layout for page
 import Admin from 'layouts/Admin.js'
+import axios from '@/lib/axios'
+import { getSession } from 'next-auth/react'
+import InfoButton from '@/components/Interface/Buttons/InfoButton'
 import InquiredProductTable from '@/components/Table/Member/Buyer/Order/InquiredProduct'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
-import TextInput from '@/components/Interface/Form/TextInput'
 import SelectInput from '@/components/Interface/Form/SelectInput'
-import InfoButton from '@/components/Interface/Buttons/InfoButton'
+import TextInput from '@/components/Interface/Form/TextInput'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
+import { useRouter } from 'next/router'
+import { VendorUrl } from '@/route/route-url'
 
 export default function InquiredProduct({ session, routeParam }) {
-  //data search
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])

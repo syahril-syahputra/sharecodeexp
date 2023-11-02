@@ -50,7 +50,7 @@ export default function InquiryDetails({ session, routeParam }) {
     const response = await axios
       .get(`/buyer/order/${routeParam.orderSlug}/detail`, {
         headers: {
-          Authorization: `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session?.accessToken}`,
         },
       })
       .then((response) => {

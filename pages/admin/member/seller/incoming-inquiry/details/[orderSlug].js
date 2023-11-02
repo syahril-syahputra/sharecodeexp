@@ -432,29 +432,24 @@ export default function InquiryDetails({ session, routeParam }) {
               errorInfo={errorInfo}
             />
           )}
-
-          <div className="w-full lg:w-1/3">
-            <PrimaryWrapper>
-              <div className="flex justify-center">
-                <div className="mx-2 my-4">
-                  <PrimaryButton
-                    outline
-                    className="mx-1"
-                    size="sm"
-                    disabled={isLoading}
-                    onClick={() => setShipProductModal(true)}
-                  >
-                    Ship Product to LAB
-                  </PrimaryButton>
-                </div>
-              </div>
-              <div className="mx-2 my-1 text-sm font-bold text-gray-500">
-                Note:
-              </div>
-              <div className="mx-2 text-sm text-gray-500 mb-5">
-                Use proforma invoice and packing list to send product to LAB.
-              </div>
-            </PrimaryWrapper>
+          <div className="flex flex-col">
+            <div className="mx-2 my-4 flex justify-center">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setShipProductModal(true)}
+              >
+                Ship Product to LAB
+              </PrimaryButton>
+            </div>
+            <div className="mx-2 my-1 text-sm font-bold text-gray-500">
+              Note:
+            </div>
+            <div className="mx-2 text-sm text-gray-500 mb-5">
+              Use proforma invoice and packing list to send product to LAB.
+            </div>
           </div>
         </div>
       )
