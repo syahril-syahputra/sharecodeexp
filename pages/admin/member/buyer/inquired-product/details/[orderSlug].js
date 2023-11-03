@@ -862,11 +862,23 @@ export default function InquiryDetails({ session, routeParam }) {
                   )}
                 </div>
               </div>
-              <div className="mx-2 my-1 text-sm border-b">
+              <div className="mx-2 my-1 text-sm ">
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500">Unit Price (USD)</span>
                   {!isLoading ? (
                     <span>${data.price_profite}</span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="mx-2 my-1 text-sm border-b">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Test Lab Fee (USD)</span>
+                  {!isLoading ? (
+                    <span>${data.order_price_amount?.test_fee_amount}</span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -882,9 +894,9 @@ export default function InquiryDetails({ session, routeParam }) {
                   {!isLoading ? (
                     <span>
                       $
-                      {data.price_profite
-                        ? parseFloat(data.price_profite) * parseInt(data.qty)
-                        : ''}
+                      {parseInt(
+                        data.order_price_amount?.grand_total.replace(/,/g, '')
+                      )}
                     </span>
                   ) : (
                     <div className="animate-pulse">

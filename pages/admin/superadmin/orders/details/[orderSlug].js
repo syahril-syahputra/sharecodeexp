@@ -1003,7 +1003,9 @@ export default function OrderDetails({ session, routeParam }) {
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500">Test Lab Fee (USD)</span>
                   {!isLoading ? (
-                    <span>${data.price}</span>
+                    <span>
+                      ${data.order_price_amount_buyer.test_fee_amount}
+                    </span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -1019,9 +1021,12 @@ export default function OrderDetails({ session, routeParam }) {
                   {!isLoading ? (
                     <span>
                       $
-                      {data.price_profite
-                        ? parseFloat(data.price_profite) * parseInt(data.qty)
-                        : ''}
+                      {parseInt(
+                        data.order_price_amount_buyer?.grand_total.replace(
+                          /,/g,
+                          ''
+                        )
+                      )}
                     </span>
                   ) : (
                     <div className="animate-pulse">
