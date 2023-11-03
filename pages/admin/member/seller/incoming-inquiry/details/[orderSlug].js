@@ -971,6 +971,33 @@ export default function InquiryDetails({ session, routeParam }) {
               </div>
               {actionToTake}
             </PrimaryWrapper>
+            <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Event History
+              </div>
+              <ul className="space-y-2 p-2 text-sm">
+                {data.event_history?.length === 0 && (
+                  <div className="text-base italic text-center p-4">
+                    No Event History
+                  </div>
+                )}
+                {data.event_history?.map((item) => (
+                  <li key={item.id} className="flex">
+                    <span className="text-cyan-700 mr-2 w-1/5 ">
+                      {moment(item.updated_at)
+                        .local()
+                        .format('DD MMM YYYY hh:mm')}
+                    </span>
+                    <div>
+                      <span className="font-bold">{item.description}</span>
+                      {item.note && (
+                        <div className="italic py-2">{item.note}</div>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </PrimaryWrapper>
           </div>
         </div>
       </div>

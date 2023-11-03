@@ -952,6 +952,7 @@ export default function OrderDetails({ session, routeParam }) {
                   )}
                 </div>
               </div>
+
               <div className="mx-2 my-1 text-sm mb-5">
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500 font-bold">
@@ -986,11 +987,23 @@ export default function OrderDetails({ session, routeParam }) {
                   )}
                 </div>
               </div>
-              <div className="mx-2 my-1 text-sm border-b">
+              <div className="mx-2 my-1 text-sm ">
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500">Unit Price (USD)</span>
                   {!isLoading ? (
                     <span>${data.price_profite}</span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="mx-2 my-1 text-sm border-b">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Test Lab Fee (USD)</span>
+                  {!isLoading ? (
+                    <span>${data.price}</span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -1266,14 +1279,24 @@ export default function OrderDetails({ session, routeParam }) {
                 Event History
               </div>
               <ul className="space-y-2 p-2 text-sm">
-                {data.event_history.map((item) => (
+                {data.event_history?.length === 0 && (
+                  <div className="text-base italic text-center p-4">
+                    No Event History
+                  </div>
+                )}
+                {data.event_history?.map((item) => (
                   <li key={item.id} className="flex">
                     <span className="text-cyan-700 mr-2 w-1/5 ">
                       {moment(item.updated_at)
                         .local()
                         .format('DD MMM YYYY hh:mm')}
                     </span>
-                    <span>{item.description}</span>
+                    <div>
+                      <span className="font-bold">{item.description}</span>
+                      {item.note && (
+                        <div className="italic py-2">{item.note}</div>
+                      )}
+                    </div>
                   </li>
                 ))}
               </ul>
