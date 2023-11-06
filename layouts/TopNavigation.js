@@ -1,4 +1,3 @@
-import React from 'react'
 import { MyAccountUrl, VendorUrl } from '@/route/route-url'
 import { Fragment, useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -36,7 +35,6 @@ function TopNavigation({ setSidebarOpen, role }) {
   useEffect(() => {
     loadUsername(session.data.accessToken)
   }, [])
-
   return (
     <>
       <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
@@ -54,9 +52,7 @@ function TopNavigation({ setSidebarOpen, role }) {
 
         <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
           <div className="relative flex flex-1">
-            <div className="pt-5 text-gray-400">
-              {role == 1 && 'SUPERADMIN'}
-            </div>
+            <div className="pt-5 text-gray-400">{role == 1 && 'ADMIN'}</div>
             {/* <div className="pt-5 text-gray-400">{role == 3 && 'SUPERADMIN'}</div> */}
             <div className="pt-5 text-gray-400">
               {role == 2 &&

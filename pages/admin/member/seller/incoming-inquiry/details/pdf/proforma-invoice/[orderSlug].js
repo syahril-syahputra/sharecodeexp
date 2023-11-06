@@ -1,23 +1,22 @@
-import React from 'react'
 import { getSession } from 'next-auth/react'
 import axios from '@/lib/axios'
 import { useState, useEffect } from 'react'
 import { PDFViewer } from '@react-pdf/renderer'
-import PurchaseOrderPDFComp from '@/components/PDF/Order/PurchaseOrder'
 
-export default function PurchaseOrderPDF({ purchaseOrder }) {
+import ProformaInvoicePDFComp from '@/components/PDF/Order/ProformaInvoiceSeller'
+export default function ProformaInvoicePDF({ session, proformaInvoice }) {
   const [isClient, setIsClient] = useState(false)
+
   useEffect(() => {
     setIsClient(true)
   }, [])
-
   return (
     <>
       {isClient ? (
         <div>
           <div className="h-screen bg-gray-300 w-full grid place-items-center">
             <PDFViewer width={1000} height={750}>
-              <PurchaseOrderPDFComp purchaseOrder={purchaseOrder} />
+              <ProformaInvoicePDFComp proformaInvoice={proformaInvoice} />
             </PDFViewer>
           </div>
         </div>
@@ -38,24 +37,26 @@ export async function getServerSideProps(context) {
       },
     }
   }
-  let purchaseOrder = {}
-  const response = await axios
-    .get(`/document/order/${context.query.orderSlug}/purchase-order`, {
-      headers: {
-        Authorization: `Bearer ${session.accessToken}`,
-      },
-    })
-    .then((response) => {
-      let result = response.data.data
-      purchaseOrder = result
-    })
-    .catch((error) => {
-      purchaseOrder = null
-    })
+  let proformaInvoice = {}
+
+  try {
+    const response = await axios.get(
+      `/document/order/${context.query.orderSlug}/seller-proforma-invoice`,
+      {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      }
+    )
+    proformaInvoice = response.data.data
+  } catch (error) {
+    console.log(error)
+  }
 
   return {
     props: {
-      purchaseOrder,
+      proformaInvoice,
+      session,
     },
   }
 }

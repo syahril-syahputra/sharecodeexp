@@ -76,8 +76,13 @@ const Quotation = ({ quotation }) => {
             <View style={styles.inlineItem}>
               <Text style={styles.subTitleBuyer}>Contact Name</Text>
               <Text style={styles.subItem}>
-                : {quotation?.quotation_info?.name_user_buyer || '-'} (
-                {quotation?.quotation_info?.email_user_buyer || '-'})
+                : {quotation?.quotation_info?.name_user_buyer || '-'}
+              </Text>
+            </View>
+            <View style={styles.inlineItem}>
+              <Text style={styles.subTitleBuyer}>E-mail</Text>
+              <Text style={styles.subItem}>
+                : {quotation?.quotation_info?.email_user_buyer || '-'}
               </Text>
             </View>
           </View>

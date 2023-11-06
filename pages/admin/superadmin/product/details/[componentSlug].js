@@ -25,11 +25,13 @@ import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses'
 import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
 import { useSideBarStatus } from '@/domain/states/user_control/admin/hook'
 import GlobalContext from '@/store/global-context'
+import { useRouter } from 'next/router'
 
 export default function ComponentDetails({ session, routeParam }) {
   //data search
   const publicDir = process.env.NEXT_PUBLIC_DIR
   const context = useContext(GlobalContext)
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [component, setComponent] = useState({})
   const [stateError, setStateError] = useState(false)
@@ -87,6 +89,7 @@ export default function ComponentDetails({ session, routeParam }) {
       )
       .then(() => {
         toast.success('The product has been accepted.', toastOptions)
+        router.push('/admin/superadmin/product/pending')
       })
       .catch((error) => {
         toast.error(
@@ -119,6 +122,7 @@ export default function ComponentDetails({ session, routeParam }) {
       )
       .then(() => {
         toast.success('The product has been rejected.', toastOptions)
+        router.push('/admin/superadmin/product/pending')
       })
       .catch((error) => {
         toast.error(
@@ -383,6 +387,7 @@ ComponentDetails.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+
   return {
     props: {
       session,

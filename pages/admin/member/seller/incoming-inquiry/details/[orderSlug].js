@@ -36,19 +36,64 @@ export default function InquiryDetails({ session, routeParam }) {
   const [isOrderValid, setIsOrderValid] = useState(true)
   const [errorInfo, setErrorInfo] = useState({})
   const [verifyInquiryModal, setVerifyInquiryModal] = useState(false)
+  const [uploadInvoiceModal, setUploadInvoiceModal] = useState(false)
+  const [shipProductModal, setShipProductModal] = useState(false)
   const [rejectInquiryModal, setRejectInquiryModal] = useState(false)
   const [updateVerifiedInquiryModal, setUpdateVerifiedInquiryModal] =
     useState(false)
-  const [shipProductModal, setShipProductModal] = useState(false)
-  const [uploadInvoiceModal, setUploadInvoiceModal] = useState(false)
+  const [isLoadingPackingList, setisLoadingPackingList] = useState(false)
+  const [isLoadingProformaInvoice, setisLoadingProformaInvoice] =
+    useState(false)
+  const openProformaInvoice = async () => {
+    try {
+      setisLoadingProformaInvoice(true)
+      await axios.post(
+        `/seller/order/verification-action/open-proforma-invoice`,
+        {
+          order_slug: data.slug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+    } catch (error) {
+      toast.error(error.data.message, toastOptions)
+    } finally {
+      window.open(`pdf/proforma-invoice/${data.slug}`, '_blank')
+      setisLoadingProformaInvoice(false)
+    }
+  }
+  const openPackingList = async () => {
+    try {
+      setisLoadingPackingList(true)
+      await axios.post(
+        `/seller/order/verification-action/open-packing-list`,
+        {
+          order_slug: data.slug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+    } catch (error) {
+      toast.error(error.data.message, toastOptions)
+    } finally {
+      window.open(`pdf/seller-packing-list/${data.slug}`, '_blank')
+      setisLoadingPackingList(false)
+    }
+  }
 
-  const loadData = async () => {
+  const loadData = () => {
     setIsLoading(true)
     setErrorInfo({})
-    const response = await axios
+    axios
       .get(`/seller/order/${routeParam.orderSlug}/detail`, {
         headers: {
-          Authorization: `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session?.accessToken}`,
         },
       })
       .then((response) => {
@@ -96,73 +141,17 @@ export default function InquiryDetails({ session, routeParam }) {
   const verifyInquiryModalHandle = async (inputData) => {
     setIsLoading(true)
     setErrorInfo({})
-    const response = await axios
-      .post(
-        `/seller/order/verify-inquiry`,
-        {
-          order_slug: data.slug,
-          ...inputData,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session.accessToken}`,
-          },
-        }
-      )
-      .then((response) => {
-        toast.success(response.data.message, toastOptions)
-        setVerifyInquiryModal(false)
-        loadData()
-      })
-      .catch((error) => {
-        toast.error(
-          'Something went wrong. Cannot verify inquiry.',
-          toastOptions
-        )
-        setErrorInfo(error.data.data)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
   }
 
   const rejectInquiryModalHandle = async (inputData) => {
     setIsLoading(true)
     setErrorInfo({})
-    const response = await axios
-      .post(
-        `/seller/order/reject-inquiry`,
-        {
-          order_slug: data.slug,
-          ...inputData,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session.accessToken}`,
-          },
-        }
-      )
-      .then((response) => {
-        toast.success(response.data.message, toastOptions)
-        setRejectInquiryModal(false)
-        loadData()
-      })
-      .catch((error) => {
-        toast.error(
-          'Something went wrong. Cannot reject inquiry.',
-          toastOptions
-        )
-        setErrorInfo(error.data.data)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
   }
 
   const updateVerifiedInquiryHandle = async (inputData) => {
     setIsLoading(true)
     setErrorInfo({})
-    const response = await axios
+    axios
       .post(
         `/seller/order/update-verified-inquiry`,
         {
@@ -181,10 +170,7 @@ export default function InquiryDetails({ session, routeParam }) {
         loadData()
       })
       .catch((error) => {
-        toast.error(
-          'Something went wrong. Cannot update verified inquiry.',
-          toastOptions
-        )
+        toast.error(error.data.message, toastOptions)
         setErrorInfo(error.data.data)
       })
       .finally(() => {
@@ -192,37 +178,14 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
-  const shipProductHanlde = async (trackingNumber) => {
+  const shipProductHanlde = async (
+    trackingNumber,
+    courier,
+    isDownloadedPerformaInvoice,
+    isDownloadedPackingList
+  ) => {
     setIsLoading(true)
     setErrorInfo({})
-    const response = await axios
-      .post(
-        `/seller/order/shipping-product`,
-        {
-          order_slug: data.slug,
-          trackingSeller: trackingNumber,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session.accessToken}`,
-          },
-        }
-      )
-      .then((response) => {
-        toast.success(response.data.message, toastOptions)
-        setShipProductModal(false)
-        loadData()
-      })
-      .catch((error) => {
-        toast.error(
-          'Something went wrong. Cannot ship the product.',
-          toastOptions
-        )
-        setErrorInfo(error.data.data)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
   }
 
   const uploadInvoiceHandler = async (invoice) => {
@@ -231,27 +194,6 @@ export default function InquiryDetails({ session, routeParam }) {
     let formData = new FormData()
     formData.append('seller_invoice', invoice)
     formData.append('order_slug', data.slug)
-    const response = await axios
-      .post(`/seller/order/upload-invoice`, formData, {
-        headers: {
-          Authorization: `Bearer ${session.accessToken}`,
-        },
-      })
-      .then((response) => {
-        toast.success(response.data.message, toastOptions)
-        setShipProductModal(false)
-        loadData()
-      })
-      .catch((error) => {
-        toast.error(
-          'Something went wrong. Cannot upload the invoice.',
-          toastOptions
-        )
-        setErrorInfo(error.data.data)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
   }
 
   //notification
@@ -429,6 +371,7 @@ export default function InquiryDetails({ session, routeParam }) {
               isLoading={isLoading}
               closeModal={() => setShipProductModal(false)}
               acceptance={shipProductHanlde}
+              orderSlug={data.slug}
               errorInfo={errorInfo}
             />
           )}
@@ -547,7 +490,6 @@ export default function InquiryDetails({ session, routeParam }) {
             </div>
           )}
         </PrimaryWrapper>
-
         {/* seller tracking number */}
         <div className="flex">
           <div className="w-1/2 lg:w-1/3 mr-4">
@@ -566,7 +508,7 @@ export default function InquiryDetails({ session, routeParam }) {
                 Courier
               </div>
               <div className="mx-2 mb-5 text-xl">
-                {checkValue(data.courier)}
+                {checkValue(data.seller_courier)}
               </div>
             </PrimaryWrapper>
           </div>
@@ -696,7 +638,14 @@ export default function InquiryDetails({ session, routeParam }) {
                       data.companies_products?.AvailableQuantity
                     ) : (
                       <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                        {data?.companies_products?.AvailableQuantity === 0 ||
+                        data?.companies_products?.AvailableQuantity === null ? (
+                          <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
+                            Out of Stock
+                          </div>
+                        ) : (
+                          <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -851,15 +800,39 @@ export default function InquiryDetails({ session, routeParam }) {
                 </div>
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
-                    <span>Packaging List</span>
+                    <span>Packaging Lists</span>
                     {data.seller_packing_list_available == 1 ? (
-                      <Link
-                        target="_blank"
-                        href={`pdf/seller-packing-list/${data.slug}`}
-                        className="underline text-blue-500"
+                      <label
+                        onClick={openPackingList}
+                        className={
+                          'underline ' +
+                          (isLoadingPackingList
+                            ? 'text-blue-300 cursor-wait'
+                            : 'text-blue-500 cursor-pointer')
+                        }
                       >
-                        view
-                      </Link>
+                        {isLoadingPackingList ? 'loading' : 'view'}
+                      </label>
+                    ) : (
+                      <span className="underline text-gray-500">view</span>
+                    )}
+                  </div>
+                </div>
+                <div className="mx-2 mt-1 text-sm">
+                  <div className="flex flex-wrap justify-between">
+                    <span>Proforma Invoice</span>
+                    {data.proforma_invoice_available == 1 ? (
+                      <label
+                        onClick={openProformaInvoice}
+                        className={
+                          'underline ' +
+                          (isLoadingProformaInvoice
+                            ? 'text-blue-300 cursor-wait'
+                            : 'text-blue-500 cursor-pointer')
+                        }
+                      >
+                        {isLoadingProformaInvoice ? 'loading' : 'view'}
+                      </label>
                     ) : (
                       <span className="underline text-gray-500">view</span>
                     )}
@@ -918,7 +891,6 @@ InquiryDetails.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
-
   return {
     props: {
       session: session,

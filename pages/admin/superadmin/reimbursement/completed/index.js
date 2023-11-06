@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import Admin from 'layouts/Admin.js'
-import axios from '@/lib/axios'
+import Admin from '@/layouts/Admin'
+import axios from 'lib/axios'
 import { getSession } from 'next-auth/react'
 import InfoButton from '@/components/Interface/Buttons/InfoButton'
-import InquiredProductTable from '@/components/Table/Member/Buyer/Order/InquiredProduct'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import SelectInput from '@/components/Interface/Form/SelectInput'
@@ -11,9 +10,9 @@ import TextInput from '@/components/Interface/Form/TextInput'
 import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
 import { useRouter } from 'next/router'
-import { VendorUrl } from '@/route/route-url'
+import ReimbursementActiveCompletedTable from '@/components/Table/Superadmin/Reimbursement/active'
 
-export default function InquiredProduct({ session, routeParam }) {
+export default function ReimbursementActive({ session, routerParam }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
@@ -22,11 +21,16 @@ export default function InquiredProduct({ session, routeParam }) {
     perPage: 0,
     lastPage: 0,
   })
+  const [pageNumber, setPageNumber] = useState('')
+  const [orderStatus, setOrderStatus] = useState({
+    label: 'Select Order Status',
+    value: '',
+  })
 
-  let orderStatusFromRoute = routeParam
+  let orderStatusFromRoute = routerParam
   const [orderStatusOptions, setOrderStatusOption] = useState([])
   const loadOrderStatusOption = async () => {
-    const request = await axios
+    await axios
       .get(`/allstatus`)
       .then((response) => {
         let res = response.data.data
@@ -44,12 +48,6 @@ export default function InquiredProduct({ session, routeParam }) {
         toast.error('Cannot load order status.', toastOptions)
       })
   }
-
-  const [pageNumber, setPageNumber] = useState('')
-  const [orderStatus, setOrderStatus] = useState({
-    label: 'Select Order Status',
-    value: '',
-  })
   const [orderNumber, setOrderNumber] = useState('')
   const [manufacturerPartNumber, setManufacturerPartNumber] = useState('')
   const [orderDate, setOrderDate] = useState('')
@@ -62,15 +60,16 @@ export default function InquiredProduct({ session, routeParam }) {
   ) => {
     setPageNumber(page)
     setIsLoading(true)
-    const response = await axios
+    await axios
       .get(
-        '/buyer/order/list' +
+        '/admin/orders/list' +
           `?page=${page}` +
           `&status=${orderStatusParam}` +
           `&order_number=${orderNumberParam}` +
           `&manufacturer_part_number=${manufacturerPartNumberParam}` +
           `&order_date=${orderDateParam}` +
-          `&active=1`,
+          `&active=0` +
+          `&reimbursement=1`,
         {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
@@ -110,7 +109,7 @@ export default function InquiredProduct({ session, routeParam }) {
   const handleResetSearchFilter = () => {
     if (orderStatusFromRoute) {
       orderStatusFromRoute = ''
-      router.push(`${VendorUrl.buyingProduct.inquiredProduct.index}`)
+      router.push(`${VendorUrl.sellingProduct.incomingInquiries.index}`)
     }
     setOrderStatus({
       label: 'Select Order Status',
@@ -131,79 +130,77 @@ export default function InquiredProduct({ session, routeParam }) {
   }, [])
 
   return (
-    <>
-      <div className="mb-10">
-        <h1 className="font-semibold text-2xl">Orders</h1>
-        <PrimaryWrapper className={`mt-5 p-5`}>
-          <h2 className="text-xl text-center">Search Active Order</h2>
-          <div className="grid grid-cols-2 gap-3 mt-2">
-            <div className="text-center">
-              <TextInput
-                value={orderNumber}
-                onChange={(target) => setOrderNumber(target.value)}
-                placeholder="Order Number"
-              ></TextInput>
-            </div>
-            <div className="text-center">
-              <TextInput
-                value={manufacturerPartNumber}
-                onChange={(target) => setManufacturerPartNumber(target.value)}
-                placeholder="Manufacturer Part Number"
-              ></TextInput>
-            </div>
+    <div className="mb-10">
+      <h1 className="font-semibold text-2xl">Reimbursement Closed</h1>
+      <PrimaryWrapper className={`mt-5 p-5`}>
+        <h2 className="text-xl text-center">Search Closed Reimbursement</h2>
+        <div className="grid grid-cols-2 gap-3 mt-2">
+          <div className="text-center">
+            <TextInput
+              value={orderNumber}
+              onChange={(target) => setOrderNumber(target.value)}
+              placeholder="Order Number"
+            ></TextInput>
           </div>
-          <div className="grid grid-cols-2 gap-3 mt-4">
-            <div className="text-center">
-              <SelectInput
-                value={orderStatus}
-                options={orderStatusOptions}
-                onChange={(input) => setOrderStatus(input)}
-              />
-            </div>
-            <div className="text-center">
-              <TextInput
-                type="date"
-                value={orderDate}
-                onChange={(target) => setOrderDate(target.value)}
-                placeholder="Order Date"
-              ></TextInput>
-            </div>
+          <div className="text-center">
+            <TextInput
+              value={manufacturerPartNumber}
+              onChange={(target) => setManufacturerPartNumber(target.value)}
+              placeholder="Manufacturer Part Number"
+            ></TextInput>
           </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3 mt-4">
+          <div className="text-center">
+            <SelectInput
+              value={orderStatus}
+              options={orderStatusOptions}
+              onChange={(input) => setOrderStatus(input)}
+            />
+          </div>
+          <div className="text-center">
+            <TextInput
+              type="date"
+              value={orderDate}
+              onChange={(target) => setOrderDate(target.value)}
+              placeholder="Order Date"
+            ></TextInput>
+          </div>
+        </div>
 
-          <div className="mt-10 text-center">
-            <PrimaryButton onClick={handleSearchData} className="w-1/2 mr-2">
-              Search
-            </PrimaryButton>
-            <InfoButton onClick={handleResetSearchFilter} className="w-1/6">
-              Reset
-            </InfoButton>
-          </div>
-        </PrimaryWrapper>
-        <InquiredProductTable
-          filterStatus
-          setPage={setPage}
-          isLoading={isLoading}
-          data={data}
-          links={links}
-          metaData={metaData}
-        ></InquiredProductTable>
-      </div>
-    </>
+        <div className="mt-10 text-center">
+          <PrimaryButton onClick={handleSearchData} className="w-1/2 mr-2">
+            Search
+          </PrimaryButton>
+          <InfoButton onClick={handleResetSearchFilter} className="w-1/6">
+            Reset
+          </InfoButton>
+        </div>
+      </PrimaryWrapper>
+      <ReimbursementActiveCompletedTable
+        filterStatus
+        setPage={setPage}
+        isLoading={isLoading}
+        data={data}
+        links={links}
+        metaData={metaData}
+      />
+    </div>
   )
 }
 
-InquiredProduct.layout = Admin
+ReimbursementActive.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
-  const orderStatus = context.query.orderStatus
-    ? context.query.orderStatus
+  const orderStatus = context?.query?.orderStatus
+    ? context.query?.orderStatus
     : null
 
   return {
     props: {
       session,
-      routeParam: orderStatus,
+      routerParam: orderStatus,
     },
   }
 }

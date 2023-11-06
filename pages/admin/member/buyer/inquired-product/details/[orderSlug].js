@@ -4,6 +4,7 @@ import axios from '@/lib/axios'
 import Link from 'next/link'
 import Image from 'next/image'
 import moment from 'moment'
+
 // components
 import AcceptQuotationModal from '@/components/Modal/OrderComponent/Buyer/AcceptQuotation'
 import RejectQuotationModal from '@/components/Modal/OrderComponent/Buyer/RejectQuotation'
@@ -13,6 +14,7 @@ import AcceptOrderModal from '@/components/Modal/OrderComponent/Buyer/AcceptOrde
 import DidntReceiveAnyModal from '@/components/Modal/OrderComponent/Buyer/DidntReceiveAny'
 import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
+
 // layout for page
 import Admin from 'layouts/Admin.js'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
@@ -25,6 +27,7 @@ import WarningNotification from '@/components/Interface/Notification/WarningNoti
 import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
 import { checkValue } from '@/utils/general'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import calculateTimeDifference from '@/lib/calculateTimeDifference'
 
 export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -38,16 +41,16 @@ export default function InquiryDetails({ session, routeParam }) {
     { value: 'other', label: 'Other' },
   ])
   const [rejectQuotationModal, setRejectQuotationModal] = useState(false)
-  const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
-  const [acceptOrderModal, setAcceptOrderModal] = useState(false)
+  const [sendPaymentDocsModal, setSendPaymentDocsModal] = useState(false)
   const [sendUpdatedPaymentDocsModal, setSendUpdatedPaymentDocsModal] =
     useState(false)
-  const [sendPaymentDocsModal, setSendPaymentDocsModal] = useState(false)
 
+  const [acceptOrderModal, setAcceptOrderModal] = useState(false)
+  const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
   const loadData = async () => {
     setIsLoading(true)
     setErrorInfo({})
-    const response = await axios
+    await axios
       .get(`/buyer/order/${routeParam.orderSlug}/detail`, {
         headers: {
           Authorization: `Bearer ${session?.accessToken}`,
@@ -66,12 +69,12 @@ export default function InquiryDetails({ session, routeParam }) {
         setIsLoading(false)
       })
   }
-  useEffect(() => {
-    loadData()
-  }, [])
 
   useEffect(() => {
     loadRejectionReason()
+  }, [])
+  useEffect(() => {
+    loadData()
   }, [])
 
   if (!isOrderValid) {
@@ -99,10 +102,9 @@ export default function InquiryDetails({ session, routeParam }) {
     )
   }
 
-  // const [acceptQuotationModal, setAcceptQuotationModal] = useState(false)
   const acceptQuotationModalHandle = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .post(
         `/buyer/order/accept-quotation`,
         {
@@ -120,10 +122,23 @@ export default function InquiryDetails({ session, routeParam }) {
         loadData()
       })
       .catch((error) => {
-        toast.error(
-          'Something went wrong. Can not accept the quotation.',
-          toastOptions
-        )
+        if (error.data.message === 'This inquiry is not yet available.') {
+          const timeDiference = calculateTimeDifference(
+            error.data.data.available_after
+          )
+          toast.error(
+            error.data.message + '\navailable in ' + timeDiference,
+            toastOptions
+          )
+        } else {
+          toast.error(error.data.message, toastOptions)
+        }
+
+        // console.log(error.data.data.available_after)
+        // const momentObject = moment.parse('2023-10-27 15:11:13')
+        // const localTimeZone = moment.local()
+        // momentObject.tz(localTimeZone)
+        // const localTime = momentObject.format('YYYY-MM-DD HH:mm:ss')
         setErrorInfo(error.data.data)
       })
       .finally(() => {
@@ -131,12 +146,9 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
-  // const [rejectionReason, setRejectionReasons] = useState([
-  //   { value: 'other', label: 'Other' },
-  // ])
   const loadRejectionReason = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .get(`/reason`)
       .then((response) => {
         let result = response.data
@@ -152,14 +164,10 @@ export default function InquiryDetails({ session, routeParam }) {
         setIsLoading(false)
       })
   }
-  // useEffect(() => {
-  //   loadRejectionReason()
-  // }, [])
 
-  // const [rejectQuotationModal, setRejectQuotationModal] = useState(false)
   const rejectQuotationModalHandle = async (quotationRejectionReason) => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .post(
         `/buyer/order/reject-quotation`,
         {
@@ -190,16 +198,13 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
-  // Hook linter error
-  // const [sendPaymentDocsModal, setSendPaymentDocsModal] = useState(false)
-
   const sendPaymentDocsModalHandle = async (paymentDocument) => {
     setIsLoading(true)
     setErrorInfo({})
     let formData = new FormData()
     formData.append('buyer_receipt', paymentDocument)
     formData.append('order_slug', data.slug)
-    const response = await axios
+    await axios
       .post(`/buyer/order/pay-order`, formData, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -223,17 +228,13 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
-  // hooks errror linter
-  // const [sendUpdatedPaymentDocsModal, setSendUpdatedPaymentDocsModal] =
-  //   useState(false)
-
   const sendUpdatedPaymentDocsModalHandle = async (paymentDocument) => {
     setIsLoading(true)
     setErrorInfo({})
     let formData = new FormData()
     formData.append('buyer_receipt', paymentDocument)
     formData.append('order_slug', data.slug)
-    const response = await axios
+    await axios
       .post(`/buyer/order/update-payment`, formData, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -257,11 +258,9 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
-  // Hook linter error
-  // const [acceptOrderModal, setAcceptOrderModal] = useState(false)
   const acceptOrderModalHandle = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .post(
         `/buyer/order/accept-order`,
         {
@@ -291,10 +290,9 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
-  // const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
   const handleDidntReceiveAny = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .post(
         `/buyer/order/did-not-receive`,
         {
@@ -532,7 +530,7 @@ export default function InquiryDetails({ session, routeParam }) {
             />
           )}
 
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center justify-center">
             <div className="mx-2 my-4">
               <PrimaryButton
                 outline
@@ -541,10 +539,17 @@ export default function InquiryDetails({ session, routeParam }) {
                 disabled={isLoading}
                 onClick={() => setAcceptOrderModal(true)}
               >
-                Accept Order
+                Confirm Receipt of Order
               </PrimaryButton>
             </div>
-            <div className="mx-2 my-4">
+            <div className="text-center text-sm text-gray-600 italic py-4">
+              In case have any concern with your order please contact exepart
+              admin :{' '}
+              <a className="font-bold" href="mailto:sales@exepart.com">
+                sales@exepart.com
+              </a>
+            </div>
+            {/* <div className="mx-2 my-4">
               <WarningButton
                 outline
                 className="mx-1"
@@ -552,9 +557,9 @@ export default function InquiryDetails({ session, routeParam }) {
                 disabled={isLoading}
                 onClick={() => setDidntReceiveAnyModal(true)}
               >
-                Didn't receive any
+                Didn&lsquo;t receive any
               </WarningButton>
-            </div>
+            </div> */}
           </div>
         </div>
       )
@@ -641,7 +646,7 @@ export default function InquiryDetails({ session, routeParam }) {
                 Courier
               </div>
               <div className="mx-2 mb-5 text-xl">
-                {checkValue(data.trackingBuyer)}
+                {checkValue(data.buyer_courier)}
               </div>
             </PrimaryWrapper>
           </div>
@@ -771,7 +776,14 @@ export default function InquiryDetails({ session, routeParam }) {
                       data.companies_products?.AvailableQuantity
                     ) : (
                       <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                        {data?.companies_products?.AvailableQuantity === 0 ||
+                        data?.companies_products?.AvailableQuantity === null ? (
+                          <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
+                            Out of Stock
+                          </div>
+                        ) : (
+                          <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -980,7 +992,7 @@ export default function InquiryDetails({ session, routeParam }) {
                 </div>
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
-                    <span>Buyer's Invoice</span>
+                    <span>Buyer&lsquo;s Invoice</span>
                     {data.buyer_invoice_available == 1 ? (
                       <Link
                         target="_blank"

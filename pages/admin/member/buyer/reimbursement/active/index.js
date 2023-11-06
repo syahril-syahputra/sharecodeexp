@@ -197,8 +197,6 @@ export async function getServerSideProps(context) {
     ? context.query?.orderStatus
     : null
 
-  console.log(orderStatus, '<<<orderStatus')
-
   return {
     props: {
       session,
