@@ -1,56 +1,61 @@
-import { getSession } from "next-auth/react";
-import axios from "@/lib/axios";
-import { useState, useEffect } from "react";
-import { PDFViewer } from "@react-pdf/renderer";
+import { getSession } from 'next-auth/react'
+import axios from '@/lib/axios'
+import React, { useState, useEffect } from 'react'
+import { PDFViewer } from '@react-pdf/renderer'
 
-import ToBuyerPackingListComp from "@/components/PDF/Order/ToBuyerPackingList"
-export default function ToBuyerPackingList({labPackingList}){
+import ToBuyerPackingListComp from '@/components/PDF/Order/ToBuyerPackingList'
+
+export default function ToBuyerPackingList({ labPackingList }) {
   const [isClient, setIsClient] = useState(false)
   useEffect(() => {
-      setIsClient(true)
-    }, [])
-  return(
-      <>
-      { isClient ?
+    setIsClient(true)
+  }, [])
+
+  return (
+    <>
+      {isClient ? (
         <div>
           <div className="h-screen bg-gray-300 w-full grid place-items-center">
             <PDFViewer width={1000} height={750}>
-              <ToBuyerPackingListComp labPackingList={labPackingList}/>
+              <ToBuyerPackingListComp labPackingList={labPackingList} />
             </PDFViewer>
           </div>
         </div>
-      : 'Loading...'}
+      ) : (
+        'Loading...'
+      )}
     </>
   )
 }
 
 export async function getServerSideProps(context) {
-    const session = await getSession(context)
-    if(!session){
-        return {
-        redirect: {
-            permanent: false,
-            destination: '/admin/dashboard',
-        },
-        };
+  const session = await getSession(context)
+  if (!session) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/admin/dashboard',
+      },
     }
-    let labPackingList = {}
-    const response = await axios.get(`/document/order/${context.query.orderSlug}/to-buyer-packing-list`,
-    {
-    headers: {
-        "Authorization" : `Bearer ${session.accessToken}`
-    }
+  }
+  let labPackingList = {}
+  const response = await axios
+    .get(`/document/order/${context.query.orderSlug}/to-buyer-packing-list`, {
+      headers: {
+        Authorization: `Bearer ${session.accessToken}`,
+      },
     })
     .then((response) => {
-        let result = response.data.data
-        labPackingList = result
-    }).catch((error) => {
-        labPackingList = null
+      let result = response.data.data
+      labPackingList = result
+    })
+    .catch((error) => {
+      labPackingList = null
     })
 
-    return {
-        props: {
-            labPackingList
-        }
-    }
+  return {
+    props: {
+      labPackingList,
+    },
+  }
 }

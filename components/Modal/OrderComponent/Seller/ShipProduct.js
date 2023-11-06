@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
 import TextInput from '@/components/Interface/Form/TextInput'
 import LightButton from '@/components/Interface/Buttons/LightButton'
@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
 import { useSession } from 'next-auth/react'
 import axios from '@/lib/axios'
+
 export default function ShipProduct(props) {
   const [trackingNumber, setTrackingNumber] = useState('')
   const [courier, setcourier] = useState('')
@@ -77,6 +78,7 @@ export default function ShipProduct(props) {
       setisLoadingPackingList(false)
     }
   }
+
   return (
     <BaseModalMedium
       title="Ship Product to LAB"
@@ -107,7 +109,10 @@ export default function ShipProduct(props) {
                 <SecondaryButton
                   onClick={openProformaInvoice}
                   size="sm"
-                  disabled={isLoadingProformaInvoice}
+                  disabled={
+                    isLoadingProformaInvoice ||
+                    props.proformaInvoiceAvailable === '0'
+                  }
                   outline
                 >
                   {isLoadingProformaInvoice && (
@@ -118,7 +123,10 @@ export default function ShipProduct(props) {
                 <SecondaryButton
                   onClick={openPackingList}
                   size="sm"
-                  disabled={isLoadingPackingList}
+                  disabled={
+                    isLoadingPackingList ||
+                    props.sellerPackingListAvailable === '0'
+                  }
                   outline
                 >
                   {isLoadingPackingList && (
@@ -132,27 +140,38 @@ export default function ShipProduct(props) {
                   <input
                     type="checkbox"
                     checked={isDownloadedProformaInvoice}
+                    id="downloadProformaInvoice"
+                    name="downloadProformaInvoice
+"
                     onChange={() =>
                       setisDownloadedProformaInvoice(
                         !isDownloadedProformaInvoice
                       )
                     }
                   />
-                  <span className="ml-2 text-sm font-medium text-gray-900">
+                  <label
+                    htmlFor="downloadProformaInvoice"
+                    className="ml-2 text-sm font-medium text-gray-900"
+                  >
                     Downloaded Proforma Invoice
-                  </span>
+                  </label>
                 </li>
                 <li className="item-center flex space-x-2">
                   <input
                     type="checkbox"
+                    id="downloadPackingList"
+                    name="downloadPackingList"
                     checked={isDownloadedPackingList}
                     onChange={() =>
                       setisDownloadedPackingList(!isDownloadedPackingList)
                     }
                   />
-                  <span className="ml-2 text-sm font-medium text-gray-900">
+                  <label
+                    htmlFor="downloadPackingList"
+                    className="ml-2 text-sm font-medium text-gray-900"
+                  >
                     Downloaded Packing List
-                  </span>
+                  </label>
                 </li>
               </ul>
             </div>

@@ -22,7 +22,39 @@ const PackingList = ({ sellerPackingList }) => (
         <Text style={styles.title}>PACKING LIST</Text>
       </View>
       <View style={styles.sectionItemDetail}>
-        <View style={[styles.sectionColumn, { width: '60%' }]}></View>
+        <View style={[styles.sectionColumn]}>
+          <View style={styles.inlineItem}>
+            <Text style={styles.sectionSubTitle}>BUYER</Text>
+          </View>
+          <View style={styles.inlineItem}>
+            <Text style={styles.sectionSubTitle}>Buyer Name</Text>
+            <Text style={styles.subItem}>: {sellerPackingList.buyer.name}</Text>
+          </View>
+          <View style={styles.inlineItem}>
+            <Text style={styles.sectionSubTitle}>Address</Text>
+            <Text style={styles.subItem}>
+              : {sellerPackingList.buyer.address}
+            </Text>
+          </View>
+          <View style={styles.inlineItem}>
+            <Text style={styles.sectionSubTitle}>Contact Name</Text>
+            <Text style={styles.subItem}>
+              : {sellerPackingList.buyer.contact_name}
+            </Text>
+          </View>
+          <View style={styles.inlineItem}>
+            <Text style={styles.sectionSubTitle}>Phone</Text>
+            <Text style={styles.subItem}>
+              : {sellerPackingList.buyer.phone}
+            </Text>
+          </View>
+          <View style={styles.inlineItem}>
+            <Text style={styles.sectionSubTitle}>Email</Text>
+            <Text style={styles.subItem}>
+              : {sellerPackingList.buyer.email}
+            </Text>
+          </View>
+        </View>
         <View style={styles.sectionColumn}>
           <View style={styles.inlineItem}>
             <Text style={styles.sectionSubTitle}>SALES ORDER</Text>
