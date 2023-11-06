@@ -4,7 +4,9 @@ import Link from 'next/link'
 
 function NavigationViewButton({ navigationId }) {
   return (
-    <Link href={`/admin/member/buyer/inquired-product/details/${navigationId}`}>
+    <Link
+      href={`/admin/member/buyer/Reimbursement/active/details/${navigationId}`}
+    >
       <PrimaryButton size="sm">View</PrimaryButton>
     </Link>
   )

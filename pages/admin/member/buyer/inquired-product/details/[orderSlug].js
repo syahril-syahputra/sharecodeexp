@@ -29,7 +29,6 @@ import { checkValue } from '@/utils/general'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import calculateTimeDifference from '@/lib/calculateTimeDifference'
 
-
 export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   //data search
@@ -53,10 +52,10 @@ export default function InquiryDetails({ session, routeParam }) {
   const loadData = async () => {
     setIsLoading(true)
     setErrorInfo({})
-    const response = await axios
+    await axios
       .get(`/buyer/order/${routeParam.orderSlug}/detail`, {
         headers: {
-          Authorization: `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session?.accessToken}`,
         },
       })
       .then((response) => {
@@ -107,7 +106,7 @@ export default function InquiryDetails({ session, routeParam }) {
 
   const acceptQuotationModalHandle = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .post(
         `/buyer/order/accept-quotation`,
         {
@@ -151,10 +150,9 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
-
   const loadRejectionReason = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .get(`/reason`)
       .then((response) => {
         let result = response.data
@@ -173,7 +171,7 @@ export default function InquiryDetails({ session, routeParam }) {
 
   const rejectQuotationModalHandle = async (quotationRejectionReason) => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .post(
         `/buyer/order/reject-quotation`,
         {
@@ -210,7 +208,7 @@ export default function InquiryDetails({ session, routeParam }) {
     let formData = new FormData()
     formData.append('buyer_receipt', paymentDocument)
     formData.append('order_slug', data.slug)
-    const response = await axios
+    await axios
       .post(`/buyer/order/pay-order`, formData, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -240,7 +238,7 @@ export default function InquiryDetails({ session, routeParam }) {
     let formData = new FormData()
     formData.append('buyer_receipt', paymentDocument)
     formData.append('order_slug', data.slug)
-    const response = await axios
+    await axios
       .post(`/buyer/order/update-payment`, formData, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -266,7 +264,7 @@ export default function InquiryDetails({ session, routeParam }) {
 
   const acceptOrderModalHandle = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .post(
         `/buyer/order/accept-order`,
         {
@@ -298,7 +296,7 @@ export default function InquiryDetails({ session, routeParam }) {
 
   const handleDidntReceiveAny = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .post(
         `/buyer/order/did-not-receive`,
         {
@@ -648,6 +646,16 @@ export default function InquiryDetails({ session, routeParam }) {
               </div>
             </PrimaryWrapper>
           </div>
+          <div className="w-1/2 lg:w-1/3 mr-4">
+            <PrimaryWrapper className="p-1">
+              <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
+                Courier
+              </div>
+              <div className="mx-2 mb-5 text-xl">
+                {checkValue(data.buyer_courier)}
+              </div>
+            </PrimaryWrapper>
+          </div>
         </div>
 
         {/* product info and quotation */}
@@ -774,7 +782,14 @@ export default function InquiryDetails({ session, routeParam }) {
                       data.companies_products?.AvailableQuantity
                     ) : (
                       <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                        {data?.companies_products?.AvailableQuantity === 0 ||
+                        data?.companies_products?.AvailableQuantity === null ? (
+                          <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
+                            Out of Stock
+                          </div>
+                        ) : (
+                          <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                        )}
                       </div>
                     )}
                   </div>

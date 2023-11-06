@@ -11,6 +11,7 @@ import Pagination from '@/components/Shared/Component/Pagination'
 import DetailProdutModal from '@/components/Modal/DetailProdutModal/DetailProdutModal'
 
 export default function TableComponent(props) {
+  console.log(props, '<<<<props')
   const { status } = useSession()
   const router = useRouter()
   const [isInquiryClicked, setIsInquiryClicked] = useState(false)
@@ -89,8 +90,20 @@ export default function TableComponent(props) {
                     </th>
                     <td className="px-6 py-4">{item.Manufacture}</td>
                     <td className="px-6 py-4">{item.Description}</td>
-                    <td className="px-6 py-4">{item.AvailableQuantity}</td>
-                    <td className="px-6 py-4">{item.moq}</td>
+                    {(item?.AvailableQuantity === null ||
+                      item?.AvailableQuantity === 0) &&
+                    (item?.moq === null || item?.moq === 0) ? (
+                      <>
+                        <td colSpan={2} className="px-6">
+                          Out of Stock
+                        </td>
+                      </>
+                    ) : (
+                      <>
+                        <td className="px-6 py-4">{item.AvailableQuantity}</td>
+                        <td className="px-6 py-4">{item.moq}</td>
+                      </>
+                    )}
                     <td className="px-6 py-4">{item.country}</td>
                     <td className="px-6 py-4 text-right">
                       <div
@@ -101,7 +114,12 @@ export default function TableComponent(props) {
                         <PrimaryButton
                           id={item?.id}
                           key={item?.id}
-                          disabled={isInquiryClicked}
+                          disabled={
+                            isInquiryClicked ||
+                            item?.AvailableQuantity === 0 ||
+                            item?.AvailableQuantity === null ||
+                            item?.AvailableQuantity === undefined
+                          }
                           size="sm"
                           onClick={async () => {
                             setIsInquiryClicked(true)

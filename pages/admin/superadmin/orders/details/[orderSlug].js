@@ -45,7 +45,7 @@ export default function OrderDetails({ session, routeParam }) {
     const response = await axios
       .get(`/admin/orders/${routeParam.orderSlug}/detail`, {
         headers: {
-          Authorization: `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session?.accessToken}`,
         },
       })
       .then((response) => {
@@ -78,7 +78,7 @@ export default function OrderDetails({ session, routeParam }) {
         },
         {
           headers: {
-            Authorization: `Bearer ${session.accessToken}`,
+            Authorization: `Bearer ${session?.accessToken}`,
           },
         }
       )
@@ -660,6 +660,7 @@ export default function OrderDetails({ session, routeParam }) {
                   </div>
                 )}
               </div>
+
               <div className="mx-2 text-md mb-5">
                 {!!data.buyer?.country ? (
                   data.buyer?.country
@@ -721,6 +722,29 @@ export default function OrderDetails({ session, routeParam }) {
               </div>
               <div className="mx-2 mb-5 text-xl uppercase">
                 {checkValue(data.trackingSeller)}
+              </div>
+            </PrimaryWrapper>
+          </div>
+        </div>
+
+        <div className="lg:flex lg:justify-around">
+          <div className="w-full lg:w-1/2 mr-4">
+            <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Buyer Courier
+              </div>
+              <div className="mx-2 my-1 text-xl">
+                {checkValue(data.buyer_courier)}
+              </div>
+            </PrimaryWrapper>
+          </div>
+          <div className="w-1/2 lg:w-1/2 ">
+            <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Seller Courier
+              </div>
+              <div className="mx-2 my-1 text-xl">
+                {checkValue(data.seller_courier)}
               </div>
             </PrimaryWrapper>
           </div>

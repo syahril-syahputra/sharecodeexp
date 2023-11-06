@@ -10,7 +10,7 @@ import TextInput from '@/components/Interface/Form/TextInput'
 import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
 import { useRouter } from 'next/router'
-import ReimbursementActiveCompletedTable from '@/components/Table/Member/Buyer/Reimbursement/active'
+import ReimbursementSellerActiveCompletedTable from '@/components/Table/Member/Seller/Reimbursement/active'
 
 export default function ReimbursementActive({ session, routerParam }) {
   const [isLoading, setIsLoading] = useState(true)
@@ -60,16 +60,18 @@ export default function ReimbursementActive({ session, routerParam }) {
   ) => {
     setPageNumber(page)
     setIsLoading(true)
+    // return_product
     await axios
       .get(
-        '/buyer/order/list' +
+        '/seller/order/list' +
           `?page=${page}` +
           `&status=${orderStatusParam}` +
           `&order_number=${orderNumberParam}` +
           `&manufacturer_part_number=${manufacturerPartNumberParam}` +
           `&order_date=${orderDateParam}` +
-          `&active=0` +
-          `&reimbursement=1`,
+          `&active=1` +
+          `&reimbursement=1` +
+          `&return_product=1`,
         {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
@@ -131,9 +133,9 @@ export default function ReimbursementActive({ session, routerParam }) {
 
   return (
     <div className="mb-10">
-      <h1 className="font-semibold text-2xl">Reimbursement Closed</h1>
+      <h1 className="font-semibold text-2xl">Reimbursement</h1>
       <PrimaryWrapper className={`mt-5 p-5`}>
-        <h2 className="text-xl text-center">Search Closed Reimbursement</h2>
+        <h2 className="text-xl text-center">Search Active Reimbursement</h2>
         <div className="grid grid-cols-2 gap-3 mt-2">
           <div className="text-center">
             <TextInput
@@ -177,7 +179,7 @@ export default function ReimbursementActive({ session, routerParam }) {
           </InfoButton>
         </div>
       </PrimaryWrapper>
-      <ReimbursementActiveCompletedTable
+      <ReimbursementSellerActiveCompletedTable
         filterStatus
         setPage={setPage}
         isLoading={isLoading}

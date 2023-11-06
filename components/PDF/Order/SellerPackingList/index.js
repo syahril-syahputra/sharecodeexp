@@ -14,7 +14,11 @@ const PackingList = ({ sellerPackingList }) => (
   <Document>
     <Page size="A4" style={styles.body}>
       <View>
-        <Image style={styles.imageLogo} src="/img/exepart-gradient.png" />
+        <Image
+          alt="exepart-gradient.png"
+          style={styles.imageLogo}
+          src="/img/exepart-gradient.png"
+        />
         <Text style={styles.title}>PACKING LIST</Text>
       </View>
       <View style={styles.sectionItemDetail}>
@@ -79,14 +83,12 @@ const PackingList = ({ sellerPackingList }) => (
               : {sellerPackingList.packing_list_info.package_type}
             </Text>
           </View>
-          {/* <View style={styles.inlineItem}>
-                        <Text style={styles.sectionSubTitle}>
-                            TRACKING
-                        </Text>
-                        <Text style={styles.subItem}>
-                            : {sellerPackingList.packing_list_info.tracking}
-                        </Text>
-                    </View> */}
+          <View style={styles.inlineItem}>
+            <Text style={styles.sectionSubTitle}>TRACKING</Text>
+            <Text style={styles.subItem}>
+              : {sellerPackingList.packing_list_info.tracking}
+            </Text>
+          </View>
         </View>
       </View>
       <View style={styles.sectionItemDetail}>
