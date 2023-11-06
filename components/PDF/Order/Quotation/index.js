@@ -11,6 +11,8 @@ import {
 } from '@react-pdf/renderer'
 
 const Quotation = ({ quotation }) => {
+  console.log(quotation, '<<<quotation')
+
   return (
     <Document pageMode="fullScreen">
       <Page size="A4" style={styles.body}>
@@ -117,7 +119,7 @@ const Quotation = ({ quotation }) => {
             </Text>
           </View>
           <View style={{ margin: 5 }}></View>
-          {!quotation?.test_free && (
+          {quotation?.test_free && (
             <>
               <View style={styles.tableHead}>
                 <Text style={styles.descriptionFee}>Description</Text>
@@ -130,7 +132,7 @@ const Quotation = ({ quotation }) => {
               </View>
               <View style={styles.tableBody}>
                 <Text style={styles.descriptionFee}>
-                  {`Basic express lab testing for authenticity`}
+                  {quotation?.test_fee_table_data?.description || '-'}
                 </Text>
                 <Text style={styles.pn}></Text>
                 <Text style={styles.mfg}></Text>
@@ -138,7 +140,7 @@ const Quotation = ({ quotation }) => {
                 <Text style={styles.qty}></Text>
                 <Text style={styles.unitPrice}></Text>
                 <Text style={styles.grandTotal}>
-                  {quotation?.test_free || '-'}
+                  {quotation?.test_fee_table_data?.test_fee || '-'}
                 </Text>
               </View>
             </>
