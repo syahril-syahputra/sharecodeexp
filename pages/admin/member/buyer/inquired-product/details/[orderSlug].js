@@ -48,6 +48,8 @@ export default function InquiryDetails({ session, routeParam }) {
 
   const [acceptOrderModal, setAcceptOrderModal] = useState(false)
   const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
+  const [availabledDateAcceptQuotation, setavailabledDateAcceptQuotation] =
+    useState('')
   const loadData = async () => {
     setIsLoading(true)
     setErrorInfo({})
@@ -123,14 +125,16 @@ export default function InquiryDetails({ session, routeParam }) {
         loadData()
       })
       .catch((error) => {
+        setavailabledDateAcceptQuotation(error.data.data.available_after)
+
         if (error.data.message === 'This inquiry is not yet available.') {
           const timeDiference = calculateTimeDifference(
             error.data.data.available_after
           )
-          toast.error(
-            error.data.message + '\navailable in ' + timeDiference,
-            toastOptions
-          )
+          const timer = error.data.data.available_after
+            ? '\navailable in ' + timeDiference
+            : ''
+          toast.error(error.data.message + timer, toastOptions)
         } else {
           toast.error(error.data.message, toastOptions)
         }
@@ -417,6 +421,8 @@ export default function InquiryDetails({ session, routeParam }) {
               orderSlug={data.slug}
               closeModal={() => setAcceptQuotationModal(false)}
               acceptance={acceptQuotationModalHandle}
+              availableDate={availabledDateAcceptQuotation}
+              openedQuotation={data.is_quotation_opened === '1' ? true : false}
             />
           )}
 
@@ -857,11 +863,23 @@ export default function InquiryDetails({ session, routeParam }) {
                   )}
                 </div>
               </div>
-              <div className="mx-2 my-1 text-sm border-b">
+              <div className="mx-2 my-1 text-sm ">
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500">Unit Price (USD)</span>
                   {!isLoading ? (
                     <span>${data.price_profite}</span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="mx-2 my-1 text-sm border-b">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Test Lab Fee (USD)</span>
+                  {!isLoading ? (
+                    <span>${data.order_price_amount?.test_fee_amount}</span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -877,9 +895,9 @@ export default function InquiryDetails({ session, routeParam }) {
                   {!isLoading ? (
                     <span>
                       $
-                      {data.price_profite
-                        ? parseFloat(data.price_profite) * parseInt(data.qty)
-                        : ''}
+                      {parseInt(
+                        data.order_price_amount?.grand_total.replace(/,/g, '')
+                      )}
                     </span>
                   ) : (
                     <div className="animate-pulse">
@@ -1000,6 +1018,33 @@ export default function InquiryDetails({ session, routeParam }) {
                 Actions to take
               </div>
               {actionToTake}
+            </PrimaryWrapper>
+            <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Event History
+              </div>
+              <ul className="space-y-2 p-2 text-sm">
+                {data.event_history?.length === 0 && (
+                  <div className="text-base italic text-center p-4">
+                    No Event History
+                  </div>
+                )}
+                {data.event_history?.map((item) => (
+                  <li key={item.id} className="flex">
+                    <span className="text-cyan-700 mr-2 w-1/5 ">
+                      {moment(item.updated_at)
+                        .local()
+                        .format('DD MMM YYYY hh:mm')}
+                    </span>
+                    <div>
+                      <span className="font-bold">{item.description}</span>
+                      {item.note && (
+                        <div className="italic py-2">{item.note}</div>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </PrimaryWrapper>
           </div>
         </div>
