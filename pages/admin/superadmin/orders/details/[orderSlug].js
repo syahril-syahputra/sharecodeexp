@@ -39,6 +39,28 @@ export default function OrderDetails({ session, routeParam }) {
   const [data, setData] = useState([])
   const [errorInfo, setErrorInfo] = useState({})
   const [isOrderValid, setIsOrderValid] = useState(true)
+  const [isLoadingOpenReceipt, setisLoadingOpenReceipt] = useState(false)
+  const openPaymentReceiptHandler = async () => {
+    try {
+      setisLoadingOpenReceipt(true)
+      await axios.post(
+        `/admin/orders/verification-action/open-buyer-payment-receipt`,
+        {
+          order_slug: data.slug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+    } catch (error) {
+      toast.error(error.data.message, toastOptions)
+    } finally {
+      window.open(publicDir + data.buyer_receipt_path)
+      setisLoadingOpenReceipt(false)
+    }
+  }
   const loadData = async () => {
     setIsLoading(true)
     setErrorInfo({})
@@ -1074,14 +1096,25 @@ export default function OrderDetails({ session, routeParam }) {
                 <div className="flex flex-wrap justify-between">
                   <span>Buyer's Payment</span>
                   {data.buyer_receipt_path ? (
-                    <Link
-                      target="_blank"
-                      href={publicDir + data.buyer_receipt_path}
-                      className="underline text-blue-500"
+                    <label
+                      onClick={openPaymentReceiptHandler}
+                      className={
+                        'underline ' +
+                        (isLoadingOpenReceipt
+                          ? 'text-blue-300 cursor-wait'
+                          : 'text-blue-500 cursor-pointer')
+                      }
                     >
-                      view
-                    </Link>
+                      {isLoadingOpenReceipt ? 'loading' : 'view'}
+                    </label>
                   ) : (
+                    // <Link
+                    //   target="_blank"
+                    //   href={publicDir + data.buyer_receipt_path}
+                    //   className="underline text-blue-500"
+                    // >
+                    //   view
+                    // </Link>
                     <span className="underline text-gray-500">view</span>
                   )}
                 </div>

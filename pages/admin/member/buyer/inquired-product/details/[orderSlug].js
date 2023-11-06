@@ -47,8 +47,28 @@ export default function InquiryDetails({ session, routeParam }) {
 
   const [acceptOrderModal, setAcceptOrderModal] = useState(false)
   const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
-  const [availabledDateAcceptQuotation, setavailabledDateAcceptQuotation] =
-    useState('')
+  const [isLoadingOpenQUotation, setisLoadingOpenQUotation] = useState(false)
+  const openQuotationHandler = async () => {
+    try {
+      setisLoadingOpenQUotation(true)
+      await axios.post(
+        `/buyer/order/verification-action/open-quotation`,
+        {
+          order_slug: data.slug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+    } catch (error) {
+      toast.error(error.data.message, toastOptions)
+    } finally {
+      window.open(`pdf/quotation/${data.slug}`)
+      setisLoadingOpenQUotation(false)
+    }
+  }
   const loadData = async () => {
     setIsLoading(true)
     setErrorInfo({})
@@ -124,8 +144,6 @@ export default function InquiryDetails({ session, routeParam }) {
         loadData()
       })
       .catch((error) => {
-        setavailabledDateAcceptQuotation(error.data.data.available_after)
-
         if (error.data.message === 'This inquiry is not yet available.') {
           const timeDiference = calculateTimeDifference(
             error.data.data.available_after
@@ -420,7 +438,7 @@ export default function InquiryDetails({ session, routeParam }) {
               orderSlug={data.slug}
               closeModal={() => setAcceptQuotationModal(false)}
               acceptance={acceptQuotationModalHandle}
-              availableDate={availabledDateAcceptQuotation}
+              availableDate={data.update_verified_inquiry_expiration_date}
               openedQuotation={data.is_quotation_opened === '1' ? true : false}
             />
           )}
@@ -866,7 +884,7 @@ export default function InquiryDetails({ session, routeParam }) {
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500">Unit Price (USD)</span>
                   {!isLoading ? (
-                    <span>${data.price_profite}</span>
+                    <span>${data.price_profite || 0}</span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -878,7 +896,9 @@ export default function InquiryDetails({ session, routeParam }) {
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500">Test Lab Fee (USD)</span>
                   {!isLoading ? (
-                    <span>${data.order_price_amount?.test_fee_amount}</span>
+                    <span>
+                      ${data.order_price_amount?.test_fee_amount || 0}
+                    </span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -892,12 +912,7 @@ export default function InquiryDetails({ session, routeParam }) {
                     Total Price (USD)
                   </span>
                   {!isLoading ? (
-                    <span>
-                      $
-                      {parseInt(
-                        data.order_price_amount?.grand_total.replace(/,/g, '')
-                      )}
-                    </span>
+                    <span>${data.order_price_amount?.grand_total || 0}</span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -955,14 +970,25 @@ export default function InquiryDetails({ session, routeParam }) {
                   <div className="flex flex-wrap justify-between">
                     <span>Quotation</span>
                     {data.quotation_available == 1 ? (
-                      <Link
-                        target="_blank"
-                        href={`pdf/quotation/${data.slug}`}
-                        className="underline text-blue-500"
+                      <label
+                        onClick={openQuotationHandler}
+                        className={
+                          'underline ' +
+                          (isLoadingOpenQUotation
+                            ? 'text-blue-300 cursor-wait'
+                            : 'text-blue-500 cursor-pointer')
+                        }
                       >
-                        view
-                      </Link>
+                        {isLoadingOpenQUotation ? 'loading' : 'view'}
+                      </label>
                     ) : (
+                      //   <Link
+                      //     target="_blank"
+                      //     href={`pdf/quotation/${data.slug}`}
+                      //     className="underline text-blue-500"
+                      //   >
+                      //     view
+                      //   </Link>
                       <span className="underline text-gray-500">view</span>
                     )}
                   </div>

@@ -1,4 +1,6 @@
+import React from 'react'
 import moment from 'moment'
+
 import {
   Page,
   View,
@@ -184,6 +186,22 @@ const ProformaInvoiceSeller = ({ proformaInvoice }) => (
       </View>
 
       <View style={{ marginTop: 15 }}>
+        <Text style={styles.noteTitle}>Terms & Conditions</Text>
+        <Text style={styles.noteItem}>
+          1. Below Terms and Conditions of Sale applies to all orders supplied
+          by Exepart.
+        </Text>
+        <Text style={styles.noteItem}>2. Payment Methods: T/T in advance.</Text>
+        <Text style={styles.noteItem}>
+          3. Covered by a 90 days warranty from shipment date unless specified
+          otherwise.
+        </Text>
+        <Text style={styles.noteItem}>
+          4. We can only accept return with provision of an authorized formal
+          test report for any quality issue.
+        </Text>
+      </View>
+      <View style={{ marginTop: 15 }}>
         <Text style={styles.noteTitle}>TERMS AND CONDITIONS OF SALE</Text>
         <Text style={styles.noteItem}>
           Orders: All orders placed by Buyer are subject to acceptance by
@@ -298,60 +316,6 @@ const ProformaInvoiceSeller = ({ proformaInvoice }) => (
           and assumes sole responsibility for obtaining licenses to export or
           re-export as ma be required.
         </Text>
-      </View>
-
-      <View style={{ marginTop: 5 }}>
-        <Text style={styles.noteTitle}>BANK ACCOUNT INFORMATION:</Text>
-        <View style={styles.inlineItem}>
-          <Text style={[styles.noteItem, { width: '20%' }]}>Bank Name</Text>
-          <Text style={styles.noteItem}>
-            : {proformaInvoice.bank_info?.name}
-          </Text>
-        </View>
-        <View style={styles.inlineItem}>
-          <Text style={[styles.noteItem, { width: '20%' }]}>Bank Address</Text>
-          <Text style={styles.noteItem}>
-            : {proformaInvoice.bank_info?.address}
-          </Text>
-        </View>
-        <View style={styles.inlineItem}>
-          <Text style={[styles.noteItem, { width: '20%' }]}>
-            Account Holder's Name
-          </Text>
-          <Text style={styles.noteItem}>
-            : {proformaInvoice.bank_info?.holder}
-          </Text>
-        </View>
-        <View style={styles.inlineItem}>
-          <Text style={[styles.noteItem, { width: '20%' }]}>
-            Account Holder's Address
-          </Text>
-          <Text style={styles.noteItem}>
-            : {proformaInvoice.bank_info?.address_holder}
-          </Text>
-        </View>
-        <View style={styles.inlineItem}>
-          <Text style={[styles.noteItem, { width: '20%' }]}>Account No</Text>
-          <Text style={styles.noteItem}>
-            : {proformaInvoice.bank_info?.account_no}
-          </Text>
-        </View>
-        <View style={styles.inlineItem}>
-          <Text style={[styles.noteItem, { width: '20%' }]}>
-            ABA Routing No
-          </Text>
-          <Text style={styles.noteItem}>
-            : {proformaInvoice.bank_info?.routing_no}
-          </Text>
-        </View>
-        <View style={styles.inlineItem}>
-          <Text style={[styles.noteItem, { width: '20%' }]}>
-            BIC/SWIFT Code
-          </Text>
-          <Text style={styles.noteItem}>
-            : {proformaInvoice.bank_info?.swift_code}
-          </Text>
-        </View>
       </View>
 
       <Text style={styles.pageNumber} fixed>
