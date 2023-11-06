@@ -897,7 +897,7 @@ export default function InquiryDetails({ session, routeParam }) {
                   <span className="text-gray-500">Test Lab Fee (USD)</span>
                   {!isLoading ? (
                     <span>
-                      ${data.order_price_amount?.test_fee_amount || 0}
+                      ${parseInt(data.order_price_amount?.test_fee_amount) || 0}
                     </span>
                   ) : (
                     <div className="animate-pulse">
@@ -912,7 +912,9 @@ export default function InquiryDetails({ session, routeParam }) {
                     Total Price (USD)
                   </span>
                   {!isLoading ? (
-                    <span>${data.order_price_amount?.grand_total || 0}</span>
+                    <span>
+                      ${parseInt(data.order_price_amount?.grand_total) || 0}
+                    </span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>
