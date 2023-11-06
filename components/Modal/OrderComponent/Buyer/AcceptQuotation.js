@@ -1,3 +1,4 @@
+import React from 'react'
 import moment from 'moment'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
@@ -13,7 +14,7 @@ import { useRouter } from 'next/router'
 
 export default function VerifyOrder(props) {
   const test_free = parseFloat(props.price * props.quantity) > 1000
-  const [isOpenend, setisOpenend] = useState(false)
+  const [isOpenend, setisOpenend] = useState(props.openedQuotation)
   const [isShowMessage, setisShowMessage] = useState(false)
   const { data: session } = useSession()
   const router = useRouter()
@@ -46,13 +47,24 @@ export default function VerifyOrder(props) {
       setisLoadingOpenQUotation(false)
     }
   }
+
+  const convert = (availableDate) => {
+    if (availableDate) {
+      const utcMoment = moment.utc(availableDate, 'YYYY-MM-DD HH:mm:ss')
+      const localMoment = utcMoment.local()
+
+      return localMoment.format('dddd, D MMMM YYYY, HH:mm:ss')
+    }
+
+    return ''
+  }
+
   return (
     <BaseModalMedium
       title="Accept Quotation"
       onClick={() => props.closeModal()}
       body={
         <>
-          {isOpenend ? 'true' : 'false'}
           <p className="text-blueGray-500 text-md leading-relaxed italic">
             Quotation Expiration Date:{' '}
             <span className="text-blueGray-700 font-bold">
@@ -71,14 +83,6 @@ export default function VerifyOrder(props) {
               for more further.
             </p>
           )}
-          {/* <Link
-            target="_blank"
-            onClick={() => {
-
-            }}
-            href={`/admin/member/buyer/inquired-product/details/pdf/quotation/${props.orderSlug}`}
-            className="underline text-blue-500"
-          > */}
           <SecondaryButton
             onClick={() => openQuotationHandler()}
             size="sm"
@@ -90,10 +94,14 @@ export default function VerifyOrder(props) {
             )}
             Open Quotation
           </SecondaryButton>
-          {/* </Link> */}
           {isShowMessage && (
             <div className="bg-red-400 rounded-lg text-white text-sm text-center p-1 mt-4">
               Please open the quotation document
+            </div>
+          )}
+          {props.availableDate && (
+            <div className="bg-red-400 rounded-lg text-white text-sm text-center p-1 mt-4">
+              Quotation will Available at : {convert(props.availableDate)}{' '}
             </div>
           )}
         </>
@@ -115,6 +123,7 @@ export default function VerifyOrder(props) {
             onClick={() => acceptHandler()}
           >
             {props.isLoading && (
+              // eslint-disable-next-line react/react-in-jsx-scope
               <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
             )}
             Yes, Accept

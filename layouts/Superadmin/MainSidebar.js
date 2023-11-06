@@ -19,6 +19,7 @@ export default function MainSidebar() {
   const sideBarOption = () => {
     switch (data.user?.userDetail.status_id) {
       case '1':
+      case 1:
         return (
           <>
             <Registry registry={adminSidebarCounter.registry} />

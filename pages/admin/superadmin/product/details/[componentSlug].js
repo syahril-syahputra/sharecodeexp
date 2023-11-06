@@ -172,6 +172,50 @@ export default function ComponentDetails({ session, routeParam }) {
 
   return (
     <PrimaryWrapper>
+      <PageHeader
+        leftTop={
+          <h3 className={'font-semibold text-lg text-blueGray-700'}>
+            Company Product Details
+          </h3>
+        }
+        rightTop={
+          <>
+            {(component.status == 'pending' ||
+              component.status == 'rejected') && (
+              <PrimaryButton
+                size="sm"
+                className="mr-2"
+                onClick={() => setShowAcceptModal(true)}
+              >
+                <i className="mr-2 ml-1 fas fa-check text-white"></i>
+                Accept
+              </PrimaryButton>
+            )}
+            {(component.status == 'approved' ||
+              component.status == 'rejected') && (
+              <WarningButton
+                size="sm"
+                className="mr-2"
+                onClick={() => setShowPendingModal(true)}
+              >
+                <i className="mr-2 ml-1 fas fa-clock text-white"></i>
+                Pending
+              </WarningButton>
+            )}
+            {(component.status == 'approved' ||
+              component.status == 'pending') && (
+              <DangerButton
+                size="sm"
+                className="mr-2"
+                onClick={() => setShowRejectModal(true)}
+              >
+                <i className="mr-2 ml-1 fas fa-times text-white"></i>
+                Reject
+              </DangerButton>
+            )}
+          </>
+        }
+      ></PageHeader>
       {component.reason && component.status == 'rejected' && (
         <DangerNotification
           message={`Products is rejected`}

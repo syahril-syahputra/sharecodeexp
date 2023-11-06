@@ -1,8 +1,8 @@
-import React from 'react'
 import { getSession } from 'next-auth/react'
 import axios from '@/lib/axios'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { PDFViewer } from '@react-pdf/renderer'
+
 import SellerPackingListPDFComp from '@/components/PDF/Order/SellerPackingList'
 
 export default function SellerPackingListPDF({ sellerPackingList }) {

@@ -976,6 +976,7 @@ export default function OrderDetails({ session, routeParam }) {
                   )}
                 </div>
               </div>
+
               <div className="mx-2 my-1 text-sm mb-5">
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500 font-bold">
@@ -1010,11 +1011,25 @@ export default function OrderDetails({ session, routeParam }) {
                   )}
                 </div>
               </div>
-              <div className="mx-2 my-1 text-sm border-b">
+              <div className="mx-2 my-1 text-sm ">
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500">Unit Price (USD)</span>
                   {!isLoading ? (
                     <span>${data.price_profite}</span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="mx-2 my-1 text-sm border-b">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Test Lab Fee (USD)</span>
+                  {!isLoading ? (
+                    <span>
+                      ${data.order_price_amount_buyer.test_fee_amount}
+                    </span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -1030,9 +1045,12 @@ export default function OrderDetails({ session, routeParam }) {
                   {!isLoading ? (
                     <span>
                       $
-                      {data.price_profite
-                        ? parseFloat(data.price_profite) * parseInt(data.qty)
-                        : ''}
+                      {parseInt(
+                        data.order_price_amount_buyer?.grand_total.replace(
+                          /,/g,
+                          ''
+                        )
+                      )}
                     </span>
                   ) : (
                     <div className="animate-pulse">
@@ -1149,11 +1167,27 @@ export default function OrderDetails({ session, routeParam }) {
                 </div>
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
-                    <span>Proforma Invoice</span>
+                    <span>Proforma Invoice for Buyer</span>
                     {data.proforma_invoice_available == 1 ? (
                       <Link
                         target="_blank"
                         href={`pdf/proforma-invoice/${data.slug}`}
+                        className="underline text-blue-500"
+                      >
+                        view
+                      </Link>
+                    ) : (
+                      <span className="underline text-gray-500">view</span>
+                    )}
+                  </div>
+                </div>
+                <div className="mx-2 mt-1 text-sm">
+                  <div className="flex flex-wrap justify-between">
+                    <span>Proforma Invoice for Seller</span>
+                    {data.proforma_invoice_available == 1 ? (
+                      <Link
+                        target="_blank"
+                        href={`pdf/proforma-invoice-seller/${data.slug}`}
                         className="underline text-blue-500"
                       >
                         view
@@ -1269,6 +1303,33 @@ export default function OrderDetails({ session, routeParam }) {
               </div>
               {actionToTake}
             </PrimaryWrapper>
+            <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Event History
+              </div>
+              <ul className="space-y-2 p-2 text-sm">
+                {data.event_history?.length === 0 && (
+                  <div className="text-base italic text-center p-4">
+                    No Event History
+                  </div>
+                )}
+                {data.event_history?.map((item) => (
+                  <li key={item.id} className="flex">
+                    <span className="text-cyan-700 mr-2 w-1/5 ">
+                      {moment(item.updated_at)
+                        .local()
+                        .format('DD MMM YYYY hh:mm')}
+                    </span>
+                    <div>
+                      <span className="font-bold">{item.description}</span>
+                      {item.note && (
+                        <div className="italic py-2">{item.note}</div>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </PrimaryWrapper>
           </div>
         </div>
       </div>
@@ -1280,6 +1341,7 @@ OrderDetails.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+
   return {
     props: {
       session,
