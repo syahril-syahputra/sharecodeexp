@@ -225,6 +225,43 @@ export default function MyProduct({ session, routeParam }) {
                   </td>
                   <td className="text-sm px-2 py-4">{data.note}</td>
                 </tr>
+                {/* Event History */}
+                <tr className="text-black hover:bg-slate-100">
+                  <th scope="col" className="px-6 py-3">
+                    Event History
+                  </th>
+                  <td scope="row" className="text-sm px-6 py-4">
+                    :
+                  </td>
+                  <td className="text-sm py-4">
+                    <span className="relative flex flex-col min-w-0 break-words w-full ">
+                      <ul className=" text-sm">
+                        {data.event_history?.length === 0 && (
+                          <span className="text-sm px-2 text-center">
+                            No Event History
+                          </span>
+                        )}
+                        {data.event_history?.map((item) => (
+                          <li key={item.id} className="flex px-2 py-1">
+                            <span className="text-cyan-700 mr-2 w-1/5 ">
+                              {moment(item.updated_at)
+                                .local()
+                                .format('DD MMM YYYY hh:mm')}
+                            </span>
+                            <span>
+                              <span className="font-bold">
+                                {item.description}
+                              </span>
+                              {item.note && (
+                                <div className="italic">{item.note}</div>
+                              )}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </span>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>

@@ -36,9 +36,6 @@ export default function OutofStock({ session, routerParam }) {
   })
   const [country, setCountry] = useState('')
   const [orderStatusOptions, setOrderStatusOption] = useState([])
-
-  const [search, setSearch] = useState('')
-  const [statusCountry, setStatusCountry] = useState('')
   const [manufacturerPartNumber, setManufacturerPartNumber] = useState('')
   let orderStatusFromRoute = routerParam
 
@@ -167,6 +164,7 @@ export default function OutofStock({ session, routerParam }) {
         </div>
       </PrimaryWrapper>
       <ComponentList
+        isOutOfStock={true}
         title="Out of Stock"
         setPage={setPage}
         isLoading={isLoading}

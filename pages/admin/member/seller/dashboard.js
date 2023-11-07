@@ -15,6 +15,7 @@ export default function SellerDashboard({ session }) {
     provide_tracking_number: 0,
     good_test_result: 0,
     upload_invoice: 0,
+    reimbursement_active: 0,
   })
 
   const loadData = async () => {
@@ -124,6 +125,27 @@ export default function SellerDashboard({ session }) {
           </div>
           <Link
             href={`${VendorUrl.sellingProduct.incomingInquiries.index}/?orderStatus=product-accepted`}
+            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
+          >
+            <div className="">
+              <h1 className="text-md text-white">Check Now</h1>
+            </div>
+            <div className="">
+              <span className="text-md">
+                <i className="fas fa-chevron-right text-white"></i>
+              </span>
+            </div>
+          </Link>
+        </PrimaryWrapper>
+        <PrimaryWrapper className="border border-blue-500">
+          <div className="p-4 mb-auto">
+            <h1 className="font-semibold text-7xl mb-3">
+              {data.reimbursement_active}
+            </h1>
+            <span className="text-md italic">Reimbursement Active</span>
+          </div>
+          <Link
+            href={`${VendorUrl.sellingProduct.reimbursement_active_completed.active.index}`}
             className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
           >
             <div className="">

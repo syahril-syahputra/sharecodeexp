@@ -392,6 +392,80 @@ export default function ComponentDetails({ session, routeParam }) {
                     {moment(component.created_at).format('dddd, D MMMM YYYY')}
                   </td>
                 </tr>
+                {/* Event Histories */}
+                {/* <tr className="text-black hover:bg-slate-100">
+                  <th scope="col" className="px-6 py-3">
+                    Event History
+                  </th>
+                  <td scope="row" className="text-sm px-6 py-4">
+                    :
+                  </td>
+                  <td className="text-sm px-2 py-4">
+                    <div className="relative flex flex-col min-w-0 break-words w-full mb-6 ">
+                      <ul className=" text-sm">
+                        {component.event_history?.length === 0 && (
+                          <div className="text-base italic text-center ">
+                            No Event History
+                          </div>
+                        )}
+                        {component.event_history?.map((item) => (
+                          <li key={item.id} className="flex">
+                            <span className="text-cyan-700 mr-2 w-1/5 ">
+                              {moment(item.updated_at)
+                                .local()
+                                .format('DD MMM YYYY hh:mm')}
+                            </span>
+                            <div>
+                              <span className="font-bold">
+                                {item.description}
+                              </span>
+                              {item.note && (
+                                <div className="italic py-2">{item.note}</div>
+                              )}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </td>
+                </tr> */}
+
+                <tr className="text-black hover:bg-slate-100">
+                  <th scope="col" className="px-6 py-3">
+                    Event History
+                  </th>
+                  <td scope="row" className="text-sm px-6 py-4">
+                    :
+                  </td>
+                  <td className="text-sm py-4">
+                    <span className="relative flex flex-col min-w-0 break-words w-full ">
+                      <ul className=" text-sm">
+                        {component.event_history?.length === 0 && (
+                          <span className="text-sm px-2 text-center">
+                            No Event History
+                          </span>
+                        )}
+                        {component.event_history?.map((item) => (
+                          <li key={item.id} className="flex px-2 py-1">
+                            <span className="text-cyan-700 mr-2 w-1/5 ">
+                              {moment(item.updated_at)
+                                .local()
+                                .format('DD MMM YYYY hh:mm')}
+                            </span>
+                            <span>
+                              <span className="font-bold">
+                                {item.description}
+                              </span>
+                              {item.note && (
+                                <div className="italic">{item.note}</div>
+                              )}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </span>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>

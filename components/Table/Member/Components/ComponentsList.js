@@ -19,6 +19,7 @@ export default function TableProduct(props) {
   const data = props.data
   const links = props.links
   const metaData = props.metaData
+  const isOutOfStock = props.isOutOfStock
 
   return (
     <>
@@ -27,12 +28,14 @@ export default function TableProduct(props) {
           title={props.title}
           action={
             <>
-              <Link href="/admin/member/seller/product/add">
-                <SecondaryButton size="sm">
-                  <i className="mr-2 ml-1 fas fa-plus text-white"></i>
-                  Add Product
-                </SecondaryButton>
-              </Link>
+              {isOutOfStock ? null : (
+                <Link href="/admin/member/seller/product/add">
+                  <SecondaryButton size="sm">
+                    <i className="mr-2 ml-1 fas fa-plus text-white"></i>
+                    Add Product
+                  </SecondaryButton>
+                </Link>
+              )}
             </>
           }
         ></HeaderTable>

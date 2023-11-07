@@ -266,7 +266,8 @@ export default function MyProduct({ session }) {
                     className="mx-auto"
                     height={180}
                     width={180}
-                  ></Image>
+                    alt="image.png"
+                  />
                 </div>
               </div>
             </div>
