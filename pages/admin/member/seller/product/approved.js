@@ -159,6 +159,7 @@ const fetchNotification = async (token) => {
         Authorization: `Bearer ${token}`,
       },
     })
+
     return response.data
   } catch (error) {
     console.log(error)
@@ -167,6 +168,7 @@ const fetchNotification = async (token) => {
 export async function getServerSideProps(context) {
   const session = await getSession(context)
   const data = await fetchNotification(session.accessToken)
+
   return {
     props: {
       session,

@@ -14,7 +14,6 @@ import SelectInput from '@/components/Interface/Form/SelectInput'
 import { AdminUrl } from '@/route/route-url'
 
 export default function FindByStatusOrder({ session, routeParam }) {
-  //data search
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
@@ -27,8 +26,8 @@ export default function FindByStatusOrder({ session, routeParam }) {
   let orderStatusFromRoute = routeParam
   const [orderStatusOptions, setOrderStatusOption] = useState([])
   const loadOrderStatusOption = async () => {
-    const request = await axios
-      .get(`/allstatus`)
+    await axios
+      .get(`/allstatus?is_closed=0&reimbursement=0&return_product=0`)
       .then((response) => {
         let res = response.data.data
         setOrderStatusOption(res)
@@ -63,7 +62,7 @@ export default function FindByStatusOrder({ session, routeParam }) {
   ) => {
     setPageNumber(page)
     setIsLoading(true)
-    const response = await axios
+    await axios
       .get(
         '/admin/orders/list' +
           `?page=${page}` +

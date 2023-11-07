@@ -81,16 +81,20 @@ export default function TableProduct(props) {
                     className="bg-white border-b hover:bg-gray-50"
                   >
                     <td scope="row" className="text-sm px-6 py-4">
-                      {item.ManufacturerNumber}
+                      {item.ManufacturerNumber || '-'}
                     </td>
                     <td className="text-sm px-6 py-4">{item.Manufacture}</td>
                     <td className="text-sm px-6 py-4">
-                      {item.AvailableQuantity}
+                      {item.AvailableQuantity || '-'}
                     </td>
-                    <td className="text-sm px-6 py-4">{item.moq}</td>
-                    <td className="text-sm px-6 py-4">{item.country}</td>
-                    <td className="text-sm px-6 py-4">{item.dateCode}</td>
-                    <td className="text-sm px-6 py-4">{item.packaging}</td>
+                    <td className="text-sm px-6 py-4">{item.moq || '-'}</td>
+                    <td className="text-sm px-6 py-4">{item.country || '-'}</td>
+                    <td className="text-sm px-6 py-4">
+                      {item.dateCode || '-'}
+                    </td>
+                    <td className="text-sm px-6 py-4">
+                      {item.packaging || '-'}
+                    </td>
                     <td className="text-sm px-6 py-4">
                       <ComponentStatus
                         status={item.status}

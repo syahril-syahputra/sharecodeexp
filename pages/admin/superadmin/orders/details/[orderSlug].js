@@ -676,8 +676,14 @@ export default function OrderDetails({ session, routeParam }) {
               <div className="mx-2 my-1 text-sm uppercase text-gray-500">
                 Tracking Number
               </div>
-              <div className="mx-2 mb-5 text-xl">
+              <div className="mx-2 mb-1 text-xl">
                 {checkValue(data.trackingBuyer)}
+              </div>
+              <div className="mx-2 mb-1 text-sm uppercase text-gray-500">
+                Buyer Courier
+              </div>
+              <div className="mx-2 mb-5 text-xl">
+                {checkValue(data.buyer_courier)}
               </div>
             </PrimaryWrapper>
           </div>
@@ -717,17 +723,23 @@ export default function OrderDetails({ session, routeParam }) {
               <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                 Seller's Shipment Info
               </div>
-              <div className="mx-2 my-1 text-sm text-gray-500">
+              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
                 Tracking Number
               </div>
-              <div className="mx-2 mb-5 text-xl uppercase">
+              <div className="mx-2 mb-1 text-xl uppercase">
                 {checkValue(data.trackingSeller)}
+              </div>
+              <div className="mx-2 mb-1 text-sm uppercase text-gray-500">
+                Seller Courier
+              </div>
+              <div className="mx-2 mb-5 text-xl">
+                {checkValue(data.seller_courier)}
               </div>
             </PrimaryWrapper>
           </div>
         </div>
 
-        <div className="lg:flex lg:justify-around">
+        {/* <div className="lg:flex lg:justify-around">
           <div className="w-full lg:w-1/2 mr-4">
             <PrimaryWrapper className="p-1">
               <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
@@ -748,7 +760,7 @@ export default function OrderDetails({ session, routeParam }) {
               </div>
             </PrimaryWrapper>
           </div>
-        </div>
+        </div> */}
 
         {/* product info and quotation */}
         <div className="lg:flex lg:justify-around">
