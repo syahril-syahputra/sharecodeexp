@@ -23,6 +23,7 @@ export default function MyProduct({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({})
+  console.log(data, '<<<data')
   const getData = async () => {
     setIsLoading(true)
     const response = await axios
@@ -142,7 +143,11 @@ export default function MyProduct({ session, routeParam }) {
                     :
                   </td>
                   <td className="text-sm px-2 py-4">
-                    {data.AvailableQuantity}
+                    {data.AvailableQuantity === null ||
+                    parseInt(data?.AvailableQuantity) === 0 ||
+                    data.AvailableQuantity === undefined
+                      ? 'Out of Stock'
+                      : data?.AvailableQuantity}
                   </td>
                 </tr>
                 <tr className="text-black hover:bg-slate-100">

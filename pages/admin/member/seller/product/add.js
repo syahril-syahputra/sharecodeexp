@@ -327,7 +327,7 @@ export default function MyProduct({ session }) {
             disabled={isLoading}
             label="Stock Location"
             name="country"
-            value={country}
+            value={inputData.country}
             countryHandleChange={countryHandleChange}
             errorMsg={errorInfo?.country}
           />
