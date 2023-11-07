@@ -15,6 +15,13 @@ export default function VerifyOrder(props) {
   const [total, setTotal] = useState(0)
 
   const [errorInfo, setErrorInfo] = useState(props.errorInfo)
+  useEffect(() => {
+    setErrorInfo(props.errorInfo)
+  }, [props.errorInfo])
+  useEffect(() => {
+    setErrorInfo()
+  }, [])
+
   const setDataHandler = (input) => {
     setErrorInfo()
     setInputData({ ...inputData, [input.name]: input.value })
