@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 import Admin from 'layouts/Admin.js'
 
 // components
-import CountrySelector from '@/components/Shared/CountrySelector'
+import CountrySelectorInitial from '@/components/Shared/CountrySelectorInitial'
 import ErrorInput from '@/components/Shared/ErrorInput'
 import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
@@ -322,7 +322,8 @@ export default function MyProduct({ session }) {
           />
         </div>
         <div className="w-full lg:w-1/2 px-3 mb-6">
-          <CountrySelector
+          <CountrySelectorInitial
+            setInisiate
             disabled={isLoading}
             label="Stock Location"
             name="country"
