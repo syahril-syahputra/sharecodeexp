@@ -1058,7 +1058,7 @@ export default function OrderDetails({ session, routeParam }) {
                     <span>
                       $
                       {parseInt(
-                        data.order_price_amount_buyer?.grand_total.replace(
+                        data.order_price_amount_buyer?.grand_total?.replace(
                           /,/g,
                           ''
                         )

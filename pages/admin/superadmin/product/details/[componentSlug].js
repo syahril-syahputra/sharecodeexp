@@ -296,7 +296,11 @@ export default function ComponentDetails({ session, routeParam }) {
                     :
                   </td>
                   <td className="text-sm px-2 py-4">
-                    {component.AvailableQuantity}
+                    {component.AvailableQuantity === null ||
+                    parseInt(component?.AvailableQuantity) === 0 ||
+                    component.AvailableQuantity === undefined
+                      ? 'Out of Stock'
+                      : component?.AvailableQuantity}
                   </td>
                 </tr>
                 <tr className="text-black hover:bg-slate-100">
