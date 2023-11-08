@@ -679,6 +679,7 @@ export default function OrderDetails({ session, routeParam }) {
               <div className="mx-2 mb-1 text-xl">
                 {checkValue(data.trackingBuyer)}
               </div>
+
               <div className="mx-2 mb-1 text-sm uppercase text-gray-500">
                 Buyer Courier
               </div>
@@ -729,12 +730,32 @@ export default function OrderDetails({ session, routeParam }) {
               <div className="mx-2 mb-1 text-xl uppercase">
                 {checkValue(data.trackingSeller)}
               </div>
+              {parseInt(data?.return_product) === 1 ? (
+                <>
+                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                    New Tracking Number
+                  </div>
+                  <div className="mx-2 mb-1 text-xl">
+                    {checkValue(data.seller_return_tracking_number)}
+                  </div>
+                </>
+              ) : undefined}
               <div className="mx-2 mb-1 text-sm uppercase text-gray-500">
                 Seller Courier
               </div>
               <div className="mx-2 mb-5 text-xl">
                 {checkValue(data.seller_courier)}
               </div>
+              {parseInt(data?.return_product) === 1 ? (
+                <>
+                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                    New Seller Courier
+                  </div>
+                  <div className="mx-2 mb-1 text-xl">
+                    {checkValue(data.seller_return_courier)}
+                  </div>
+                </>
+              ) : undefined}
             </PrimaryWrapper>
           </div>
         </div>
