@@ -31,7 +31,7 @@ export default function ReimbursementActive({ session, routerParam }) {
   const [orderStatusOptions, setOrderStatusOption] = useState([])
   const loadOrderStatusOption = async () => {
     await axios
-      .get(`/allstatus?is_closed=0&reimbursement=1&return_product=0`)
+      .get(`/allstatus?is_closed=0&reimbursement=1`)
       .then((response) => {
         let res = response.data.data
         setOrderStatusOption(res)

@@ -49,10 +49,10 @@ export default function TableProduct(props) {
               <th scope="col" className="px-6 py-3">
                 Manufacturer
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-8 py-3">
                 Available Quantity
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-10 py-3">
                 MOQ
               </th>
               <th scope="col" className="px-6 py-3">
@@ -87,10 +87,21 @@ export default function TableProduct(props) {
                       {item.ManufacturerNumber || '-'}
                     </td>
                     <td className="text-sm px-6 py-4">{item.Manufacture}</td>
-                    <td className="text-sm px-6 py-4">
-                      {item.AvailableQuantity || '-'}
+                    <td className="text-sm px-8 py-4">
+                      {item?.AvailableQuantity === null ||
+                      item?.AvailableQuantity == 0 ? (
+                        <span>Out of Stock</span>
+                      ) : (
+                        <span>{item.AvailableQuantity}</span>
+                      )}{' '}
                     </td>
-                    <td className="text-sm px-6 py-4">{item.moq || '-'}</td>
+                    <td className="text-sm px-10 py-4">
+                      {item?.moq === null || item?.moq == 0 ? (
+                        <span>Out of Stock</span>
+                      ) : (
+                        <span>{item.moq}</span>
+                      )}{' '}
+                    </td>
                     <td className="text-sm px-6 py-4">{item.country || '-'}</td>
                     <td className="text-sm px-6 py-4">
                       {item.dateCode || '-'}

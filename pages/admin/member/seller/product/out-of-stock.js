@@ -2,23 +2,15 @@ import { getSession } from 'next-auth/react'
 import React, { useState, useEffect } from 'react'
 import Admin from 'layouts/Admin.js'
 import ComponentList from '@/components/Table/Member/Components/ComponentsList'
-import MiniSearchBar from '@/components/Shared/MiniSearchBar'
 import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
-import InfoNotification from '@/components/Interface/Notification/InfoNotification'
-import {
-  BaseModalLarge,
-  BaseModalMedium,
-} from '@/components/Interface/Modal/BaseModal'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
-import Link from 'next/link'
 import axios from 'lib/axios'
 import InfoButton from '@/components/Interface/Buttons/InfoButton'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
-import SelectInput from '@/components/Interface/Form/SelectInput'
 import TextInput from '@/components/Interface/Form/TextInput'
 
-export default function OutofStock({ session, routerParam }) {
+export default function OutofStock({ session }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
@@ -31,11 +23,9 @@ export default function OutofStock({ session, routerParam }) {
   })
   const [country, setCountry] = useState('')
   const [manufacturerPartNumber, setManufacturerPartNumber] = useState('')
-  let orderStatusFromRoute = routerParam
 
   const loadData = async (
     page = 1,
-    orderStatusParam = orderStatusFromRoute ? orderStatusFromRoute : '',
     countryParam = '',
     manufacturerPartNumberParam = ''
   ) => {
@@ -136,14 +126,10 @@ OutofStock.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
-  const orderStatus = context?.query?.orderStatus
-    ? context.query?.orderStatus
-    : null
 
   return {
     props: {
       session,
-      routerParam: orderStatus,
     },
   }
 }

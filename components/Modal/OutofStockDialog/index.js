@@ -26,7 +26,6 @@ export default function OutofStockDialog({ session, ...props }) {
         toast.success(`${response?.data?.message}`, toastOptions)
         props.setShowModal(false)
         setIsLoading(false)
-        router.push('/admin/member/seller/product/out-of-stock')
       })
       .catch((error) => {
         toast.error(`${error?.data?.message}`, toastOptions)

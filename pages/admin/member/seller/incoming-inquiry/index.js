@@ -186,7 +186,7 @@ export default function IncomingInquiry({ session, routeParam }) {
           data={data}
           links={links}
           metaData={metaData}
-        ></IncomingInquiryTable>
+        />
       </div>
     </>
   )

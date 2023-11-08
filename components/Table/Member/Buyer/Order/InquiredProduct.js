@@ -1,13 +1,10 @@
 import React from 'react'
 import moment from 'moment'
-// components
 import BaseTable from '@/components/Interface/Table/BaseTable'
 import Pagination from '@/components/Shared/Component/Pagination'
 import NoData from '@/components/Interface/Table/NoData'
 import MetaData from '@/components/Interface/Table/MetaData'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
-
-//data
 import NavigationViewButton from './NavigationViewButton'
 import { checkValue } from '@/utils/general'
 
