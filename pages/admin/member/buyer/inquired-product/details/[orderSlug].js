@@ -28,6 +28,7 @@ import PrimaryNotification from '@/components/Interface/Notification/PrimaryNoti
 import { checkValue } from '@/utils/general'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import calculateTimeDifference from '@/lib/calculateTimeDifference'
+import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
 
 export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -48,6 +49,7 @@ export default function InquiryDetails({ session, routeParam }) {
   const [acceptOrderModal, setAcceptOrderModal] = useState(false)
   const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
   const [isLoadingOpenQUotation, setisLoadingOpenQUotation] = useState(false)
+  const [courierModal, setcourierModal] = useState(false)
   const openQuotationHandler = async () => {
     try {
       setisLoadingOpenQUotation(true)
@@ -124,6 +126,35 @@ export default function InquiryDetails({ session, routeParam }) {
     )
   }
 
+  const handlelCourierDetailsModal = (courier) => {
+    setIsLoading(true)
+    setErrorInfo({})
+    axios
+      .post(
+        `/buyer/order/upload-courier`,
+        {
+          order_slug: data.slug,
+          courier,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot send tracking number to buyer.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
   const acceptQuotationModalHandle = async () => {
     setIsLoading(true)
     const response = await axios
@@ -531,6 +562,34 @@ export default function InquiryDetails({ session, routeParam }) {
               >
                 Update Payment
               </WarningButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+
+    case 11:
+      actionToTake = (
+        <div>
+          {courierModal && (
+            <UploadCourierDetails
+              isLoading={isLoading}
+              closeModal={() => setcourierModal(false)}
+              acceptance={handlelCourierDetailsModal}
+              errorInfo={errorInfo}
+            />
+          )}
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setcourierModal(true)}
+              >
+                Upload Courier Details
+              </PrimaryButton>
             </div>
           </div>
         </div>
