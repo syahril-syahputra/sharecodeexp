@@ -144,6 +144,7 @@ export default function InquiryDetails({ session, routeParam }) {
       )
       .then((response) => {
         toast.success(response.data.message, toastOptions)
+        setcourierModal(false)
         loadData()
       })
       .catch((error) => {
@@ -588,7 +589,7 @@ export default function InquiryDetails({ session, routeParam }) {
                 disabled={isLoading}
                 onClick={() => setcourierModal(true)}
               >
-                Upload Courier Details
+                Insert Courier Details
               </PrimaryButton>
             </div>
           </div>
