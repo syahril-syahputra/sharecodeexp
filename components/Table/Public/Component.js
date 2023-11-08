@@ -11,7 +11,6 @@ import Pagination from '@/components/Shared/Component/Pagination'
 import DetailProdutModal from '@/components/Modal/DetailProdutModal/DetailProdutModal'
 
 export default function TableComponent(props) {
-  console.log(props, '<<<<props')
   const { status } = useSession()
   const router = useRouter()
   const [isInquiryClicked, setIsInquiryClicked] = useState(false)

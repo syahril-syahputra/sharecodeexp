@@ -12,18 +12,23 @@ import DangerNotification from '@/components/Interface/Notification/DangerNotifi
 import LoadingState from '@/components/Interface/Loader/LoadingState'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
 import { toast } from 'react-toastify'
+import DangerButton from '@/components/Interface/Buttons/DangerButton'
+import OutofStockDialog from '@/components/Modal/OutofStockDialog'
 
 export default function MyProduct({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   const [isLoading, setIsLoading] = useState(true)
+  const [isLoadingModal, setIsLoadingModal] = useState(false)
   const [data, setData] = useState({})
+  const [showModal, setShowModal] = useState(false)
+  const [slugState, setSlugState] = useState('')
 
   const getData = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .get(`/companyproduct?id=${routeParam.componentSlug}`, {
         headers: {
-          Authorization: `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session?.accessToken}`,
         },
       })
       .then((response) => {
@@ -52,6 +57,26 @@ export default function MyProduct({ session, routeParam }) {
           }
           rightTop={
             <>
+              {!!data.id &&
+                (data?.moq === 0 ||
+                data?.AvailableQuantity === 0 ||
+                data?.moq === null ||
+                data?.AvailableQuantity === null ? undefined : (
+                  <DangerButton
+                    size="sm"
+                    className="mr-2"
+                    onClick={() => {
+                      setShowModal(true)
+                      setSlugState(data?.slug)
+                    }}
+                  >
+                    {showModal == true ? (
+                      <i className="px-3 fas fa-hourglass fa-spin"></i>
+                    ) : (
+                      'Out of Stock'
+                    )}
+                  </DangerButton>
+                ))}
               {!!data.id && (
                 <Link href={`/admin/member/seller/product/edit/${data.slug}`}>
                   <WarningButton size="sm">
@@ -254,6 +279,14 @@ export default function MyProduct({ session, routeParam }) {
           <LoadingState className={'pb-20'} />
         )}
       </PrimaryWrapper>
+      {showModal ? (
+        <OutofStockDialog
+          setShowModal={setShowModal}
+          item={slugState}
+          isLoading={[isLoadingModal, setIsLoadingModal]}
+          session={session}
+        />
+      ) : null}
     </>
   )
 }

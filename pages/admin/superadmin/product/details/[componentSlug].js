@@ -1,10 +1,8 @@
-import moment from 'moment'
 import React, { useState, useEffect, useContext } from 'react'
+import moment from 'moment'
 import Link from 'next/link'
 import axios from 'lib/axios'
 import { getSession } from 'next-auth/react'
-
-// components
 import ComponentStatus from '@/components/Shared/Component/Statuses'
 import AcceptComponent from '@/components/Modal/Component/AcceptComponent'
 import RejectComponent from '@/components/Modal/Component/RejectComponent'
@@ -15,31 +13,24 @@ import DangerNotification from '@/components/Interface/Notification/DangerNotifi
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import DangerButton from '@/components/Interface/Buttons/DangerButton'
-
-// layout for page
 import Admin from 'layouts/Admin.js'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import LoadingState from '@/components/Interface/Loader/LoadingState'
 import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses'
-import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
-import { useSideBarStatus } from '@/domain/states/user_control/admin/hook'
 import GlobalContext from '@/store/global-context'
 import { useRouter } from 'next/router'
 
 export default function ComponentDetails({ session, routeParam }) {
-  //data search
   const publicDir = process.env.NEXT_PUBLIC_DIR
   const context = useContext(GlobalContext)
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [component, setComponent] = useState({})
-  const [stateError, setStateError] = useState(false)
-  const [stateStatus, setStateStatus] = useState({})
 
   const getData = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .get(`/admin/product?id=${routeParam.componentSlug}`, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -50,7 +41,6 @@ export default function ComponentDetails({ session, routeParam }) {
         setComponent(result)
       })
       .catch((error) => {
-        // console.log(error.response)
         toast.error('Something went wrong. Component not found.', toastOptions)
       })
       .finally(() => {
@@ -58,7 +48,6 @@ export default function ComponentDetails({ session, routeParam }) {
       })
   }
 
-  // This code for update sidebar state
   const updateState = () => {
     context.loadAdminSidebarCounter(session.accessToken)
   }
@@ -75,7 +64,7 @@ export default function ComponentDetails({ session, routeParam }) {
   const handleAcceptComponent = async () => {
     setShowAcceptModal(false)
     setIsLoading(true)
-    const request = await axios
+    await axios
       .post(
         `admin/product/update`,
         {
@@ -107,7 +96,7 @@ export default function ComponentDetails({ session, routeParam }) {
   const handleRejectComponent = async (text) => {
     setShowRejectModal(false)
     setIsLoading(true)
-    const request = await axios
+    await axios
       .post(
         `admin/product/updateReject`,
         {
@@ -140,7 +129,7 @@ export default function ComponentDetails({ session, routeParam }) {
   const handlePendingComponent = async (text) => {
     setShowPendingModal(false)
     setIsLoading(true)
-    const request = await axios
+    await axios
       .post(
         `admin/product/updatePending`,
         {
@@ -383,80 +372,6 @@ export default function ComponentDetails({ session, routeParam }) {
                       {moment(component.created_at).format('dddd, D MMMM YYYY')}
                     </td>
                   </tr>
-                  {/* Event Histories */}
-                  {/* <tr className="text-black hover:bg-slate-100">
-                  <th scope="col" className="px-6 py-3">
-                    Event History
-                  </th>
-                  <td scope="row" className="text-sm px-6 py-4">
-                    :
-                  </td>
-                  <td className="text-sm px-2 py-4">
-                    <div className="relative flex flex-col min-w-0 break-words w-full mb-6 ">
-                      <ul className=" text-sm">
-                        {component.event_history?.length === 0 && (
-                          <div className="text-base italic text-center ">
-                            No Event History
-                          </div>
-                        )}
-                        {component.event_history?.map((item) => (
-                          <li key={item.id} className="flex">
-                            <span className="text-cyan-700 mr-2 w-1/5 ">
-                              {moment(item.updated_at)
-                                .local()
-                                .format('DD MMM YYYY hh:mm')}
-                            </span>
-                            <div>
-                              <span className="font-bold">
-                                {item.description}
-                              </span>
-                              {item.note && (
-                                <div className="italic py-2">{item.note}</div>
-                              )}
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </td>
-                </tr> */}
-
-                  {/* <tr className="text-black hover:bg-slate-100">
-                  <th scope="col" className="px-6 py-3">
-                    Event History
-                  </th>
-                  <td scope="row" className="text-sm px-6 py-4">
-                    :
-                  </td>
-                  <td className="text-sm py-4">
-                    <span className="relative flex flex-col min-w-0 break-words w-full ">
-                      <ul className=" text-sm">
-                        {component.event_history?.length === 0 && (
-                          <span className="text-sm px-2 text-center">
-                            No Event History
-                          </span>
-                        )}
-                        {component.event_history?.map((item) => (
-                          <li key={item.id} className="flex px-2 py-1">
-                            <span className="text-cyan-700 mr-2 w-1/5 ">
-                              {moment(item.updated_at)
-                                .local()
-                                .format('DD MMM YYYY hh:mm')}
-                            </span>
-                            <span>
-                              <span className="font-bold">
-                                {item.description}
-                              </span>
-                              {item.note && (
-                                <div className="italic">{item.note}</div>
-                              )}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </span>
-                  </td>
-                </tr> */}
                 </tbody>
               </table>
             </div>
