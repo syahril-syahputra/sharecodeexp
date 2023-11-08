@@ -27,7 +27,7 @@ export default function FindByStatusOrder({ session, routeParam }) {
   const [orderStatusOptions, setOrderStatusOption] = useState([])
   const loadOrderStatusOption = async () => {
     await axios
-      .get(`/allstatus?is_closed=0&reimbursement=0&return_product=0`)
+      .get(`/allstatus?is_closed=0&reimbursement=0`)
       .then((response) => {
         let res = response.data.data
         setOrderStatusOption(res)

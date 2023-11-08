@@ -25,7 +25,6 @@ import SelectInput from '@/components/Interface/Form/SelectInput'
 
 export default function EditComponent({ session, routeParam, packaginglist }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
-  // update data
   const [inputData, setInputData] = useState({
     id: '',
     AvailableQuantity: '',
@@ -85,7 +84,7 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
     for (const key in inputData) {
       formData.append(key, inputData[key])
     }
-    const response = await axios
+    await axios
       .post(`/companyproduct/${inputData.id}/update`, formData, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -175,7 +174,7 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
   const [isLoading, setIsLoading] = useState(true)
   const getData = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .get(`/companyproduct?id=${routeParam.componentSlug}`, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -194,7 +193,6 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
           Description: result.Description,
           dateCode: result.dateCode,
           note: result.note,
-          // subcategory_id: result.subcategory.id
         })
         setShowImage(result.img)
 
@@ -207,9 +205,6 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
         } else {
           setPackaging({ value: 'other', label: 'Other' })
         }
-
-        // setCategory({value: result.subcategory.category.id, label: result.subcategory.category.name})
-        // setSubCategory({value: result.subcategory.id, label: result.subcategory.name})
       })
       .catch((error) => {
         toast.error(
@@ -221,6 +216,7 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
         setIsLoading(false)
       })
   }
+
   useEffect(() => {
     getData()
   }, [])
@@ -250,7 +246,7 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
         }
         rightTop={
           <Link
-            href={`/admin/member/sellcomponents/component/view/${routeParam.componentSlug}`}
+            href={`/admin/member/seller/product/details/${routeParam.componentSlug}`}
           >
             <LightButton size="sm" className="mr-2">
               <i className="mr-2 ml-1 fas fa-arrow-left"></i>

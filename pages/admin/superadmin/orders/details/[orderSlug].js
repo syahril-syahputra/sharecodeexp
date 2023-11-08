@@ -674,17 +674,16 @@ export default function OrderDetails({ session, routeParam }) {
                 Buyer's Shipment Info
               </div>
               <div className="mx-2 my-1 text-sm uppercase text-gray-500">
-                Tracking Number
-              </div>
-              <div className="mx-2 mb-1 text-xl">
-                {checkValue(data.trackingBuyer)}
-              </div>
-
-              <div className="mx-2 mb-1 text-sm uppercase text-gray-500">
                 Buyer Courier
               </div>
-              <div className="mx-2 mb-5 text-xl">
+              <div className="mx-2 mb-1 text-xl">
                 {checkValue(data.buyer_courier)}
+              </div>
+              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                Tracking Number
+              </div>
+              <div className="mx-2 mb-5 text-xl">
+                {checkValue(data.trackingBuyer)}
               </div>
             </PrimaryWrapper>
           </div>
@@ -725,63 +724,39 @@ export default function OrderDetails({ session, routeParam }) {
                 Seller's Shipment Info
               </div>
               <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                Seller Courier
+              </div>
+              <div className="mx-2 mb-1 text-xl">
+                {checkValue(data.seller_courier)}
+              </div>
+              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
                 Tracking Number
               </div>
-              <div className="mx-2 mb-1 text-xl uppercase">
+              <div className="mx-2 mb-5 text-xl uppercase">
                 {checkValue(data.trackingSeller)}
               </div>
               {parseInt(data?.return_product) === 1 ? (
                 <>
-                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
-                    New Tracking Number
+                  <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                    Seller's Return Shipment Info
                   </div>
-                  <div className="mx-2 mb-1 text-xl">
-                    {checkValue(data.seller_return_tracking_number)}
-                  </div>
-                </>
-              ) : undefined}
-              <div className="mx-2 mb-1 text-sm uppercase text-gray-500">
-                Seller Courier
-              </div>
-              <div className="mx-2 mb-5 text-xl">
-                {checkValue(data.seller_courier)}
-              </div>
-              {parseInt(data?.return_product) === 1 ? (
-                <>
                   <div className="mx-2 my-1 text-sm uppercase text-gray-500">
-                    New Seller Courier
+                    Seller Courier
                   </div>
                   <div className="mx-2 mb-1 text-xl">
                     {checkValue(data.seller_return_courier)}
+                  </div>
+                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                    Tracking Number
+                  </div>
+                  <div className="mx-2 mb-5 text-xl">
+                    {checkValue(data.seller_return_tracking_number)}
                   </div>
                 </>
               ) : undefined}
             </PrimaryWrapper>
           </div>
         </div>
-
-        {/* <div className="lg:flex lg:justify-around">
-          <div className="w-full lg:w-1/2 mr-4">
-            <PrimaryWrapper className="p-1">
-              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                Buyer Courier
-              </div>
-              <div className="mx-2 my-1 text-xl">
-                {checkValue(data.buyer_courier)}
-              </div>
-            </PrimaryWrapper>
-          </div>
-          <div className="w-1/2 lg:w-1/2 ">
-            <PrimaryWrapper className="p-1">
-              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                Seller Courier
-              </div>
-              <div className="mx-2 my-1 text-xl">
-                {checkValue(data.seller_courier)}
-              </div>
-            </PrimaryWrapper>
-          </div>
-        </div> */}
 
         {/* product info and quotation */}
         <div className="lg:flex lg:justify-around">

@@ -209,7 +209,14 @@ export default function AddToInquiryList({ session, routeParam }) {
                 <td scope="row" className="text-sm px-6 py-4">
                   :
                 </td>
-                <td className="text-sm px-2 py-4">{data.moq}</td>
+                <td className="text-sm px-2 py-4">
+                  {' '}
+                  {data.moq === null ||
+                  parseInt(data?.moq) === 0 ||
+                  data.moq === undefined
+                    ? 'Out of Stock'
+                    : data?.moq}
+                </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
                 <th scope="col" className="px-6 py-3">

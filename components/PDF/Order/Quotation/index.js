@@ -119,7 +119,7 @@ const Quotation = ({ quotation }) => {
             </Text>
           </View>
           <View style={{ margin: 5 }}></View>
-          {quotation?.test_free && (
+          {!quotation?.test_free && (
             <>
               <View style={styles.tableHead}>
                 <Text style={styles.descriptionFee}>Description</Text>
@@ -145,19 +145,6 @@ const Quotation = ({ quotation }) => {
               </View>
             </>
           )}
-          {/* {!quotation?.test_free && (
-            <View style={styles.tableBody}>
-              <Text style={styles.pn}></Text>
-              <Text style={styles.description}></Text>
-              <Text style={styles.mfg}></Text>
-              <Text style={styles.dc}></Text>
-              <Text style={styles.qty}></Text>
-              <Text style={styles.grandTotal}>Test LAB Fee (USD)</Text>
-              <Text style={styles.grandTotal}>
-                {quotation?.test_fee || '-'}
-              </Text>
-            </View>
-          )} */}
           <View style={styles.tableSummary}>
             <Text style={styles.pn}></Text>
             <Text style={styles.description}></Text>

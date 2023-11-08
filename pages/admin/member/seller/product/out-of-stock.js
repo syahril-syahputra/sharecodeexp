@@ -21,7 +21,6 @@ import TextInput from '@/components/Interface/Form/TextInput'
 export default function OutofStock({ session, routerParam }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
-  console.log(data, '<<<data')
   const [links, setLinks] = useState([])
   const [pageNumber, setPageNumber] = useState('')
 
@@ -30,34 +29,10 @@ export default function OutofStock({ session, routerParam }) {
     perPage: 0,
     lastPage: 0,
   })
-  const [orderStatus, setOrderStatus] = useState({
-    label: 'Select Order Status',
-    value: '',
-  })
   const [country, setCountry] = useState('')
-  const [orderStatusOptions, setOrderStatusOption] = useState([])
   const [manufacturerPartNumber, setManufacturerPartNumber] = useState('')
   let orderStatusFromRoute = routerParam
 
-  const loadOrderStatusOption = async () => {
-    await axios
-      .get(`/allstatus?is_closed=0&reimbursement=0&return_product=0`)
-      .then((response) => {
-        let res = response.data.data
-        setOrderStatusOption(res)
-        res.filter((option) => {
-          if (option.value === orderStatusFromRoute) {
-            setOrderStatus({
-              label: option.label,
-              value: option.value,
-            })
-          }
-        })
-      })
-      .catch(() => {
-        toast.error('Cannot load order status.', toastOptions)
-      })
-  }
   const loadData = async (
     page = 1,
     orderStatusParam = orderStatusFromRoute ? orderStatusFromRoute : '',
@@ -68,7 +43,7 @@ export default function OutofStock({ session, routerParam }) {
     setIsLoading(true)
     await axios
       .get(
-        `/seller/product/list?status=${orderStatusParam}&country=${countryParam}&manufacturer_part_number=${manufacturerPartNumberParam}&sort_by=updated_at&sort_type=Desc`,
+        `/seller/product/list?country=${countryParam}&manufacturer_part_number=${manufacturerPartNumberParam}&sort_by=updated_at&sort_type=Desc`,
         {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
@@ -97,18 +72,10 @@ export default function OutofStock({ session, routerParam }) {
   }
 
   const handleSearchData = () => {
-    loadData(1, orderStatus?.value, country, manufacturerPartNumber)
+    loadData(1, country, manufacturerPartNumber)
   }
 
   const handleResetSearchFilter = () => {
-    if (orderStatusFromRoute) {
-      orderStatusFromRoute = ''
-      router.push(`${VendorUrl.sellingProduct.incomingInquiries.index}`)
-    }
-    setOrderStatus({
-      label: 'Select Order Status',
-      value: '',
-    })
     setManufacturerPartNumber('')
     setCountry('')
     loadData()
@@ -120,14 +87,13 @@ export default function OutofStock({ session, routerParam }) {
 
   useEffect(() => {
     loadData()
-    loadOrderStatusOption()
   }, [])
 
   return (
     <div className="mb-10">
       <h1 className="font-semibold text-2xl">Out of Stock</h1>
       <PrimaryWrapper className={`mt-5 p-5`}>
-        <h2 className="text-xl text-center">Search Active Out of Stock</h2>
+        <h2 className="text-xl text-center">Search Out of Stock</h2>
         <div className="grid grid-cols-2 gap-3 mt-2">
           <div className="text-center">
             <TextInput
@@ -144,16 +110,6 @@ export default function OutofStock({ session, routerParam }) {
             ></TextInput>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-3 mt-4">
-          <div className="text-center">
-            <SelectInput
-              value={orderStatus}
-              options={orderStatusOptions}
-              onChange={(input) => setOrderStatus(input)}
-            />
-          </div>
-        </div>
-
         <div className="mt-10 text-center">
           <PrimaryButton onClick={handleSearchData} className="w-1/2 mr-2">
             Search
