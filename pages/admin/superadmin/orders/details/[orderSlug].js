@@ -1229,7 +1229,7 @@ export default function OrderDetails({ session, routeParam }) {
                   {!isLoading ? (
                     <span>
                       $
-                      {parseInt(data.order_price_amount_buyer?.grand_total) ||
+                      {data.order_price_amount_buyer?.grand_total ||
                         0}
                     </span>
                   ) : (
