@@ -11,8 +11,6 @@ import {
 } from '@react-pdf/renderer'
 
 const Quotation = ({ quotation }) => {
-  console.log(quotation, '<<<quotation')
-
   return (
     <Document pageMode="fullScreen">
       <Page size="A4" style={styles.body}>

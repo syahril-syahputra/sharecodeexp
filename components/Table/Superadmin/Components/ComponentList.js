@@ -1,123 +1,130 @@
-import React from "react";
-import moment from "moment";
+import React from 'react'
+import moment from 'moment'
 // components
-import ComponentStatus from "@/components/Shared/Component/Statuses";
-import Pagination from "@/components/Shared/Component/Pagination";
+import ComponentStatus from '@/components/Shared/Component/Statuses'
+import Pagination from '@/components/Shared/Component/Pagination'
 
-import BaseTable from "@/components/Interface/Table/BaseTable";
-import HeaderTable from "@/components/Interface/Table/HeaderTable";
-import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
-import NoData from "@/components/Interface/Table/NoData";
-import MetaData from "@/components/Interface/Table/MetaData";
-import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
-import Link from "next/link";
+import BaseTable from '@/components/Interface/Table/BaseTable'
+import HeaderTable from '@/components/Interface/Table/HeaderTable'
+import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import NoData from '@/components/Interface/Table/NoData'
+import MetaData from '@/components/Interface/Table/MetaData'
+import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
+import Link from 'next/link'
 
 export default function ComponentList(props) {
-    return (
-        <>  
-            <PrimaryWrapper>
-                <HeaderTable
-                    title={props.title}
-                />
-                <BaseTable  
-                    isBusy={props.isLoading}
-                    header={
-                        <>
-                            <th scope="col" className="px-6 py-3">
-                                Manufacturer Part Number
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Manufacturer
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Available Quantity
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                MOQ
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Country
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Date Code
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Packaging
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Status
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Created On
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-right">
-                                Action
-                            </th>
-                        </>
-                    }
-                    tableData={
-                    <>
-                        {props.data.map((item, index) => {
-                            return(
-                                <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                                    <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                        {item.ManufacturerNumber}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {item.Manufacture}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {item.AvailableQuantity}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {item.moq}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {item.country}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {item.dateCode}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {item.packaging}
-                                    </td>                                    
-                                    <td className="px-6 py-4 w-36">
-                                        <ComponentStatus status={item.status} title={`stock status ${item.status}`} label={item.status}/>
-                                    </td>
-                                    <td className="text-sm px-6 py-4">
-                                        {moment(item.created_at).format('dddd, D MMMM YYYY')}
-                                    </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <div className="inline-flex">
-                                            <Link href={`/admin/superadmin/product/details/${item.slug}`}>
-                                                <PrimaryButton
-                                                    size="sm">
-                                                    View
-                                                </PrimaryButton>
-                                            </Link>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )
-                        })}
-                        {!props.isLoading && props.metaData.total === 0 &&
-                            <NoData colSpan={10}/>
-                        }
-                    </>
-                    }                
-                />
-                {!props.isLoading && props.metaData.total > 0 ? 
-                    <MetaData
-                        total={props.metaData.total}
-                        perPage={props.data.length}
-                    />
-                : null}               
-            </PrimaryWrapper>
-            <Pagination 
-                links={props.links}
-                metaData={props.metaData}
-                setPage={props.setPage}
-            />
-        </>
-    );
+  return (
+    <>
+      <PrimaryWrapper>
+        <HeaderTable title={props.title} />
+        <BaseTable
+          isBusy={props.isLoading}
+          header={
+            <>
+              <th scope="col" className="px-6 py-3">
+                Manufacturer Part Number
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Manufacturer
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Available Quantity
+              </th>
+              <th scope="col" className="px-8 py-3">
+                MOQ
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Country
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Date Code
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Packaging
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Status
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Created On
+              </th>
+              <th scope="col" className="px-6 py-3 text-right">
+                Action
+              </th>
+            </>
+          }
+          tableData={
+            <>
+              {props.data.map((item, index) => {
+                return (
+                  <tr
+                    key={index}
+                    className="bg-white border-b hover:bg-gray-50"
+                  >
+                    <td
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                    >
+                      {item.ManufacturerNumber}
+                    </td>
+                    <td className="px-6 py-4">{item.Manufacture}</td>
+                    <td className="px-6 py-4">
+                      {' '}
+                      {item?.AvailableQuantity === null ||
+                      item?.AvailableQuantity == 0 ? (
+                        <span>Out of Stock</span>
+                      ) : (
+                        <span>{item.AvailableQuantity}</span>
+                      )}{' '}
+                    </td>
+                    <td className="px-8 py-4">
+                      {' '}
+                      {item?.moq === null || item?.moq == 0 ? (
+                        <span>Out of Stock</span>
+                      ) : (
+                        <span>{item.moq}</span>
+                      )}{' '}
+                    </td>
+                    <td className="px-6 py-4">{item.country}</td>
+                    <td className="px-6 py-4">{item.dateCode}</td>
+                    <td className="px-6 py-4">{item.packaging}</td>
+                    <td className="px-6 py-4 w-36">
+                      <ComponentStatus
+                        status={item.status}
+                        title={`stock status ${item.status}`}
+                        label={item.status}
+                      />
+                    </td>
+                    <td className="text-sm px-6 py-4">
+                      {moment(item.created_at).format('dddd, D MMMM YYYY')}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="inline-flex">
+                        <Link
+                          href={`/admin/superadmin/product/details/${item.slug}`}
+                        >
+                          <PrimaryButton size="sm">View</PrimaryButton>
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+              {!props.isLoading && props.metaData.total === 0 && (
+                <NoData colSpan={10} />
+              )}
+            </>
+          }
+        />
+        {!props.isLoading && props.metaData.total > 0 ? (
+          <MetaData total={props.metaData.total} perPage={props.data.length} />
+        ) : null}
+      </PrimaryWrapper>
+      <Pagination
+        links={props.links}
+        metaData={props.metaData}
+        setPage={props.setPage}
+      />
+    </>
+  )
 }

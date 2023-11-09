@@ -25,7 +25,8 @@ export default function OutofStockDialog({ session, ...props }) {
       .then((response) => {
         toast.success(`${response?.data?.message}`, toastOptions)
         props.setShowModal(false)
-        setIsLoading(false)
+        setIsLoading(true)
+        props.callback()
       })
       .catch((error) => {
         toast.error(`${error?.data?.message}`, toastOptions)
@@ -39,6 +40,7 @@ export default function OutofStockDialog({ session, ...props }) {
       title="Action Required"
       onClick={() => {
         props.setShowModal(false)
+        setIsLoading(false)
       }}
       body={
         <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
@@ -50,8 +52,11 @@ export default function OutofStockDialog({ session, ...props }) {
         <>
           <LightButton
             className="uppercase mr-2 font-bold"
+            isLoading={props.isLoading}
+            disabled={isLoading}
             onClick={() => {
               props.setShowModal(false)
+              setIsLoading(false)
             }}
           >
             No, Close
