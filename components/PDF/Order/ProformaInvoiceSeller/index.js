@@ -167,17 +167,6 @@ const ProformaInvoiceSeller = ({ proformaInvoice }) => (
             {proformaInvoice.table_data.total}
           </Text>
         </View>
-        {!proformaInvoice.test_free && (
-          <View style={styles.tableSummary}>
-            <Text style={styles.pn}></Text>
-            <Text style={styles.description}></Text>
-            <Text style={styles.mfg}></Text>
-            <Text style={styles.dc}></Text>
-            <Text style={styles.qty}></Text>
-            <Text style={styles.grandTotal}>Test LAB Fee (USD)</Text>
-            <Text style={styles.grandTotal}>{proformaInvoice.test_fee}</Text>
-          </View>
-        )}
         <View style={styles.tableSummary}>
           <Text style={styles.pn}></Text>
           <Text style={styles.description}></Text>
