@@ -83,12 +83,6 @@ const PackingList = ({ sellerPackingList }) => (
               : {sellerPackingList.packing_list_info.package_type}
             </Text>
           </View>
-          <View style={styles.inlineItem}>
-            <Text style={styles.sectionSubTitle}>TRACKING</Text>
-            <Text style={styles.subItem}>
-              : {sellerPackingList.packing_list_info.tracking}
-            </Text>
-          </View>
         </View>
       </View>
       <View style={styles.sectionItemDetail}>
