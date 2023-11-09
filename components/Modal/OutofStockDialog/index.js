@@ -52,6 +52,8 @@ export default function OutofStockDialog({ session, ...props }) {
         <>
           <LightButton
             className="uppercase mr-2 font-bold"
+            isLoading={props.isLoading}
+            disabled={isLoading}
             onClick={() => {
               props.setShowModal(false)
               setIsLoading(false)
