@@ -73,17 +73,19 @@ export default function InquiryDetails({ session, routeParam }) {
   const openProformaInvoice = async () => {
     try {
       setisLoadingProformaInvoice(true)
-      await axios.post(
-        `/seller/order/verification-action/open-proforma-invoice`,
-        {
-          order_slug: data.slug,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session.accessToken}`,
+      if (data.order_status_id !== '7') {
+        await axios.post(
+          `/seller/order/verification-action/open-proforma-invoice`,
+          {
+            order_slug: data.slug,
           },
-        }
-      )
+          {
+            headers: {
+              Authorization: `Bearer ${session.accessToken}`,
+            },
+          }
+        )
+      }
     } catch (error) {
       toast.error(error.data.message, toastOptions)
     } finally {
@@ -761,7 +763,7 @@ export default function InquiryDetails({ session, routeParam }) {
                   <div className="mx-2 text-md">
                     {!isLoading ? (
                       data.order_date ? (
-                        moment(data.created_at).format('dddd, D MMMM YYYY')
+                        moment(data.order_date).format('dddd, D MMMM YYYY')
                       ) : (
                         '-'
                       )
