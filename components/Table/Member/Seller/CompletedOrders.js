@@ -1,7 +1,6 @@
+import React from 'react'
 import Link from 'next/link'
 import moment from 'moment'
-
-//data
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import HeaderTable from '@/components/Interface/Table/HeaderTable'
 import BaseTable from '@/components/Interface/Table/BaseTable'
@@ -23,6 +22,9 @@ export default function CompletedOrders(props) {
                 Manufacturer Part Number
               </th>
               <th scope="col" className="px-6 py-3">
+                Completed On
+              </th>
+              <th scope="col" className="px-6 py-3">
                 Manufacturer
               </th>
               <th scope="col" className="px-6 py-3">
@@ -30,9 +32,6 @@ export default function CompletedOrders(props) {
               </th>
               <th scope="col" className="px-6 py-3">
                 Incoming Inquiry QTY
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Completed On
               </th>
               <th scope="col" className="px-6 py-3 text-right">
                 Action
@@ -51,17 +50,17 @@ export default function CompletedOrders(props) {
                       {item.companies_products.ManufacturerNumber}
                     </td>
                     <td className="text-sm px-6 py-4">
+                      {moment(item.completedOrdersDate).format(
+                        'dddd, D MMMM YYYY'
+                      )}
+                    </td>
+                    <td className="text-sm px-6 py-4">
                       {item.companies_products.Manufacture}
                     </td>
                     <td className="text-sm px-6 py-4">
                       {item.companies_products.country}
                     </td>
                     <td className="text-sm px-6 py-4">{item.qty}</td>
-                    <td className="text-sm px-6 py-4">
-                      {moment(item.completedOrdersDate).format(
-                        'dddd, D MMMM YYYY'
-                      )}
-                    </td>
                     <td className="text-sm px-6 py-4 text-right">
                       <div className="inline-flex">
                         <Link

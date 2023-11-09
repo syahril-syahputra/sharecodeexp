@@ -31,6 +31,10 @@ import PrimaryNotification from '@/components/Interface/Notification/PrimaryNoti
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import WarningNotification from '@/components/Interface/Notification/WarningNotification'
 import InfoNotification from '@/components/Interface/Notification/InfoNotification'
+import TrackerNumberForSeler from '@/components/Modal/OrderComponent/Superadmin/TrackerNumberForSeler'
+import ReleasePaymentToBuyer from '@/components/Modal/OrderComponent/Superadmin/ReleasePaymentToBuyer'
+import DangerButton from '@/components/Interface/Buttons/DangerButton'
+import TerminateOrder from '@/components/Modal/OrderComponent/Superadmin/TerminateOrder'
 
 export default function OrderDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -39,13 +43,35 @@ export default function OrderDetails({ session, routeParam }) {
   const [data, setData] = useState([])
   const [errorInfo, setErrorInfo] = useState({})
   const [isOrderValid, setIsOrderValid] = useState(true)
+  const [isLoadingOpenReceipt, setisLoadingOpenReceipt] = useState(false)
+  const openPaymentReceiptHandler = async () => {
+    try {
+      setisLoadingOpenReceipt(true)
+      await axios.post(
+        `/admin/orders/verification-action/open-buyer-payment-receipt`,
+        {
+          order_slug: data.slug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+    } catch (error) {
+      toast.error(error.data.message, toastOptions)
+    } finally {
+      window.open(publicDir + data.buyer_receipt_path)
+      setisLoadingOpenReceipt(false)
+    }
+  }
   const loadData = async () => {
     setIsLoading(true)
     setErrorInfo({})
     const response = await axios
       .get(`/admin/orders/${routeParam.orderSlug}/detail`, {
         headers: {
-          Authorization: `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session?.accessToken}`,
         },
       })
       .then((response) => {
@@ -78,7 +104,7 @@ export default function OrderDetails({ session, routeParam }) {
         },
         {
           headers: {
-            Authorization: `Bearer ${session.accessToken}`,
+            Authorization: `Bearer ${session?.accessToken}`,
           },
         }
       )
@@ -219,6 +245,39 @@ export default function OrderDetails({ session, routeParam }) {
       })
   }
 
+  const [terminateOrderModal, setterminateOrderModal] = useState(false)
+  const terminateOrderHandler = (reason, terminate) => {
+    setIsLoading(true)
+    setErrorInfo({})
+    axios
+      .post(
+        `/admin/orders/terminate-order`,
+        {
+          order_slug: data.slug,
+          terminate_order: terminate,
+          order_termination_reason: reason,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setterminateOrderModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot sent the request.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
+
   const [trackerNumberForBuyerModal, setTrackerNumberForBuyerModal] =
     useState(false)
   const handleTrackerNumberForBuyerModal = async (trackingNumber) => {
@@ -240,6 +299,38 @@ export default function OrderDetails({ session, routeParam }) {
       .then((response) => {
         toast.success(response.data.message, toastOptions)
         setTrackerNumberForBuyerModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot send tracking number to buyer.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
+  const [trackerNumberForSellerModal, setTrackerNumberForSellerModal] =
+    useState(false)
+  const handleTrackerNumberForSellerModal = async (trackingNumber) => {
+    setIsLoading(true)
+    setErrorInfo({})
+    const response = await axios
+      .post(
+        `/admin/orders/shipping-product-to-seller`,
+        {
+          order_slug: data.slug,
+          tracking_number: trackingNumber,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setTrackerNumberForSellerModal(false)
         loadData()
       })
       .catch((error) => {
@@ -282,6 +373,34 @@ export default function OrderDetails({ session, routeParam }) {
       })
   }
 
+  const [closeReimbusmentModal, setcloseReimbusmentModal] = useState(false)
+  const handleCloseReimbusment = async (recepit) => {
+    setIsLoading(true)
+    setErrorInfo({})
+    let formData = new FormData()
+    formData.append('order_slug', data.slug)
+    formData.append('admin_receipt', recepit)
+
+    const response = await axios
+      .post(`/admin/orders/close-reimbursement`, formData, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      })
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setRequestUpdatePaymentModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot upload the result.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
   if (!isOrderValid) {
     return (
       <div className="">
@@ -387,6 +506,7 @@ export default function OrderDetails({ session, routeParam }) {
       No action to take
     </div>
   )
+  //   let actionToTake = ''
   switch (data.order_status?.id) {
     case 4:
       actionToTake = (
@@ -515,7 +635,7 @@ export default function OrderDetails({ session, routeParam }) {
         </div>
       )
       break
-    case 11:
+    case 12:
       actionToTake = (
         <div>
           {trackerNumberForBuyerModal && (
@@ -543,7 +663,7 @@ export default function OrderDetails({ session, routeParam }) {
         </div>
       )
       break
-    case 16:
+    case 15:
       actionToTake = (
         <div>
           {completeOrderModal && (
@@ -565,6 +685,62 @@ export default function OrderDetails({ session, routeParam }) {
                 onClick={() => setCompleteOrderModal(true)}
               >
                 Complete Order
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+    case 18:
+      actionToTake = (
+        <div>
+          {trackerNumberForSellerModal && (
+            <TrackerNumberForSeler
+              isLoading={isLoading}
+              closeModal={() => setTrackerNumberForSellerModal(false)}
+              acceptance={handleTrackerNumberForSellerModal}
+              errorInfo={errorInfo}
+            />
+          )}
+
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setTrackerNumberForSellerModal(true)}
+              >
+                Provide Tracking Number
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+    case 19:
+      actionToTake = (
+        <div>
+          {closeReimbusmentModal && (
+            <ReleasePaymentToBuyer
+              isLoading={isLoading}
+              closeModal={() => setcloseReimbusmentModal(false)}
+              acceptance={handleCloseReimbusment}
+              errorInfo={errorInfo}
+            />
+          )}
+
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setcloseReimbusmentModal(true)}
+              >
+                Release Payment to Buyer
               </PrimaryButton>
             </div>
           </div>
@@ -660,6 +836,7 @@ export default function OrderDetails({ session, routeParam }) {
                   </div>
                 )}
               </div>
+
               <div className="mx-2 text-md mb-5">
                 {!!data.buyer?.country ? (
                   data.buyer?.country
@@ -671,6 +848,12 @@ export default function OrderDetails({ session, routeParam }) {
               </div>
               <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                 Buyer's Shipment Info
+              </div>
+              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                Buyer Courier
+              </div>
+              <div className="mx-2 mb-1 text-xl">
+                {checkValue(data.buyer_courier)}
               </div>
               <div className="mx-2 my-1 text-sm uppercase text-gray-500">
                 Tracking Number
@@ -716,12 +899,37 @@ export default function OrderDetails({ session, routeParam }) {
               <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                 Seller's Shipment Info
               </div>
-              <div className="mx-2 my-1 text-sm text-gray-500">
+              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                Seller Courier
+              </div>
+              <div className="mx-2 mb-1 text-xl">
+                {checkValue(data.seller_courier)}
+              </div>
+              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
                 Tracking Number
               </div>
               <div className="mx-2 mb-5 text-xl uppercase">
                 {checkValue(data.trackingSeller)}
               </div>
+              {parseInt(data?.return_product) === 1 ? (
+                <>
+                  <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                    Seller's Return Shipment Info
+                  </div>
+                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                    Seller Courier
+                  </div>
+                  <div className="mx-2 mb-1 text-xl">
+                    {checkValue(data.seller_return_courier)}
+                  </div>
+                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                    Tracking Number
+                  </div>
+                  <div className="mx-2 mb-5 text-xl">
+                    {checkValue(data.seller_return_tracking_number)}
+                  </div>
+                </>
+              ) : undefined}
             </PrimaryWrapper>
           </div>
         </div>
@@ -952,6 +1160,7 @@ export default function OrderDetails({ session, routeParam }) {
                   )}
                 </div>
               </div>
+
               <div className="mx-2 my-1 text-sm mb-5">
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500 font-bold">
@@ -986,11 +1195,25 @@ export default function OrderDetails({ session, routeParam }) {
                   )}
                 </div>
               </div>
-              <div className="mx-2 my-1 text-sm border-b">
+              <div className="mx-2 my-1 text-sm ">
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500">Unit Price (USD)</span>
                   {!isLoading ? (
                     <span>${data.price_profite}</span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="mx-2 my-1 text-sm border-b">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Test Lab Fee (USD)</span>
+                  {!isLoading ? (
+                    <span>
+                      ${data.order_price_amount_buyer.test_fee_amount || 0}
+                    </span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -1006,9 +1229,8 @@ export default function OrderDetails({ session, routeParam }) {
                   {!isLoading ? (
                     <span>
                       $
-                      {data.price_profite
-                        ? parseFloat(data.price_profite) * parseInt(data.qty)
-                        : ''}
+                      {parseInt(data.order_price_amount_buyer?.grand_total) ||
+                        0}
                     </span>
                   ) : (
                     <div className="animate-pulse">
@@ -1056,14 +1278,25 @@ export default function OrderDetails({ session, routeParam }) {
                 <div className="flex flex-wrap justify-between">
                   <span>Buyer's Payment</span>
                   {data.buyer_receipt_path ? (
-                    <Link
-                      target="_blank"
-                      href={publicDir + data.buyer_receipt_path}
-                      className="underline text-blue-500"
+                    <label
+                      onClick={openPaymentReceiptHandler}
+                      className={
+                        'underline ' +
+                        (isLoadingOpenReceipt
+                          ? 'text-blue-300 cursor-wait'
+                          : 'text-blue-500 cursor-pointer')
+                      }
                     >
-                      view
-                    </Link>
+                      {isLoadingOpenReceipt ? 'loading' : 'view'}
+                    </label>
                   ) : (
+                    // <Link
+                    //   target="_blank"
+                    //   href={publicDir + data.buyer_receipt_path}
+                    //   className="underline text-blue-500"
+                    // >
+                    //   view
+                    // </Link>
                     <span className="underline text-gray-500">view</span>
                   )}
                 </div>
@@ -1125,11 +1358,27 @@ export default function OrderDetails({ session, routeParam }) {
                 </div>
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
-                    <span>Proforma Invoice</span>
+                    <span>Proforma Invoice for Buyer</span>
                     {data.proforma_invoice_available == 1 ? (
                       <Link
                         target="_blank"
                         href={`pdf/proforma-invoice/${data.slug}`}
+                        className="underline text-blue-500"
+                      >
+                        view
+                      </Link>
+                    ) : (
+                      <span className="underline text-gray-500">view</span>
+                    )}
+                  </div>
+                </div>
+                <div className="mx-2 mt-1 text-sm">
+                  <div className="flex flex-wrap justify-between">
+                    <span>Proforma Invoice for Seller</span>
+                    {data.proforma_invoice_available == 1 ? (
+                      <Link
+                        target="_blank"
+                        href={`pdf/proforma-invoice-seller/${data.slug}`}
                         className="underline text-blue-500"
                       >
                         view
@@ -1245,6 +1494,63 @@ export default function OrderDetails({ session, routeParam }) {
               </div>
               {actionToTake}
             </PrimaryWrapper>
+            {data.order_status_id !== '20' && data.order_status_id !== '21' && (
+              <PrimaryWrapper className="p-1">
+                <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                  Terminate Order
+                </div>
+                <div className="flex flex-col space-y-4 items-center p-4 justify-center">
+                  {terminateOrderModal && (
+                    <TerminateOrder
+                      isLoading={isLoading}
+                      closeModal={() => setterminateOrderModal(false)}
+                      acceptance={terminateOrderHandler}
+                      errorInfo={errorInfo}
+                    />
+                  )}
+                  <div className="text-center text-sm text-red-500">
+                    Please click the button below to cancel the order
+                  </div>
+                  <DangerButton
+                    outline
+                    className="mx-1"
+                    size="sm"
+                    disabled={isLoading}
+                    onClick={() => setterminateOrderModal(true)}
+                  >
+                    Terminate Order
+                  </DangerButton>
+                </div>
+              </PrimaryWrapper>
+            )}
+
+            <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Event History
+              </div>
+              <ul className="space-y-2 p-2 text-sm">
+                {data.event_history?.length === 0 && (
+                  <div className="text-base italic text-center p-4">
+                    No Event History
+                  </div>
+                )}
+                {data.event_history?.map((item) => (
+                  <li key={item.id} className="flex">
+                    <span className="text-cyan-700 mr-2 w-1/5 ">
+                      {moment(item.updated_at)
+                        .local()
+                        .format('DD MMM YYYY hh:mm')}
+                    </span>
+                    <div>
+                      <span className="font-bold">{item.description}</span>
+                      {item.note && (
+                        <div className="italic py-2">{item.note}</div>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </PrimaryWrapper>
           </div>
         </div>
       </div>
@@ -1256,6 +1562,7 @@ OrderDetails.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+
   return {
     props: {
       session,

@@ -1,7 +1,6 @@
+import React from 'react'
 import Link from 'next/link'
 import moment from 'moment'
-
-//data
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import HeaderTable from '@/components/Interface/Table/HeaderTable'
 import BaseTable from '@/components/Interface/Table/BaseTable'

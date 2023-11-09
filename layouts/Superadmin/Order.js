@@ -72,16 +72,6 @@ export default function Order({ order }) {
                 Complete Orders
                 <PrimaryBadges title={order.complete} />
               </Link>
-              <Link
-                href="/admin/superadmin/orders/product-not-arrived"
-                className={classNames(
-                  false ? 'bg-gray-50' : 'hover:bg-gray-50',
-                  'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
-                )}
-              >
-                Product not Arrived
-                <PrimaryBadges title={order.not_arrived} />
-              </Link>
             </Disclosure.Panel>
           </>
         )}

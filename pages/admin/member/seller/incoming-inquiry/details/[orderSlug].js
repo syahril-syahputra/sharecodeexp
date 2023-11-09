@@ -27,6 +27,7 @@ import PrimaryNotification from '@/components/Interface/Notification/PrimaryNoti
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import WarningNotification from '@/components/Interface/Notification/WarningNotification'
 import InfoNotification from '@/components/Interface/Notification/InfoNotification'
+import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
 
 export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -38,6 +39,37 @@ export default function InquiryDetails({ session, routeParam }) {
   const [isLoadingPackingList, setisLoadingPackingList] = useState(false)
   const [isLoadingProformaInvoice, setisLoadingProformaInvoice] =
     useState(false)
+
+  const [courierModal, setcourierModal] = useState(false)
+  const handlelCourierDetailsModal = (courier) => {
+    setIsLoading(true)
+    setErrorInfo({})
+    axios
+      .post(
+        `/seller/order/upload-courier`,
+        {
+          order_slug: data.slug,
+          courier,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot send tracking number to buyer.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
   const openProformaInvoice = async () => {
     try {
       setisLoadingProformaInvoice(true)
@@ -166,7 +198,6 @@ export default function InquiryDetails({ session, routeParam }) {
         setIsLoading(false)
       })
   }
-
 
   const [rejectInquiryModal, setRejectInquiryModal] = useState(false)
   const rejectInquiryModalHandle = async (inputData) => {
@@ -482,10 +513,13 @@ export default function InquiryDetails({ session, routeParam }) {
               isLoading={isLoading}
               closeModal={() => setShipProductModal(false)}
               acceptance={shipProductHanlde}
+              proformaInvoiceAvailable={data.proforma_invoice_available}
+              sellerPackingListAvailable={data.seller_packing_list_available}
               orderSlug={data.slug}
               errorInfo={errorInfo}
             />
           )}
+
           <div className="flex justify-center">
             <div className="mx-2 my-4">
               <PrimaryButton
@@ -525,6 +559,33 @@ export default function InquiryDetails({ session, routeParam }) {
                 onClick={() => setUploadInvoiceModal(true)}
               >
                 Upload Invoice
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+    case 17:
+      actionToTake = (
+        <div>
+          {courierModal && (
+            <UploadCourierDetails
+              isLoading={isLoading}
+              closeModal={() => setcourierModal(false)}
+              acceptance={handlelCourierDetailsModal}
+              errorInfo={errorInfo}
+            />
+          )}
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setcourierModal(true)}
+              >
+                Insert Courier Details
               </PrimaryButton>
             </div>
           </div>
@@ -595,6 +656,7 @@ export default function InquiryDetails({ session, routeParam }) {
             </div>
           )}
         </PrimaryWrapper>
+
         {/* seller tracking number */}
         <div className="flex">
           <div className="w-1/2 lg:w-1/3 mr-4">
@@ -604,16 +666,6 @@ export default function InquiryDetails({ session, routeParam }) {
               </div>
               <div className="mx-2 mb-5 text-xl">
                 {checkValue(data.trackingSeller)}
-              </div>
-            </PrimaryWrapper>
-          </div>
-          <div className="w-1/2 lg:w-1/3 mr-4">
-            <PrimaryWrapper className="p-1">
-              <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
-                Courier
-              </div>
-              <div className="mx-2 mb-5 text-xl">
-                {checkValue(data.courier)}
               </div>
             </PrimaryWrapper>
           </div>
@@ -978,6 +1030,33 @@ export default function InquiryDetails({ session, routeParam }) {
               </div>
               {actionToTake}
             </PrimaryWrapper>
+            <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Event History
+              </div>
+              <ul className="space-y-2 p-2 text-sm">
+                {data.event_history?.length === 0 && (
+                  <div className="text-base italic text-center p-4">
+                    No Event History
+                  </div>
+                )}
+                {data.event_history?.map((item) => (
+                  <li key={item.id} className="flex">
+                    <span className="text-cyan-700 mr-2 w-1/5 ">
+                      {moment(item.updated_at)
+                        .local()
+                        .format('DD MMM YYYY hh:mm')}
+                    </span>
+                    <div>
+                      <span className="font-bold">{item.description}</span>
+                      {item.note && (
+                        <div className="italic py-2">{item.note}</div>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </PrimaryWrapper>
           </div>
         </div>
       </div>
@@ -989,6 +1068,7 @@ InquiryDetails.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+
   return {
     props: {
       session: session,

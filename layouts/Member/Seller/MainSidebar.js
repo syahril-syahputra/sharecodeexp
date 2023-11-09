@@ -3,13 +3,13 @@ import { useSession } from 'next-auth/react'
 import GlobalContext from '@/store/global-context'
 import ProductManagement from './ProductManagement'
 import IncomingInquiries from './IncomingInquiries'
+import Reimbursement from './Reimbursement'
 
 export default function MainSidebar() {
   const session = useSession()
 
   const { sellerSidebarCounter, loadSellerSidebarCounter } =
     useContext(GlobalContext)
-
   useEffect(() => {
     loadSellerSidebarCounter(session.data.accessToken)
   }, [session])
@@ -21,6 +21,7 @@ export default function MainSidebar() {
           <ul role="list" className="-mx-2 space-y-1">
             <ProductManagement product={sellerSidebarCounter.product} />
             <IncomingInquiries order={sellerSidebarCounter.order} />
+            <Reimbursement reimbursement={sellerSidebarCounter?.order} />
           </ul>
         </li>
       </ul>

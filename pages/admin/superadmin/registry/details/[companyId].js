@@ -2,11 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'lib/axios'
 import { getSession } from 'next-auth/react'
 import Link from 'next/link'
-
-// layout for page
 import Admin from 'layouts/Admin.js'
-
-//toast
 import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
 
@@ -526,6 +522,7 @@ CompanyDetail.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+
   return {
     props: {
       session,

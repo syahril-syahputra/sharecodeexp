@@ -76,8 +76,13 @@ const Quotation = ({ quotation }) => {
             <View style={styles.inlineItem}>
               <Text style={styles.subTitleBuyer}>Contact Name</Text>
               <Text style={styles.subItem}>
-                : {quotation?.quotation_info?.name_user_buyer || '-'} (
-                {quotation?.quotation_info?.email_user_buyer || '-'})
+                : {quotation?.quotation_info?.name_user_buyer || '-'}
+              </Text>
+            </View>
+            <View style={styles.inlineItem}>
+              <Text style={styles.subTitleBuyer}>E-mail</Text>
+              <Text style={styles.subItem}>
+                : {quotation?.quotation_info?.email_user_buyer || '-'}
               </Text>
             </View>
           </View>
@@ -113,17 +118,30 @@ const Quotation = ({ quotation }) => {
           </View>
           <View style={{ margin: 5 }}></View>
           {!quotation?.test_free && (
-            <View style={styles.tableBody}>
-              <Text style={styles.pn}></Text>
-              <Text style={styles.description}></Text>
-              <Text style={styles.mfg}></Text>
-              <Text style={styles.dc}></Text>
-              <Text style={styles.qty}></Text>
-              <Text style={styles.grandTotal}>Test LAB Fee (USD)</Text>
-              <Text style={styles.grandTotal}>
-                {quotation?.test_fee || '-'}
-              </Text>
-            </View>
+            <>
+              <View style={styles.tableHead}>
+                <Text style={styles.descriptionFee}>Description</Text>
+                <Text style={styles.pn}></Text>
+                <Text style={styles.mfg}></Text>
+                <Text style={styles.dc}></Text>
+                <Text style={styles.qty}></Text>
+                <Text style={styles.unitPrice}></Text>
+                <Text style={styles.total}>Total (USD)</Text>
+              </View>
+              <View style={styles.tableBody}>
+                <Text style={styles.descriptionFee}>
+                  {quotation?.test_fee_table_data?.description || '-'}
+                </Text>
+                <Text style={styles.pn}></Text>
+                <Text style={styles.mfg}></Text>
+                <Text style={styles.dc}></Text>
+                <Text style={styles.qty}></Text>
+                <Text style={styles.unitPrice}></Text>
+                <Text style={styles.grandTotal}>
+                  {quotation?.test_fee_table_data?.test_fee || '-'}
+                </Text>
+              </View>
+            </>
           )}
           <View style={styles.tableSummary}>
             <Text style={styles.pn}></Text>
@@ -241,6 +259,12 @@ const styles = StyleSheet.create({
   },
   description: {
     width: '30%',
+    fontSize: 7,
+    padding: 2,
+    flexDirection: 'column',
+  },
+  descriptionFee: {
+    width: '50%',
     fontSize: 7,
     padding: 2,
     flexDirection: 'column',

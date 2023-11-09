@@ -19,8 +19,7 @@ export default function BuyerDashboard({ session }) {
     ongoing_test: 0,
     order_ready_to_pick: 0,
     confirm_receipt_of_shipment: 0,
-    reimbursement_active: 0,
-    reimbursement_complete: 0,
+    reimbursement: 0,
   })
   const loadData = async () => {
     setIsLoading(true)
@@ -162,7 +161,7 @@ export default function BuyerDashboard({ session }) {
         <PrimaryWrapper className="border border-blue-500">
           <div className="p-4 mb-auto">
             <h1 className="font-semibold text-7xl mb-3">
-              {data.reimbursement_active || 0}
+              {data.reimbursement || 0}
             </h1>
             <span className="text-md italic">Reimbursement Active</span>
           </div>

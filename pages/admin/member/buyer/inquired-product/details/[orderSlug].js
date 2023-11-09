@@ -28,7 +28,7 @@ import PrimaryNotification from '@/components/Interface/Notification/PrimaryNoti
 import { checkValue } from '@/utils/general'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import calculateTimeDifference from '@/lib/calculateTimeDifference'
-
+import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
 
 export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -48,13 +48,36 @@ export default function InquiryDetails({ session, routeParam }) {
 
   const [acceptOrderModal, setAcceptOrderModal] = useState(false)
   const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
+  const [isLoadingOpenQUotation, setisLoadingOpenQUotation] = useState(false)
+  const [courierModal, setcourierModal] = useState(false)
+  const openQuotationHandler = async () => {
+    try {
+      setisLoadingOpenQUotation(true)
+      await axios.post(
+        `/buyer/order/verification-action/open-quotation`,
+        {
+          order_slug: data.slug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+    } catch (error) {
+      toast.error(error.data.message, toastOptions)
+    } finally {
+      window.open(`pdf/quotation/${data.slug}`)
+      setisLoadingOpenQUotation(false)
+    }
+  }
   const loadData = async () => {
     setIsLoading(true)
     setErrorInfo({})
-    const response = await axios
+    await axios
       .get(`/buyer/order/${routeParam.orderSlug}/detail`, {
         headers: {
-          Authorization: `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session?.accessToken}`,
         },
       })
       .then((response) => {
@@ -103,9 +126,39 @@ export default function InquiryDetails({ session, routeParam }) {
     )
   }
 
+  const handlelCourierDetailsModal = (courier) => {
+    setIsLoading(true)
+    setErrorInfo({})
+    axios
+      .post(
+        `/buyer/order/upload-courier`,
+        {
+          order_slug: data.slug,
+          courier,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setcourierModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot send tracking number to buyer.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
   const acceptQuotationModalHandle = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .post(
         `/buyer/order/accept-quotation`,
         {
@@ -127,10 +180,10 @@ export default function InquiryDetails({ session, routeParam }) {
           const timeDiference = calculateTimeDifference(
             error.data.data.available_after
           )
-          toast.error(
-            error.data.message + '\navailable in ' + timeDiference,
-            toastOptions
-          )
+          const timer = error.data.data.available_after
+            ? '\navailable in ' + timeDiference
+            : ''
+          toast.error(error.data.message + timer, toastOptions)
         } else {
           toast.error(error.data.message, toastOptions)
         }
@@ -147,10 +200,9 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
-
   const loadRejectionReason = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .get(`/reason`)
       .then((response) => {
         let result = response.data
@@ -169,7 +221,7 @@ export default function InquiryDetails({ session, routeParam }) {
 
   const rejectQuotationModalHandle = async (quotationRejectionReason) => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .post(
         `/buyer/order/reject-quotation`,
         {
@@ -206,7 +258,7 @@ export default function InquiryDetails({ session, routeParam }) {
     let formData = new FormData()
     formData.append('buyer_receipt', paymentDocument)
     formData.append('order_slug', data.slug)
-    const response = await axios
+    await axios
       .post(`/buyer/order/pay-order`, formData, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -236,7 +288,7 @@ export default function InquiryDetails({ session, routeParam }) {
     let formData = new FormData()
     formData.append('buyer_receipt', paymentDocument)
     formData.append('order_slug', data.slug)
-    const response = await axios
+    await axios
       .post(`/buyer/order/update-payment`, formData, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -262,7 +314,7 @@ export default function InquiryDetails({ session, routeParam }) {
 
   const acceptOrderModalHandle = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .post(
         `/buyer/order/accept-order`,
         {
@@ -294,7 +346,7 @@ export default function InquiryDetails({ session, routeParam }) {
 
   const handleDidntReceiveAny = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .post(
         `/buyer/order/did-not-receive`,
         {
@@ -417,6 +469,8 @@ export default function InquiryDetails({ session, routeParam }) {
               orderSlug={data.slug}
               closeModal={() => setAcceptQuotationModal(false)}
               acceptance={acceptQuotationModalHandle}
+              availableDate={data.update_verified_inquiry_expiration_date}
+              openedQuotation={data.is_quotation_opened === '1' ? true : false}
             />
           )}
 
@@ -508,6 +562,34 @@ export default function InquiryDetails({ session, routeParam }) {
               >
                 Update Payment
               </WarningButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+
+    case 11:
+      actionToTake = (
+        <div>
+          {courierModal && (
+            <UploadCourierDetails
+              isLoading={isLoading}
+              closeModal={() => setcourierModal(false)}
+              acceptance={handlelCourierDetailsModal}
+              errorInfo={errorInfo}
+            />
+          )}
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setcourierModal(true)}
+              >
+                Insert Courier Details
+              </PrimaryButton>
             </div>
           </div>
         </div>
@@ -642,6 +724,16 @@ export default function InquiryDetails({ session, routeParam }) {
               </div>
             </PrimaryWrapper>
           </div>
+          <div className="w-1/2 lg:w-1/3 mr-4">
+            <PrimaryWrapper className="p-1">
+              <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
+                Courier
+              </div>
+              <div className="mx-2 mb-5 text-xl">
+                {checkValue(data.buyer_courier)}
+              </div>
+            </PrimaryWrapper>
+          </div>
         </div>
 
         {/* product info and quotation */}
@@ -754,7 +846,15 @@ export default function InquiryDetails({ session, routeParam }) {
                       data.companies_products?.moq
                     ) : (
                       <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                        {data?.companies_products?.moq === 0 ||
+                        parseInt(data?.companies_products?.moq) === 0 ||
+                        data?.companies_products?.moq === null ? (
+                          <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
+                            Out of Stock
+                          </div>
+                        ) : (
+                          <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -768,7 +868,14 @@ export default function InquiryDetails({ session, routeParam }) {
                       data.companies_products?.AvailableQuantity
                     ) : (
                       <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                        {data?.companies_products?.AvailableQuantity === 0 ||
+                        data?.companies_products?.AvailableQuantity === null ? (
+                          <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
+                            Out of Stock
+                          </div>
+                        ) : (
+                          <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -857,11 +964,25 @@ export default function InquiryDetails({ session, routeParam }) {
                   )}
                 </div>
               </div>
-              <div className="mx-2 my-1 text-sm border-b">
+              <div className="mx-2 my-1 text-sm ">
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500">Unit Price (USD)</span>
                   {!isLoading ? (
-                    <span>${data.price_profite}</span>
+                    <span>${data.price_profite || 0}</span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="mx-2 my-1 text-sm border-b">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Test Lab Fee (USD)</span>
+                  {!isLoading ? (
+                    <span>
+                      ${parseInt(data.order_price_amount?.test_fee_amount) || 0}
+                    </span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -876,10 +997,7 @@ export default function InquiryDetails({ session, routeParam }) {
                   </span>
                   {!isLoading ? (
                     <span>
-                      $
-                      {data.price_profite
-                        ? parseFloat(data.price_profite) * parseInt(data.qty)
-                        : ''}
+                      ${parseInt(data.order_price_amount?.grand_total) || 0}
                     </span>
                   ) : (
                     <div className="animate-pulse">
@@ -947,14 +1065,25 @@ export default function InquiryDetails({ session, routeParam }) {
                   <div className="flex flex-wrap justify-between">
                     <span>Quotation</span>
                     {data.quotation_available == 1 ? (
-                      <Link
-                        target="_blank"
-                        href={`pdf/quotation/${data.slug}`}
-                        className="underline text-blue-500"
+                      <label
+                        onClick={openQuotationHandler}
+                        className={
+                          'underline ' +
+                          (isLoadingOpenQUotation
+                            ? 'text-blue-300 cursor-wait'
+                            : 'text-blue-500 cursor-pointer')
+                        }
                       >
-                        view
-                      </Link>
+                        {isLoadingOpenQUotation ? 'loading' : 'view'}
+                      </label>
                     ) : (
+                      //   <Link
+                      //     target="_blank"
+                      //     href={`pdf/quotation/${data.slug}`}
+                      //     className="underline text-blue-500"
+                      //   >
+                      //     view
+                      //   </Link>
                       <span className="underline text-gray-500">view</span>
                     )}
                   </div>
@@ -1000,6 +1129,33 @@ export default function InquiryDetails({ session, routeParam }) {
                 Actions to take
               </div>
               {actionToTake}
+            </PrimaryWrapper>
+            <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Event History
+              </div>
+              <ul className="space-y-2 p-2 text-sm">
+                {data.event_history?.length === 0 && (
+                  <div className="text-base italic text-center p-4">
+                    No Event History
+                  </div>
+                )}
+                {data.event_history?.map((item) => (
+                  <li key={item.id} className="flex">
+                    <span className="text-cyan-700 mr-2 w-1/5 ">
+                      {moment(item.updated_at)
+                        .local()
+                        .format('DD MMM YYYY hh:mm')}
+                    </span>
+                    <div>
+                      <span className="font-bold">{item.description}</span>
+                      {item.note && (
+                        <div className="italic py-2">{item.note}</div>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </PrimaryWrapper>
           </div>
         </div>
