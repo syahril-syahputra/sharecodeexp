@@ -11,7 +11,6 @@ import Pagination from '@/components/Shared/Component/Pagination'
 import DetailProdutModal from '@/components/Modal/DetailProdutModal/DetailProdutModal'
 
 export default function TableComponent(props) {
-  console.log(props, '<<<<props')
   const { status } = useSession()
   const router = useRouter()
   const [isInquiryClicked, setIsInquiryClicked] = useState(false)
@@ -60,10 +59,10 @@ export default function TableComponent(props) {
               <th scope="col" className="px-6 py-3">
                 Description
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-8 py-3">
                 Available Stocks
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-8 py-3">
                 MOQ
               </th>
               <th scope="col" className="px-6 py-3">
@@ -94,14 +93,22 @@ export default function TableComponent(props) {
                       item?.AvailableQuantity === 0) &&
                     (item?.moq === null || item?.moq === 0) ? (
                       <>
-                        <td colSpan={2} className="px-6">
-                          Out of Stock
-                        </td>
+                        <td className="px-8">Out of Stock</td>
                       </>
                     ) : (
                       <>
-                        <td className="px-6 py-4">{item.AvailableQuantity}</td>
-                        <td className="px-6 py-4">{item.moq}</td>
+                        <td className="px-8 py-4">{item.AvailableQuantity}</td>
+                      </>
+                    )}
+                    {(item?.AvailableQuantity === null ||
+                      item?.AvailableQuantity === 0) &&
+                    (item?.moq === null || item?.moq === 0) ? (
+                      <>
+                        <td className="px-8">Out of Stock</td>
+                      </>
+                    ) : (
+                      <>
+                        <td className="px-8 py-4">{item.moq}</td>
                       </>
                     )}
                     <td className="px-6 py-4">{item.country}</td>

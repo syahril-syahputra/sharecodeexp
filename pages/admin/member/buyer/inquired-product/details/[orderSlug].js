@@ -768,7 +768,15 @@ export default function InquiryDetails({ session, routeParam }) {
                       data.companies_products?.moq
                     ) : (
                       <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                        {data?.companies_products?.moq === 0 ||
+                        parseInt(data?.companies_products?.moq) === 0 ||
+                        data?.companies_products?.moq === null ? (
+                          <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
+                            Out of Stock
+                          </div>
+                        ) : (
+                          <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                        )}
                       </div>
                     )}
                   </div>

@@ -34,7 +34,7 @@ export default function IncomingInquiry(props) {
               <th scope="col" className="px-6 py-3">
                 Country
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-8 py-3">
                 Available Quanity
               </th>
               <th scope="col" className="px-6 py-3">
@@ -73,8 +73,15 @@ export default function IncomingInquiry(props) {
                     <td className="text-sm px-6 py-4">
                       {item.companies_products.country}
                     </td>
-                    <td className="text-sm px-6 py-4">
-                      {item.companies_products.AvailableQuantity}
+                    <td className="text-sm px-8 py-4">
+                      {item.companies_products.AvailableQuantity === null ||
+                      item.companies_products.AvailableQuantity == 0 ? (
+                        <span>Out of Stock</span>
+                      ) : (
+                        <span>
+                          {item.companies_products?.AvailableQuantity}
+                        </span>
+                      )}{' '}
                     </td>
                     <td className="text-sm px-6 py-4">{item.qty}</td>
                     <td className="text-sm px-6 py-4">

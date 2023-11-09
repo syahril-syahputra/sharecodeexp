@@ -27,7 +27,7 @@ export default function IncomingInquiry({ session, routeParam }) {
   const [orderStatusOptions, setOrderStatusOption] = useState([])
   const loadOrderStatusOption = async () => {
     await axios
-      .get(`/allstatus`)
+      .get(`/allstatus?is_closed=0&reimbursement=0`)
       .then((response) => {
         let res = response.data.data
         setOrderStatusOption(res)
@@ -186,7 +186,7 @@ export default function IncomingInquiry({ session, routeParam }) {
           data={data}
           links={links}
           metaData={metaData}
-        ></IncomingInquiryTable>
+        />
       </div>
     </>
   )
