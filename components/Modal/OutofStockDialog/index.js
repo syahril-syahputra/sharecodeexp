@@ -40,6 +40,7 @@ export default function OutofStockDialog({ session, ...props }) {
       title="Action Required"
       onClick={() => {
         props.setShowModal(false)
+        setIsLoading(false)
       }}
       body={
         <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
@@ -53,6 +54,7 @@ export default function OutofStockDialog({ session, ...props }) {
             className="uppercase mr-2 font-bold"
             onClick={() => {
               props.setShowModal(false)
+              setIsLoading(false)
             }}
           >
             No, Close
