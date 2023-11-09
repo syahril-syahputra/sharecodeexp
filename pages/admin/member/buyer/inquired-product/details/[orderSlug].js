@@ -28,6 +28,7 @@ import PrimaryNotification from '@/components/Interface/Notification/PrimaryNoti
 import { checkValue } from '@/utils/general'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import calculateTimeDifference from '@/lib/calculateTimeDifference'
+import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
 
 export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -47,8 +48,29 @@ export default function InquiryDetails({ session, routeParam }) {
 
   const [acceptOrderModal, setAcceptOrderModal] = useState(false)
   const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
-  const [availabledDateAcceptQuotation, setavailabledDateAcceptQuotation] =
-    useState('')
+  const [isLoadingOpenQUotation, setisLoadingOpenQUotation] = useState(false)
+  const [courierModal, setcourierModal] = useState(false)
+  const openQuotationHandler = async () => {
+    try {
+      setisLoadingOpenQUotation(true)
+      await axios.post(
+        `/buyer/order/verification-action/open-quotation`,
+        {
+          order_slug: data.slug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+    } catch (error) {
+      toast.error(error.data.message, toastOptions)
+    } finally {
+      window.open(`pdf/quotation/${data.slug}`)
+      setisLoadingOpenQUotation(false)
+    }
+  }
   const loadData = async () => {
     setIsLoading(true)
     setErrorInfo({})
@@ -104,6 +126,36 @@ export default function InquiryDetails({ session, routeParam }) {
     )
   }
 
+  const handlelCourierDetailsModal = (courier) => {
+    setIsLoading(true)
+    setErrorInfo({})
+    axios
+      .post(
+        `/buyer/order/upload-courier`,
+        {
+          order_slug: data.slug,
+          courier,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setcourierModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot send tracking number to buyer.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
   const acceptQuotationModalHandle = async () => {
     setIsLoading(true)
     await axios
@@ -124,8 +176,6 @@ export default function InquiryDetails({ session, routeParam }) {
         loadData()
       })
       .catch((error) => {
-        setavailabledDateAcceptQuotation(error.data.data.available_after)
-
         if (error.data.message === 'This inquiry is not yet available.') {
           const timeDiference = calculateTimeDifference(
             error.data.data.available_after
@@ -419,7 +469,7 @@ export default function InquiryDetails({ session, routeParam }) {
               orderSlug={data.slug}
               closeModal={() => setAcceptQuotationModal(false)}
               acceptance={acceptQuotationModalHandle}
-              availableDate={availabledDateAcceptQuotation}
+              availableDate={data.update_verified_inquiry_expiration_date}
               openedQuotation={data.is_quotation_opened === '1' ? true : false}
             />
           )}
@@ -512,6 +562,34 @@ export default function InquiryDetails({ session, routeParam }) {
               >
                 Update Payment
               </WarningButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+
+    case 11:
+      actionToTake = (
+        <div>
+          {courierModal && (
+            <UploadCourierDetails
+              isLoading={isLoading}
+              closeModal={() => setcourierModal(false)}
+              acceptance={handlelCourierDetailsModal}
+              errorInfo={errorInfo}
+            />
+          )}
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setcourierModal(true)}
+              >
+                Insert Courier Details
+              </PrimaryButton>
             </div>
           </div>
         </div>
@@ -890,7 +968,7 @@ export default function InquiryDetails({ session, routeParam }) {
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500">Unit Price (USD)</span>
                   {!isLoading ? (
-                    <span>${data.price_profite}</span>
+                    <span>${data.price_profite || 0}</span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -902,7 +980,9 @@ export default function InquiryDetails({ session, routeParam }) {
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500">Test Lab Fee (USD)</span>
                   {!isLoading ? (
-                    <span>${data.order_price_amount?.test_fee_amount}</span>
+                    <span>
+                      ${parseInt(data.order_price_amount?.test_fee_amount) || 0}
+                    </span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -917,10 +997,7 @@ export default function InquiryDetails({ session, routeParam }) {
                   </span>
                   {!isLoading ? (
                     <span>
-                      $
-                      {parseInt(
-                        data.order_price_amount?.grand_total.replace(/,/g, '')
-                      )}
+                      ${parseInt(data.order_price_amount?.grand_total) || 0}
                     </span>
                   ) : (
                     <div className="animate-pulse">
@@ -988,14 +1065,25 @@ export default function InquiryDetails({ session, routeParam }) {
                   <div className="flex flex-wrap justify-between">
                     <span>Quotation</span>
                     {data.quotation_available == 1 ? (
-                      <Link
-                        target="_blank"
-                        href={`pdf/quotation/${data.slug}`}
-                        className="underline text-blue-500"
+                      <label
+                        onClick={openQuotationHandler}
+                        className={
+                          'underline ' +
+                          (isLoadingOpenQUotation
+                            ? 'text-blue-300 cursor-wait'
+                            : 'text-blue-500 cursor-pointer')
+                        }
                       >
-                        view
-                      </Link>
+                        {isLoadingOpenQUotation ? 'loading' : 'view'}
+                      </label>
                     ) : (
+                      //   <Link
+                      //     target="_blank"
+                      //     href={`pdf/quotation/${data.slug}`}
+                      //     className="underline text-blue-500"
+                      //   >
+                      //     view
+                      //   </Link>
                       <span className="underline text-gray-500">view</span>
                     )}
                   </div>

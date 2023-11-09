@@ -204,6 +204,122 @@ const ProformaInvoice = ({ proformaInvoice }) => (
           test report for any quality issue.
         </Text>
       </View>
+      <View style={{ marginTop: 15 }}>
+        <Text style={styles.noteTitle}>TERMS AND CONDITIONS OF SALE</Text>
+        <Text style={styles.noteItem}>
+          Orders: All orders placed by Buyer are subject to acceptance by
+          Seller. Orders may not be cancelled or rescheduled without Seller’s
+          written consent and are subject to restocking fees. All orders must
+          include quantities, part numbers, price and complete description of
+          the Products being purchased. Seller may in its sole discretion
+          allocate Products to its customers.
+        </Text>
+        <Text style={styles.noteItem}>
+          1. Prices: All quotes (prices) of products are subject to prior sale.
+          Pricing for undelivered Products may be increased in the event of an
+          increase in Seller’s cost, change in market conditions or any other
+          causes beyond the Seller’s reasonable control. Price quotations,
+          unless otherwise stated, shall automatically expire thirty (30)
+          calendar days from the date issued and may be cancelled or amended
+          within that period upon notice to Buyer, Unless otherwise agreed to in
+          writing by Seller, all prices quoted are exclusive of transportation
+          and insurance costs, duties, and all taxes including Federal, State
+          and local sales, excise and value added taxes, and similar taxes.
+          Buyer agrees to pay these taxes unless Buyer has provided Seller with
+          an exemption resale certificate in the appropriate form for the
+          jurisdiction of the Buyer’s place of business and any jurisdiction to
+          which the Product is to be directly shipped hereunder, or unless the
+          sale is otherwise exempt from these taxes. Buyer agrees to indemnify
+          and hold harmless Seller for any liability for tax in connection with
+          the sale, as well as the collection or withholding thereof, including
+          penalties and interest thereon. Where applicable, transportation and
+          taxes shall appear as separate items on Seller’s invoice.{' '}
+        </Text>
+        <Text style={styles.noteItem}>
+          2. Delivery: All shipments are “F.O.B.” place of shipment. Delivery
+          will be deemed complete and risk of loss or damage to the Product will
+          pass to the Buyer upon delivery to the carrier. Buyer acknowledges
+          that delivery dates provided by Seller are estimates only, and Seller
+          shall not be liable for any delays in delivery or for failure to
+          perform due to causes beyond the reasonable control of Seller, nor
+          shall the carrier be deemed the agent of Seller. In the event of delay
+          caused by such event, the date of delivery shall be extended for a
+          period equal to the time lost as a consequence of the delay in
+          delivery, without subjecting Seller to any liability. If the Products
+          perish while in the custody of the carrier, the Seller shall be deemed
+          to have performed its obligations hereunder in full.
+        </Text>
+        <Text style={styles.noteItem}>
+          3. Acceptance/Returns: Shipments will deem to have been accepted by
+          Buyer upon receipt of said shipment at Buyer’s facility. Buyer shall
+          perform whatever inspection or tests Buyer deems necessary as promptly
+          as possible but in no event later than five (5) days after delivery,
+          at which time Buyer must either accept or reject the Products. Any
+          discrepancy in shipment quantity must be reported within five (5)
+          business days of receipt of the Products. In the event parts are
+          return for replacement or credit, they must have a Return Material
+          Authorization (RMA) issued. Parts returned without authorization will
+          not be accepted for credit. RMA number will only be issued within 30
+          days of receipt of product. A restocking fee will be charged on all
+          items returned (if not our error )
+        </Text>
+        <Text style={styles.noteItem}>
+          4. Limited Warranty and Limitation of Liability: (a) Seller warrants
+          that the Products will conform to the description and specifications
+          issued by the manufacturer for a period of 30 days from the date of
+          purchase, or such shorter period specified by the manufacturer of the
+          Product, and that Seller will transfer to Buyer any transferable
+          warranties or indemnities that the manufacturer of the Product or the
+          third party vendor/service provider provides to Seller. SELLER SHALL
+          HAVE NO LIABILITY TO BUYER BEYOND THE EXPRESS TERMS OF SUCH
+          MANUFACTURER PRODCT WARRANTIES. THIS WARRANTY IS MADE IN LIEU OF ANY
+          AND ALL OTHER WARRANTES EXPRESS OR IMPLIED INCLUDING THE WARRANTIES OF
+          MERCHANTABILITY AND FITNESS. (b) Seller’s exclusive obligations with
+          respect to a non-conforming Product shall be at Seller’s option, to
+          repair or replace the Product, if it is determined to be defective, or
+          to refund to Buyer the purchase price paid for the Product.
+          Notwithstanding anything herein to the contrary, the liability of
+          seller hereunder for all claims shall not exceed the sum of the
+          Buyer’s payments for the Products, which are the subject of the
+          dispute, and the foregoing is Buyer’s sole and exclusive remedy for
+          breach of warranty by Seller with respect to the Product. THE
+          FOREGOING WARRANTIES ARE THE SOLE WARRANTIES EXPRESSED OR IMPLIED,
+          GIVEN BY SELLER IN CONNECTION WITH THE PRODUCTS, AND SELLER DISCLAIMS
+          ALL OTHER WARRANTIES INCLUDING, BUT NOT LIMITED TO WARRANTIES OF
+          MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT OF
+          THIRD PARTY RIGHTS AND WARRANTIES AGAINST LATENT DEFECTS. (c) This
+          warranty shall not apply to any Products that have been subject to
+          misuse, mishandling, or which have been operated contrary to current
+          instructions relating to installation, maintenance, or operation or
+          contrary to industry standards relating to acceptable input power. (d)
+          Seller shall have no liability for any copyright, design or patent
+          infringement, which may occur, as a result of a sale of the Products
+          to the Buyer. The only remedy or recourse for copyright, design or
+          patent infringement shall be against the manufacturer of the Products.
+          (e) IN NO EVENT WILL SELLER (OR ITS SUPPLIERS) BE LIABLE FOR ANY
+          SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES WHATSOEVER
+          INCLUDING, WITHOUT LIMITATION, THOSE RESULTING FROM ANTICIPATED OR
+          LOST PROFITS, LOST DATA, BUSINESS INTERRUPTION, LOSS OF BUSINESS, LOSS
+          OF MARKET SHARE, LOSS OF GOODWILL OR MAUFACTURING EXPENSES AND ANY
+          OTHER LOSS OR LOSSES THAT MIGHT ARISE AS A DIRECT OR INDIRECT RESULT
+          OF THE SALE OR USE OF THE PRODUCTS OR AS A RESULT OF SELLER’S NON
+          PERFORMANCE OR INADEQUATE PERFORMANCE OF ITS OBLIGATIONS, WHETHER
+          BASED ON WARRANTY, CONTRACT, TORT OR ANY OTHER LEGAL THEORY AND
+          WHETHER OR NOT ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+        </Text>
+        <Text style={styles.noteItem}>
+          5. Export Control/Use of Products: Buyer certifies that it will be the
+          recipient of the Products to be delivered by Seller. Buyer
+          acknowledges that the Products are subject to the export/import
+          control laws and regulations of various countries, including the
+          Export Administration Laws of the United States. Buyer understands and
+          agrees that it will not sell, resell, re-export or ship or otherwise
+          divert, directly or indirectly, any of the Products delivered by
+          Seller and further agrees to comply strictly with all U.S. export laws
+          and assumes sole responsibility for obtaining licenses to export or
+          re-export as ma be required.
+        </Text>
+      </View>
       <View style={{ marginTop: 5 }}>
         <Text style={styles.noteTitle}>BANK ACCOUNT INFORMATION:</Text>
         <View style={styles.inlineItem}>

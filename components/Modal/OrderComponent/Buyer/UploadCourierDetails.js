@@ -4,32 +4,28 @@ import TextInput from '@/components/Interface/Form/TextInput'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 
-export default function VerifyOrder(props) {
-  const [trackingNumber, setTrackingNumber] = useState('')
+export default function UploadCourierDetails(props) {
+  const [courier, setcourier] = useState('')
 
   const handleSubmit = () => {
-    props.acceptance(trackingNumber)
+    props.acceptance(courier)
   }
 
   return (
     <BaseModalMedium
-      title="Provide Tracking Number"
+      title="Courier Details"
       onClick={() => props.closeModal()}
       body={
         <>
           <div className="mb-4">
             <TextInput
-              label="Tracking Number"
-              name="trackingNumber"
-              value={trackingNumber}
-              onChange={(input) => setTrackingNumber(input.value)}
-              errorMsg={props.errorInfo?.trackingBuyer}
+              label="Courier"
+              name="courier"
+              value={courier}
+              onChange={(input) => setcourier(input.value)}
+              errorMsg={props.errorInfo?.courier}
             ></TextInput>
           </div>
-
-          <p className="mt-8 italic text-blueGray-500 text-sm leading-relaxed">
-            Note: This tracking number will be send to the buyer.
-          </p>
         </>
       }
       action={
