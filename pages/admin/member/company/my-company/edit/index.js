@@ -17,11 +17,15 @@ import TextInput from '@/components/Interface/Form/TextInput'
 import SelectInput from '@/components/Interface/Form/SelectInput'
 import AreaInput from '@/components/Interface/Form/AreaInput'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
+import ProvinceSelectorInitial from '@/components/Shared/ProvinceSelectorInitial'
+import CitySelectorInitial from '@/components/Shared/CitySelectorInitial'
+import useDataCountry from '@/hooks/useCountry'
+import useDataProvince from '@/hooks/useProvince'
 
 export default function MyCompany({ session, sectorlist }) {
-  //data search
+  const countries = useDataCountry()
   const [isLoading, setIsLoading] = useState(true)
-  const getData = async () => {
+  const getDataFunc = async () => {
     setIsLoading(true)
     await axios
       .get(`/company`, {
@@ -31,7 +35,6 @@ export default function MyCompany({ session, sectorlist }) {
       })
       .then((response) => {
         let result = response.data.data
-        console.log(result, '<<<result')
         setInputData({
           name: result.name,
           address: result.address,
@@ -49,6 +52,18 @@ export default function MyCompany({ session, sectorlist }) {
         } else {
           setSector({ value: 'other', label: 'Other' })
         }
+        const countryIdFilter = countries?.filter(
+          (e) => e?.name === result?.country
+        )
+        const provinces = UseProvince(countryIdFilter) || []
+        let oldProvince = provinces?.find(
+          (item) => item?.value == result?.state
+        )
+        if (oldProvince) {
+          setStateData({ value: result.state, label: result.state })
+        } else {
+          setStateData({ value: 'other', label: 'Other' })
+        }
       })
       .catch(() => {
         toast.error(
@@ -60,8 +75,15 @@ export default function MyCompany({ session, sectorlist }) {
         setIsLoading(false)
       })
   }
+
+  const UseProvince = (arrData) => {
+    const provinces = useDataProvince(arrData[0]?.id)
+
+    return provinces
+  }
+
   useEffect(() => {
-    getData()
+    getDataFunc()
   }, [])
 
   // update data
@@ -74,6 +96,8 @@ export default function MyCompany({ session, sectorlist }) {
     state: '',
     city: '',
     zip_code: '',
+    state_other: '',
+    city_other: '',
   })
   const [errorInfo, setErrorInfo] = useState({})
   const [errorMessage, setErrorMessage] = useState(null)
@@ -88,8 +112,24 @@ export default function MyCompany({ session, sectorlist }) {
     setCountry(value)
   }
 
-  //option
-  //packaging option
+  const [stateData, setStateData] = useState(null)
+  const provinceHandleChange = (value) => {
+    setInputData({ ...inputData, state: '' })
+    setStateData(value)
+    if (value?.value != 'other') {
+      setInputData({ ...inputData, state: value.value })
+    }
+  }
+
+  const [stateDataCity, setStateDataCity] = useState(null)
+  const cityHandleChange = (value) => {
+    setInputData({ ...inputData, state: '' })
+    setStateDataCity(value)
+    if (value?.value != 'other') {
+      setStateDataCity({ ...inputData, state: value.value })
+    }
+  }
+
   const [sectors, setSectors] = useState([
     ...sectorlist,
     { value: 'other', label: 'Other' },
@@ -111,11 +151,46 @@ export default function MyCompany({ session, sectorlist }) {
     setIsLoading(true)
     setErrorInfo({})
     setErrorMessage(null)
+    let payloadData = {}
+    payloadData['state'] =
+      inputData?.state?.toLowerCase() === 'other'
+        ? inputData?.state_other
+        : inputData?.state
+    payloadData['address'] = inputData?.address
+    payloadData['name'] = inputData?.name
+    payloadData['country'] = inputData?.country
+    payloadData['sector'] = inputData?.sector
+    payloadData['phone'] = inputData?.phone
+    payloadData['city'] = inputData?.city
+    payloadData['zip_code'] = inputData?.zip_code
 
     let formData = new FormData()
-    for (const key in inputData) {
-      formData.append(key, inputData[key])
+    for (const key in payloadData) {
+      formData.append(key, payloadData[key])
     }
+
+    await axios
+      .post(`/master/company/update`, formData, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      })
+      .then((response) => {
+        let result = response.data.data
+        router.replace('/admin/member')
+        toast.success(
+          'Your company have been updated successfully.',
+          toastOptions
+        )
+      })
+      .catch((error) => {
+        setErrorMessage('Please fill your form correctly')
+        toast.error('Something went wrong.', toastOptions)
+        setErrorInfo(error.data.data)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }
 
   return (
@@ -193,6 +268,96 @@ export default function MyCompany({ session, sectorlist }) {
               value={inputData.country}
               countryHandleChange={countryHandleChange}
               errorMsg={errorInfo.country}
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-wrap mb-6">
+          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <ProvinceSelectorInitial
+              setInisiate
+              label="Province"
+              className="w-full"
+              required
+              name="state"
+              countryId={inputData?.country}
+              value={inputData?.state}
+              errorMsg={
+                inputData?.state?.toLowerCase() === 'other' ||
+                stateData?.value?.toLowerCase() === 'other'
+                  ? undefined
+                  : errorInfo?.state
+              }
+              onChange={(input) => setDataHandler(input)}
+              provinceHandleChange={provinceHandleChange}
+            />
+            {stateData?.value?.toLowerCase() === 'other' && (
+              <div className="mt-2">
+                <TextInput
+                  className="w-full"
+                  required
+                  name="state"
+                  value={inputData.city_other}
+                  errorMsg={
+                    inputData?.city_other?.toLowerCase() === 'other' ||
+                    stateData?.value?.toLowerCase() === 'other'
+                      ? errorInfo?.city_other
+                      : undefined
+                  }
+                  onChange={(input) => setDataHandler(input)}
+                />
+              </div>
+            )}
+          </div>
+          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <CitySelectorInitial
+              setInisiate
+              label="City"
+              className="w-full"
+              required
+              name="city"
+              countryId={inputData?.country}
+              provinceId={inputData?.state}
+              value={inputData?.city}
+              errorMsg={
+                inputData?.city?.toLowerCase() === 'other' ||
+                stateData?.value?.toLowerCase() === 'other'
+                  ? undefined
+                  : errorInfo?.city
+              }
+              onChange={(input) => setDataHandler(input)}
+              cityHandleChange={cityHandleChange}
+            />
+            {stateDataCity?.value?.toLowerCase() === 'other' && (
+              <div className="mt-2">
+                <TextInput
+                  className="w-full"
+                  required
+                  name="city"
+                  value={inputData.state_other}
+                  errorMsg={
+                    inputData?.state_other?.toLowerCase() === 'other' ||
+                    stateDataCity?.value?.toLowerCase() === 'other'
+                      ? errorInfo?.state_other
+                      : undefined
+                  }
+                  onChange={(input) => setDataHandler(input)}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="flex flex-wrap mb-6">
+          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <TextInput
+              label="zip_code"
+              className="w-full"
+              required
+              name="zip_code"
+              value={inputData.zip_code}
+              errorMsg={errorInfo?.zip_code}
+              onChange={(input) => setDataHandler(input)}
             />
           </div>
         </div>

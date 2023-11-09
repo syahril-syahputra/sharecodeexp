@@ -285,6 +285,10 @@ export default function MyProduct({ session, routeParam }) {
           item={slugState}
           isLoading={[isLoadingModal, setIsLoadingModal]}
           session={session}
+          routerParam={routeParam}
+          callback={() => {
+            getData()
+          }}
         />
       ) : null}
     </>

@@ -25,7 +25,8 @@ export default function OutofStockDialog({ session, ...props }) {
       .then((response) => {
         toast.success(`${response?.data?.message}`, toastOptions)
         props.setShowModal(false)
-        setIsLoading(false)
+        setIsLoading(true)
+        props.callback()
       })
       .catch((error) => {
         toast.error(`${error?.data?.message}`, toastOptions)
