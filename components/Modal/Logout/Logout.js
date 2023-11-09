@@ -30,6 +30,7 @@ export default function Logout(props) {
 
             <PrimaryButton
               size="sm"
+              isLoading={isLoading}
               disabled={isLoading}
               onClick={() => {
                 props.acceptance(), setIsLoading(true)

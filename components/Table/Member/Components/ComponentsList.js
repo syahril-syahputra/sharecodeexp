@@ -19,6 +19,7 @@ export default function TableProduct(props) {
   const data = props.data
   const links = props.links
   const metaData = props.metaData
+  const isOutOfStock = props.isOutOfStock
 
   return (
     <>
@@ -27,12 +28,14 @@ export default function TableProduct(props) {
           title={props.title}
           action={
             <>
-              <Link href="/admin/member/seller/product/add">
-                <SecondaryButton size="sm">
-                  <i className="mr-2 ml-1 fas fa-plus text-white"></i>
-                  Add Product
-                </SecondaryButton>
-              </Link>
+              {isOutOfStock ? null : (
+                <Link href="/admin/member/seller/product/add">
+                  <SecondaryButton size="sm">
+                    <i className="mr-2 ml-1 fas fa-plus text-white"></i>
+                    Add Product
+                  </SecondaryButton>
+                </Link>
+              )}
             </>
           }
         ></HeaderTable>
@@ -46,10 +49,10 @@ export default function TableProduct(props) {
               <th scope="col" className="px-6 py-3">
                 Manufacturer
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-8 py-3">
                 Available Quantity
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-10 py-3">
                 MOQ
               </th>
               <th scope="col" className="px-6 py-3">
@@ -81,16 +84,31 @@ export default function TableProduct(props) {
                     className="bg-white border-b hover:bg-gray-50"
                   >
                     <td scope="row" className="text-sm px-6 py-4">
-                      {item.ManufacturerNumber}
+                      {item.ManufacturerNumber || '-'}
                     </td>
                     <td className="text-sm px-6 py-4">{item.Manufacture}</td>
-                    <td className="text-sm px-6 py-4">
-                      {item.AvailableQuantity}
+                    <td className="text-sm px-8 py-4">
+                      {item?.AvailableQuantity === null ||
+                      item?.AvailableQuantity == 0 ? (
+                        <span>Out of Stock</span>
+                      ) : (
+                        <span>{item.AvailableQuantity}</span>
+                      )}{' '}
                     </td>
-                    <td className="text-sm px-6 py-4">{item.moq}</td>
-                    <td className="text-sm px-6 py-4">{item.country}</td>
-                    <td className="text-sm px-6 py-4">{item.dateCode}</td>
-                    <td className="text-sm px-6 py-4">{item.packaging}</td>
+                    <td className="text-sm px-10 py-4">
+                      {item?.moq === null || item?.moq == 0 ? (
+                        <span>Out of Stock</span>
+                      ) : (
+                        <span>{item.moq}</span>
+                      )}{' '}
+                    </td>
+                    <td className="text-sm px-6 py-4">{item.country || '-'}</td>
+                    <td className="text-sm px-6 py-4">
+                      {item.dateCode || '-'}
+                    </td>
+                    <td className="text-sm px-6 py-4">
+                      {item.packaging || '-'}
+                    </td>
                     <td className="text-sm px-6 py-4">
                       <ComponentStatus
                         status={item.status}

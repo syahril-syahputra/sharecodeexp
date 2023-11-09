@@ -15,7 +15,11 @@ const ProformaInvoiceSeller = ({ proformaInvoice }) => (
   <Document>
     <Page size="A4" style={styles.body}>
       <View>
-        <Image style={styles.imageLogo} src="/img/exepart-gradient.png" />
+        <Image
+          style={styles.imageLogo}
+          src="/img/exepart-gradient.png"
+          alt="exepart-gradient.png"
+        />
         <Text style={styles.title}>PROFORMA INVOICE</Text>
       </View>
       <View style={styles.sectionItemDetail}>

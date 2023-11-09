@@ -1,15 +1,15 @@
-import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton"
-import Link from "next/link"
+import React from 'react'
+import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import Link from 'next/link'
 
-function NavigationViewButton({navigationId}){
-    return (
-        <Link href={`/admin/superadmin/orders/details/${navigationId}`}>
-            <PrimaryButton
-                size="sm">
-                View
-            </PrimaryButton>
-        </Link>
-    )
+function NavigationViewButton({ navigationId, disabled }) {
+  return (
+    <Link href={`/admin/superadmin/orders/details/${navigationId}`}>
+      <PrimaryButton size="sm" disabled={disabled}>
+        View
+      </PrimaryButton>
+    </Link>
+  )
 }
 
 export default NavigationViewButton

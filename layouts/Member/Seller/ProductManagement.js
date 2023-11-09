@@ -1,6 +1,6 @@
+import React from 'react'
 import Link from 'next/link'
 import classNames from '@/utils/classNames'
-
 import { Cog8ToothIcon } from '@heroicons/react/24/outline'
 import { Disclosure } from '@headlessui/react'
 import { ChevronRightIcon } from '@heroicons/react/20/solid'
@@ -33,7 +33,6 @@ export default function ProductManagement({ product }) {
             </Disclosure.Button>
             <Disclosure.Panel as="ul" className="mt-1 px-2">
               <Link
-                // as="a"
                 href="/admin/member/seller/product/approved"
                 className={classNames(
                   false ? 'bg-gray-50' : 'hover:bg-gray-50',
@@ -44,7 +43,16 @@ export default function ProductManagement({ product }) {
                 <PrimaryBadges title={product.approved} />
               </Link>
               <Link
-                // as="a"
+                href="/admin/member/seller/product/out-of-stock"
+                className={classNames(
+                  false ? 'bg-gray-50' : 'hover:bg-gray-50',
+                  'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
+                )}
+              >
+                Out of Stock
+                <PrimaryBadges title={product.out_of_stock} />
+              </Link>
+              <Link
                 href="/admin/member/seller/product/pending"
                 className={classNames(
                   false ? 'bg-gray-50' : 'hover:bg-gray-50',
@@ -67,7 +75,6 @@ export default function ProductManagement({ product }) {
                 <PrimaryBadges title={product.rejected} />
               </Link>
               <Link
-                // as="a"
                 href="/admin/member/seller/product/uploaded"
                 className={classNames(
                   false ? 'bg-gray-50' : 'hover:bg-gray-50',
@@ -77,7 +84,6 @@ export default function ProductManagement({ product }) {
                 Uploaded Excel File
               </Link>
               <Link
-                // as="a"
                 href="/admin/member/seller/product/add"
                 className={classNames(
                   false ? 'bg-gray-50' : 'hover:bg-gray-50',

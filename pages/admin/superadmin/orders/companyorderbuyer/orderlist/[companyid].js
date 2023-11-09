@@ -1,18 +1,13 @@
-import React, { useState, useEffect } from "react";
-import axios from "lib/axios"
-import { getSession } from "next-auth/react";
+import React, { useState, useEffect } from 'react'
+import axios from 'lib/axios'
+import { getSession } from 'next-auth/react'
+import Admin from 'layouts/Admin.js'
+import CompaniesBasedOrderChild from '@/components/Table/Superadmin/Orders/CompaniesBasedOrderChild'
+import MiniSearchBar from '@/components/Shared/MiniSearchBar'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
 
-// layout for page
-import Admin from "layouts/Admin.js";
-
-// components
-import CompaniesBasedOrderChild from "@/components/Table/Superadmin/Orders/CompaniesBasedOrderChild"
-import MiniSearchBar from "@/components/Shared/MiniSearchBar";
-import { toast } from 'react-toastify';
-import { toastOptions } from "@/lib/toastOptions"
-
-export default function ActiveOrders({session, routeParam}) {
-  //data search
+export default function ActiveOrders({ session, routeParam }) {
   const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
@@ -20,53 +15,55 @@ export default function ActiveOrders({session, routeParam}) {
   const [metaData, setMetaData] = useState({
     total: 0,
     perPage: 0,
-    lastPage: 0
+    lastPage: 0,
   })
   const [companyData, setCompanyData] = useState({})
   const loadCompany = async () => {
     setIsLoading(true)
-    const response = await axios.get(`admin/companies?id=${routeParam.companyid}`,
-      {
-          headers: {
-          "Authorization" : `Bearer ${session.accessToken}`
-          }
-      }
-      )
+    const response = await axios
+      .get(`admin/companies?id=${routeParam.companyid}`, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      })
       .then((response) => {
-          let result = response.data.data
-          setCompanyData(result)
-      }).catch((error) => {
-          // console.log(error.response)
-      }).finally(() => {
-          setIsLoading(false)
+        let result = response.data.data
+        setCompanyData(result)
+      })
+      .catch((error) => {
+        // console.log(error.response)
+      })
+      .finally(() => {
+        setIsLoading(false)
       })
   }
-  const searchData = async (page=1) =>{
-      setIsLoading(true)
-      const response = await axios.get(`/admin/orders/companiesBuyer/${routeParam.companyid}`,
-          {
-            headers: {
-              "Authorization" : `Bearer ${session.accessToken}`
-            }
-          }
-        )
-        .then((response) => {
-          let result = response.data.data
-          setData(result.data)
-          setLinks(result.links)
-          setMetaData({
-            total: result.total,
-            perPage: result.per_page,
-            lastPage: result.last_page,
-            currentPage: result.current_page,
-            nextPage: result.next_page_url ? true : false,
-            prevPage: result.prev_page_url ? true : false
-          })
-        }).catch((error) => {
-            toast.error("Something went wrong. Cannot load order.", toastOptions)
-        }).finally(() => {
-          setIsLoading(false)
+  const searchData = async (page = 1) => {
+    setIsLoading(true)
+    const response = await axios
+      .get(`/admin/orders/companiesBuyer/${routeParam.companyid}`, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      })
+      .then((response) => {
+        let result = response.data.data
+        setData(result.data)
+        setLinks(result.links)
+        setMetaData({
+          total: result.total,
+          perPage: result.per_page,
+          lastPage: result.last_page,
+          currentPage: result.current_page,
+          nextPage: result.next_page_url ? true : false,
+          prevPage: result.prev_page_url ? true : false,
         })
+      })
+      .catch((error) => {
+        toast.error('Something went wrong. Cannot load order.', toastOptions)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }
   const setPage = (item) => {
     searchData(item)
@@ -76,7 +73,7 @@ export default function ActiveOrders({session, routeParam}) {
     loadCompany()
   }, [])
 
-  const handleSearch = (item) =>{
+  const handleSearch = (item) => {
     setSearch(item)
     searchData()
   }
@@ -85,7 +82,7 @@ export default function ActiveOrders({session, routeParam}) {
     <>
       <div className="mb-10">
         <div className="mb-5 w-full lg:w-1/2">
-            <MiniSearchBar searchItem={handleSearch}/>
+          <MiniSearchBar searchItem={handleSearch} />
         </div>
         <CompaniesBasedOrderChild
           title={`${companyData.name}'s Order List (Buyer)`}
@@ -97,17 +94,18 @@ export default function ActiveOrders({session, routeParam}) {
         ></CompaniesBasedOrderChild>
       </div>
     </>
-  );
+  )
 }
 
-ActiveOrders.layout = Admin;
+ActiveOrders.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+
   return {
-      props: {
-          session: session,
-          routeParam: context.query
-      }
+    props: {
+      session: session,
+      routeParam: context.query,
+    },
   }
 }

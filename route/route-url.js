@@ -66,6 +66,14 @@ export const VendorUrl = {
       index: '/admin/member/seller/incoming-inquiry',
       detail: '/admin/member/seller/incoming-inquiry/detail',
     },
+    reimbursement_active_completed: {
+      active: {
+        index: '/admin/member/seller/reimbursement/active',
+      },
+      completed: {
+        index: '/admin/member/seller/reimbursement/completed',
+      },
+    },
   },
   buyingProduct: {
     product: {
@@ -74,6 +82,14 @@ export const VendorUrl = {
     inquiredProduct: {
       index: '/admin/member/buyer/inquired-product',
       detail: '/admin/member/buyer/inquired-product/details',
+    },
+  },
+  reimbursement: {
+    active: {
+      index: '/admin/member/buyer/reimbursement/active',
+    },
+    completed: {
+      index: '/admin/member/buyer/reimbursement/completed',
     },
   },
   // sellingComponent: {

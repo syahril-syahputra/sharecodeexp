@@ -5,16 +5,17 @@ import GlobalContext from '@/store/global-context'
 import Registry from '@/layouts/Superadmin/Registry'
 import ProductManagement from '@/layouts/Superadmin/ProductManagement'
 import Order from '@/layouts/Superadmin/Order'
+import Reimbursement from './Reimbursement'
 
 export default function MainSidebar() {
   const session = useSession()
   const { data } = session
   const { adminSidebarCounter, loadAdminSidebarCounter } =
     useContext(GlobalContext)
+
   useEffect(() => {
     loadAdminSidebarCounter(session.data.accessToken)
   }, [session])
-
   const sideBarOption = () => {
     switch (data.user?.userDetail.status_id) {
       case '1':
@@ -24,6 +25,7 @@ export default function MainSidebar() {
             <Registry registry={adminSidebarCounter.registry} />
             <ProductManagement product={adminSidebarCounter.product} />
             <Order order={adminSidebarCounter.order} />
+            <Reimbursement reimbursement={adminSidebarCounter.order} />
           </>
         )
       case '2':

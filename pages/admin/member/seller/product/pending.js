@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from "react";
-import axios from "lib/axios"
-import { getSession } from "next-auth/react";
+import React, { useState, useEffect } from 'react'
+import axios from 'lib/axios'
+import { getSession } from 'next-auth/react'
 
 // layout for page
-import Admin from "layouts/Admin.js";
+import Admin from 'layouts/Admin.js'
 
 // components
-import ComponentList from "@/components/Table/Member/Components/ComponentsList"
-import MiniSearchBar from "@/components/Shared/MiniSearchBar";
-import { toast } from 'react-toastify';
-import { toastOptions } from "@/lib/toastOptions"
+import ComponentList from '@/components/Table/Member/Components/ComponentsList'
+import MiniSearchBar from '@/components/Shared/MiniSearchBar'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
 
-export default function MyProduct({session}) {
-
+export default function MyProduct({ session }) {
   //data search
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
@@ -20,38 +19,45 @@ export default function MyProduct({session}) {
   const [metaData, setMetaData] = useState({
     total: 0,
     perPage: 0,
-    lastPage: 0
+    lastPage: 0,
   })
 
   const [search, setSearch] = useState('')
-  async function searchData(searchParam='', page = 1) {
+  async function searchData(searchParam = '', page = 1) {
     setSearch(searchParam)
-    setIsLoading(true);
-    const response = await axios.get(`/companyproduct?page=${page}&status=pending&search=${searchParam}`,
-      {
-        headers: {
-          "Authorization": `Bearer ${session.accessToken}`
+    setIsLoading(true)
+    const response = await axios
+      .get(
+        `/companyproduct?page=${page}&status=pending&search=${searchParam}`,
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
         }
-      }
-    )
+      )
       .then((response) => {
-        let result = response.data.data;
-        setData(result.data);
-        setLinks(result.links);
+        let result = response.data.data
+        setData(result.data)
+        setLinks(result.links)
         setMetaData({
           total: result.total,
           perPage: result.per_page,
           lastPage: result.last_page,
           currentPage: result.current_page,
           nextPage: result.next_page_url ? true : false,
-          prevPage: result.prev_page_url ? true : false
-        });
-      }).catch((error) => {
-        setData([]);
-        toast.error("Something went wrong. Cannot load component.", toastOptions);
-      }).finally(() => {
-        setIsLoading(false);
-      });
+          prevPage: result.prev_page_url ? true : false,
+        })
+      })
+      .catch((error) => {
+        setData([])
+        toast.error(
+          'Something went wrong. Cannot load component.',
+          toastOptions
+        )
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }
   const setPage = (pageNumber) => {
     searchData(search, pageNumber)
@@ -59,7 +65,7 @@ export default function MyProduct({session}) {
   useEffect(() => {
     searchData()
   }, [])
-  const handleSearch = (searchResult) =>{
+  const handleSearch = (searchResult) => {
     searchData(searchResult)
   }
 
@@ -67,7 +73,7 @@ export default function MyProduct({session}) {
     <>
       <div className="mb-10">
         <div className="mb-5 w-full lg:w-1/2">
-            <MiniSearchBar searchItem={handleSearch}/>
+          <MiniSearchBar searchItem={handleSearch} />
         </div>
         <ComponentList
           title="Pending Product"
@@ -79,16 +85,17 @@ export default function MyProduct({session}) {
         ></ComponentList>
       </div>
     </>
-  );
+  )
 }
 
-MyProduct.layout = Admin;
+MyProduct.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+
   return {
-      props: {
-          session
-      }
+    props: {
+      session,
+    },
   }
 }

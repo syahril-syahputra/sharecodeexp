@@ -1,0 +1,15 @@
+import React from 'react'
+import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import Link from 'next/link'
+
+function NavigationViewButton({ navigationId }) {
+  return (
+    <Link
+      href={`/admin/member/buyer/Reimbursement/active/details/${navigationId}`}
+    >
+      <PrimaryButton size="sm">View</PrimaryButton>
+    </Link>
+  )
+}
+
+export default NavigationViewButton

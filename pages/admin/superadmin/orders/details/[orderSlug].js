@@ -71,7 +71,7 @@ export default function OrderDetails({ session, routeParam }) {
     const response = await axios
       .get(`/admin/orders/${routeParam.orderSlug}/detail`, {
         headers: {
-          Authorization: `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session?.accessToken}`,
         },
       })
       .then((response) => {
@@ -104,7 +104,7 @@ export default function OrderDetails({ session, routeParam }) {
         },
         {
           headers: {
-            Authorization: `Bearer ${session.accessToken}`,
+            Authorization: `Bearer ${session?.accessToken}`,
           },
         }
       )
@@ -836,6 +836,7 @@ export default function OrderDetails({ session, routeParam }) {
                   </div>
                 )}
               </div>
+
               <div className="mx-2 text-md mb-5">
                 {!!data.buyer?.country ? (
                   data.buyer?.country
@@ -847,6 +848,12 @@ export default function OrderDetails({ session, routeParam }) {
               </div>
               <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                 Buyer's Shipment Info
+              </div>
+              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                Buyer Courier
+              </div>
+              <div className="mx-2 mb-1 text-xl">
+                {checkValue(data.buyer_courier)}
               </div>
               <div className="mx-2 my-1 text-sm uppercase text-gray-500">
                 Tracking Number
@@ -892,12 +899,37 @@ export default function OrderDetails({ session, routeParam }) {
               <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                 Seller's Shipment Info
               </div>
-              <div className="mx-2 my-1 text-sm text-gray-500">
+              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                Seller Courier
+              </div>
+              <div className="mx-2 mb-1 text-xl">
+                {checkValue(data.seller_courier)}
+              </div>
+              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
                 Tracking Number
               </div>
               <div className="mx-2 mb-5 text-xl uppercase">
                 {checkValue(data.trackingSeller)}
               </div>
+              {parseInt(data?.return_product) === 1 ? (
+                <>
+                  <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                    Seller's Return Shipment Info
+                  </div>
+                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                    Seller Courier
+                  </div>
+                  <div className="mx-2 mb-1 text-xl">
+                    {checkValue(data.seller_return_courier)}
+                  </div>
+                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                    Tracking Number
+                  </div>
+                  <div className="mx-2 mb-5 text-xl">
+                    {checkValue(data.seller_return_tracking_number)}
+                  </div>
+                </>
+              ) : undefined}
             </PrimaryWrapper>
           </div>
         </div>

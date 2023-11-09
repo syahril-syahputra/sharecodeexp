@@ -59,10 +59,10 @@ export default function TableComponent(props) {
               <th scope="col" className="px-6 py-3">
                 Description
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-8 py-3">
                 Available Stocks
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-8 py-3">
                 MOQ
               </th>
               <th scope="col" className="px-6 py-3">
@@ -89,8 +89,28 @@ export default function TableComponent(props) {
                     </th>
                     <td className="px-6 py-4">{item.Manufacture}</td>
                     <td className="px-6 py-4">{item.Description}</td>
-                    <td className="px-6 py-4">{item.AvailableQuantity}</td>
-                    <td className="px-6 py-4">{item.moq}</td>
+                    {(item?.AvailableQuantity === null ||
+                      item?.AvailableQuantity === 0) &&
+                    (item?.moq === null || item?.moq === 0) ? (
+                      <>
+                        <td className="px-8">Out of Stock</td>
+                      </>
+                    ) : (
+                      <>
+                        <td className="px-8 py-4">{item.AvailableQuantity}</td>
+                      </>
+                    )}
+                    {(item?.AvailableQuantity === null ||
+                      item?.AvailableQuantity === 0) &&
+                    (item?.moq === null || item?.moq === 0) ? (
+                      <>
+                        <td className="px-8">Out of Stock</td>
+                      </>
+                    ) : (
+                      <>
+                        <td className="px-8 py-4">{item.moq}</td>
+                      </>
+                    )}
                     <td className="px-6 py-4">{item.country}</td>
                     <td className="px-6 py-4 text-right">
                       <div
@@ -101,7 +121,12 @@ export default function TableComponent(props) {
                         <PrimaryButton
                           id={item?.id}
                           key={item?.id}
-                          disabled={isInquiryClicked}
+                          disabled={
+                            isInquiryClicked ||
+                            item?.AvailableQuantity === 0 ||
+                            item?.AvailableQuantity === null ||
+                            item?.AvailableQuantity === undefined
+                          }
                           size="sm"
                           onClick={async () => {
                             setIsInquiryClicked(true)

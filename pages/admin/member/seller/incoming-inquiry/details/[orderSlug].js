@@ -35,7 +35,13 @@ export default function InquiryDetails({ session, routeParam }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({})
   const [isOrderValid, setIsOrderValid] = useState(true)
-
+  const [errorInfo, setErrorInfo] = useState({})
+  const [verifyInquiryModal, setVerifyInquiryModal] = useState(false)
+  const [uploadInvoiceModal, setUploadInvoiceModal] = useState(false)
+  const [shipProductModal, setShipProductModal] = useState(false)
+  const [rejectInquiryModal, setRejectInquiryModal] = useState(false)
+  const [updateVerifiedInquiryModal, setUpdateVerifiedInquiryModal] =
+    useState(false)
   const [isLoadingPackingList, setisLoadingPackingList] = useState(false)
   const [isLoadingProformaInvoice, setisLoadingProformaInvoice] =
     useState(false)
@@ -119,7 +125,7 @@ export default function InquiryDetails({ session, routeParam }) {
     axios
       .get(`/seller/order/${routeParam.orderSlug}/detail`, {
         headers: {
-          Authorization: `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session?.accessToken}`,
         },
       })
       .then((response) => {
@@ -164,77 +170,16 @@ export default function InquiryDetails({ session, routeParam }) {
     )
   }
 
-  const [errorInfo, setErrorInfo] = useState({})
-  const [verifyInquiryModal, setVerifyInquiryModal] = useState(false)
   const verifyInquiryModalHandle = async (inputData) => {
     setIsLoading(true)
     setErrorInfo({})
-    const response = await axios
-      .post(
-        `/seller/order/verify-inquiry`,
-        {
-          order_slug: data.slug,
-          ...inputData,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session.accessToken}`,
-          },
-        }
-      )
-      .then((response) => {
-        toast.success(response.data.message, toastOptions)
-        setVerifyInquiryModal(false)
-        loadData()
-      })
-      .catch((error) => {
-        toast.error(
-          'Something went wrong. Cannot verify inquiry.',
-          toastOptions
-        )
-        setErrorInfo(error.data.data)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
   }
 
-  const [rejectInquiryModal, setRejectInquiryModal] = useState(false)
   const rejectInquiryModalHandle = async (inputData) => {
     setIsLoading(true)
     setErrorInfo({})
-    const response = await axios
-      .post(
-        `/seller/order/reject-inquiry`,
-        {
-          order_slug: data.slug,
-          ...inputData,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session.accessToken}`,
-          },
-        }
-      )
-      .then((response) => {
-        toast.success(response.data.message, toastOptions)
-        setRejectInquiryModal(false)
-        loadData()
-      })
-      .catch((error) => {
-        toast.error(
-          'Something went wrong. Cannot reject inquiry.',
-          toastOptions
-        )
-        setErrorInfo(error.data.data)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
   }
 
-  const [updateVerifiedInquiryModal, setUpdateVerifiedInquiryModal] =
-    useState(false)
   const updateVerifiedInquiryHandle = async (inputData) => {
     setIsLoading(true)
     setErrorInfo({})
@@ -265,7 +210,6 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
-  const [shipProductModal, setShipProductModal] = useState(false)
   const shipProductHanlde = async (
     trackingNumber,
     courier,
@@ -274,68 +218,14 @@ export default function InquiryDetails({ session, routeParam }) {
   ) => {
     setIsLoading(true)
     setErrorInfo({})
-    const response = await axios
-      .post(
-        `/seller/order/shipping-product`,
-        {
-          order_slug: data.slug,
-          trackingSeller: trackingNumber,
-          courier: courier,
-          download_packing_list: isDownloadedPackingList,
-          download_proforma_invoice: isDownloadedPerformaInvoice,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session.accessToken}`,
-          },
-        }
-      )
-      .then((response) => {
-        toast.success(response.data.message, toastOptions)
-        setShipProductModal(false)
-        loadData()
-      })
-      .catch((error) => {
-        toast.error(
-          'Something went wrong. Cannot ship the product. ' +
-            error.data.message,
-          toastOptions
-        )
-        setErrorInfo(error.data.data)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
   }
 
-  const [uploadInvoiceModal, setUploadInvoiceModal] = useState(false)
   const uploadInvoiceHandler = async (invoice) => {
     setIsLoading(true)
     setErrorInfo({})
     let formData = new FormData()
     formData.append('seller_invoice', invoice)
     formData.append('order_slug', data.slug)
-    const response = await axios
-      .post(`/seller/order/upload-invoice`, formData, {
-        headers: {
-          Authorization: `Bearer ${session.accessToken}`,
-        },
-      })
-      .then((response) => {
-        toast.success(response.data.message, toastOptions)
-        setShipProductModal(false)
-        loadData()
-      })
-      .catch((error) => {
-        toast.error(
-          'Something went wrong. Cannot upload the invoice.',
-          toastOptions
-        )
-        setErrorInfo(error.data.data)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
   }
 
   //notification
@@ -519,9 +409,8 @@ export default function InquiryDetails({ session, routeParam }) {
               errorInfo={errorInfo}
             />
           )}
-
-          <div className="flex justify-center">
-            <div className="mx-2 my-4">
+          <div className="flex flex-col">
+            <div className="mx-2 my-4 flex justify-center">
               <PrimaryButton
                 outline
                 className="mx-1"
@@ -531,6 +420,12 @@ export default function InquiryDetails({ session, routeParam }) {
               >
                 Ship Product to LAB
               </PrimaryButton>
+            </div>
+            <div className="mx-2 my-1 text-sm font-bold text-gray-500">
+              Note:
+            </div>
+            <div className="mx-2 text-sm text-gray-500 mb-5">
+              Use proforma invoice and packing list to send product to LAB.
             </div>
           </div>
         </div>
@@ -656,7 +551,6 @@ export default function InquiryDetails({ session, routeParam }) {
             </div>
           )}
         </PrimaryWrapper>
-
         {/* seller tracking number */}
         <div className="flex">
           <div className="w-1/2 lg:w-1/3 mr-4">
@@ -669,7 +563,42 @@ export default function InquiryDetails({ session, routeParam }) {
               </div>
             </PrimaryWrapper>
           </div>
+          <div className="w-1/2 lg:w-1/3 mr-4">
+            <PrimaryWrapper className="p-1">
+              <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
+                Courier
+              </div>
+              <div className="mx-2 mb-5 text-xl">
+                {checkValue(data.seller_courier)}
+              </div>
+            </PrimaryWrapper>
+          </div>
         </div>
+
+        {parseInt(data?.return_product) === 1 ? (
+          <div className="flex">
+            <div className="w-1/2 lg:w-1/3 mr-4">
+              <PrimaryWrapper className="p-1">
+                <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
+                  Tracking Number Return Shipment
+                </div>
+                <div className="mx-2 mb-5 text-xl">
+                  {checkValue(data.seller_return_tracking_number)}
+                </div>
+              </PrimaryWrapper>
+            </div>
+            <div className="w-1/2 lg:w-1/3 mr-4">
+              <PrimaryWrapper className="p-1">
+                <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
+                  Courier Return Shipment
+                </div>
+                <div className="mx-2 mb-5 text-xl">
+                  {checkValue(data.seller_return_courier)}
+                </div>
+              </PrimaryWrapper>
+            </div>
+          </div>
+        ) : undefined}
 
         {/* product info and quotation */}
         <div className="lg:flex lg:justify-around">
@@ -795,7 +724,14 @@ export default function InquiryDetails({ session, routeParam }) {
                       data.companies_products?.AvailableQuantity
                     ) : (
                       <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                        {data?.companies_products?.AvailableQuantity === 0 ||
+                        data?.companies_products?.AvailableQuantity === null ? (
+                          <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
+                            Out of Stock
+                          </div>
+                        ) : (
+                          <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                        )}
                       </div>
                     )}
                   </div>
