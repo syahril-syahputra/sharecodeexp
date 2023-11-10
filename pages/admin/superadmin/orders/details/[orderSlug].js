@@ -303,7 +303,8 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot send tracking number to buyer.',
+          //   'Something went wrong. Cannot send tracking number to buyer.',
+          error.data.message,
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -335,7 +336,8 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot send tracking number to buyer.',
+          //   'Something went wrong. Cannot send tracking number to buyer.',
+          error.data.message,
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -747,6 +749,37 @@ export default function OrderDetails({ session, routeParam }) {
         </div>
       )
       break
+    case 21:
+      if (data.reimbursement === '1') {
+        actionToTake = (
+          <div>
+            {closeReimbusmentModal && (
+              <ReleasePaymentToBuyer
+                isLoading={isLoading}
+                closeModal={() => setcloseReimbusmentModal(false)}
+                acceptance={handleCloseReimbusment}
+                errorInfo={errorInfo}
+              />
+            )}
+
+            <div className="flex justify-center">
+              <div className="mx-2 my-4">
+                <PrimaryButton
+                  outline
+                  className="mx-1"
+                  size="sm"
+                  disabled={isLoading}
+                  onClick={() => setcloseReimbusmentModal(true)}
+                >
+                  Release Payment to Buyer
+                </PrimaryButton>
+              </div>
+            </div>
+          </div>
+        )
+      }
+
+      break
   }
 
   return (
@@ -1024,7 +1057,7 @@ export default function OrderDetails({ session, routeParam }) {
                   <div className="mx-2 text-md">
                     {!isLoading ? (
                       data.order_date ? (
-                        moment(data.created_at).format('dddd, D MMMM YYYY')
+                        moment(data.order_date).format('dddd, D MMMM YYYY')
                       ) : (
                         '-'
                       )
@@ -1228,9 +1261,7 @@ export default function OrderDetails({ session, routeParam }) {
                   </span>
                   {!isLoading ? (
                     <span>
-                      $
-                      {parseInt(data.order_price_amount_buyer?.grand_total) ||
-                        0}
+                      ${data.order_price_amount_buyer?.grand_total || 0}
                     </span>
                   ) : (
                     <div className="animate-pulse">

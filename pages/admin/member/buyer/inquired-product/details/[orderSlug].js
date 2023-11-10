@@ -149,7 +149,8 @@ export default function InquiryDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot send tracking number to buyer.',
+          //   'Something went wrong. Cannot send tracking number to buyer.',
+          error.data.message,
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -826,7 +827,7 @@ export default function InquiryDetails({ session, routeParam }) {
                   <div className="mx-2 text-md">
                     {!isLoading ? (
                       data.order_date ? (
-                        moment(data.created_at).format('dddd, D MMMM YYYY')
+                        moment(data.order_date).format('dddd, D MMMM YYYY')
                       ) : (
                         '-'
                       )
@@ -981,7 +982,7 @@ export default function InquiryDetails({ session, routeParam }) {
                   <span className="text-gray-500">Test Lab Fee (USD)</span>
                   {!isLoading ? (
                     <span>
-                      ${parseInt(data.order_price_amount?.test_fee_amount) || 0}
+                      ${data.order_price_amount?.test_fee_amount || 0}
                     </span>
                   ) : (
                     <div className="animate-pulse">
@@ -996,9 +997,7 @@ export default function InquiryDetails({ session, routeParam }) {
                     Total Price (USD)
                   </span>
                   {!isLoading ? (
-                    <span>
-                      ${parseInt(data.order_price_amount?.grand_total) || 0}
-                    </span>
+                    <span>${data.order_price_amount?.grand_total || 0}</span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>
