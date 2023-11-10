@@ -149,7 +149,8 @@ export default function InquiryDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot send tracking number to buyer.',
+          //   'Something went wrong. Cannot send tracking number to buyer.',
+          error.data.message,
           toastOptions
         )
         setErrorInfo(error.data.data)
