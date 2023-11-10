@@ -73,19 +73,17 @@ export default function InquiryDetails({ session, routeParam }) {
   const openProformaInvoice = async () => {
     try {
       setisLoadingProformaInvoice(true)
-      if (data.order_status_id !== '7') {
-        await axios.post(
-          `/seller/order/verification-action/open-proforma-invoice`,
-          {
-            order_slug: data.slug,
+      await axios.post(
+        `/seller/order/verification-action/open-proforma-invoice`,
+        {
+          order_slug: data.slug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${session.accessToken}`,
-            },
-          }
-        )
-      }
+        }
+      )
     } catch (error) {
       toast.error(error.data.message, toastOptions)
     } finally {
