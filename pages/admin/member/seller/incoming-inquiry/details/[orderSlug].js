@@ -28,6 +28,7 @@ import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import WarningNotification from '@/components/Interface/Notification/WarningNotification'
 import InfoNotification from '@/components/Interface/Notification/InfoNotification'
 import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
+import calculateDayDifference from '@/lib/calculateDayDifference'
 
 export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -537,6 +538,38 @@ export default function InquiryDetails({ session, routeParam }) {
         </div>
       )
       break
+    case 13:
+      if (calculateDayDifference(data.invoice_date) >= 15) {
+        actionToTake = (
+          <div>
+            {uploadInvoiceModal && (
+              <UploadInvoiceModal
+                isLoading={isLoading}
+                closeModal={() => setUploadInvoiceModal(false)}
+                acceptance={uploadInvoiceHandler}
+                errorInfo={errorInfo}
+              />
+            )}
+
+            <div className="flex justify-center">
+              {/* <div>{calculateDayDifference(data.invoice_date)}</div> */}
+              <div>{}</div>
+              <div className="mx-2 my-4">
+                <PrimaryButton
+                  outline
+                  className="mx-1"
+                  size="sm"
+                  disabled={isLoading}
+                  onClick={() => setUploadInvoiceModal(true)}
+                >
+                  Upload Invoice
+                </PrimaryButton>
+              </div>
+            </div>
+          </div>
+        )
+      }
+      break
     case 14:
       // upload invoice
       actionToTake = (
@@ -877,12 +910,7 @@ export default function InquiryDetails({ session, routeParam }) {
                     Total Price (USD)
                   </span>
                   {!isLoading ? (
-                    <span>
-                      $
-                      {data.price
-                        ? parseFloat(data.price) * parseInt(data.qty)
-                        : ''}
-                    </span>
+                    <span>${data.order_price_amount || 0}</span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>

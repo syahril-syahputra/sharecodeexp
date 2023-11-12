@@ -1200,12 +1200,7 @@ export default function OrderDetails({ session, routeParam }) {
                     Total Price (USD)
                   </span>
                   {!isLoading ? (
-                    <span>
-                      $
-                      {data.price
-                        ? parseFloat(data.price) * parseInt(data.qty)
-                        : ''}
-                    </span>
+                    <span>${data.order_price_amount_seller || 0}</span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>
