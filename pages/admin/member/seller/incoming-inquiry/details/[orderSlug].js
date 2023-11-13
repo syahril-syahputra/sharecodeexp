@@ -42,6 +42,7 @@ export default function InquiryDetails({ session, routeParam }) {
     useState(false)
 
   const [courierModal, setcourierModal] = useState(false)
+
   const handlelCourierDetailsModal = (courier) => {
     setIsLoading(true)
     setErrorInfo({})
@@ -539,7 +540,13 @@ export default function InquiryDetails({ session, routeParam }) {
       )
       break
     case 13:
-      if (calculateDayDifference(data.invoice_date) >= 15) {
+      const utcMoment = moment.utc(
+        data.arrival_estimation_to_buyer_date,
+        'YYYY-MM-DD HH:mm:ss'
+      )
+      const available = utcMoment.local()
+      const thisTime = moment()
+      if (available.isBefore(thisTime)) {
         actionToTake = (
           <div>
             {uploadInvoiceModal && (
