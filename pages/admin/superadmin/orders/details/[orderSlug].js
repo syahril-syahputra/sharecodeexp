@@ -1398,7 +1398,7 @@ export default function OrderDetails({ session, routeParam }) {
                     )}
                   </div>
                 </div>
-                <div className="mx-2 mt-1 text-sm">
+                {/* <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Proforma Invoice for Seller</span>
                     {data.proforma_invoice_available == 1 ? (
@@ -1413,7 +1413,7 @@ export default function OrderDetails({ session, routeParam }) {
                       <span className="underline text-gray-500">view</span>
                     )}
                   </div>
-                </div>
+                </div> */}
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Buyer's Invoice</span>

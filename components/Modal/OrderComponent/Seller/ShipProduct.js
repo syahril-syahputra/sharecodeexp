@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
 import { useSession } from 'next-auth/react'
 import axios from '@/lib/axios'
+import FileInput from '@/components/Interface/Form/FileInput'
 
 export default function ShipProduct(props) {
   const [trackingNumber, setTrackingNumber] = useState('')
@@ -103,6 +104,17 @@ export default function ShipProduct(props) {
                   value={trackingNumber}
                   onChange={(input) => setTrackingNumber(input.value)}
                   errorMsg={props.errorInfo?.trackingSeller}
+                />
+              </div>
+              <div className="w-full px-3  border-b border-gray-300 pb-4">
+                <FileInput
+                  label="Invoice"
+                  description="Input PDF (.pdf) only, max 10MB"
+                  accept=".pdf"
+                  name="File Upload"
+                  required
+                  onChange={(target) => console.log(target.files[0])}
+                  //   errorMsg={['disabled', 'second error']}
                 />
               </div>
               <div className="flex space-x-4 px-4">
