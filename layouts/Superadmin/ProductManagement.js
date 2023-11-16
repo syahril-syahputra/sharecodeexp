@@ -7,7 +7,7 @@ import { Disclosure } from '@headlessui/react'
 import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import PrimaryBadges from '@/components/Interface/Badges/PrimaryBadges'
 
-export default function ComponentManagement({ product }) {
+export default function ComponentManagement({ product, excel }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
 
   return (
@@ -73,7 +73,7 @@ export default function ComponentManagement({ product }) {
                   'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                 )}
               >
-                Uploaded Excel File
+                Uploaded Excel File <PrimaryBadges title={excel.uploaded} />
               </Link>
               <Link
                 href={publicDir + '/template/exepart_template.xlsx'}
