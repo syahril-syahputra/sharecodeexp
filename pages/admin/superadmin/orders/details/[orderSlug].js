@@ -31,6 +31,10 @@ import PrimaryNotification from '@/components/Interface/Notification/PrimaryNoti
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import WarningNotification from '@/components/Interface/Notification/WarningNotification'
 import InfoNotification from '@/components/Interface/Notification/InfoNotification'
+import TrackerNumberForSeler from '@/components/Modal/OrderComponent/Superadmin/TrackerNumberForSeler'
+import ReleasePaymentToBuyer from '@/components/Modal/OrderComponent/Superadmin/ReleasePaymentToBuyer'
+import DangerButton from '@/components/Interface/Buttons/DangerButton'
+import TerminateOrder from '@/components/Modal/OrderComponent/Superadmin/TerminateOrder'
 
 export default function OrderDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -39,6 +43,28 @@ export default function OrderDetails({ session, routeParam }) {
   const [data, setData] = useState([])
   const [errorInfo, setErrorInfo] = useState({})
   const [isOrderValid, setIsOrderValid] = useState(true)
+  const [isLoadingOpenReceipt, setisLoadingOpenReceipt] = useState(false)
+  const openPaymentReceiptHandler = async () => {
+    try {
+      setisLoadingOpenReceipt(true)
+      await axios.post(
+        `/admin/orders/verification-action/open-buyer-payment-receipt`,
+        {
+          order_slug: data.slug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+    } catch (error) {
+      toast.error(error.data.message, toastOptions)
+    } finally {
+      window.open(publicDir + data.buyer_receipt_path)
+      setisLoadingOpenReceipt(false)
+    }
+  }
   const loadData = async () => {
     setIsLoading(true)
     setErrorInfo({})
@@ -219,6 +245,39 @@ export default function OrderDetails({ session, routeParam }) {
       })
   }
 
+  const [terminateOrderModal, setterminateOrderModal] = useState(false)
+  const terminateOrderHandler = (reason, terminate) => {
+    setIsLoading(true)
+    setErrorInfo({})
+    axios
+      .post(
+        `/admin/orders/terminate-order`,
+        {
+          order_slug: data.slug,
+          terminate_order: terminate,
+          order_termination_reason: reason,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setterminateOrderModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot sent the request.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
+
   const [trackerNumberForBuyerModal, setTrackerNumberForBuyerModal] =
     useState(false)
   const handleTrackerNumberForBuyerModal = async (trackingNumber) => {
@@ -244,7 +303,41 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot send tracking number to buyer.',
+          //   'Something went wrong. Cannot send tracking number to buyer.',
+          error.data.message,
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
+  const [trackerNumberForSellerModal, setTrackerNumberForSellerModal] =
+    useState(false)
+  const handleTrackerNumberForSellerModal = async (trackingNumber) => {
+    setIsLoading(true)
+    setErrorInfo({})
+    const response = await axios
+      .post(
+        `/admin/orders/shipping-product-to-seller`,
+        {
+          order_slug: data.slug,
+          tracking_number: trackingNumber,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setTrackerNumberForSellerModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          //   'Something went wrong. Cannot send tracking number to buyer.',
+          error.data.message,
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -282,6 +375,34 @@ export default function OrderDetails({ session, routeParam }) {
       })
   }
 
+  const [closeReimbusmentModal, setcloseReimbusmentModal] = useState(false)
+  const handleCloseReimbusment = async (recepit) => {
+    setIsLoading(true)
+    setErrorInfo({})
+    let formData = new FormData()
+    formData.append('order_slug', data.slug)
+    formData.append('admin_receipt', recepit)
+
+    const response = await axios
+      .post(`/admin/orders/close-reimbursement`, formData, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      })
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setRequestUpdatePaymentModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot upload the result.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
   if (!isOrderValid) {
     return (
       <div className="">
@@ -387,6 +508,7 @@ export default function OrderDetails({ session, routeParam }) {
       No action to take
     </div>
   )
+  //   let actionToTake = ''
   switch (data.order_status?.id) {
     case 4:
       actionToTake = (
@@ -515,7 +637,7 @@ export default function OrderDetails({ session, routeParam }) {
         </div>
       )
       break
-    case 11:
+    case 12:
       actionToTake = (
         <div>
           {trackerNumberForBuyerModal && (
@@ -543,7 +665,7 @@ export default function OrderDetails({ session, routeParam }) {
         </div>
       )
       break
-    case 16:
+    case 15:
       actionToTake = (
         <div>
           {completeOrderModal && (
@@ -570,6 +692,93 @@ export default function OrderDetails({ session, routeParam }) {
           </div>
         </div>
       )
+      break
+    case 18:
+      actionToTake = (
+        <div>
+          {trackerNumberForSellerModal && (
+            <TrackerNumberForSeler
+              isLoading={isLoading}
+              closeModal={() => setTrackerNumberForSellerModal(false)}
+              acceptance={handleTrackerNumberForSellerModal}
+              errorInfo={errorInfo}
+            />
+          )}
+
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setTrackerNumberForSellerModal(true)}
+              >
+                Provide Tracking Number
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+    case 19:
+      actionToTake = (
+        <div>
+          {closeReimbusmentModal && (
+            <ReleasePaymentToBuyer
+              isLoading={isLoading}
+              closeModal={() => setcloseReimbusmentModal(false)}
+              acceptance={handleCloseReimbusment}
+              errorInfo={errorInfo}
+            />
+          )}
+
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setcloseReimbusmentModal(true)}
+              >
+                Release Payment to Buyer
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+    case 21:
+      if (data.reimbursement === '1') {
+        actionToTake = (
+          <div>
+            {closeReimbusmentModal && (
+              <ReleasePaymentToBuyer
+                isLoading={isLoading}
+                closeModal={() => setcloseReimbusmentModal(false)}
+                acceptance={handleCloseReimbusment}
+                errorInfo={errorInfo}
+              />
+            )}
+
+            <div className="flex justify-center">
+              <div className="mx-2 my-4">
+                <PrimaryButton
+                  outline
+                  className="mx-1"
+                  size="sm"
+                  disabled={isLoading}
+                  onClick={() => setcloseReimbusmentModal(true)}
+                >
+                  Release Payment to Buyer
+                </PrimaryButton>
+              </div>
+            </div>
+          </div>
+        )
+      }
+
       break
   }
 
@@ -848,7 +1057,7 @@ export default function OrderDetails({ session, routeParam }) {
                   <div className="mx-2 text-md">
                     {!isLoading ? (
                       data.order_date ? (
-                        moment(data.created_at).format('dddd, D MMMM YYYY')
+                        moment(data.order_date).format('dddd, D MMMM YYYY')
                       ) : (
                         '-'
                       )
@@ -991,12 +1200,7 @@ export default function OrderDetails({ session, routeParam }) {
                     Total Price (USD)
                   </span>
                   {!isLoading ? (
-                    <span>
-                      $
-                      {data.price
-                        ? parseFloat(data.price) * parseInt(data.qty)
-                        : ''}
-                    </span>
+                    <span>${data.order_price_amount_seller || 0}</span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -1036,7 +1240,7 @@ export default function OrderDetails({ session, routeParam }) {
                   <span className="text-gray-500">Test Lab Fee (USD)</span>
                   {!isLoading ? (
                     <span>
-                      ${data.order_price_amount_buyer.test_fee_amount}
+                      ${data.order_price_amount_buyer.test_fee_amount || 0}
                     </span>
                   ) : (
                     <div className="animate-pulse">
@@ -1052,13 +1256,7 @@ export default function OrderDetails({ session, routeParam }) {
                   </span>
                   {!isLoading ? (
                     <span>
-                      $
-                      {parseInt(
-                        data.order_price_amount_buyer?.grand_total?.replace(
-                          /,/g,
-                          ''
-                        )
-                      )}
+                      ${data.order_price_amount_buyer?.grand_total || 0}
                     </span>
                   ) : (
                     <div className="animate-pulse">
@@ -1106,14 +1304,25 @@ export default function OrderDetails({ session, routeParam }) {
                 <div className="flex flex-wrap justify-between">
                   <span>Buyer's Payment</span>
                   {data.buyer_receipt_path ? (
-                    <Link
-                      target="_blank"
-                      href={publicDir + data.buyer_receipt_path}
-                      className="underline text-blue-500"
+                    <label
+                      onClick={openPaymentReceiptHandler}
+                      className={
+                        'underline ' +
+                        (isLoadingOpenReceipt
+                          ? 'text-blue-300 cursor-wait'
+                          : 'text-blue-500 cursor-pointer')
+                      }
                     >
-                      view
-                    </Link>
+                      {isLoadingOpenReceipt ? 'loading' : 'view'}
+                    </label>
                   ) : (
+                    // <Link
+                    //   target="_blank"
+                    //   href={publicDir + data.buyer_receipt_path}
+                    //   className="underline text-blue-500"
+                    // >
+                    //   view
+                    // </Link>
                     <span className="underline text-gray-500">view</span>
                   )}
                 </div>
@@ -1311,6 +1520,36 @@ export default function OrderDetails({ session, routeParam }) {
               </div>
               {actionToTake}
             </PrimaryWrapper>
+            {data.order_status_id !== '20' && data.order_status_id !== '21' && (
+              <PrimaryWrapper className="p-1">
+                <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                  Terminate Order
+                </div>
+                <div className="flex flex-col space-y-4 items-center p-4 justify-center">
+                  {terminateOrderModal && (
+                    <TerminateOrder
+                      isLoading={isLoading}
+                      closeModal={() => setterminateOrderModal(false)}
+                      acceptance={terminateOrderHandler}
+                      errorInfo={errorInfo}
+                    />
+                  )}
+                  <div className="text-center text-sm text-red-500">
+                    Please click the button below to cancel the order
+                  </div>
+                  <DangerButton
+                    outline
+                    className="mx-1"
+                    size="sm"
+                    disabled={isLoading}
+                    onClick={() => setterminateOrderModal(true)}
+                  >
+                    Terminate Order
+                  </DangerButton>
+                </div>
+              </PrimaryWrapper>
+            )}
+
             <PrimaryWrapper className="p-1">
               <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                 Event History

@@ -145,7 +145,7 @@ export default function OrderComplete({ session }) {
           data={data}
           links={links}
           metaData={metaData}
-        />
+        ></InquiredProductTable>
       </div>
     </>
   )

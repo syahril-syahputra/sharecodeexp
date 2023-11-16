@@ -14,17 +14,13 @@ import { useRouter } from 'next/router'
 
 export default function VerifyOrder(props) {
   const test_free = parseFloat(props.price * props.quantity) > 1000
-  const [isOpenend, setisOpenend] = useState(props.openedQuotation)
-  const [isShowMessage, setisShowMessage] = useState(false)
   const { data: session } = useSession()
   const router = useRouter()
   const [isLoadingOpenQUotation, setisLoadingOpenQUotation] = useState(false)
   const acceptHandler = () => {
-    setisShowMessage(false)
-    isOpenend ? props.acceptance() : setisShowMessage(true)
+    props.acceptance()
   }
   const openQuotationHandler = async () => {
-    setisShowMessage(false)
     try {
       setisLoadingOpenQUotation(true)
       await axios.post(
@@ -38,7 +34,6 @@ export default function VerifyOrder(props) {
           },
         }
       )
-      setisOpenend(true)
       const url = `/admin/member/buyer/inquired-product/details/pdf/quotation/${props.orderSlug}`
       window.open(url, '_blank')
     } catch (error) {
@@ -58,6 +53,16 @@ export default function VerifyOrder(props) {
 
     return ''
   }
+  const cek = (availableDate) => {
+    const utcMoment = moment.utc(availableDate, 'YYYY-MM-DD HH:mm:ss')
+    const available = utcMoment.local()
+    const thisTime = moment()
+    if (available.isBefore(thisTime)) {
+      return false
+    }
+
+    return true
+  }
 
   return (
     <BaseModalMedium
@@ -65,10 +70,18 @@ export default function VerifyOrder(props) {
       onClick={() => props.closeModal()}
       body={
         <>
+          {cek(props.availableDate) && (
+            <div className="rounded-lg text-sm text-center  bg-red-100 mb-2 p-2">
+              Quotation will Available at : {convert(props.availableDate)}{' '}
+            </div>
+          )}
+
           <p className="text-blueGray-500 text-md leading-relaxed italic">
             Quotation Expiration Date:{' '}
             <span className="text-blueGray-700 font-bold">
-              {moment(props.expirationDate).format('dddd, D MMMM YYYY')}
+              {moment(props.expirationDate).format(
+                'dddd, D MMMM YYYY HH:mm:ss'
+              )}
             </span>
           </p>
           <p className="mb-5 text-blueGray-500 text-lg leading-relaxed">
@@ -94,16 +107,6 @@ export default function VerifyOrder(props) {
             )}
             Open Quotation
           </SecondaryButton>
-          {isShowMessage && (
-            <div className="bg-red-400 rounded-lg text-white text-sm text-center p-1 mt-4">
-              Please open the quotation document
-            </div>
-          )}
-          {props.availableDate && (
-            <div className="bg-red-400 rounded-lg text-white text-sm text-center p-1 mt-4">
-              Quotation will Available at : {convert(props.availableDate)}{' '}
-            </div>
-          )}
         </>
       }
       action={

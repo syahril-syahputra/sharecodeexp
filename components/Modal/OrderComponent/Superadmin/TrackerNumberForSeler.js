@@ -4,7 +4,7 @@ import TextInput from '@/components/Interface/Form/TextInput'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 
-export default function VerifyOrder(props) {
+export default function TrackerNumberForSeler(props) {
   const [trackingNumber, setTrackingNumber] = useState('')
 
   const handleSubmit = () => {
@@ -28,7 +28,7 @@ export default function VerifyOrder(props) {
           </div>
 
           <p className="mt-8 italic text-blueGray-500 text-sm leading-relaxed">
-            Note: This tracking number will be send to the buyer.
+            Note: This tracking number will be send to the Seller.
           </p>
         </>
       }

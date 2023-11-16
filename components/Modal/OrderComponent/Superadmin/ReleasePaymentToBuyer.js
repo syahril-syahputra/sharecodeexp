@@ -1,36 +1,33 @@
 import React, { useState } from 'react'
 import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
-import TextInput from '@/components/Interface/Form/TextInput'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import TextInput from '@/components/Interface/Form/TextInput'
+import FileInput from '@/components/Interface/Form/FileInput'
 
-export default function VerifyOrder(props) {
-  const [trackingNumber, setTrackingNumber] = useState('')
-
-  const handleSubmit = () => {
-    props.acceptance(trackingNumber)
+export default function ReleasePaymentToBuyer(props) {
+  const [goodResult, setGoodResult] = useState('')
+  const handlerUpload = () => {
+    props.acceptance(goodResult)
   }
 
   return (
     <BaseModalMedium
-      title="Provide Tracking Number"
+      title="Upload Payment Receipt to Buyer"
       onClick={() => props.closeModal()}
       body={
-        <>
-          <div className="mb-4">
-            <TextInput
-              label="Tracking Number"
-              name="trackingNumber"
-              value={trackingNumber}
-              onChange={(input) => setTrackingNumber(input.value)}
-              errorMsg={props.errorInfo?.trackingBuyer}
-            ></TextInput>
+        <div>
+          <div className="mb-6">
+            <FileInput
+              description="Input PDF (.pdf) only, max 10MB"
+              accept=".pdf"
+              name="File Upload"
+              required
+              onChange={(target) => setGoodResult(target.files[0])}
+              errorMsg={props.errorInfo?.test_result}
+            />
           </div>
-
-          <p className="mt-8 italic text-blueGray-500 text-sm leading-relaxed">
-            Note: This tracking number will be send to the buyer.
-          </p>
-        </>
+        </div>
       }
       action={
         <>
@@ -45,12 +42,12 @@ export default function VerifyOrder(props) {
           <PrimaryButton
             disabled={props.isLoading}
             size="sm"
-            onClick={handleSubmit}
+            onClick={handlerUpload}
           >
             {props.isLoading && (
               <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
             )}
-            Provide
+            Upload Receipt
           </PrimaryButton>
         </>
       }
