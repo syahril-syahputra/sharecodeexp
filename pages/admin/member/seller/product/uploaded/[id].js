@@ -64,129 +64,157 @@ export default function DetailUploadedExcel({ session, data }) {
   }
 
   return (
-    <PrimaryWrapper>
-      {data.requested_for_update && (
-        <WarningNotification
-          message="New Request From Admin"
-          detail={
-            <a
-              onClick={() => setisRequestShow(true)}
-              className="text-white text-xs block mt-1 italic underline hover:text-gray-600 cursor-pointer"
-            >
-              Show Request
-            </a>
-          }
-        ></WarningNotification>
-      )}
-      {data.requested_for_update && isRequestShow && (
-        <BaseModalMedium
-          title="Request Update From Admin"
-          onClick={() => setisRequestShow(false)}
-          body={<div>{data.requested_for_update}</div>}
-        ></BaseModalMedium>
-      )}
-      <PageHeader
-        leftTop={
-          <h3 className={'font-semibold text-lg text-blueGray-700'}>
-            Detail File Excel {data.requested_for_update}
-          </h3>
-        }
-      ></PageHeader>
-      <div>
-        <div className="flex items-center justify-center">
-          <FontAwesomeIcon
-            icon={faFileExcel}
-            className=" h-28 w-28 text-green-400 mx-auto"
-          />
-        </div>
-        <table className="w-50 text-sm text-left text-gray-500 bg-white">
-          <tbody>
-            <tr className="text-black hover:bg-slate-100">
-              <th scope="col" className="px-6 py-3">
-                File Name
-              </th>
-              <td scope="row" className="text-sm px-6 py-4">
-                :
-              </td>
-              <td className="text-sm px-2 py-4">{data.name}</td>
-            </tr>
-            <tr className="text-black hover:bg-slate-100">
-              <th scope="col" className="px-6 py-3">
-                Excel Status
-              </th>
-              <td scope="row" className="text-sm px-6 py-4">
-                :
-              </td>
-              <td className="text-sm px-2 py-4">{data.status}</td>
-            </tr>
-            <tr className="text-black hover:bg-slate-100">
-              <th scope="col" className="px-6 py-3">
-                Uploaded at
-              </th>
-              <td scope="row" className="text-sm px-6 py-4">
-                :
-              </td>
-              <td className="text-sm px-2 py-4">
-                {moment(data.created_at).format('dddd, D MMMM YYYY')}
-              </td>
-            </tr>
-            <tr className="text-black hover:bg-slate-100">
-              <th scope="col" className="px-6 py-3">
-                Last Updated at
-              </th>
-              <td scope="row" className="text-sm px-6 py-4">
-                :
-              </td>
-              <td className="text-sm px-2 py-4">
-                {moment(data.updated_at).format('dddd, D MMMM YYYY')}
-              </td>
-            </tr>
-            <tr className="text-black hover:bg-slate-100">
-              <th scope="col" className="px-6 py-3">
-                Log
-              </th>
-              <td scope="row" className="text-sm px-6 py-4">
-                :
-              </td>
-              <td className="text-sm px-2 py-4">{data.log || '-'}</td>
-            </tr>
-          </tbody>
-        </table>
-        {uploadForm ? (
-          <div className="p-4">
-            <FileInput
-              helperText="Select Excel File"
-              className="border border-gray-300"
-              id="file"
-              accept=".xls, .xlsx"
-              disabled={isOnUploading}
-              onChange={handleFileChange}
-            />
-            {isOnUploading ? (
-              <div className="flex text-gray-600 space-x-4 justify-center items-center pt-8">
-                <Spinner color="info" />
-                <span>Loading</span>
-              </div>
-            ) : (
-              <div className="flex justify-center space-x-2 pt-4">
-                <DangerButton onClick={() => setuploadForm(false)}>
-                  Cancel
-                </DangerButton>
-                <SuccessButton onClick={() => validate()}>Upload</SuccessButton>
-              </div>
-            )}
-          </div>
-        ) : (
-          data.requested_for_update && (
-            <div className="p-5">
-              <SuccessButton onClick={() => setuploadForm(true)}>
-                Upload
-              </SuccessButton>
-            </div>
-          )
+    <>
+      <PrimaryWrapper>
+        {data.requested_for_update && (
+          <WarningNotification
+            message="New Request From Admin"
+            detail={
+              <a
+                onClick={() => setisRequestShow(true)}
+                className="text-white text-xs block mt-1 italic underline hover:text-gray-600 cursor-pointer"
+              >
+                Show Request
+              </a>
+            }
+          ></WarningNotification>
         )}
-      </div>
-    </PrimaryWrapper>
+        {data.requested_for_update && isRequestShow && (
+          <BaseModalMedium
+            title="Request Update From Admin"
+            onClick={() => setisRequestShow(false)}
+            body={<div>{data.requested_for_update}</div>}
+          ></BaseModalMedium>
+        )}
+        <PageHeader
+          leftTop={
+            <h3 className={'font-semibold text-lg text-blueGray-700'}>
+              Detail File Excel {data.requested_for_update}
+            </h3>
+          }
+        ></PageHeader>
+        <div>
+          <div className="flex items-center justify-center">
+            <FontAwesomeIcon
+              icon={faFileExcel}
+              className=" h-28 w-28 text-green-400 mx-auto"
+            />
+          </div>
+          <table className="w-50 text-sm text-left text-gray-500 bg-white">
+            <tbody>
+              <tr className="text-black hover:bg-slate-100">
+                <th scope="col" className="px-6 py-3">
+                  File Name
+                </th>
+                <td scope="row" className="text-sm px-6 py-4">
+                  :
+                </td>
+                <td className="text-sm px-2 py-4">{data.name}</td>
+              </tr>
+              <tr className="text-black hover:bg-slate-100">
+                <th scope="col" className="px-6 py-3">
+                  Excel Status
+                </th>
+                <td scope="row" className="text-sm px-6 py-4">
+                  :
+                </td>
+                <td className="text-sm px-2 py-4">{data.file_status?.name}</td>
+              </tr>
+              <tr className="text-black hover:bg-slate-100">
+                <th scope="col" className="px-6 py-3">
+                  Uploaded at
+                </th>
+                <td scope="row" className="text-sm px-6 py-4">
+                  :
+                </td>
+                <td className="text-sm px-2 py-4">
+                  {moment(data.created_at).format('dddd, D MMMM YYYY')}
+                </td>
+              </tr>
+              <tr className="text-black hover:bg-slate-100">
+                <th scope="col" className="px-6 py-3">
+                  Last Updated at
+                </th>
+                <td scope="row" className="text-sm px-6 py-4">
+                  :
+                </td>
+                <td className="text-sm px-2 py-4">
+                  {moment(data.updated_at).format('dddd, D MMMM YYYY')}
+                </td>
+              </tr>
+              <tr className="text-black hover:bg-slate-100">
+                <th scope="col" className="px-6 py-3">
+                  Log
+                </th>
+                <td scope="row" className="text-sm px-6 py-4">
+                  :
+                </td>
+                <td className="text-sm px-2 py-4">{data.log || '-'}</td>
+              </tr>
+            </tbody>
+          </table>
+          {uploadForm ? (
+            <div className="p-4">
+              <FileInput
+                helperText="Select Excel File"
+                className="border border-gray-300"
+                id="file"
+                accept=".xls, .xlsx"
+                disabled={isOnUploading}
+                onChange={handleFileChange}
+              />
+              {isOnUploading ? (
+                <div className="flex text-gray-600 space-x-4 justify-center items-center pt-8">
+                  <Spinner color="info" />
+                  <span>Loading</span>
+                </div>
+              ) : (
+                <div className="flex justify-center space-x-2 pt-4">
+                  <DangerButton onClick={() => setuploadForm(false)}>
+                    Cancel
+                  </DangerButton>
+                  <SuccessButton onClick={() => validate()}>
+                    Upload
+                  </SuccessButton>
+                </div>
+              )}
+            </div>
+          ) : (
+            //   data.excel_product_file_status_id && (
+            parseInt(data.excel_product_file_status_id) === 7 && (
+              <div className="p-5">
+                <SuccessButton onClick={() => setuploadForm(true)}>
+                  Upload
+                </SuccessButton>
+              </div>
+            )
+          )}
+        </div>
+      </PrimaryWrapper>
+      <PrimaryWrapper className="p-1">
+        <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+          Event History
+        </div>
+        <ul className="space-y-2 p-2 text-sm">
+          {data.event_history?.length === 0 && (
+            <div className="text-base italic text-center p-4">
+              No Event History
+            </div>
+          )}
+          {data.event_history?.map((item) => (
+            <li key={item.id} className="flex">
+              <span className="text-cyan-700 mr-2 w-1/5 ">
+                {moment(item.updated_at).local().format('DD MMM YYYY hh:mm')}
+              </span>
+              <div>
+                <span className="font-bold">{item.description}</span>
+                {item.note && <div className="italic py-2">{item.note}</div>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </PrimaryWrapper>
+    </>
   )
 }
 async function fetchData(context, accessToken) {

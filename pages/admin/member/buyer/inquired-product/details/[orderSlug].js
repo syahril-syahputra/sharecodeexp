@@ -1009,10 +1009,8 @@ export default function InquiryDetails({ session, routeParam }) {
                 <div className="mx-2 my-1 text-sm mb-5">
                   <div className="flex flex-wrap justify-between">
                     <span className="text-orange-500 font-bold">
-                      This order is charged for test lab separately
-                    </span>
-                    <span className="text-orange-500">
-                      Check Quotation for more further
+                      This order is charged for test lab separately because
+                      total order is less than 1000US dollars
                     </span>
                   </div>
                 </div>
