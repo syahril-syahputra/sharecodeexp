@@ -166,7 +166,7 @@ const ProformaInvoice = ({ proformaInvoice }) => (
             {proformaInvoice.table_data.total}
           </Text>
         </View>
-        {!proformaInvoice.test_free && (
+        {/* {!proformaInvoice.test_free && (
           <View style={styles.tableSummary}>
             <Text style={styles.pn}></Text>
             <Text style={styles.description}></Text>
@@ -176,6 +176,32 @@ const ProformaInvoice = ({ proformaInvoice }) => (
             <Text style={styles.grandTotal}>Test LAB Fee (USD)</Text>
             <Text style={styles.grandTotal}>{proformaInvoice.test_fee}</Text>
           </View>
+        )} */}
+        {!proformaInvoice?.test_free && (
+          <>
+            <View style={styles.tableHead}>
+              <Text style={styles.descriptionFee}>Description</Text>
+              <Text style={styles.pn}></Text>
+              <Text style={styles.mfg}></Text>
+              <Text style={styles.dc}></Text>
+              <Text style={styles.qty}></Text>
+              <Text style={styles.unitPrice}></Text>
+              <Text style={styles.total}>Total (USD)</Text>
+            </View>
+            <View style={styles.tableBody}>
+              <Text style={styles.descriptionFee}>
+                {proformaInvoice?.test_fee_table_data?.description || '-'}
+              </Text>
+              <Text style={styles.pn}></Text>
+              <Text style={styles.mfg}></Text>
+              <Text style={styles.dc}></Text>
+              <Text style={styles.qty}></Text>
+              <Text style={styles.unitPrice}></Text>
+              <Text style={styles.grandTotal}>
+                {proformaInvoice?.test_fee_table_data?.test_fee || '-'}
+              </Text>
+            </View>
+          </>
         )}
         <View style={styles.tableSummary}>
           <Text style={styles.pn}></Text>
@@ -350,6 +376,12 @@ const styles = StyleSheet.create({
   },
   description: {
     width: '30%',
+    fontSize: 7,
+    padding: 2,
+    flexDirection: 'column',
+  },
+  descriptionFee: {
+    width: '50%',
     fontSize: 7,
     padding: 2,
     flexDirection: 'column',

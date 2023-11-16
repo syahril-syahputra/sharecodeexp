@@ -1,56 +1,62 @@
-import { getSession } from "next-auth/react";
-import axios from "@/lib/axios";
-import { useState, useEffect } from "react";
-import { PDFViewer } from "@react-pdf/renderer";
+import React from 'react'
+import { getSession } from 'next-auth/react'
+import axios from '@/lib/axios'
+import { useState, useEffect } from 'react'
+import { PDFViewer } from '@react-pdf/renderer'
 
-import ProformaInvoicePDFComp from "@/components/PDF/Order/ProformaInvoice"
-export default function ProformaInvoicePDF({proformaInvoice}){
+import ProformaInvoicePDFComp from '@/components/PDF/Order/ProformaInvoice'
+
+export default function ProformaInvoicePDF({ proformaInvoice }) {
   const [isClient, setIsClient] = useState(false)
   useEffect(() => {
-      setIsClient(true)
-    }, [])
-  return(
-      <>
-      { isClient ?
+    setIsClient(true)
+  }, [])
+
+  return (
+    <>
+      {isClient ? (
         <div>
           <div className="h-screen bg-gray-300 w-full grid place-items-center">
             <PDFViewer width={1000} height={750}>
-              <ProformaInvoicePDFComp proformaInvoice={proformaInvoice}/>
+              <ProformaInvoicePDFComp proformaInvoice={proformaInvoice} />
             </PDFViewer>
           </div>
         </div>
-      : 'Loading...'}
+      ) : (
+        'Loading...'
+      )}
     </>
   )
 }
 
 export async function getServerSideProps(context) {
-    const session = await getSession(context)
-    if(!session){
-        return {
-        redirect: {
-            permanent: false,
-            destination: '/admin/dashboard',
-        },
-        };
+  const session = await getSession(context)
+  if (!session) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/admin/dashboard',
+      },
     }
-    let proformaInvoice = {}
-    const response = await axios.get(`/document/order/${context.query.orderSlug}/proforma-invoice`,
-    {
-    headers: {
-        "Authorization" : `Bearer ${session.accessToken}`
-    }
+  }
+  let proformaInvoice = {}
+  const response = await axios
+    .get(`/document/order/${context.query.orderSlug}/proforma-invoice`, {
+      headers: {
+        Authorization: `Bearer ${session.accessToken}`,
+      },
     })
     .then((response) => {
-        let result = response.data.data
-        proformaInvoice = result
-    }).catch((error) => {
-        proformaInvoice = null
+      let result = response.data.data
+      proformaInvoice = result
+    })
+    .catch((error) => {
+      proformaInvoice = null
     })
 
-    return {
-        props: {
-            proformaInvoice
-        }
-    }
+  return {
+    props: {
+      proformaInvoice,
+    },
+  }
 }
