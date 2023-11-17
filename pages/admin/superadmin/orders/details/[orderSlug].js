@@ -665,7 +665,43 @@ export default function OrderDetails({ session, routeParam }) {
         </div>
       )
       break
-    case 15:
+    case 13:
+      const utcMoment = moment.utc(
+        data.arrival_estimation_to_buyer_date,
+        'YYYY-MM-DD HH:mm:ss'
+      )
+      const available = utcMoment.local()
+      const thisTime = moment()
+      if (available.isBefore(thisTime)) {
+        actionToTake = (
+          <div>
+            {completeOrderModal && (
+              <CompleteOrderModal
+                isLoading={isLoading}
+                closeModal={() => setCompleteOrderModal(false)}
+                acceptance={handleCompleteOrderModal}
+                errorInfo={errorInfo}
+              />
+            )}
+
+            <div className="flex justify-center">
+              <div className="mx-2 my-4">
+                <PrimaryButton
+                  outline
+                  className="mx-1"
+                  size="sm"
+                  disabled={isLoading}
+                  onClick={() => setCompleteOrderModal(true)}
+                >
+                  Complete Order
+                </PrimaryButton>
+              </div>
+            </div>
+          </div>
+        )
+      }
+      break
+    case 14:
       actionToTake = (
         <div>
           {completeOrderModal && (
@@ -1269,11 +1305,12 @@ export default function OrderDetails({ session, routeParam }) {
                 <div className="mx-2 my-1 text-sm mb-5">
                   <div className="flex flex-wrap justify-between">
                     <span className="text-orange-500 font-bold">
-                      This order is charged for test lab separately
+                      This order is charged for test lab separately because
+                      total order is less than 1000US dollars
                     </span>
-                    <span className="text-orange-500">
+                    {/* <span className="text-orange-500">
                       Check Quotation for more further
-                    </span>
+                    </span> */}
                   </div>
                 </div>
               )}
@@ -1398,7 +1435,7 @@ export default function OrderDetails({ session, routeParam }) {
                     )}
                   </div>
                 </div>
-                <div className="mx-2 mt-1 text-sm">
+                {/* <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Proforma Invoice for Seller</span>
                     {data.proforma_invoice_available == 1 ? (
@@ -1413,7 +1450,7 @@ export default function OrderDetails({ session, routeParam }) {
                       <span className="underline text-gray-500">view</span>
                     )}
                   </div>
-                </div>
+                </div> */}
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Buyer's Invoice</span>
@@ -1520,35 +1557,37 @@ export default function OrderDetails({ session, routeParam }) {
               </div>
               {actionToTake}
             </PrimaryWrapper>
-            {data.order_status_id !== '20' && data.order_status_id !== '21' && (
-              <PrimaryWrapper className="p-1">
-                <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                  Terminate Order
-                </div>
-                <div className="flex flex-col space-y-4 items-center p-4 justify-center">
-                  {terminateOrderModal && (
-                    <TerminateOrder
-                      isLoading={isLoading}
-                      closeModal={() => setterminateOrderModal(false)}
-                      acceptance={terminateOrderHandler}
-                      errorInfo={errorInfo}
-                    />
-                  )}
-                  <div className="text-center text-sm text-red-500">
-                    Please click the button below to cancel the order
-                  </div>
-                  <DangerButton
-                    outline
-                    className="mx-1"
-                    size="sm"
-                    disabled={isLoading}
-                    onClick={() => setterminateOrderModal(true)}
-                  >
+            {parseInt(data.order_status_id) !== 20 &&
+              parseInt(data.order_status_id) !== 21 &&
+              parseInt(data.order_status_id) !== 15 && (
+                <PrimaryWrapper className="p-1">
+                  <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                     Terminate Order
-                  </DangerButton>
-                </div>
-              </PrimaryWrapper>
-            )}
+                  </div>
+                  <div className="flex flex-col space-y-4 items-center p-4 justify-center">
+                    {terminateOrderModal && (
+                      <TerminateOrder
+                        isLoading={isLoading}
+                        closeModal={() => setterminateOrderModal(false)}
+                        acceptance={terminateOrderHandler}
+                        errorInfo={errorInfo}
+                      />
+                    )}
+                    <div className="text-center text-sm text-red-500">
+                      Please click the button below to cancel the order
+                    </div>
+                    <DangerButton
+                      outline
+                      className="mx-1"
+                      size="sm"
+                      disabled={isLoading}
+                      onClick={() => setterminateOrderModal(true)}
+                    >
+                      Terminate Order
+                    </DangerButton>
+                  </div>
+                </PrimaryWrapper>
+              )}
 
             <PrimaryWrapper className="p-1">
               <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">

@@ -3,6 +3,7 @@ import { Alert, Button, Modal, Spinner } from 'flowbite-react'
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import DangerButton from '@/components/Interface/Buttons/DangerButton'
+
 export default function ExcelComponent(props) {
   const [isOpenConfirmDelete, setIsOpenConfirmDelete] = props.show
   const [isDeleting, setisDeleting] = props.delete
@@ -19,6 +20,7 @@ export default function ExcelComponent(props) {
       setisDeleting(false)
     }
   }
+
   return (
     <Modal
       show={isOpenConfirmDelete}

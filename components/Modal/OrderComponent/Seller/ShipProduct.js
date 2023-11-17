@@ -8,39 +8,47 @@ import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
 import { useSession } from 'next-auth/react'
 import axios from '@/lib/axios'
+import FileInput from '@/components/Interface/Form/FileInput'
 
 export default function ShipProduct(props) {
   const [trackingNumber, setTrackingNumber] = useState('')
   const [courier, setcourier] = useState('')
   const { data: session } = useSession()
-  const [isDownloadedProformaInvoice, setisDownloadedProformaInvoice] =
+  const [isDownloadedPurchaseOrder, setisDownloadedPurchaseOrder] =
     useState(false)
   const [isDownloadedPackingList, setisDownloadedPackingList] = useState(false)
-  const [isLoadingProformaInvoice, setisLoadingProformaInvoice] =
-    useState(false)
+  const [isLoadingPurchaseOrder, setisLoadingPurchaseOrder] = useState(false)
   const [isLoadingPackingList, setisLoadingPackingList] = useState(false)
+  const [file, setFile] = useState(null)
 
   const handleSubmit = () => {
-    if (isDownloadedPackingList && isDownloadedProformaInvoice) {
-      props.acceptance(
-        trackingNumber,
-        courier,
-        isDownloadedProformaInvoice,
-        isDownloadedPackingList
-      )
-    } else {
+    if (!isDownloadedPackingList || !isDownloadedPurchaseOrder) {
       toast.error(
-        'Please check if you have downloaded Invoice Proformance and Packing List',
+        'Please check if you have downloaded Purchase Order and Packing List',
         toastOptions
       )
+
+      return
     }
+    if (!file) {
+      toast.error('Please select invoice file', toastOptions)
+
+      return
+    }
+    props.acceptance(
+      trackingNumber,
+      courier,
+      isDownloadedPurchaseOrder,
+      isDownloadedPackingList,
+      file.files[0]
+    )
   }
 
-  const openProformaInvoice = async () => {
+  const openPurchaseOrder = async () => {
     try {
-      setisLoadingProformaInvoice(true)
+      setisLoadingPurchaseOrder(true)
       await axios.post(
-        `/seller/order/verification-action/open-proforma-invoice`,
+        `/seller/order/verification-action/open-purchase-order`,
         {
           order_slug: props.orderSlug,
         },
@@ -50,11 +58,11 @@ export default function ShipProduct(props) {
           },
         }
       )
-      window.open(`pdf/proforma-invoice/${props.orderSlug}`, '_blank')
+      window.open(`pdf/purchase-order//${props.orderSlug}`, '_blank')
     } catch (error) {
       toast.error(error.data.message, toastOptions)
     } finally {
-      setisLoadingProformaInvoice(false)
+      setisLoadingPurchaseOrder(false)
     }
   }
   const openPackingList = async () => {
@@ -105,20 +113,31 @@ export default function ShipProduct(props) {
                   errorMsg={props.errorInfo?.trackingSeller}
                 />
               </div>
+              <div className="w-full px-3  border-b border-gray-300 pb-4">
+                <FileInput
+                  label="Invoice"
+                  description="Input PDF (.pdf) only, max 10MB"
+                  accept=".pdf"
+                  name="File Upload"
+                  required
+                  onChange={(target) => setFile(target)}
+                  //   errorMsg={['disabled', 'second error']}
+                />
+              </div>
               <div className="flex space-x-4 px-4">
                 <SecondaryButton
-                  onClick={openProformaInvoice}
+                  onClick={openPurchaseOrder}
                   size="sm"
                   disabled={
-                    isLoadingProformaInvoice ||
-                    props.proformaInvoiceAvailable === '0'
+                    isLoadingPurchaseOrder ||
+                    props.purchaseOrderAvailable === '0'
                   }
                   outline
                 >
-                  {isLoadingProformaInvoice && (
+                  {isLoadingPurchaseOrder && (
                     <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                   )}
-                  Open Proforma Invoice
+                  Open Purchase Invoice
                 </SecondaryButton>
                 <SecondaryButton
                   onClick={openPackingList}
@@ -139,21 +158,19 @@ export default function ShipProduct(props) {
                 <li className="item-center flex space-x-2">
                   <input
                     type="checkbox"
-                    checked={isDownloadedProformaInvoice}
-                    id="downloadProformaInvoice"
-                    name="downloadProformaInvoice
+                    checked={isDownloadedPurchaseOrder}
+                    id="downloadPurchaseOrder"
+                    name="downloadPurchaseOrder
 "
                     onChange={() =>
-                      setisDownloadedProformaInvoice(
-                        !isDownloadedProformaInvoice
-                      )
+                      setisDownloadedPurchaseOrder(!isDownloadedPurchaseOrder)
                     }
                   />
                   <label
-                    htmlFor="downloadProformaInvoice"
+                    htmlFor="downloadPurchaseOrder"
                     className="ml-2 text-sm font-medium text-gray-900"
                   >
-                    Downloaded Proforma Invoice
+                    Downloaded Purchase Order
                   </label>
                 </li>
                 <li className="item-center flex space-x-2">
