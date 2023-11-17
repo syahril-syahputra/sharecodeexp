@@ -81,7 +81,8 @@ export default function ProductManagement({ product, excel }) {
                   'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                 )}
               >
-                Uploaded Excel File <PrimaryBadges title={excel.uploaded} />
+                Uploaded Excel File
+                <PrimaryBadges title={excel?.uploaded} />
               </Link>
               <Link
                 href="/admin/member/seller/product/add"
