@@ -6,7 +6,7 @@ import { Disclosure } from '@headlessui/react'
 import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import PrimaryBadges from '@/components/Interface/Badges/PrimaryBadges'
 
-export default function ProductManagement({ product }) {
+export default function ProductManagement({ product, excel }) {
   return (
     <li>
       <Disclosure as="div">
@@ -82,6 +82,7 @@ export default function ProductManagement({ product }) {
                 )}
               >
                 Uploaded Excel File
+                <PrimaryBadges title={excel?.uploaded} />
               </Link>
               <Link
                 href="/admin/member/seller/product/add"

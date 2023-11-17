@@ -23,7 +23,10 @@ export default function MainSidebar() {
         return (
           <>
             <Registry registry={adminSidebarCounter.registry} />
-            <ProductManagement product={adminSidebarCounter.product} />
+            <ProductManagement
+              product={adminSidebarCounter.product}
+              excel={adminSidebarCounter.excel_file}
+            />
             <Order order={adminSidebarCounter.order} />
             <Reimbursement reimbursement={adminSidebarCounter.order} />
           </>
@@ -33,7 +36,12 @@ export default function MainSidebar() {
       case '3':
         return <Registry registry={adminSidebarCounter.registry} />
       case '4':
-        return <ProductManagement product={adminSidebarCounter.product} />
+        return (
+          <ProductManagement
+            product={adminSidebarCounter.product}
+            excel={adminSidebarCounter.excel_file}
+          />
+        )
       case '5':
         return <Order order={adminSidebarCounter.order} />
       case '6':
