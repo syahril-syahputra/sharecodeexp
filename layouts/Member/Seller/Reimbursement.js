@@ -49,7 +49,7 @@ export default function Reimbursement({ reimbursement }) {
                   'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                 )}
               >
-                Closed Order
+                Returned
                 <PrimaryBadges title={reimbursement?.returned || 0} />
               </Link>
             </Disclosure.Panel>
