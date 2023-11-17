@@ -38,24 +38,33 @@ export default function QuotationRejected({ session }) {
     page = 1,
     orderNumberParam = '',
     manufacturerPartNumberParam = '',
-    orderDateParam = ''
+    orderDateParam = '',
+    orderActionRequiredParam = false
   ) => {
     setPageNumber(page)
     setIsLoading(true)
-    const response = await axios
-      .get(
-        '/seller/order/list' +
+    const actionRequired =
+      orderActionRequiredParam === false
+        ? '/seller/order/list' +
           `?page=${page}` +
           `&status=quotation-rejected` +
           `&order_number=${orderNumberParam}` +
           `&manufacturer_part_number=${manufacturerPartNumberParam}` +
-          `&order_date=${orderDateParam}`,
-        {
-          headers: {
-            Authorization: `Bearer ${session?.accessToken}`,
-          },
-        }
-      )
+          `&order_date=${orderDateParam}`
+        : '/seller/order/list' +
+          `?page=${page}` +
+          `&status=quotation-rejected` +
+          `&order_number=${orderNumberParam}` +
+          `&manufacturer_part_number=${manufacturerPartNumberParam}` +
+          `&order_date=${orderDateParam}` +
+          `&action_required=${true}`
+
+    await axios
+      .get(actionRequired, {
+        headers: {
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+      })
       .then((response) => {
         let result = response.data.data
         setData(result.data)
@@ -77,7 +86,13 @@ export default function QuotationRejected({ session }) {
       })
   }
   const handleSearchData = () => {
-    loadData(1, orderNumber, manufacturerPartNumber, orderDate)
+    loadData(
+      1,
+      orderNumber,
+      manufacturerPartNumber,
+      orderDate,
+      stateActionRequired
+    )
   }
   const router = useRouter()
   const handleResetSearchFilter = () => {

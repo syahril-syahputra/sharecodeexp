@@ -40,9 +40,7 @@ export default function Reimbursement({ reimbursement }) {
                 )}
               >
                 Cancelled Order
-                <PrimaryBadges
-                  title={reimbursement?.reimbursement_active || 0}
-                />
+                <PrimaryBadges title={reimbursement?.cancelled_order || 0} />
               </Link>
               <Link
                 href="/admin/member/seller/returned-product/closed-order"
@@ -52,9 +50,7 @@ export default function Reimbursement({ reimbursement }) {
                 )}
               >
                 Closed Order
-                <PrimaryBadges
-                  title={reimbursement?.reimbursement_complete || 0}
-                />
+                <PrimaryBadges title={reimbursement?.returned || 0} />
               </Link>
             </Disclosure.Panel>
           </>
