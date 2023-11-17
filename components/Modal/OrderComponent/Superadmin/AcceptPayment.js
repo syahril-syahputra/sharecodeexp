@@ -1,3 +1,4 @@
+import React from 'react'
 import { useState } from 'react'
 import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
 import LightButton from '@/components/Interface/Buttons/LightButton'
@@ -45,6 +46,7 @@ export default function AcceptPayment(props) {
       setisLoadingOpenReceipt(false)
     }
   }
+
   return (
     <BaseModalMedium
       title="Accept Payment"

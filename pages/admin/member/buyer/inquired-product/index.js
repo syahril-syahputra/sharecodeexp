@@ -51,6 +51,7 @@ export default function InquiredProduct({ session, routeParam }) {
     value: '',
   })
   const [orderNumber, setOrderNumber] = useState('')
+  const [stateActionRequired, setStateActionRequired] = useState(false)
   const [manufacturerPartNumber, setManufacturerPartNumber] = useState('')
   const [orderDate, setOrderDate] = useState('')
   const loadData = async (
@@ -58,25 +59,35 @@ export default function InquiredProduct({ session, routeParam }) {
     orderStatusParam = orderStatusFromRoute ? orderStatusFromRoute : '',
     orderNumberParam = '',
     manufacturerPartNumberParam = '',
-    orderDateParam = ''
+    orderDateParam = '',
+    NumberActionRequired = false
   ) => {
     setPageNumber(page)
     setIsLoading(true)
-    const response = await axios
-      .get(
-        '/buyer/order/list' +
+    const actionRequired =
+      NumberActionRequired === false
+        ? '/buyer/order/list' +
           `?page=${page}` +
           `&status=${orderStatusParam}` +
           `&order_number=${orderNumberParam}` +
           `&manufacturer_part_number=${manufacturerPartNumberParam}` +
           `&order_date=${orderDateParam}` +
-          `&active=1`,
-        {
-          headers: {
-            Authorization: `Bearer ${session?.accessToken}`,
-          },
-        }
-      )
+          `&active=1
+        `
+        : '/buyer/order/list' +
+          `?page=${page}` +
+          `&status=${orderStatusParam}` +
+          `&order_number=${orderNumberParam}` +
+          `&manufacturer_part_number=${manufacturerPartNumberParam}` +
+          `&order_date=${orderDateParam}` +
+          `&active=1` +
+          `&action_required=${true}`
+    await axios
+      .get(actionRequired, {
+        headers: {
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+      })
       .then((response) => {
         let result = response.data.data
         setData(result.data)
@@ -103,7 +114,8 @@ export default function InquiredProduct({ session, routeParam }) {
       orderStatus?.value,
       orderNumber,
       manufacturerPartNumber,
-      orderDate
+      orderDate,
+      stateActionRequired
     )
   }
   const router = useRouter()
@@ -119,6 +131,7 @@ export default function InquiredProduct({ session, routeParam }) {
     setManufacturerPartNumber('')
     setOrderNumber('')
     setOrderDate('')
+    setStateActionRequired(false)
     loadData()
   }
   const setPage = (pageNumber) => {
@@ -167,6 +180,23 @@ export default function InquiredProduct({ session, routeParam }) {
                 onChange={(target) => setOrderDate(target.value)}
                 placeholder="Order Date"
               ></TextInput>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 mt-6">
+            <div className="text-center items-center flex space-x-2">
+              <input
+                type="checkbox"
+                checked={stateActionRequired}
+                id="stateActionRequired"
+                onChange={(e) => setStateActionRequired(!stateActionRequired)}
+              />
+              <label
+                htmlFor="stateActionRequired"
+                className="ml-2 text-sm font-medium text-gray-900"
+              >
+                Action Require
+              </label>
             </div>
           </div>
 

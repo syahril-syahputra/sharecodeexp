@@ -710,6 +710,16 @@ export default function InquiryDetails({ session, routeParam }) {
               </div>
             </PrimaryWrapper>
           </div>
+          <div className="w-1/2 lg:w-1/3 mr-4">
+            <PrimaryWrapper className="p-1">
+              <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
+                Courier
+              </div>
+              <div className="mx-2 mb-5 text-xl">
+                {checkValue(data.seller_courier)}
+              </div>
+            </PrimaryWrapper>
+          </div>
         </div>
 
         {/* product info and quotation */}
