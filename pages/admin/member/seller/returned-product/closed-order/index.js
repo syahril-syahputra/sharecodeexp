@@ -23,7 +23,7 @@ export default function ReimbursementActive({ session, routerParam }) {
   })
   const [pageNumber, setPageNumber] = useState('')
   const [orderStatus, setOrderStatus] = useState({
-    label: 'Reimbursement Closed',
+    label: 'Closed Order',
     value: '',
   })
 
@@ -132,9 +132,9 @@ export default function ReimbursementActive({ session, routerParam }) {
 
   return (
     <div className="mb-10">
-      <h1 className="font-semibold text-2xl">Reimbursement Closed</h1>
+      <h1 className="font-semibold text-2xl">Closed Order</h1>
       <PrimaryWrapper className={`mt-5 p-5`}>
-        <h2 className="text-xl text-center">Search Closed Reimbursement</h2>
+        <h2 className="text-xl text-center">Search Closed Order</h2>
         <div className="grid grid-cols-2 gap-3 mt-2">
           <div className="text-center">
             <TextInput

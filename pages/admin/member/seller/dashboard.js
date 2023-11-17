@@ -142,10 +142,10 @@ export default function SellerDashboard({ session }) {
             <h1 className="font-semibold text-7xl mb-3">
               {data.reimbursement_active}
             </h1>
-            <span className="text-md italic">Reimbursement Active</span>
+            <span className="text-md italic">Cancelled Order</span>
           </div>
           <Link
-            href={`${VendorUrl.sellingProduct.reimbursement_active_completed.active.index}`}
+            href={`${VendorUrl.sellingProduct.returnedProduct.active.index}`}
             className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
           >
             <div className="">

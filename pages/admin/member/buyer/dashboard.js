@@ -19,7 +19,7 @@ export default function BuyerDashboard({ session }) {
     ongoing_test: 0,
     order_ready_to_pick: 0,
     confirm_receipt_of_shipment: 0,
-    reimbursement: 0,
+    reimbursement_active: 0,
   })
   const loadData = async () => {
     setIsLoading(true)
@@ -161,12 +161,12 @@ export default function BuyerDashboard({ session }) {
         <PrimaryWrapper className="border border-blue-500">
           <div className="p-4 mb-auto">
             <h1 className="font-semibold text-7xl mb-3">
-              {data.reimbursement || 0}
+              {data.reimbursement_active || 0}
             </h1>
-            <span className="text-md italic">Reimbursement Active</span>
+            <span className="text-md italic">Cancelled Order</span>
           </div>
           <Link
-            href={`${VendorUrl.reimbursement.active.index}`}
+            href={`${VendorUrl.reimbursement.canceledOrder.index}`}
             className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
           >
             <div className="">

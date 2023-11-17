@@ -1106,7 +1106,8 @@ export default function InquiryDetails({ session, routeParam }) {
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Buyer&lsquo;s Invoice</span>
-                    {data.buyer_invoice_available == 1 ? (
+                    {/* {data.buyer_invoice_available == 1 ? ( */}
+                    {data.admin_reimbursement_receipt_path ? (
                       <Link
                         target="_blank"
                         href={`pdf/buyer-invoice/${data.slug}`}
