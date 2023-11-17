@@ -24,7 +24,9 @@ export default function MainSidebar() {
               excel={sellerSidebarCounter.excel_file}
             />
             <IncomingInquiries order={sellerSidebarCounter.order} />
-            <Reimbursement reimbursement={sellerSidebarCounter?.order} />
+            <Reimbursement
+              reimbursement={sellerSidebarCounter?.returned_product}
+            />
           </ul>
         </li>
       </ul>
