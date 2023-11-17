@@ -117,7 +117,7 @@ export default function TableProduct(props) {
                       />
                     </td>
                     <td className="text-sm px-6 py-4">
-                      {moment(data.created_at).format('dddd, D MMMM YYYY')}
+                      {moment(item.created_at).format('dddd, D MMMM YYYY')}
                     </td>
                     <td className="text-sm px-6 py-4 text-right">
                       <div className="inline-flex">

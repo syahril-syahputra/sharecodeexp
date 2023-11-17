@@ -149,7 +149,8 @@ export default function InquiryDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot send tracking number to buyer.',
+          //   'Something went wrong. Cannot send tracking number to buyer.',
+          error.data.message,
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -826,7 +827,7 @@ export default function InquiryDetails({ session, routeParam }) {
                   <div className="mx-2 text-md">
                     {!isLoading ? (
                       data.order_date ? (
-                        moment(data.created_at).format('dddd, D MMMM YYYY')
+                        moment(data.order_date).format('dddd, D MMMM YYYY')
                       ) : (
                         '-'
                       )
@@ -996,9 +997,7 @@ export default function InquiryDetails({ session, routeParam }) {
                     Total Price (USD)
                   </span>
                   {!isLoading ? (
-                    <span>
-                      ${data.order_price_amount?.grand_total || 0}
-                    </span>
+                    <span>${data.order_price_amount?.grand_total || 0}</span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -1010,10 +1009,8 @@ export default function InquiryDetails({ session, routeParam }) {
                 <div className="mx-2 my-1 text-sm mb-5">
                   <div className="flex flex-wrap justify-between">
                     <span className="text-orange-500 font-bold">
-                      This order is charged for test lab separately
-                    </span>
-                    <span className="text-orange-500">
-                      Check Quotation for more further
+                      This order is charged for test lab separately because
+                      total order is less than 1000US dollars
                     </span>
                   </div>
                 </div>
@@ -1107,6 +1104,7 @@ export default function InquiryDetails({ session, routeParam }) {
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Buyer&lsquo;s Invoice</span>
+                    {/* {data.admin_reimbursement_receipt_path ? ( */}
                     {data.buyer_invoice_available == 1 ? (
                       <Link
                         target="_blank"

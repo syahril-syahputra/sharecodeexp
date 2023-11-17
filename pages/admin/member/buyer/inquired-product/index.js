@@ -51,6 +51,7 @@ export default function InquiredProduct({ session, routeParam }) {
     value: '',
   })
   const [orderNumber, setOrderNumber] = useState('')
+  const [stateActionRequired, setStateActionRequired] = useState(false)
   const [manufacturerPartNumber, setManufacturerPartNumber] = useState('')
   const [orderDate, setOrderDate] = useState('')
   const loadData = async (
@@ -58,25 +59,35 @@ export default function InquiredProduct({ session, routeParam }) {
     orderStatusParam = orderStatusFromRoute ? orderStatusFromRoute : '',
     orderNumberParam = '',
     manufacturerPartNumberParam = '',
-    orderDateParam = ''
+    orderDateParam = '',
+    NumberActionRequired = false
   ) => {
     setPageNumber(page)
     setIsLoading(true)
-    const response = await axios
-      .get(
-        '/buyer/order/list' +
+    const actionRequired =
+      NumberActionRequired === false
+        ? '/buyer/order/list' +
           `?page=${page}` +
           `&status=${orderStatusParam}` +
           `&order_number=${orderNumberParam}` +
           `&manufacturer_part_number=${manufacturerPartNumberParam}` +
           `&order_date=${orderDateParam}` +
-          `&active=1`,
-        {
-          headers: {
-            Authorization: `Bearer ${session?.accessToken}`,
-          },
-        }
-      )
+          `&active=1
+        `
+        : '/buyer/order/list' +
+          `?page=${page}` +
+          `&status=${orderStatusParam}` +
+          `&order_number=${orderNumberParam}` +
+          `&manufacturer_part_number=${manufacturerPartNumberParam}` +
+          `&order_date=${orderDateParam}` +
+          `&active=1` +
+          `&action_required=${true}`
+    await axios
+      .get(actionRequired, {
+        headers: {
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+      })
       .then((response) => {
         let result = response.data.data
         setData(result.data)
@@ -103,9 +114,15 @@ export default function InquiredProduct({ session, routeParam }) {
       orderStatus?.value,
       orderNumber,
       manufacturerPartNumber,
-      orderDate
+      orderDate,
+      stateActionRequired
     )
   }
+
+  const handleOnlyActionRequired = () => {
+    loadData(stateActionRequired)
+  }
+
   const router = useRouter()
   const handleResetSearchFilter = () => {
     if (orderStatusFromRoute) {
@@ -119,6 +136,7 @@ export default function InquiredProduct({ session, routeParam }) {
     setManufacturerPartNumber('')
     setOrderNumber('')
     setOrderDate('')
+    setStateActionRequired(false)
     loadData()
   }
   const setPage = (pageNumber) => {
@@ -167,6 +185,27 @@ export default function InquiredProduct({ session, routeParam }) {
                 onChange={(target) => setOrderDate(target.value)}
                 placeholder="Order Date"
               ></TextInput>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 mt-6">
+            <div className="text-center items-center flex space-x-2">
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={stateActionRequired}
+                  className="sr-only peer"
+                  id="stateActionRequired"
+                  onChange={(e) => {
+                    setStateActionRequired(!stateActionRequired)
+                    handleSearchData()
+                  }}
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                  Action Require{' '}
+                </span>
+              </label>
             </div>
           </div>
 

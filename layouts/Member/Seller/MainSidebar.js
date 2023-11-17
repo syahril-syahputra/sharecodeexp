@@ -19,9 +19,14 @@ export default function MainSidebar() {
       <ul role="list" className="flex flex-1 flex-col gap-y-7">
         <li>
           <ul role="list" className="-mx-2 space-y-1">
-            <ProductManagement product={sellerSidebarCounter.product} />
+            <ProductManagement
+              product={sellerSidebarCounter.product}
+              excel={sellerSidebarCounter.excel_file}
+            />
             <IncomingInquiries order={sellerSidebarCounter.order} />
-            <Reimbursement reimbursement={sellerSidebarCounter?.order} />
+            <Reimbursement
+              reimbursement={sellerSidebarCounter?.returned_product}
+            />
           </ul>
         </li>
       </ul>

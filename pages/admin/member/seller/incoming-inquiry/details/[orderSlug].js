@@ -28,6 +28,7 @@ import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import WarningNotification from '@/components/Interface/Notification/WarningNotification'
 import InfoNotification from '@/components/Interface/Notification/InfoNotification'
 import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
+import calculateDayDifference from '@/lib/calculateDayDifference'
 
 export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -37,10 +38,10 @@ export default function InquiryDetails({ session, routeParam }) {
   const [isOrderValid, setIsOrderValid] = useState(true)
 
   const [isLoadingPackingList, setisLoadingPackingList] = useState(false)
-  const [isLoadingProformaInvoice, setisLoadingProformaInvoice] =
-    useState(false)
+  const [isLoadingPurchaseOrder, setisLoadingPurchaseOrder] = useState(false)
 
   const [courierModal, setcourierModal] = useState(false)
+
   const handlelCourierDetailsModal = (courier) => {
     setIsLoading(true)
     setErrorInfo({})
@@ -63,18 +64,19 @@ export default function InquiryDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot send tracking number to buyer.',
+          //   'Something went wrong. Cannot send tracking number to buyer.',
+          error.data.message,
           toastOptions
         )
         setErrorInfo(error.data.data)
         setIsLoading(false)
       })
   }
-  const openProformaInvoice = async () => {
+  const openPurchaseOrder = async () => {
     try {
-      setisLoadingProformaInvoice(true)
+      setisLoadingPurchaseOrder(true)
       await axios.post(
-        `/seller/order/verification-action/open-proforma-invoice`,
+        `/seller/order/verification-action/open-purchase-order`,
         {
           order_slug: data.slug,
         },
@@ -87,8 +89,8 @@ export default function InquiryDetails({ session, routeParam }) {
     } catch (error) {
       toast.error(error.data.message, toastOptions)
     } finally {
-      window.open(`pdf/proforma-invoice/${data.slug}`, '_blank')
-      setisLoadingProformaInvoice(false)
+      window.open(`pdf/purchase-order/${data.slug}`, '_blank')
+      setisLoadingPurchaseOrder(false)
     }
   }
   const openPackingList = async () => {
@@ -269,27 +271,25 @@ export default function InquiryDetails({ session, routeParam }) {
   const shipProductHanlde = async (
     trackingNumber,
     courier,
-    isDownloadedPerformaInvoice,
-    isDownloadedPackingList
+    isDownloadedPurchaseOrder,
+    isDownloadedPackingList,
+    invoice
   ) => {
     setIsLoading(true)
     setErrorInfo({})
+    let formData = new FormData()
+    formData.append('order_slug', data.slug)
+    formData.append('trackingSeller', trackingNumber)
+    formData.append('courier', courier)
+    formData.append('download_packing_list', isDownloadedPackingList)
+    formData.append('download_purchase_order', isDownloadedPurchaseOrder)
+    formData.append('seller_invoice', invoice)
     const response = await axios
-      .post(
-        `/seller/order/shipping-product`,
-        {
-          order_slug: data.slug,
-          trackingSeller: trackingNumber,
-          courier: courier,
-          download_packing_list: isDownloadedPackingList,
-          download_proforma_invoice: isDownloadedPerformaInvoice,
+      .post(`/seller/order/shipping-product`, formData, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${session.accessToken}`,
-          },
-        }
-      )
+      })
       .then((response) => {
         toast.success(response.data.message, toastOptions)
         setShipProductModal(false)
@@ -357,13 +357,13 @@ export default function InquiryDetails({ session, routeParam }) {
     case 13:
     case 14:
     case 16:
-      notification = (
-        <PrimaryNotification
-          message={data.order_status?.name}
-          detail={data.order_status?.seller_notification?.message}
-        ></PrimaryNotification>
-      )
-      break
+    //   notification = (
+    //     <PrimaryNotification
+    //       message={data.order_status?.name}
+    //       detail={data.order_status?.seller_notification?.message}
+    //     ></PrimaryNotification>
+    //   )
+    //   break
     case 3:
     case 12:
     case 15:
@@ -513,7 +513,7 @@ export default function InquiryDetails({ session, routeParam }) {
               isLoading={isLoading}
               closeModal={() => setShipProductModal(false)}
               acceptance={shipProductHanlde}
-              proformaInvoiceAvailable={data.proforma_invoice_available}
+              purchaseOrderAvailable={data.purchase_order_available}
               sellerPackingListAvailable={data.seller_packing_list_available}
               orderSlug={data.slug}
               errorInfo={errorInfo}
@@ -536,35 +536,73 @@ export default function InquiryDetails({ session, routeParam }) {
         </div>
       )
       break
-    case 14:
-      // upload invoice
-      actionToTake = (
-        <div>
-          {uploadInvoiceModal && (
-            <UploadInvoiceModal
-              isLoading={isLoading}
-              closeModal={() => setUploadInvoiceModal(false)}
-              acceptance={uploadInvoiceHandler}
-              errorInfo={errorInfo}
-            />
-          )}
+    // case 13:
+    //   const utcMoment = moment.utc(
+    //     data.arrival_estimation_to_buyer_date,
+    //     'YYYY-MM-DD HH:mm:ss'
+    //   )
+    //   const available = utcMoment.local()
+    //   const thisTime = moment()
+    //   if (available.isBefore(thisTime)) {
+    //     actionToTake = (
+    //       <div>
+    //         {uploadInvoiceModal && (
+    //           <UploadInvoiceModal
+    //             isLoading={isLoading}
+    //             closeModal={() => setUploadInvoiceModal(false)}
+    //             acceptance={uploadInvoiceHandler}
+    //             errorInfo={errorInfo}
+    //           />
+    //         )}
 
-          <div className="flex justify-center">
-            <div className="mx-2 my-4">
-              <PrimaryButton
-                outline
-                className="mx-1"
-                size="sm"
-                disabled={isLoading}
-                onClick={() => setUploadInvoiceModal(true)}
-              >
-                Upload Invoice
-              </PrimaryButton>
-            </div>
-          </div>
-        </div>
-      )
-      break
+    //         <div className="flex justify-center">
+    //           {/* <div>{calculateDayDifference(data.invoice_date)}</div> */}
+    //           <div>{}</div>
+    //           <div className="mx-2 my-4">
+    //             <PrimaryButton
+    //               outline
+    //               className="mx-1"
+    //               size="sm"
+    //               disabled={isLoading}
+    //               onClick={() => setUploadInvoiceModal(true)}
+    //             >
+    //               Upload Invoice
+    //             </PrimaryButton>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     )
+    //   }
+    //   break
+    // case 14:
+    //   // upload invoice
+    //   actionToTake = (
+    //     <div>
+    //       {uploadInvoiceModal && (
+    //         <UploadInvoiceModal
+    //           isLoading={isLoading}
+    //           closeModal={() => setUploadInvoiceModal(false)}
+    //           acceptance={uploadInvoiceHandler}
+    //           errorInfo={errorInfo}
+    //         />
+    //       )}
+
+    //       <div className="flex justify-center">
+    //         <div className="mx-2 my-4">
+    //           <PrimaryButton
+    //             outline
+    //             className="mx-1"
+    //             size="sm"
+    //             disabled={isLoading}
+    //             onClick={() => setUploadInvoiceModal(true)}
+    //           >
+    //             Upload Invoice
+    //           </PrimaryButton>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   )
+    //   break
     case 17:
       actionToTake = (
         <div>
@@ -689,7 +727,7 @@ export default function InquiryDetails({ session, routeParam }) {
                   Tracking Number Return Shipment
                 </div>
                 <div className="mx-2 mb-5 text-xl">
-                  {checkValue(data.seller_return_tracking_number)}
+                  {checkValue(data?.seller_return_tracking_number)}
                 </div>
               </PrimaryWrapper>
             </div>
@@ -796,7 +834,7 @@ export default function InquiryDetails({ session, routeParam }) {
                   <div className="mx-2 text-md">
                     {!isLoading ? (
                       data.order_date ? (
-                        moment(data.created_at).format('dddd, D MMMM YYYY')
+                        moment(data.order_date).format('dddd, D MMMM YYYY')
                       ) : (
                         '-'
                       )
@@ -911,12 +949,7 @@ export default function InquiryDetails({ session, routeParam }) {
                     Total Price (USD)
                   </span>
                   {!isLoading ? (
-                    <span>
-                      $
-                      {data.price
-                        ? parseFloat(data.price) * parseInt(data.qty)
-                        : ''}
-                    </span>
+                    <span>${data.order_price_amount || 0}</span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -963,6 +996,7 @@ export default function InquiryDetails({ session, routeParam }) {
                   )}
                 </div>
               </div>
+
               <div className="mb-5">
                 <div className="mx-2 mt-1 text-sm">
                   <span className="text-gray-500">Exepart</span>
@@ -971,13 +1005,17 @@ export default function InquiryDetails({ session, routeParam }) {
                   <div className="flex flex-wrap justify-between">
                     <span>Purchase Order</span>
                     {data.purchase_order_available == 1 ? (
-                      <Link
-                        target="_blank"
-                        href={`pdf/purchase-order/${data.slug}`}
-                        className="underline text-blue-500"
+                      <label
+                        onClick={openPurchaseOrder}
+                        className={
+                          'underline ' +
+                          (isLoadingPurchaseOrder
+                            ? 'text-blue-300 cursor-wait'
+                            : 'text-blue-500 cursor-pointer')
+                        }
                       >
-                        view
-                      </Link>
+                        {isLoadingPurchaseOrder ? 'loading' : 'view'}
+                      </label>
                     ) : (
                       <span className="underline text-gray-500">view</span>
                     )}
@@ -1003,7 +1041,7 @@ export default function InquiryDetails({ session, routeParam }) {
                     )}
                   </div>
                 </div>
-                <div className="mx-2 mt-1 text-sm">
+                {/* <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Proforma Invoice</span>
                     {data.proforma_invoice_available == 1 ? (
@@ -1022,7 +1060,7 @@ export default function InquiryDetails({ session, routeParam }) {
                       <span className="underline text-gray-500">view</span>
                     )}
                   </div>
-                </div>
+                </div> */}
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Test Result</span>

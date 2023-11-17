@@ -66,12 +66,12 @@ export const VendorUrl = {
       index: '/admin/member/seller/incoming-inquiry',
       detail: '/admin/member/seller/incoming-inquiry/detail',
     },
-    reimbursement_active_completed: {
+    returnedProduct: {
       active: {
-        index: '/admin/member/seller/reimbursement/active',
+        index: '/admin/member/seller/returned-product/cancelled-order',
       },
       completed: {
-        index: '/admin/member/seller/reimbursement/completed',
+        index: '/admin/member/seller/returned-product/corser-order',
       },
     },
   },
@@ -85,7 +85,7 @@ export const VendorUrl = {
     },
   },
   reimbursement: {
-    active: {
+    canceledOrder: {
       index: '/admin/member/buyer/reimbursement/active',
     },
     completed: {
