@@ -163,7 +163,7 @@ export default function BuyerDashboard({ session }) {
             <h1 className="font-semibold text-7xl mb-3">
               {data.reimbursement_active || 0}
             </h1>
-            <span className="text-md italic">Cancelled Order</span>
+            <span className="text-md italic">Reimbursement Active</span>
           </div>
           <Link
             href={`${VendorUrl.reimbursement.canceledOrder.index}`}

@@ -86,10 +86,10 @@ export const VendorUrl = {
   },
   reimbursement: {
     canceledOrder: {
-      index: '/admin/member/buyer/returned-product/cancelled-order',
+      index: '/admin/member/buyer/reimbursement/active',
     },
     completed: {
-      index: '/admin/member/buyer/returned-product/completed',
+      index: '/admin/member/buyer/reimbursement/completed',
     },
   },
   // sellingComponent: {
