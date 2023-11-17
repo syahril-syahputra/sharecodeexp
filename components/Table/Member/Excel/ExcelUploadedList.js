@@ -17,6 +17,7 @@ import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
 import { Dialog, Transition } from '@headlessui/react'
 import { Button, Modal, Spinner } from 'flowbite-react'
 import axios from 'lib/axios'
+
 export default function TableExcel(props) {
   const data = props.data
   const links = props.links
@@ -66,7 +67,9 @@ export default function TableExcel(props) {
                     <td scope="row" className="text-sm px-6 py-4">
                       {item.name}
                     </td>
-                    <td className="text-sm px-6 py-4">{item.status}</td>
+                    <td className="text-sm px-6 py-4">
+                      {item.file_status?.name}
+                    </td>
                     <td className="text-sm px-6 py-4">
                       {moment(item.created_at).format('dddd, D MMMM YYYY')}
                     </td>
