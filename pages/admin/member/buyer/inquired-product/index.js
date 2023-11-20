@@ -26,7 +26,7 @@ export default function InquiredProduct({ session, routeParam }) {
   let orderStatusFromRoute = routeParam
   const [orderStatusOptions, setOrderStatusOption] = useState([])
   const loadOrderStatusOption = async () => {
-    const request = await axios
+    await axios
       .get(`/allstatus?is_closed=0&reimbursement=0`)
       .then((response) => {
         let res = response.data.data

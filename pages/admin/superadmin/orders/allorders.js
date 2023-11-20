@@ -53,30 +53,43 @@ export default function FindByStatusOrder({ session, routeParam }) {
   const [orderNumber, setOrderNumber] = useState('')
   const [manufacturerPartNumber, setManufacturerPartNumber] = useState('')
   const [orderDate, setOrderDate] = useState('')
+  const [stateActionRequired, setStateActionRequired] = useState(false)
   const loadData = async (
     page = 1,
     orderStatusParam = orderStatusFromRoute ? orderStatusFromRoute : '',
     orderNumberParam = '',
     manufacturerPartNumberParam = '',
-    orderDateParam = ''
+    orderDateParam = '',
+    NumberActionRequired = false
   ) => {
     setPageNumber(page)
     setIsLoading(true)
-    await axios
-      .get(
-        '/admin/orders/list' +
+
+    const actionRequired =
+      NumberActionRequired === false
+        ? '/admin/orders/list' +
           `?page=${page}` +
           `&status=${orderStatusParam}` +
           `&order_number=${orderNumberParam}` +
           `&manufacturer_part_number=${manufacturerPartNumberParam}` +
           `&order_date=${orderDateParam}` +
-          `&active=1`,
-        {
-          headers: {
-            Authorization: `Bearer ${session.accessToken}`,
-          },
-        }
-      )
+          `&active=1` +
+          `&action_required=${false}`
+        : '/admin/orders/list' +
+          `?page=${page}` +
+          `&status=${orderStatusParam}` +
+          `&order_number=${orderNumberParam}` +
+          `&manufacturer_part_number=${manufacturerPartNumberParam}` +
+          `&order_date=${orderDateParam}` +
+          `&active=1` +
+          `&action_required=${true}`
+
+    await axios
+      .get(actionRequired, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      })
       .then((response) => {
         let result = response.data.data
         setData(result.data)
@@ -186,7 +199,7 @@ export default function FindByStatusOrder({ session, routeParam }) {
           data={data}
           links={links}
           metaData={metaData}
-        ></OrderList>
+        />
       </div>
     </>
   )
