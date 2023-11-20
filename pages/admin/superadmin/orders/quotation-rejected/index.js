@@ -30,15 +30,18 @@ export default function QuotationRejected({ session }) {
   const [orderNumber, setOrderNumber] = useState('')
   const [manufacturerPartNumber, setManufacturerPartNumber] = useState('')
   const [orderDate, setOrderDate] = useState('')
+  const [stateActionRequired, setStateActionRequired] = useState(false)
+
   const loadData = async (
     page = 1,
     orderNumberParam = '',
     manufacturerPartNumberParam = '',
-    orderDateParam = ''
+    orderDateParam = '',
+    orderActionRequiredParam = false
   ) => {
     setPageNumber(page)
     setIsLoading(true)
-    const response = await axios
+    await axios
       .get(
         '/admin/orders/list' +
           `?page=${page}` +
