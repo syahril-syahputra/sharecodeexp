@@ -33,7 +33,7 @@ export default function ApprovedCompany({ session }) {
     setIsLoading(true)
     const response = await axios
       .get(
-        `/admin/company/allowed?page=${page}&status=accepted&search=${searchParam}`,
+        `/admin/company/restricted?page=${page}&status=accepted&search=${searchParam}`,
         {
           headers: {
             Authorization: `Bearer ${session.accessToken}`,
@@ -80,7 +80,7 @@ export default function ApprovedCompany({ session }) {
           <MiniSearchBar searchItem={handleSearch} />
         </div>
         <CompanyList
-          title="Approved Company"
+          title="Restricted Company"
           setPage={setPage}
           isLoading={isLoading}
           data={data}
