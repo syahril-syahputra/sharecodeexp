@@ -1,4 +1,5 @@
 import React from 'react'
+
 export function Tooltip({ children, tooltipText }) {
   const tipRef = React.createRef(null)
   function handleMouseEnter() {
@@ -9,6 +10,7 @@ export function Tooltip({ children, tooltipText }) {
     tipRef.current.style.opacity = 0
     tipRef.current.style.marginLeft = '10px'
   }
+
   return (
     <div
       className="relative flex items-center"

@@ -60,13 +60,12 @@ export default function FindByStatusOrder({ session, routeParam }) {
     orderNumberParam = '',
     manufacturerPartNumberParam = '',
     orderDateParam = '',
-    NumberActionRequired = false
+    orderActionRequiredParam = false
   ) => {
     setPageNumber(page)
     setIsLoading(true)
-
     const actionRequired =
-      NumberActionRequired === false
+      orderActionRequiredParam === false
         ? '/admin/orders/list' +
           `?page=${page}` +
           `&status=${orderStatusParam}` +
@@ -83,7 +82,6 @@ export default function FindByStatusOrder({ session, routeParam }) {
           `&order_date=${orderDateParam}` +
           `&active=1` +
           `&action_required=${true}`
-
     await axios
       .get(actionRequired, {
         headers: {
@@ -116,7 +114,8 @@ export default function FindByStatusOrder({ session, routeParam }) {
       orderStatus?.value,
       orderNumber,
       manufacturerPartNumber,
-      orderDate
+      orderDate,
+      stateActionRequired
     )
   }
   const router = useRouter()
@@ -132,6 +131,7 @@ export default function FindByStatusOrder({ session, routeParam }) {
     setManufacturerPartNumber('')
     setOrderNumber('')
     setOrderDate('')
+    setStateActionRequired(false)
     loadData()
   }
   const setPage = (pageNumber) => {
@@ -142,6 +142,10 @@ export default function FindByStatusOrder({ session, routeParam }) {
     loadData()
     loadOrderStatusOption()
   }, [])
+
+  useEffect(() => {
+    handleSearchData()
+  }, [stateActionRequired])
 
   return (
     <>
@@ -182,7 +186,26 @@ export default function FindByStatusOrder({ session, routeParam }) {
               ></TextInput>
             </div>
           </div>
-
+          <div className="grid grid-cols-2 gap-3 mt-6">
+            <div className="text-center items-center flex space-x-2">
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={stateActionRequired}
+                  className="sr-only peer"
+                  id="stateActionRequired"
+                  onChange={(e) => {
+                    setStateActionRequired(!stateActionRequired)
+                    // handleSearchData()
+                  }}
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                  Action Required{' '}
+                </span>
+              </label>
+            </div>
+          </div>
           <div className="mt-10 text-center">
             <PrimaryButton onClick={handleSearchData} className="w-1/2 mr-2">
               Search

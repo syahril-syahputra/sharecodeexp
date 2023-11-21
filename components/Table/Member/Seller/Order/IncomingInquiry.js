@@ -20,6 +20,9 @@ export default function IncomingInquiry(props) {
           header={
             <>
               <th scope="col" className="px-6 py-3">
+                Action Required
+              </th>
+              <th scope="col" className="px-6 py-3">
                 Order Number
               </th>
               <th scope="col" className="px-6 py-3">
@@ -56,6 +59,18 @@ export default function IncomingInquiry(props) {
                     key={index}
                     className="bg-white border-b hover:bg-gray-50"
                   >
+                    <td scope="row" className="text-sm px-6 py-4">
+                      {item?.order_status?.seller_to_act ? (
+                        <span className="relative animate-ping center inline-flex">
+                          <i
+                            className="fa-solid fa-circle fa-2xs"
+                            style={{
+                              color: 'rgb(249 115 22)',
+                            }}
+                          ></i>
+                        </span>
+                      ) : undefined}
+                    </td>
                     <td scope="row" className="text-sm px-6 py-4">
                       {checkValue(item.order_number)}
                     </td>

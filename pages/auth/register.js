@@ -946,7 +946,6 @@ export default function Index() {
                               type="file"
                               required
                               onChange={({ target }) => {
-                                formikProps.handleChange(target)
                                 formikProps.setFieldValue(
                                   'company_CertificationofActivity',
                                   target?.files[0]

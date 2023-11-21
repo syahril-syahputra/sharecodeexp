@@ -157,7 +157,7 @@ export default function EmailVerify({ session }) {
 
   return (
     <Fragment>
-      <IndexNavbar fixed hideLogin={true} emailVerification={true} />
+      <IndexNavbar fixed hideLogin={false} emailVerification={true} />
       <section className="relative py-14 overflow-hidden h-3/6 ">
         <div className="container mx-auto mt-10 xs:pb-10 xs:pt-8 px-4">
           {dialogState ? (
@@ -178,7 +178,8 @@ export default function EmailVerify({ session }) {
                 <div className="flex justify-center border w-1/2 flex-col mx-auto  py-12">
                   {verified ? (
                     <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
-                      Your email has been verified, please wait you will redirect to dashboard.
+                      Your email has been verified, please wait you will
+                      redirect to dashboard.
                     </h3>
                   ) : (
                     <>
@@ -235,12 +236,13 @@ async function fetchUser(context, accessToken) {
 }
 export async function getServerSideProps(context) {
   const session = await getSession(context)
-  const result = await fetchUser(context, session.accessToken)
+  // const accessToken = session?.accessToken
+  // const result = await fetchUser(context, accessToken)
 
   return {
     props: {
       session,
-      data: result.data.data,
+      // data: result.data.data,
     },
   }
 }

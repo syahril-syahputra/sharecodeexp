@@ -52,7 +52,8 @@ export default function OrderComplete({ session }) {
           `&status=order-completed` +
           `&order_number=${orderNumberParam}` +
           `&manufacturer_part_number=${manufacturerPartNumberParam}` +
-          `&order_date=${orderDateParam}`
+          `&order_date=${orderDateParam}` +
+          `&action_required=${false}`
         : '/buyer/order/list' +
           `?page=${page}` +
           `&status=order-completed` +
