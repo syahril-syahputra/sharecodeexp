@@ -3,7 +3,7 @@ import { Fragment, useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
 import classNames from '@/utils/classNames'
 import GlobalContext from '@/store/global-context'
-import { useSession, signOut } from 'next-auth/react'
+import React, { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
 import { Menu, Transition } from '@headlessui/react'
@@ -35,6 +35,7 @@ function TopNavigation({ setSidebarOpen, role }) {
   useEffect(() => {
     loadUsername(session.data.accessToken)
   }, [])
+
   return (
     <>
       <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
@@ -115,36 +116,40 @@ function TopNavigation({ setSidebarOpen, role }) {
                       )}
                     </Menu.Item>
                   ))}
-                  {session.data.user.dashboardStatus === 'seller' && (
-                    <Menu.Item>
-                      {({ active }) => (
-                        <span
-                          onClick={() => switchToBuyer(true)}
-                          className={classNames(
-                            active ? 'bg-gray-50' : '',
-                            'cursor-pointer block px-3 py-1 text-sm leading-6 text-gray-900'
-                          )}
-                        >
-                          Switch to Buyer
-                        </span>
-                      )}
-                    </Menu.Item>
-                  )}
-                  {session.data.user.dashboardStatus === 'buyer' && (
-                    <Menu.Item>
-                      {({ active }) => (
-                        <span
-                          onClick={() => switchToSeller(true)}
-                          className={classNames(
-                            active ? 'bg-gray-50' : '',
-                            'cursor-pointer block px-3 py-1 text-sm leading-6 text-gray-900'
-                          )}
-                        >
-                          Switch to Seller
-                        </span>
-                      )}
-                    </Menu.Item>
-                  )}
+                  {session.data.user.dashboardStatus === 'seller' &&
+                    !session.data.user.userDetail.company
+                      .buying_restriction && (
+                      <Menu.Item>
+                        {({ active }) => (
+                          <span
+                            onClick={() => switchToBuyer(true)}
+                            className={classNames(
+                              active ? 'bg-gray-50' : '',
+                              'cursor-pointer block px-3 py-1 text-sm leading-6 text-gray-900'
+                            )}
+                          >
+                            Switch to Buyer
+                          </span>
+                        )}
+                      </Menu.Item>
+                    )}
+                  {session.data.user.dashboardStatus === 'buyer' &&
+                    !session.data.user.userDetail.company
+                      .selling_restriction && (
+                      <Menu.Item>
+                        {({ active }) => (
+                          <span
+                            onClick={() => switchToSeller(true)}
+                            className={classNames(
+                              active ? 'bg-gray-50' : '',
+                              'cursor-pointer block px-3 py-1 text-sm leading-6 text-gray-900'
+                            )}
+                          >
+                            Switch to Seller
+                          </span>
+                        )}
+                      </Menu.Item>
+                    )}
                   <Menu.Item>
                     {({ active }) => (
                       <span

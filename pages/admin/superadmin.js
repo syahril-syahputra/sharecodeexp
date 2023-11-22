@@ -185,15 +185,14 @@ export default function SuperadminDashboard({ session, message }) {
               <ComponentCardAdminDashboard
                 dataName={data?.excel_product_file?.uploaded_file}
                 url={'/admin/superadmin/product/uploaded'}
-                name={'Uploaded File'}
+                name={'New File Uploaded'}
               />
-              {/*
-               IN PRogress not completed yet
-                `<ComponentCardAdminDashboard
+
+              <ComponentCardAdminDashboard
                 dataName={data?.excel_product_file?.in_progress}
                 url={'/admin/superadmin/product/pending'}
-                name={'Pending Product Approval'}
-              /> */}
+                name={'File In Progress'}
+              />
             </div>
             <hr className="border-gray-500 my-4" />
             <h1 className="font-normal text-2xl mb-3 mt-4">Orders</h1>

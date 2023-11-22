@@ -32,6 +32,7 @@ import { useContext } from 'react'
 import GlobalContext from '@/store/global-context'
 import { Tooltip } from '@/components/Tooltip'
 import SuccessButton from '@/components/Interface/Buttons/SuccessButton'
+import classNames from '@/utils/classNames'
 
 export default function CompanyDetail({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -456,7 +457,31 @@ export default function CompanyDetail({ session, routeParam }) {
               Main Email - {companyData.master_user?.email}
             </div>
 
-            <div className="mt-10 py-5 border-t border-blueGray-200 text-center">
+            <div className=" capitalize mt-10 font-bold space-y-4 py-5 border-t border-blueGray-200 text-center">
+              <div
+                className={classNames(
+                  companyData.buying_restriction
+                    ? 'text-red-500'
+                    : 'text-green-600'
+                )}
+              >
+                {companyData.buying_restriction
+                  ? 'Company cannot buy'
+                  : 'Company can buy'}
+              </div>
+              <div
+                className={classNames(
+                  companyData.selling_restriction
+                    ? 'text-red-500'
+                    : 'text-green-600'
+                )}
+              >
+                {companyData.selling_restriction
+                  ? 'Company cannot sell'
+                  : 'Companies can sell'}
+              </div>
+            </div>
+            <div className=" py-5 border-t border-blueGray-200 text-center">
               <div className="flex flex-wrap justify-center mt-5">
                 <div className="w-full lg:w-9/12 px-4 mb-3">
                   <Link
@@ -501,22 +526,8 @@ export default function CompanyDetail({ session, routeParam }) {
             <div className="mt-10 py-5 border-t border-blueGray-200 text-center">
               <div className="flex flex-wrap justify-center mt-5">
                 <div className="w-full lg:w-9/12 px-4 space-x-4">
-                  {companyData.buying_restriction ? (
+                  {!companyData.buying_restriction ? (
                     <DangerButton
-                      size="sm"
-                      className="font-bold"
-                      disabled={isLoadingBuyingg}
-                      onClick={() => updateBuyinggHandler(false)}
-                    >
-                      {isLoadingBuyingg ? (
-                        <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
-                      ) : (
-                        <i className="mr-2 fas fa-times text-white"></i>
-                      )}
-                      Disable Buying
-                    </DangerButton>
-                  ) : (
-                    <SuccessButton
                       size="sm"
                       className="font-bold"
                       disabled={isLoadingBuyingg}
@@ -527,25 +538,25 @@ export default function CompanyDetail({ session, routeParam }) {
                       ) : (
                         <i className="mr-2 fas fa-times text-white"></i>
                       )}
-                      Enable Buying
-                    </SuccessButton>
-                  )}
-                  {companyData.selling_restriction ? (
-                    <DangerButton
-                      size="sm"
-                      className="font-bold"
-                      disabled={isLoadingSelling}
-                      onClick={() => updateSellingHandler(false)}
-                    >
-                      {isLoadingSelling ? (
-                        <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
-                      ) : (
-                        <i className="mr-2 fas fa-times text-white"></i>
-                      )}
-                      Disable Selling
+                      DISABLE BUYING
                     </DangerButton>
                   ) : (
                     <SuccessButton
+                      size="sm"
+                      className="font-bold"
+                      disabled={isLoadingBuyingg}
+                      onClick={() => updateBuyinggHandler(false)}
+                    >
+                      {isLoadingBuyingg ? (
+                        <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
+                      ) : (
+                        <i className="mr-2 fas fa-check text-white"></i>
+                      )}
+                      ENABLE BUYING
+                    </SuccessButton>
+                  )}
+                  {!companyData.selling_restriction ? (
+                    <DangerButton
                       size="sm"
                       className="font-bold"
                       disabled={isLoadingSelling}
@@ -556,7 +567,21 @@ export default function CompanyDetail({ session, routeParam }) {
                       ) : (
                         <i className="mr-2 fas fa-times text-white"></i>
                       )}
-                      Enable Selling
+                      DISABLE SELLING
+                    </DangerButton>
+                  ) : (
+                    <SuccessButton
+                      size="sm"
+                      className="font-bold"
+                      disabled={isLoadingSelling}
+                      onClick={() => updateSellingHandler(false)}
+                    >
+                      {isLoadingSelling ? (
+                        <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
+                      ) : (
+                        <i className="mr-2 fas fa-check text-white"></i>
+                      )}
+                      ENABLE SELLING
                     </SuccessButton>
                   )}
                   <DangerButton

@@ -153,7 +153,7 @@ export default function MemberDashboard({ company, message, session }) {
                     className="m-2"
                     size="lg"
                     outline
-                    disabled={company.buying_restriction !== '0'}
+                    disabled={company.buying_restriction}
                     onClick={() => handleDashboard('buyer')}
                   >
                     Buyer
@@ -162,11 +162,15 @@ export default function MemberDashboard({ company, message, session }) {
                     className="m-2"
                     size="lg"
                     outline
-                    disabled={company.selling_restriction !== '0'}
+                    disabled={company.selling_restriction}
                     onClick={() => handleDashboard('seller')}
                   >
                     Seller
                   </PrimaryButton>
+                </div>
+                <div className="flex items-center justify-center space-x-4 font-bold text-red-500 py-4">
+                  {company.buying_restriction && <span>You Cannot Buy</span>}
+                  {company.selling_restriction && <span>You Cannot Sell</span>}
                 </div>
               </div>
             </PrimaryWrapper>

@@ -65,7 +65,28 @@ export default function SellerDashboard({ session }) {
             <h1 className="font-semibold text-7xl mb-3">
               {data.excel_product_file.update_request}
             </h1>
-            <span className="text-md italic">Updated Request</span>
+            <span className="text-md italic">New File Uploaded</span>
+          </div>
+          <Link
+            href={`${VendorUrl.sellingProduct.incomingInquiries.index}/?orderStatus=inquiry-sent`}
+            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
+          >
+            <div className="">
+              <h1 className="text-md text-white">Check Now</h1>
+            </div>
+            <div className="">
+              <span className="text-md">
+                <i className="fas fa-chevron-right text-white"></i>
+              </span>
+            </div>
+          </Link>
+        </PrimaryWrapper>
+        <PrimaryWrapper className="border border-blue-500">
+          <div className="p-4 mb-auto">
+            <h1 className="font-semibold text-7xl mb-3">
+              {data.excel_product_file.in_progress}
+            </h1>
+            <span className="text-md italic">File In Progress</span>
           </div>
           <Link
             href={`${VendorUrl.sellingProduct.incomingInquiries.index}/?orderStatus=inquiry-sent`}
@@ -153,9 +174,9 @@ export default function SellerDashboard({ session }) {
         <PrimaryWrapper className="border border-blue-500">
           <div className="p-4 mb-auto">
             <h1 className="font-semibold text-7xl mb-3">
-              {data.order.upload_invoice || 0}
+              {data.order.waiting_for_payment || 0}
             </h1>
-            <span className="text-md italic">Orders Need Invoice</span>
+            <span className="text-md italic">Waiting For Payment</span>
           </div>
           <Link
             href={`${VendorUrl.sellingProduct.incomingInquiries.index}/?orderStatus=product-accepted`}
@@ -174,9 +195,9 @@ export default function SellerDashboard({ session }) {
         <PrimaryWrapper className="border border-blue-500">
           <div className="p-4 mb-auto">
             <h1 className="font-semibold text-7xl mb-3">
-              {data.order.reimbursement_active || 0}
+              {data.order.bad_test_result || 0}
             </h1>
-            <span className="text-md italic">Cancelled Order</span>
+            <span className="text-md italic">Bad Test Result</span>
           </div>
           <Link
             href={`${VendorUrl.sellingProduct.returnedProduct.active.index}`}
