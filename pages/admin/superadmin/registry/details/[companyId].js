@@ -46,7 +46,7 @@ export default function CompanyDetail({ session, routeParam }) {
   const updateSellingHandler = async (value) => {
     try {
       setisLoadingSelling(true)
-      await axios.post(
+      const result = await axios.post(
         'admin/company/update-single-restriction-company',
         {
           company_id: companyData.id,
@@ -59,7 +59,7 @@ export default function CompanyDetail({ session, routeParam }) {
           },
         }
       )
-      toast.success('Company has been accepted successfully.', toastOptions)
+      toast.success(result.data.message, toastOptions)
     } catch (error) {
       toast.error('Something went wrong.', toastOptions)
     } finally {
@@ -72,7 +72,7 @@ export default function CompanyDetail({ session, routeParam }) {
   const updateBuyinggHandler = async (value) => {
     try {
       setisLoadingBuyingg(true)
-      await axios.post(
+      const result = await axios.post(
         'admin/company/update-single-restriction-company',
         {
           company_id: companyData.id,
@@ -85,7 +85,7 @@ export default function CompanyDetail({ session, routeParam }) {
           },
         }
       )
-      toast.success('Company has been accepted successfully.', toastOptions)
+      toast.success(result.data.message, toastOptions)
     } catch (error) {
       toast.error('Something went wrong.', toastOptions)
     } finally {

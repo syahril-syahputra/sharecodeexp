@@ -109,7 +109,7 @@ export default function SuperadminDashboard({ session, message }) {
           <div className="grid grid-cols-4 gap-4 mt-5">
             <ComponentCardAdminDashboard
               dataName={data?.product_management?.pending_product}
-              url={'/admin/superadmin/registry/uploadedcompany'}
+              url={'/admin/superadmin/product/pending'}
               name={'Pending Product Approval'}
             />
           </div>
@@ -190,7 +190,7 @@ export default function SuperadminDashboard({ session, message }) {
 
               <ComponentCardAdminDashboard
                 dataName={data?.excel_product_file?.in_progress}
-                url={'/admin/superadmin/product/pending'}
+                url={'/admin/superadmin/product/uploaded'}
                 name={'File In Progress'}
               />
             </div>

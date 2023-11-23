@@ -18,6 +18,8 @@ import TextInput from '@/components/Interface/Form/TextInput'
 import SelectInput from '@/components/Interface/Form/SelectInput'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import CountrySelector from '@/components/Shared/CountrySelector'
+import CompanyListRestricted from '@/components/Table/Superadmin/Registry/CompanyListRestricted'
+import RegistrySearch from '@/components/Shared/RegistrySearch'
 
 export default function ApprovedCompany({ session }) {
   //data search
@@ -44,8 +46,8 @@ export default function ApprovedCompany({ session }) {
           `page=${page}` +
           `&status=accepted` +
           `&name=${name}` +
-          `&country=${country}` +
-          `&sector=${sector}`,
+          `&country=${country.value || ''}` +
+          `&sector=${sector.value || ''}`,
         {
           headers: {
             Authorization: `Bearer ${session.accessToken}`,
@@ -85,60 +87,19 @@ export default function ApprovedCompany({ session }) {
   const [sector, setsector] = useState('')
   const [country, setcountry] = useState('')
 
-  const handleSearchData = () => {
-    searchData(pageNumber, name, country.value, sector)
-  }
-  const handleResetSearchFilter = () => {
-    setname('')
-    setsector('')
-    setcountry('')
-    searchData()
-  }
-
   return (
     <>
       <div className="mb-10">
-        <PrimaryWrapper className={`mt-5 p-5`}>
-          <h2 className="text-xl text-center">Search Restricted Registry</h2>
-          <div className="grid grid-cols-2 gap-3 mt-2">
-            <div className="text-center">
-              <TextInput
-                title="Nam"
-                value={name}
-                onChange={(target) => setname(target.value)}
-                placeholder="Order Number"
-              ></TextInput>
-            </div>
-            <div className="text-center">
-              <TextInput
-                value={sector}
-                onChange={(target) => setsector(target.value)}
-                placeholder="Insert Sector"
-              ></TextInput>
-            </div>
-          </div>
-          <div className="text-center  mt-4">
-            <CountrySelector
-              setInisiate
-              disabled={isLoading}
-              name="country"
-              placeholder="Select Country"
-              value={country}
-              onChange={(value) => setcountry(value)}
-              // errorMsg={errorInfo.country}
-            />
-          </div>
-
-          <div className="mt-10 text-center">
-            <PrimaryButton onClick={handleSearchData} className="w-1/2 mr-2">
-              Search
-            </PrimaryButton>
-            <InfoButton onClick={handleResetSearchFilter} className="w-1/6">
-              Reset
-            </InfoButton>
-          </div>
-        </PrimaryWrapper>
-        <CompanyList
+        <RegistrySearch
+          title="Search Restricted Registry"
+          registryName={[name, setname]}
+          registryCountry={[country, setcountry]}
+          registrySector={[sector, setsector]}
+          search={() => searchData(pageNumber, name, country, sector)}
+          reset={() => searchData()}
+          isLoading={isLoading}
+        />
+        <CompanyListRestricted
           title="Restricted Company"
           setPage={setPage}
           isLoading={isLoading}
