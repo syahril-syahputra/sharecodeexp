@@ -14,7 +14,14 @@ export default function TextInputDocument(props) {
           {props.label}
         </label>
 
-        <div className="p-5 border-dashed border-2 border-indigo-200">
+        <div
+          className={classNames(
+            props.errorMsg || props.helperText
+              ? 'border-red-500'
+              : 'border-indigo-200',
+            `p-5 border-dashed border-2`
+          )}
+        >
           <div className="grid gap-4 lg:grid-cols-2 md:grid-cols-1">
             <div className="text-center my-auto">
               <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl" />
@@ -27,6 +34,7 @@ export default function TextInputDocument(props) {
                 value={props.value}
                 accept=".pdf"
                 onChange={props.onChange}
+                required={props.required || false}
                 onKeyDown={props.onKeyDown}
                 className={classNames(
                   props.errorMsg || props.helperText
@@ -38,7 +46,7 @@ export default function TextInputDocument(props) {
             </div>
           </div>
         </div>
-        {props.errorMsg && <ErrorInput errors={props.company_img} />}
+        {props.errorMsg && <ErrorInput errors={props.errorMsg} />}
         {props.helperText && (
           <span className="mt-2 text-md italic block text-red-500">
             {props.helperText}

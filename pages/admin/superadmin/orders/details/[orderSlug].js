@@ -1547,6 +1547,23 @@ export default function OrderDetails({ session, routeParam }) {
                     )}
                   </div>
                 </div>
+                {/*  */}
+                <div className="mx-2 mt-1 text-sm">
+                  <div className="flex flex-wrap justify-between">
+                    <span>Receipt of Reimbursement</span>
+                    {data.admin_reimbursement_receipt_path ? (
+                      <Link
+                        target="_blank"
+                        href={publicDir + data.admin_reimbursement_receipt_path}
+                        className="underline text-blue-500"
+                      >
+                        view
+                      </Link>
+                    ) : (
+                      <span className="underline text-gray-500">view</span>
+                    )}
+                  </div>
+                </div>
               </div>
             </PrimaryWrapper>
           </div>

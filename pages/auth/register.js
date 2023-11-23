@@ -171,6 +171,12 @@ export default function Index() {
         }
       )
       .notRequired(),
+    company_CertificationofActivity: Yup.mixed().required(
+      'The Field of Certification of Activity is required'
+    ),
+    company_RegistrationDocument: Yup.mixed().required(
+      'The Field of Company Registration Document is required'
+    ),
   })
 
   const [, setRegistrationInfo] = useState({
@@ -227,6 +233,7 @@ export default function Index() {
   const [stateTOCSale, setStateTOCSale] = useState(false)
   const [stateTOCExport, setStateTOCExport] = useState(false)
   const handleSubmit = async (values) => {
+    setIsLoading(true)
     const payload = {
       name: values.name,
       email: values.email,
@@ -268,7 +275,6 @@ export default function Index() {
     // }
     setErrorMessage(null)
     setErrorInfo(null)
-    setIsLoading(true)
 
     await axios
       .post('/registration', payload, {
@@ -909,8 +915,7 @@ export default function Index() {
                               )}
                             </div> */}
                             <TextInputDocument
-                              label="                                Company Registration Document
-                            "
+                              label="Company Registration Document"
                               id="company_RegistrationDocument"
                               name="company_RegistrationDocument"
                               className=""
@@ -922,14 +927,24 @@ export default function Index() {
                                 )
                               }}
                               errorMsg={errorInfo?.company_RegistrationDocument}
+                              error={
+                                formikProps.touched
+                                  .company_RegistrationDocument &&
+                                Boolean(errors.company_RegistrationDocument)
+                              }
+                              helperText={
+                                formikProps.touched
+                                  .company_RegistrationDocument &&
+                                errors.company_RegistrationDocument
+                              }
                             />
                             <TextInputDocument
-                              label="                                                              Certification of Activity
-                                "
+                              label="Certification of Activity"
                               id="company_CertificationofActivity"
                               name="company_CertificationofActivity"
                               className=""
                               type="file"
+                              required
                               onChange={({ target }) => {
                                 formikProps.setFieldValue(
                                   'company_CertificationofActivity',
@@ -938,6 +953,16 @@ export default function Index() {
                               }}
                               errorMsg={
                                 errorInfo?.company_CertificationofActivity
+                              }
+                              error={
+                                formikProps.touched
+                                  .company_CertificationofActivity &&
+                                Boolean(errors.company_CertificationofActivity)
+                              }
+                              helperText={
+                                formikProps.touched
+                                  .company_CertificationofActivity &&
+                                errors.company_CertificationofActivity
                               }
                             />
 
@@ -1057,6 +1082,7 @@ export default function Index() {
                         <div className="text-center">
                           <div className="mt-5">
                             <PrimaryButton
+                              disabled={isLoading}
                               type="submit"
                               className="w-full md:w-6/12 font-bold uppercase"
                             >
