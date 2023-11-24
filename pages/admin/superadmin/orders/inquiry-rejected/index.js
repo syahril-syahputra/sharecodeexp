@@ -45,28 +45,21 @@ export default function InquiryRejected({ session }) {
   ) => {
     setPageNumber(page)
     setIsLoading(true)
-    const actionRequired =
-      orderActionRequiredParam === false
-        ? '/admin/orders/list' +
-          `?page=${page}` +
-          `&status=inquiry-rejected` +
-          `&order_number=${orderNumberParam}` +
-          `&manufacturer_part_number=${manufacturerPartNumberParam}` +
-          `&order_date=${orderDateParam}` +
-          `&action_required=${false}`
-        : '/admin/orders/list' +
-          `?page=${page}` +
-          `&status=inquiry-rejected` +
-          `&order_number=${orderNumberParam}` +
-          `&manufacturer_part_number=${manufacturerPartNumberParam}` +
-          `&order_date=${orderDateParam}` +
-          `&action_required=${true}`
     await axios
-      .get(actionRequired, {
-        headers: {
-          Authorization: `Bearer ${session?.accessToken}`,
-        },
-      })
+      .get(
+        '/admin/orders/list' +
+          `?page=${page}` +
+          `&status=inquiry-rejected` +
+          `&order_number=${orderNumberParam}` +
+          `&manufacturer_part_number=${manufacturerPartNumberParam}` +
+          `&order_date=${orderDateParam}` +
+          `&action_required=${orderActionRequiredParam}`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+        }
+      )
       .then((response) => {
         let result = response.data.data
         setData(result.data)
