@@ -1,3 +1,4 @@
+import React from 'react'
 import Link from 'next/link'
 import classNames from '@/utils/classNames'
 
@@ -71,6 +72,16 @@ export default function Registry({ registry }) {
               >
                 Rejected
                 <PrimaryBadges title={registry.rejected} />
+              </Link>
+              <Link
+                href="/admin/superadmin/registry/restrictedcompany"
+                className={classNames(
+                  false ? 'bg-gray-50' : 'hover:bg-gray-50',
+                  'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
+                )}
+              >
+                Restricted
+                <PrimaryBadges title={registry.restricted} />
               </Link>
             </Disclosure.Panel>
           </>

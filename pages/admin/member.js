@@ -124,12 +124,12 @@ export default function MemberDashboard({ company, message, session }) {
         {/* {company.is_confirmed == "accepted" &&
           <PrimaryWrapper>
             <div className="text-center pb-10 pt-10">
-              <img className="object-contain mb-3 h-40 mx-auto" 
+              <img className="object-contain mb-3 h-40 mx-auto"
                 alt={company.name}
                 src={publicDir + "/companies_images/" + company.img}/>
               <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
                 {company.name}
-                <CompanyStatusesIcon status={company.is_confirmed}/>                
+                <CompanyStatusesIcon status={company.is_confirmed}/>
               </h3>
             </div>
           </PrimaryWrapper>
@@ -153,6 +153,7 @@ export default function MemberDashboard({ company, message, session }) {
                     className="m-2"
                     size="lg"
                     outline
+                    disabled={company.buying_restriction}
                     onClick={() => handleDashboard('buyer')}
                   >
                     Buyer
@@ -161,10 +162,19 @@ export default function MemberDashboard({ company, message, session }) {
                     className="m-2"
                     size="lg"
                     outline
+                    disabled={company.selling_restriction}
                     onClick={() => handleDashboard('seller')}
                   >
                     Seller
                   </PrimaryButton>
+                </div>
+                <div className="flex items-center justify-center space-x-4 font-bold text-red-500 py-4">
+                  {company.buying_restriction && (
+                    <span>Restricted for Buying</span>
+                  )}
+                  {company.selling_restriction && (
+                    <span>Restricted for Selling</span>
+                  )}
                 </div>
               </div>
             </PrimaryWrapper>

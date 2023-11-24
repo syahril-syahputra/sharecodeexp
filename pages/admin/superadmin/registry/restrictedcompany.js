@@ -18,14 +18,11 @@ import TextInput from '@/components/Interface/Form/TextInput'
 import SelectInput from '@/components/Interface/Form/SelectInput'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import CountrySelector from '@/components/Shared/CountrySelector'
+import CompanyListRestricted from '@/components/Table/Superadmin/Registry/CompanyListRestricted'
 import RegistrySearch from '@/components/Shared/RegistrySearch'
 
-export default function PendingCompany({ session }) {
+export default function ApprovedCompany({ session }) {
   //data search
-
-  const [name, setname] = useState('')
-  const [sector, setsector] = useState('')
-  const [country, setcountry] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
@@ -45,9 +42,9 @@ export default function PendingCompany({ session }) {
     setIsLoading(true)
     const response = await axios
       .get(
-        `/admin/company/allowed?` +
+        `/admin/company/restricted?` +
           `page=${page}` +
-          `&status=pending` +
+          `&status=accepted` +
           `&name=${name}` +
           `&country=${country.value || ''}` +
           `&sector=${sector.value || ''}`,
@@ -83,14 +80,18 @@ export default function PendingCompany({ session }) {
       })
   }
   const setPage = (pageNumber) => {
-    searchData(pageNumber, name, country, sector)
+    searchData(pageNumber, name, sector, country)
   }
+
+  const [name, setname] = useState('')
+  const [sector, setsector] = useState('')
+  const [country, setcountry] = useState('')
 
   return (
     <>
       <div className="mb-10">
         <RegistrySearch
-          title="Search Pending Registry"
+          title="Search Restricted Registry"
           registryName={[name, setname]}
           registryCountry={[country, setcountry]}
           registrySector={[sector, setsector]}
@@ -98,8 +99,8 @@ export default function PendingCompany({ session }) {
           reset={() => searchData()}
           isLoading={isLoading}
         />
-        <CompanyList
-          title="Pending Company"
+        <CompanyListRestricted
+          title="Restricted Company"
           setPage={setPage}
           isLoading={isLoading}
           data={data}
@@ -111,7 +112,7 @@ export default function PendingCompany({ session }) {
   )
 }
 
-PendingCompany.layout = Admin
+ApprovedCompany.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
