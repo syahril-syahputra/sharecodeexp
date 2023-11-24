@@ -169,8 +169,12 @@ export default function MemberDashboard({ company, message, session }) {
                   </PrimaryButton>
                 </div>
                 <div className="flex items-center justify-center space-x-4 font-bold text-red-500 py-4">
-                  {company.buying_restriction && <span>You Cannot Buy</span>}
-                  {company.selling_restriction && <span>You Cannot Sell</span>}
+                  {company.buying_restriction && (
+                    <span>Restricted for Buying</span>
+                  )}
+                  {company.selling_restriction && (
+                    <span>Restricted for Selling</span>
+                  )}
                 </div>
               </div>
             </PrimaryWrapper>
