@@ -265,6 +265,25 @@ export default function MyCompany({ session }) {
                 <i className="fas fa-envelope mr-2 text-lg text-blueGray-400"></i>
                 Master Email - {companyData.master?.email}
               </div>
+              <hr className="border-gray-200 my-4" />
+              <div className="mb-2 text-blueGray-600 flex items-center justify-center  space-x-2">
+                <i className="fas fa-circle-exclamation mr-2 text-lg text-blueGray-400"></i>
+                Restricted for Buying -{' '}
+                {!companyData.buying_restriction ? (
+                  <i className="fa-solid fa-ban  text-red-600 "></i>
+                ) : (
+                  <i className="fa-solid fa-check  text-green-600"></i>
+                )}
+              </div>
+              <div className="mb-2 text-blueGray-600  flex items-center justify-center space-x-2">
+                <i className="fas fa-circle-exclamation mr-2 text-lg text-blueGray-400"></i>
+                Restricted for Selling -{' '}
+                {!companyData.selling_restriction ? (
+                  <i className="fa-solid fa-ban  text-red-600"></i>
+                ) : (
+                  <i className="fa-solid fa-check  text-green-600"></i>
+                )}
+              </div>
             </div>
           </>
         ) : (
@@ -393,6 +412,7 @@ MyCompany.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+
   return {
     props: {
       session,

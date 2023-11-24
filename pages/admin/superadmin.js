@@ -45,8 +45,17 @@ export default function SuperadminDashboard({ session, message }) {
   const status_id = session?.user?.userDetail?.status_id
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({
-    pending_companies: 0,
-    pending_product: 0,
+    registry: {
+      pending_companies: 0,
+      uploaded_additional_documents: 0,
+    },
+    product_management: {
+      pending_product: 0,
+    },
+    excel_product_file: {
+      uploaded_file: 0,
+      in_progress: 0,
+    },
     order_process_one: {
       active_order: 0,
       approve_reject_payment: 0,
@@ -87,23 +96,27 @@ export default function SuperadminDashboard({ session, message }) {
     switch (status_id) {
       case '3':
         return (
-          <ComponentCardAdminDashboard
-            dataName={data.pending_companies}
-            url={'/admin/superadmin/registry/pendingcompany'}
-            name={'Pending Company Registry'}
-          />
+          <div className="grid grid-cols-4 gap-4 mt-5">
+            <ComponentCardAdminDashboard
+              dataName={data?.registry?.pending_companies}
+              url={'/admin/superadmin/registry/pendingcompany'}
+              name={'Pending Company Registry'}
+            />
+          </div>
         )
       case '4':
         return (
-          <ComponentCardAdminDashboard
-            dataName={data.pending_product}
-            url={'/admin/superadmin/product/pending'}
-            name={'Pending Product Approval'}
-          />
+          <div className="grid grid-cols-4 gap-4 mt-5">
+            <ComponentCardAdminDashboard
+              dataName={data?.product_management?.pending_product}
+              url={'/admin/superadmin/product/pending'}
+              name={'Pending Product Approval'}
+            />
+          </div>
         )
       case '5':
         return (
-          <>
+          <div className="grid grid-cols-4 gap-4 mt-5">
             <ComponentCardAdminDashboard
               dataName={data?.order_process_one?.active_order || 0}
               url={'/admin/superadmin/orders/allorders'}
@@ -116,11 +129,11 @@ export default function SuperadminDashboard({ session, message }) {
               }
               name={'Approve/Reject Payment of Buyer'}
             />
-          </>
+          </div>
         )
       case '6':
         return (
-          <>
+          <div className="grid grid-cols-4 gap-4 mt-5">
             <ComponentCardAdminDashboard
               dataName={data.order_process_two?.pending_shipment || 0}
               url={
@@ -135,57 +148,92 @@ export default function SuperadminDashboard({ session, message }) {
               }
               name={'Release Payment to Seller'}
             />
-          </>
+          </div>
         )
       default:
         return (
           <>
-            <ComponentCardAdminDashboard
-              dataName={data.pending_companies}
-              url={'/admin/superadmin/registry/pendingcompany'}
-              name={'Pending Compan Registry'}
-            />
-            <ComponentCardAdminDashboard
-              dataName={data.pending_product}
-              url={'/admin/superadmin/product/pending'}
-              name={'Pending Product Approval'}
-            />
-            <ComponentCardAdminDashboard
-              dataName={data?.order_process_one?.active_order || 0}
-              url={'/admin/superadmin/orders/allorders'}
-              name={'Status Update for Active Orders'}
-            />
-            <ComponentCardAdminDashboard
-              dataName={data.order_process_one?.approve_reject_payment || 0}
-              url={
-                '/admin/superadmin/orders/allorders?orderStatus=payment-uploaded'
-              }
-              name={'Approve/Reject Payment of Buyer'}
-            />
-            <ComponentCardAdminDashboard
-              dataName={data.order_process_two?.pending_shipment || 0}
-              url={
-                '/admin/superadmin/orders/allorders?orderStatus=payment-accepted'
-              }
-              name={'Pending Shipment'}
-            />
-            <ComponentCardAdminDashboard
-              dataName={data.order_process_two.release_payment || 0}
-              url={
-                '/admin/superadmin/orders/allorders?orderStatus=invoice-uploaded'
-              }
-              name={'Release Payment to Seller'}
-            />
-            <ComponentCardAdminDashboard
-              dataName={data.uploaded_additional_documents || 0}
-              url={'/admin/superadmin/registry/uploadedcompany'}
-              name={'Additional Document Need to Review'}
-            />
-            <ComponentCardAdminDashboard
-              dataName={data.reimbursement || 0}
-              url={'/admin/superadmin/reimbursement/active'}
-              name={'Reimbursement'}
-            />
+            <h1 className="font-normal text-2xl mb-3 mt-4">Registry</h1>
+            <div className="grid grid-cols-4 gap-4 mt-5">
+              <ComponentCardAdminDashboard
+                dataName={data?.registry?.pending_companies}
+                url={'/admin/superadmin/registry/pendingcompany'}
+                name={'Pending Company Registry'}
+              />
+              <ComponentCardAdminDashboard
+                dataName={data?.registry?.uploaded_additional_documents}
+                url={'/admin/superadmin/product/pending'}
+                name={'Uploaded Additional Documents'}
+              />
+            </div>
+            <hr className="border-gray-500 my-4" />
+            <h1 className="font-normal text-2xl mb-3 mt-4">
+              Product Management
+            </h1>
+            <div className="grid grid-cols-4 gap-4 mt-5">
+              <ComponentCardAdminDashboard
+                dataName={data?.product_management?.pending_product}
+                url={'/admin/superadmin/product/pending'}
+                name={'Pending Product Approval'}
+              />
+            </div>
+            <hr className="border-gray-500 my-4" />
+            <h1 className="font-normal text-2xl mb-3 mt-4">
+              Excel Product Management
+            </h1>
+            <div className="grid grid-cols-4 gap-4 mt-5">
+              <ComponentCardAdminDashboard
+                dataName={data?.excel_product_file?.uploaded_file}
+                url={'/admin/superadmin/product/uploaded'}
+                name={'New File Uploaded'}
+              />
+
+              <ComponentCardAdminDashboard
+                dataName={data?.excel_product_file?.in_progress}
+                url={'/admin/superadmin/product/uploaded'}
+                name={'File In Progress'}
+              />
+            </div>
+            <hr className="border-gray-500 my-4" />
+            <h1 className="font-normal text-2xl mb-3 mt-4">Orders</h1>
+            <div className="grid grid-cols-4 gap-4 mt-5">
+              <ComponentCardAdminDashboard
+                dataName={data?.order_process_one?.active_order || 0}
+                url={'/admin/superadmin/orders/allorders'}
+                name={'Status Update for Active Orders'}
+              />
+              <ComponentCardAdminDashboard
+                dataName={data.order_process_one?.approve_reject_payment || 0}
+                url={
+                  '/admin/superadmin/orders/allorders?orderStatus=payment-uploaded'
+                }
+                name={'Approve/Reject Payment of Buyer'}
+              />
+              <ComponentCardAdminDashboard
+                dataName={data.order_process_two?.pending_shipment || 0}
+                url={
+                  '/admin/superadmin/orders/allorders?orderStatus=payment-accepted'
+                }
+                name={'Pending Shipment'}
+              />
+              <ComponentCardAdminDashboard
+                dataName={data.order_process_two.release_payment || 0}
+                url={
+                  '/admin/superadmin/orders/allorders?orderStatus=invoice-uploaded'
+                }
+                name={'Release Payment to Seller'}
+              />
+              <ComponentCardAdminDashboard
+                dataName={data.uploaded_additional_documents || 0}
+                url={'/admin/superadmin/registry/uploadedcompany'}
+                name={'Additional Document Need to Review'}
+              />
+              <ComponentCardAdminDashboard
+                dataName={data.reimbursement || 0}
+                url={'/admin/superadmin/reimbursement/active'}
+                name={'Reimbursement'}
+              />
+            </div>
           </>
         )
     }
@@ -195,12 +243,11 @@ export default function SuperadminDashboard({ session, message }) {
     <>
       <div className="flex flex-wrap items-center justify-between">
         <div className="">
-          <h1 className="font-semibold text-2xl">Admin Dashboard</h1>
+          <h1 className="font-semibold text-2xl">Admin Dashboards</h1>
         </div>
       </div>
-      <div className="grid grid-cols-4 gap-4 mt-5">
-        {componentDashboardCard()}
-      </div>
+
+      {componentDashboardCard()}
     </>
   )
 }
