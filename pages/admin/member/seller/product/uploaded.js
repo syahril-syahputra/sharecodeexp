@@ -8,10 +8,13 @@ import { toastOptions } from '@/lib/toastOptions'
 import TableExcel from '@/components/Table/Member/Excel/ExcelUploadedList'
 import ExcelComponent from '@/components/Modal/Component/ExcelComponent'
 import MiniSearchBar from '@/components/Shared/MiniSearchBar'
+import { useRouter } from 'next/router'
 
 Uploaded.layout = Admin
 
 export default function Uploaded({ session }) {
+  const router = useRouter()
+  console.log(router.query)
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
@@ -23,11 +26,14 @@ export default function Uploaded({ session }) {
     perPage: 0,
     lastPage: 0,
   })
+
   const fetchdata = async (page = 1) => {
     setIsLoading(true)
     try {
       const response = await axios.get(
-        `/seller/product/excel?paginate=5&page=${page}`,
+        `/seller/product/excel?paginate=5&page=${page}&status=${
+          router.query.status || ''
+        }`,
         {
           headers: {
             Authorization: `Bearer ${session.accessToken}`,
@@ -58,7 +64,9 @@ export default function Uploaded({ session }) {
   useEffect(() => {
     fetchdata()
   }, [])
-
+  useEffect(() => {
+    fetchdata()
+  }, [router.query])
   const deleteConfirmHadler = (data) => {
     setselectedData(data)
     setisOpenConfirmDelete(true)

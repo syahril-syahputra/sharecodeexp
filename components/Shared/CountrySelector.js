@@ -31,6 +31,7 @@ export default function CountrySelector(props) {
         disabled={props.disabled}
         name={props.name}
         value={props.value}
+        placeholder={props.placeholder}
         options={options}
         errorMsg={props.errorMsg}
         onBlur={props.onBlur}
