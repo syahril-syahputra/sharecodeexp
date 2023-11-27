@@ -85,6 +85,22 @@ export default function Index() {
     return regex.test(value)
   }
 
+  const handleisAgreeTermCondtionOfSale = () => {
+    setIsAgreeTermCondtionOfSale((prev) => !prev)
+
+    if (!isAgreeTermCondtionOfSale) {
+      setIsAgreeTermCondtionOfSaleMessage()
+    }
+  }
+
+  const handleisAgreeTermCondtionOfExport = () => {
+    setIsAgreeTermCondtionOfExport((prev) => !prev)
+
+    if (!isAgreeTermCondtionOfExport) {
+      setIsAgreeTermCondtionOfExportMessage()
+    }
+  }
+
   const validationSchema = Yup.object({
     name: Yup.string().required('The user name field is required'),
     email: Yup.string()
@@ -171,6 +187,12 @@ export default function Index() {
         }
       )
       .notRequired(),
+    company_CertificationofActivity: Yup.mixed().required(
+      'The Field of Certification of Activity is required'
+    ),
+    company_RegistrationDocument: Yup.mixed().required(
+      'The Field of Company Registration Document is required'
+    ),
   })
 
   const [, setRegistrationInfo] = useState({
@@ -253,23 +275,24 @@ export default function Index() {
       company_RegistrationDocument: values.company_RegistrationDocument,
       company_CertificationofActivity: values.company_CertificationofActivity,
       company_img: values.company_img,
+      tac_of_sale_agreement: isAgreeTermCondtionOfSale,
+      tac_of_export_agreement: isAgreeTermCondtionOfExport,
     }
-    // if (!isAgreeTermCondtionOfSale) {
-    //   setIsAgreeTermCondtionOfSaleMessage(
-    //     'Please agreed the Term and Conditions of Sale before continue.'
-    //   )
-    //   return
-    // }
-    // if (!isAgreeTermCondtionOfExport) {
-    //   setIsAgreeTermCondtionOfExportMessage(
-    //     'Please agreed the Term and Conditions of Export before continue.'
-    //   )
-    //   return
-    // }
+    if (!isAgreeTermCondtionOfSale) {
+      setIsAgreeTermCondtionOfSaleMessage(
+        'Please agreed the Term and Conditions of Sale before continue.'
+      )
+      return
+    }
+    if (!isAgreeTermCondtionOfExport) {
+      setIsAgreeTermCondtionOfExportMessage(
+        'Please agreed the Term and Conditions of Export before continue.'
+      )
+      return
+    }
     setErrorMessage(null)
     setErrorInfo(null)
     setIsLoading(true)
-
     await axios
       .post('/registration', payload, {
         headers: {
@@ -909,8 +932,7 @@ export default function Index() {
                               )}
                             </div> */}
                             <TextInputDocument
-                              label="                                Company Registration Document
-                            "
+                              label="Company Registration Document"
                               id="company_RegistrationDocument"
                               name="company_RegistrationDocument"
                               className=""
@@ -922,14 +944,24 @@ export default function Index() {
                                 )
                               }}
                               errorMsg={errorInfo?.company_RegistrationDocument}
+                              error={
+                                formikProps.touched
+                                  .company_RegistrationDocument &&
+                                Boolean(errors.company_RegistrationDocument)
+                              }
+                              helperText={
+                                formikProps.touched
+                                  .company_RegistrationDocument &&
+                                errors.company_RegistrationDocument
+                              }
                             />
                             <TextInputDocument
-                              label="                                                              Certification of Activity
-                                "
+                              label="Certification of Activity"
                               id="company_CertificationofActivity"
                               name="company_CertificationofActivity"
                               className=""
                               type="file"
+                              required
                               onChange={({ target }) => {
                                 formikProps.setFieldValue(
                                   'company_CertificationofActivity',
@@ -938,6 +970,16 @@ export default function Index() {
                               }}
                               errorMsg={
                                 errorInfo?.company_CertificationofActivity
+                              }
+                              error={
+                                formikProps.touched
+                                  .company_CertificationofActivity &&
+                                Boolean(errors.company_CertificationofActivity)
+                              }
+                              helperText={
+                                formikProps.touched
+                                  .company_CertificationofActivity &&
+                                errors.company_CertificationofActivity
                               }
                             />
 
@@ -1001,7 +1043,7 @@ export default function Index() {
                                 id="term"
                                 type="checkbox"
                                 defaultChecked={isAgreeTermCondtionOfSale}
-                                // onChange={handleisAgreeTermCondtionOfSale}
+                                onChange={handleisAgreeTermCondtionOfSale}
                                 className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                               />
                               <label
@@ -1035,7 +1077,7 @@ export default function Index() {
                                 id="policy"
                                 type="checkbox"
                                 defaultChecked={isAgreeTermCondtionOfExport}
-                                // onChange={handleisAgreeTermCondtionOfExport}
+                                onChange={handleisAgreeTermCondtionOfExport}
                                 className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                               />
                               <label
@@ -1057,6 +1099,7 @@ export default function Index() {
                         <div className="text-center">
                           <div className="mt-5">
                             <PrimaryButton
+                              disabled={isLoading}
                               type="submit"
                               className="w-full md:w-6/12 font-bold uppercase"
                             >

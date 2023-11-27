@@ -1,7 +1,8 @@
-import {motion} from 'framer-motion';
-import {textContainer, textVariant2} from '@/utils/motion';
+import React from 'react'
+import { motion } from 'framer-motion'
+import { textContainer, textVariant2 } from '@/utils/motion'
 
-export const TitleText = ({title, textStyle}) => (
+export const TitleText = ({ title, textStyle }) => (
   <motion.p
     variants={textVariant2}
     initial="hidden"
@@ -10,4 +11,4 @@ export const TitleText = ({title, textStyle}) => (
   >
     {title}
   </motion.p>
-);
+)
