@@ -60,7 +60,7 @@ export default function InquiredProduct({ session, routeParam }) {
     orderNumberParam = '',
     manufacturerPartNumberParam = '',
     orderDateParam = '',
-    NumberActionRequired = false
+    orderActionRequiredParam = false
   ) => {
     setPageNumber(page)
     setIsLoading(true)
@@ -74,7 +74,7 @@ export default function InquiredProduct({ session, routeParam }) {
           `&manufacturer_part_number=${manufacturerPartNumberParam}` +
           `&order_date=${orderDateParam}` +
           `&active=1` +
-          `&action_required=${NumberActionRequired}`,
+          `&action_required=${orderActionRequiredParam}`,
         {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
