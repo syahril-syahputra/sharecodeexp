@@ -66,15 +66,15 @@ export default function OrderList(props) {
                   >
                     <td scope="row" className="text-sm px-6 py-4">
                       {item?.order_status?.admin_to_act ? (
-                          <span className="relative flex text-xl">
-                            <span className="animate-ping absolute inline-flex opacity-75">
-                                <i className="fas fa-circle fa-2xs text-orange-500"></i>
-                            </span>
-                            <span className="relative inline-flex">
-                                <i className="fas fa-circle fa-2xs text-orange-500"></i>
-                            </span>
+                        <span className="relative flex text-xl">
+                          <span className="animate-ping absolute inline-flex opacity-75">
+                            <i className="fas fa-circle fa-2xs text-orange-500" />
                           </span>
-                        ) : undefined}
+                          <span className="relative inline-flex">
+                            <i className="fas fa-circle fa-2xs text-orange-500" />
+                          </span>
+                        </span>
+                      ) : undefined}
                     </td>
                     <td scope="row" className="text-xs px-8 py-4">
                       {checkValue(item.order_number)}

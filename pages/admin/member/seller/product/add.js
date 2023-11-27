@@ -52,6 +52,7 @@ export default function MyProduct({ session }) {
     setInputData({ ...inputData, country: value.label })
     setCountry(value)
   }
+  const [showPassword, setShowPassword] = useState(false)
 
   const [descriptionCount, setDescriptionCount] = useState(0)
   const descriptionLimit = 100
@@ -357,6 +358,7 @@ export default function MyProduct({ session }) {
             value={inputData.dateCode}
             errorMsg={errorInfo?.dateCode}
             onChange={(input) => setDataHandler(input)}
+            isDateCode={true}
           />
         </div>
         <div className="w-full lg:w-1/2 px-3 mb-6">
