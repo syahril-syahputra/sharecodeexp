@@ -18,6 +18,7 @@ import BadgesWithBell from '@/components/Interface/Badges/BadgesWithBell'
 
 function SideNavigation() {
   const session = useSession()
+  console.log(session, '<<<session')
   const status = session.data.user.userDetail.status_id
   const company = useCompany(
     session.data.user.userDetail,
@@ -147,7 +148,6 @@ function SideNavigation() {
                                       'block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700'
                                     )}
                                   >
-                                    {/* name === 'My Company' */}
                                     {subItem.name === 'My Company' ? (
                                       <>
                                         {isReason_notNull !== null &&

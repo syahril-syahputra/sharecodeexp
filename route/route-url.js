@@ -48,6 +48,7 @@ export const AdminUrl = {
     vendors: '/admin/superadmin/usercontrol/vendors',
     contributors: '/admin/superadmin/usercontrol/contributors',
   },
+  help: '/admin/superadmin/help'
 }
 
 export const VendorUrl = {
@@ -131,4 +132,5 @@ export const VendorUrl = {
       edit: '/admin/member/settings/users/edit',
     },
   },
+  help: '/admin/member/help',
 }

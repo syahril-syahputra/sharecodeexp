@@ -21,16 +21,52 @@ import ProvinceSelectorInitial from '@/components/Shared/ProvinceSelectorInitial
 import CitySelectorInitial from '@/components/Shared/CitySelectorInitial'
 import useDataCountry from '@/hooks/useCountry'
 import useDataProvince from '@/hooks/useProvince'
+import { Form, Formik } from 'formik'
+import TextInputValidate from '@/components/Interface/Form/TextInputValidation'
+import SelectInputSector from '@/components/Interface/Form/SelectInputSector'
+import useSctor from '@/hooks/useSctor'
+import TextInputPhoneValidate from '@/components/Interface/Form/TextInputPhoneValidate'
+import CountrySelector from '@/components/Shared/CountrySelector'
+import ProvinceSelector from '@/components/Shared/ProvinceSelector'
+import CitySelector from '@/components/Shared/CitySelector'
+import useDataCity from '@/hooks/useCity'
 
 export default function MyCompany({ session, sectorlist }) {
+  const [errorInfo, setErrorInfo] = useState({})
+  const [companySector, setCompanySector] = useState(null)
+  const [stateDataCountry, setStateDataCountry] = useState(null)
+  const [companyProvince, setCompanyProvince] = useState(null)
+  const [companyCity, setCompanyCity] = useState(null)
+  const [provinceCompanyData, setProvinceCompanyData] = useState(null)
+  const [companyCodeCountry, setCompanyCodeCountry] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [stateProvince, setStateProvince] = useState(null)
+
+  function isEmailCompany(email) {
+    return /^[a-zA-Z0-9._%+-]+@(?!gmail.com)(?!yahoo.com)(?!hotmail.com)(?!yahoo.co.id)(?!aol.com)(?!live.com)(?!outlook.com)(?!inbox.com)(?!icloud.com)(?!mail.com)(?!gmx.com)(?!yandex.com)[a-zA-Z0-9_-]+.[a-zA-Z0-9-.]{2,61}$/gm.test(
+      email
+    )
+  }
+
+  function isMatchPostalCodePattern({ id, Country, value }) {
+    const findCodeRegex = PostalCode?.find(
+      (e) => e?.id === id && e.country === Country
+    )
+    const regex = findCodeRegex?.Regex
+
+    return regex.test(value)
+  }
+
   const countries = useDataCountry()
+  const provincies = useDataProvince(stateDataCountry?.id)
+  const cities = useDataCity(stateProvince?.id)
   const [isLoading, setIsLoading] = useState(true)
   const getDataFunc = async () => {
     setIsLoading(true)
     await axios
       .get(`/company`, {
         headers: {
-          Authorization: `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session?.accessToken}`,
         },
       })
       .then((response) => {
@@ -38,31 +74,55 @@ export default function MyCompany({ session, sectorlist }) {
         setInputData({
           name: result.name,
           address: result.address,
+          address2: result.address2,
           country: result.country,
           sector: result.sector,
           phone: result.phone,
+          company_code_country: result.phone,
           state: result?.state,
+          company_other: '',
           city: result?.city,
           zip_code: result?.zip_code,
         })
 
         let oldSector = sectors.find((item) => item.value == result.sector)
+        let oldCountry = countries.find((e) => e.name == result.country)
+        setStateDataCountry({ ...oldCountry })
         if (oldSector) {
           setSector({ value: result.sector, label: result.sector })
+          setCompanySector({ value: result.sector, label: result.sector })
         } else {
           setSector({ value: 'other', label: 'Other' })
+          setCompanySector({ value: 'other', label: 'Other' })
         }
-        const countryIdFilter = countries?.filter(
-          (e) => e?.name === result?.country
+
+        if (oldCountry) {
+          setCountry({
+            value: result.country,
+            label: result.country,
+          })
+          setCompanyCodeCountry({
+            value: oldCountry?.phonecode,
+            label: oldCountry?.phonecode,
+          })
+        }
+
+        let oldProvince = provincies?.find(
+          (item) => item?.name == result?.state
         )
-        const provinces = UseProvince(countryIdFilter) || []
-        let oldProvince = provinces?.find(
-          (item) => item?.value == result?.state
-        )
+        setStateProvince({ ...oldProvince })
         if (oldProvince) {
-          setStateData({ value: result.state, label: result.state })
+          setCompanyProvince({ value: result.state, label: result.state })
         } else {
-          setStateData({ value: 'other', label: 'Other' })
+          setCompanyProvince({ value: 'other', label: 'Other' })
+        }
+
+        let oldCity = cities?.find((item) => item?.name == result?.city)
+        console.log(oldCity, '<<oldCity')
+        if (oldCity) {
+          setCompanyCity({ value: result.city, label: result.city })
+        } else {
+          setCompanyCity({ value: 'other', label: 'Other' })
         }
       })
       .catch(() => {
@@ -76,10 +136,15 @@ export default function MyCompany({ session, sectorlist }) {
       })
   }
 
-  const UseProvince = (arrData) => {
-    const provinces = useDataProvince(arrData[0]?.id)
-
-    return provinces
+  const UseProvince = (countryId) => {
+    console.log(countryId, '<<<countryId')
+    if (countryId) {
+      const provinces = useDataProvince(countryId)
+      console.log(provinces, '<<<<provinces')
+    }
+    // const provinces = useDataProvince(countryId)
+    // console.log(provinces, '<<<<provinces')
+    // return provinces
   }
 
   useEffect(() => {
@@ -90,6 +155,7 @@ export default function MyCompany({ session, sectorlist }) {
   const [inputData, setInputData] = useState({
     name: '',
     address: '',
+    address2: '',
     country: '',
     sector: '',
     phone: '',
@@ -98,15 +164,17 @@ export default function MyCompany({ session, sectorlist }) {
     zip_code: '',
     state_other: '',
     city_other: '',
+    company_other: '',
+    company_code_country: '',
   })
-  const [errorInfo, setErrorInfo] = useState({})
-  const [errorMessage, setErrorMessage] = useState(null)
+
   const setDataHandler = (input) => {
     setInputData({ ...inputData, [input.name]: input.value })
   }
 
   //country handle
-  const [country, setCountry] = useState()
+  const [stateCountry, setCountry] = useState()
+
   const countryHandleChange = (value) => {
     setInputData({ ...inputData, country: value.label })
     setCountry(value)
@@ -122,18 +190,23 @@ export default function MyCompany({ session, sectorlist }) {
   }
 
   const [stateDataCity, setStateDataCity] = useState(null)
+  console.log(stateDataCity, '<<<stateDataCity')
   const cityHandleChange = (value) => {
-    setInputData({ ...inputData, state: '' })
-    setStateDataCity(value)
+    console.log(value, '<<<valueCityHandle')
+    setInputData({ ...inputData, city: '' })
+    // setStateDataCity(value)
     if (value?.value != 'other') {
-      setStateDataCity({ ...inputData, state: value.value })
+      // setStateDataCity(value)
+      setInputData({ ...inputData, city: value.value })
     }
   }
 
-  const [sectors, setSectors] = useState([
-    ...sectorlist,
-    { value: 'other', label: 'Other' },
-  ])
+  // const [sectors, setSectors] = useState([
+  //   ...sectorlist,
+  //   { value: 'other', label: 'Other' },
+  // ])
+
+  const sectors = useSctor()
 
   const [sector, setSector] = useState(null)
   const handleSectorChange = (value) => {
@@ -157,6 +230,7 @@ export default function MyCompany({ session, sectorlist }) {
         ? inputData?.state_other
         : inputData?.state
     payloadData['address'] = inputData?.address
+    payloadData['address2'] = inputData?.address2
     payloadData['name'] = inputData?.name
     payloadData['country'] = inputData?.country
     payloadData['sector'] = inputData?.sector
@@ -211,279 +285,188 @@ export default function MyCompany({ session, sectorlist }) {
         }
       ></PageHeader>
       {errorMessage && <DangerNotification message={errorMessage} />}
-      <form onSubmit={handleSubmit} className="p-2">
-        <div className="flex flex-wrap mb-6">
-          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <TextInput
-              label="Company Name"
-              className="w-full"
-              required
-              name="name"
-              value={inputData.name}
-              errorMsg={errorInfo?.name}
-              onChange={(input) => setDataHandler(input)}
-            />
-          </div>
-          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <SelectInput
-              searchable
-              label="Sectors"
-              name="sector"
-              value={sector}
-              options={sectors}
-              errorMsg={errorInfo?.sector}
-              onChange={handleSectorChange}
-            />
-            {sector?.value == 'other' && (
-              <div className="mt-2">
-                <TextInput
-                  className="w-full"
-                  required
-                  name="sector"
-                  value={inputData.sector}
-                  errorMsg={errorInfo?.sector}
-                  onChange={(input) => setDataHandler(input)}
-                />
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="flex flex-wrap mb-6">
-          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <TextInput
-              label="Phone"
-              className="w-full"
-              required
-              name="phone"
-              value={inputData.phone}
-              errorMsg={errorInfo?.phone}
-              onChange={(input) => setDataHandler(input)}
-            />
-          </div>
-          <div className="w-full md:w-1/2 px-3">
-            <CountrySelectorInitial
-              setInisiate
-              label="Country"
-              inputDataName="country"
-              value={inputData.country}
-              countryHandleChange={countryHandleChange}
-              errorMsg={errorInfo.country}
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-wrap mb-6">
-          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <ProvinceSelectorInitial
-              setInisiate
-              label="Province"
-              className="w-full"
-              required
-              name="state"
-              countryId={inputData?.country}
-              value={inputData?.state}
-              errorMsg={
-                inputData?.state?.toLowerCase() === 'other' ||
-                stateData?.value?.toLowerCase() === 'other'
-                  ? undefined
-                  : errorInfo?.state
-              }
-              onChange={(input) => setDataHandler(input)}
-              provinceHandleChange={provinceHandleChange}
-            />
-            {stateData?.value?.toLowerCase() === 'other' && (
-              <div className="mt-2">
-                <TextInput
-                  className="w-full"
-                  required
-                  name="state"
-                  value={inputData.city_other}
-                  errorMsg={
-                    inputData?.city_other?.toLowerCase() === 'other' ||
-                    stateData?.value?.toLowerCase() === 'other'
-                      ? errorInfo?.city_other
-                      : undefined
-                  }
-                  onChange={(input) => setDataHandler(input)}
-                />
-              </div>
-            )}
-          </div>
-          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <CitySelectorInitial
-              setInisiate
-              label="City"
-              className="w-full"
-              required
-              name="city"
-              countryId={inputData?.country}
-              provinceId={inputData?.state}
-              value={inputData?.city}
-              errorMsg={
-                inputData?.city?.toLowerCase() === 'other' ||
-                stateData?.value?.toLowerCase() === 'other'
-                  ? undefined
-                  : errorInfo?.city
-              }
-              onChange={(input) => setDataHandler(input)}
-              cityHandleChange={cityHandleChange}
-            />
-            {stateDataCity?.value?.toLowerCase() === 'other' && (
-              <div className="mt-2">
-                <TextInput
-                  className="w-full"
-                  required
-                  name="city"
-                  value={inputData.state_other}
-                  errorMsg={
-                    inputData?.state_other?.toLowerCase() === 'other' ||
-                    stateDataCity?.value?.toLowerCase() === 'other'
-                      ? errorInfo?.state_other
-                      : undefined
-                  }
-                  onChange={(input) => setDataHandler(input)}
-                />
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="flex flex-wrap mb-6">
-          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <TextInput
-              label="zip_code"
-              className="w-full"
-              required
-              name="zip_code"
-              value={inputData.zip_code}
-              errorMsg={errorInfo?.zip_code}
-              onChange={(input) => setDataHandler(input)}
-            />
-          </div>
-        </div>
-        <div className="flex flex-wrap mb-6">
-          <div className="w-full  px-3 mb-6 md:mb-0">
-            <AreaInput
-              label="Address"
-              name="address"
-              required
-              value={inputData.address}
-              errorMsg={errorInfo?.address}
-              onChange={(input) => setDataHandler(input)}
-            />
-          </div>
-        </div>
-        <div className="mt-8 mb-20">
-          <div className="relative flex py-5 items-center w-full mx-auto">
-            <div className="flex-grow border-t border-blueGray-700"></div>
-            <div className="flex-shrink mx-4">
-              <h2 className="font-semibold text-xl text-blueGray-500">
-                Documents
-              </h2>
-            </div>
-            <div className="flex-grow border-t border-blueGray-700"></div>
-          </div>
-          <div className="flex flex-wrap mb-6">
-            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-              <label
-                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                htmlFor="grid-last-name"
-              >
-                Company Registration Document (Upload if only change)
-              </label>
-              <div className="p-5 border-dashed border-2 border-indigo-200">
-                <div className="grid gap-4 lg:grid-cols-2 md:grid-cols-1">
-                  <div className="text-center my-auto">
-                    <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
-                  </div>
-                  <div className="text-xs ">
-                    <p>PDF file size no more than 10MB</p>
-                    <input
-                      className="mt-3"
-                      type="file"
-                      accept=".pdf"
-                      name="RegistrationDocument"
-                      onChange={({ target }) =>
-                        setInputData({
-                          ...inputData,
-                          RegistrationDocument: target.files[0],
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-              </div>
-              {errorInfo.RegistrationDocument && (
-                <ErrorInput error={errorInfo.RegistrationDocument} />
-              )}
-            </div>
-            <div className="w-full md:w-1/2 px-3">
-              <label
-                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                htmlFor="grid-last-name"
-              >
-                Certification of Activity (Upload if only change)
-              </label>
-              <div className="p-5 border-dashed border-2 border-indigo-200">
-                <div className="grid gap-4 lg:grid-cols-2 md:grid-cols-1">
-                  <div className="text-center my-auto">
-                    <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
-                  </div>
-                  <div className="text-xs ">
-                    <p>PDF file size no more than 10MB</p>
-                    <input
-                      className="mt-3"
-                      type="file"
-                      accept=".pdf"
-                      name="CertificationofActivity"
-                      onChange={({ target }) =>
-                        setInputData({
-                          ...inputData,
-                          CertificationofActivity: target.files[0],
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-              </div>
-              {errorInfo.CertificationofActivity && (
-                <ErrorInput error={errorInfo.CertificationofActivity} />
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="text-center mb-10 w-1/2 mx-auto">
-          <i className="italic text-red-500">
-            Note: Updating your Company causing your Member Status become
-            pending.
-          </i>
-        </div>
-        <div className="px-3 mb-6 flex">
-          <div className="w-full pr-2">
-            <Link href="/admin/member/company/my-company">
-              <LightButton
-                className="w-full font-bold uppercase mb-2"
-                disabled={isLoading}
-              >
-                Cancel
-              </LightButton>
-            </Link>
-          </div>
-          <div className="w-full">
-            <WarningButton
-              className="w-full font-bold uppercase"
-              disabled={isLoading}
-              type="submit"
+      {/* <form onSubmit={handleSubmit} className="p-2"></form> */}
+      <Formik
+        initialValues={inputData}
+        onSubmit={handleSubmit}
+        enableReinitialize
+      >
+        {({ values, errors, ...formikProps }) => {
+          return (
+            <Form
+              className="p-2"
+              id="Edit-company-form"
+              aria-label="form"
+              noValidate
             >
-              {isLoading && (
-                <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
-              )}
-              Update
-            </WarningButton>
-          </div>
-        </div>
-      </form>
+              <div className="flex flex-wrap mb-6">
+                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                  <TextInputValidate
+                    id="name"
+                    label="Company Name"
+                    className="w-full"
+                    required
+                    name="name"
+                    placeholder="Please enter a company name here..."
+                    value={values.name}
+                    errorMsg={errorInfo?.name}
+                    onChange={formikProps.handleChange}
+                    error={formikProps.touched.name && Boolean(errors.name)}
+                    helperText={formikProps.touched.name && errors.name}
+                  />
+                </div>
+                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                  <SelectInputSector
+                    searchable
+                    label="Sectors"
+                    name={'sector'}
+                    value={companySector}
+                    required
+                    options={sectors}
+                    errorMsg={errorInfo?.sector}
+                    onChange={(value) => {
+                      setCompanySector(value)
+                      formikProps.setFieldValue('sector', value)
+                    }}
+                    onBlur={formikProps.onBlur}
+                    error={formikProps.touched.sector && Boolean(errors.sector)}
+                    helperText={formikProps.touched.sector && errors.sector}
+                  />
+                  {companySector?.value === 'other' && (
+                    <div className="mt-2">
+                      <TextInputValidate
+                        id="company_other"
+                        className="w-full"
+                        required
+                        type="text"
+                        name="company_other"
+                        value={values.company_other}
+                        errorMsg={errorInfo?.company_other}
+                        onChange={formikProps.handleChange}
+                        error={
+                          formikProps.touched.company_other &&
+                          Boolean(errors.company_other)
+                        }
+                        helperText={
+                          formikProps.touched.company_other &&
+                          errors.company_other
+                        }
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-wrap mb-6">
+                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                  <TextInputPhoneValidate
+                    label="Phone"
+                    id="phone"
+                    className="w-full"
+                    searchable
+                    required
+                    type="text"
+                    name="phone"
+                    name2="company_code_country"
+                    value={values.phone}
+                    value2={companyCodeCountry}
+                    errorMsg={errorInfo?.phone}
+                    onChange={formikProps.handleChange}
+                    onChange2={(event) => {
+                      formikProps.setFieldValue('company_code_country', event)
+                      setCompanyCodeCountry(event)
+                    }}
+                    error={
+                      (formikProps.touched.phone && Boolean(errors.phone)) ||
+                      (formikProps.touched.company_code_country &&
+                        Boolean(errors.company_code_country))
+                    }
+                    helperText={
+                      (formikProps.touched.phone && errors.phone) ||
+                      (formikProps.touched.company_code_country &&
+                        errors.company_code_country)
+                    }
+                    placeholder="Please enter company phone number here..."
+                  />
+                </div>
+              </div>
+              <div className="flex flex-wrap mb-6">
+                <div className="w-full md:w-1/2 px-3">
+                  <CountrySelector
+                    searchable
+                    name="country"
+                    label="Country"
+                    value={stateCountry}
+                    required
+                    onChange={(value) => {
+                      setCountry(value)
+                      formikProps.setFieldValue('country', value)
+                      formikProps.setFieldValue('province', '')
+                      formikProps.setFieldValue('')
+                      setCompanyProvince(null)
+                      const Country = countries.find(
+                        (e) => e?.name == value?.value
+                      )
+                      setStateDataCountry({ ...Country })
+                    }}
+                    onBlur={formikProps.onBlur}
+                    errorMsg={errorInfo?.country}
+                    error={
+                      formikProps.touched.country && Boolean(errors.country)
+                    }
+                    helperText={formikProps.touched.country && errors.country}
+                  />
+                </div>
+                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                  <ProvinceSelector
+                    searchable
+                    name="province"
+                    label="Province"
+                    value={companyProvince}
+                    required
+                    onChange={(value) => {
+                      formikProps.setFieldValue('province', value)
+                      setCompanyProvince(value)
+                      formikProps.setFieldValue('city', '')
+                      const province = provincies?.find(
+                        (e) => e?.name == value.value
+                      )
+                      setStateProvince({ ...province })
+                    }}
+                    countryId={stateDataCountry?.id}
+                    onBlur={formikProps.onBlur}
+                    errorMsg={errorInfo?.province}
+                    error={
+                      formikProps.touched.province && Boolean(errors.province)
+                    }
+                    helperText={formikProps.touched.province && errors.province}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-wrap mb-6">
+                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                  <CitySelector
+                    searchable
+                    label="City"
+                    className="w-full"
+                    required
+                    id="city"
+                    name="city"
+                    value={companyCity}
+                    errorMsg={errorInfo?.city}
+                    provinceId={stateProvince?.id}
+                    onChange={(value) => {
+                      formikProps.setFieldValue('city', value)
+                      // setStateDataCity(value)
+                    }}
+                    error={formikProps.touched.city && Boolean(errors.city)}
+                    helperText={formikProps.touched.city && errors.city}
+                  />
+                </div>
+              </div>
+            </Form>
+          )
+        }}
+      </Formik>
     </PrimaryWrapper>
   )
 }

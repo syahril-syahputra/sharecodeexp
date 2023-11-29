@@ -11,6 +11,8 @@ import MemberNav from './Member/SideNavigation'
 import SmallSideSuperadminNav from './Superadmin/SmallSideNavigation'
 import SmallSideMemberNav from './Member/SmallSideNavigation'
 import MyAccount from './MyAccount'
+import HelpNavigation from './help'
+import AdminHelpNavigation from './AdminHelp'
 
 export default function Admin({ children }) {
   const session = useSession()
@@ -79,6 +81,12 @@ export default function Admin({ children }) {
             <nav className="flex flex-1 flex-col mb-20">
               <MyAccount />
             </nav>
+           { role == 2 &&  <nav className="flex flex-1 flex-col justify-end">
+              <HelpNavigation />
+            </nav>}
+            { role == 1 &&  <nav className="flex flex-1 flex-col justify-end">
+              <AdminHelpNavigation />
+            </nav>}
           </div>
         </div>
 
