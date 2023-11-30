@@ -536,6 +536,7 @@ export default function InquiryDetails({ session, routeParam }) {
         </div>
       )
       break
+
     // case 13:
     //   const utcMoment = moment.utc(
     //     data.arrival_estimation_to_buyer_date,
@@ -603,6 +604,34 @@ export default function InquiryDetails({ session, routeParam }) {
     //     </div>
     //   )
     //   break
+    case 16:
+      actionToTake = (
+        <div>
+          {courierModal && (
+            <UploadCourierDetails
+              isLoading={isLoading}
+              closeModal={() => setcourierModal(false)}
+              acceptance={handlelCourierDetailsModal}
+              errorInfo={errorInfo}
+            />
+          )}
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setcourierModal(true)}
+              >
+                Insert Courier Details
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+
     case 17:
       actionToTake = (
         <div>

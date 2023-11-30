@@ -381,10 +381,10 @@ export default function OrderDetails({ session, routeParam }) {
     setErrorInfo({})
     let formData = new FormData()
     formData.append('order_slug', data.slug)
-    formData.append('admin_receipt', recepit)
+    formData.append('admin_reimbursement_receipt', recepit)
 
     const response = await axios
-      .post(`/admin/orders/close-reimbursement`, formData, {
+      .post(`/admin/orders/release-reimbursement`, formData, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
         },
@@ -729,35 +729,7 @@ export default function OrderDetails({ session, routeParam }) {
         </div>
       )
       break
-    case 18:
-      actionToTake = (
-        <div>
-          {trackerNumberForSellerModal && (
-            <TrackerNumberForSeler
-              isLoading={isLoading}
-              closeModal={() => setTrackerNumberForSellerModal(false)}
-              acceptance={handleTrackerNumberForSellerModal}
-              errorInfo={errorInfo}
-            />
-          )}
-
-          <div className="flex justify-center">
-            <div className="mx-2 my-4">
-              <PrimaryButton
-                outline
-                className="mx-1"
-                size="sm"
-                disabled={isLoading}
-                onClick={() => setTrackerNumberForSellerModal(true)}
-              >
-                Provide Tracking Number
-              </PrimaryButton>
-            </div>
-          </div>
-        </div>
-      )
-      break
-    case 19:
+    case 16:
       actionToTake = (
         <div>
           {closeReimbusmentModal && (
@@ -785,37 +757,93 @@ export default function OrderDetails({ session, routeParam }) {
         </div>
       )
       break
-    case 21:
-      if (data.reimbursement === '1') {
-        actionToTake = (
-          <div>
-            {closeReimbusmentModal && (
-              <ReleasePaymentToBuyer
-                isLoading={isLoading}
-                closeModal={() => setcloseReimbusmentModal(false)}
-                acceptance={handleCloseReimbusment}
-                errorInfo={errorInfo}
-              />
-            )}
+    // case 18:
+    //   actionToTake = (
+    //     <div>
+    //       {trackerNumberForSellerModal && (
+    //         <TrackerNumberForSeler
+    //           isLoading={isLoading}
+    //           closeModal={() => setTrackerNumberForSellerModal(false)}
+    //           acceptance={handleTrackerNumberForSellerModal}
+    //           errorInfo={errorInfo}
+    //         />
+    //       )}
 
-            <div className="flex justify-center">
-              <div className="mx-2 my-4">
-                <PrimaryButton
-                  outline
-                  className="mx-1"
-                  size="sm"
-                  disabled={isLoading}
-                  onClick={() => setcloseReimbusmentModal(true)}
-                >
-                  Release Payment to Buyer
-                </PrimaryButton>
-              </div>
+    //       <div className="flex justify-center">
+    //         <div className="mx-2 my-4">
+    //           <PrimaryButton
+    //             outline
+    //             className="mx-1"
+    //             size="sm"
+    //             disabled={isLoading}
+    //             onClick={() => setTrackerNumberForSellerModal(true)}
+    //           >
+    //             Provide Tracking Number
+    //           </PrimaryButton>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   )
+    //   break
+    case 18:
+      actionToTake = (
+        <div>
+          {closeReimbusmentModal && (
+            <ReleasePaymentToBuyer
+              isLoading={isLoading}
+              closeModal={() => setcloseReimbusmentModal(false)}
+              acceptance={handleCloseReimbusment}
+              errorInfo={errorInfo}
+            />
+          )}
+
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setcloseReimbusmentModal(true)}
+              >
+                Release Payment to Buyer
+              </PrimaryButton>
             </div>
           </div>
-        )
-      }
-
+        </div>
+      )
       break
+    // case 21:
+    //   if (data.reimbursement === '1') {
+    //     actionToTake = (
+    //       <div>
+    //         {closeReimbusmentModal && (
+    //           <ReleasePaymentToBuyer
+    //             isLoading={isLoading}
+    //             closeModal={() => setcloseReimbusmentModal(false)}
+    //             acceptance={handleCloseReimbusment}
+    //             errorInfo={errorInfo}
+    //           />
+    //         )}
+
+    //         <div className="flex justify-center">
+    //           <div className="mx-2 my-4">
+    //             <PrimaryButton
+    //               outline
+    //               className="mx-1"
+    //               size="sm"
+    //               disabled={isLoading}
+    //               onClick={() => setcloseReimbusmentModal(true)}
+    //             >
+    //               Release Payment to Buyer
+    //             </PrimaryButton>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     )
+    //   }
+
+    //   break
   }
 
   return (
