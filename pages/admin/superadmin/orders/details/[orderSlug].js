@@ -35,6 +35,8 @@ import TrackerNumberForSeler from '@/components/Modal/OrderComponent/Superadmin/
 import ReleasePaymentToBuyer from '@/components/Modal/OrderComponent/Superadmin/ReleasePaymentToBuyer'
 import DangerButton from '@/components/Interface/Buttons/DangerButton'
 import TerminateOrder from '@/components/Modal/OrderComponent/Superadmin/TerminateOrder'
+import TestingAndHandlingServices from '@/components/Modal/OrderComponent/Superadmin/TestingAndHandlingServices'
+import RequestUpdateTestingPayment from '@/components/Modal/OrderComponent/Superadmin/RequestUpdateTestingPayment'
 
 export default function OrderDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -403,6 +405,76 @@ export default function OrderDetails({ session, routeParam }) {
         setIsLoading(false)
       })
   }
+  const [testingAndHandlingServices, settestingAndHandlingServices] =
+    useState(false)
+  const testingAndHandlingServicesHandler = async (
+    testing_lab_amount,
+    handling_charge_amount
+  ) => {
+    setIsLoading(true)
+    setErrorInfo({})
+
+    const response = await axios
+      .post(
+        `/admin/orders/test-handling-services`,
+        {
+          order_slug: data.slug,
+          testing_lab_amount: testing_lab_amount,
+          handling_charge_amount: handling_charge_amount,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        settestingAndHandlingServices(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot upload the result.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
+  const [requestUpdateTestingPayment, setrequestUpdateTestingPayment] =
+    useState(false)
+  const requestUpdateTestingPaymentHandler = async (reason) => {
+    setIsLoading(true)
+    setErrorInfo({})
+
+    const response = await axios
+      .post(
+        `/admin/orders/request-update-testing-payment`,
+        {
+          order_slug: data.slug,
+          reason,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setrequestUpdateTestingPayment(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot upload the result.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
   if (!isOrderValid) {
     return (
       <div className="">
@@ -757,42 +829,15 @@ export default function OrderDetails({ session, routeParam }) {
         </div>
       )
       break
-    // case 18:
-    //   actionToTake = (
-    //     <div>
-    //       {trackerNumberForSellerModal && (
-    //         <TrackerNumberForSeler
-    //           isLoading={isLoading}
-    //           closeModal={() => setTrackerNumberForSellerModal(false)}
-    //           acceptance={handleTrackerNumberForSellerModal}
-    //           errorInfo={errorInfo}
-    //         />
-    //       )}
-
-    //       <div className="flex justify-center">
-    //         <div className="mx-2 my-4">
-    //           <PrimaryButton
-    //             outline
-    //             className="mx-1"
-    //             size="sm"
-    //             disabled={isLoading}
-    //             onClick={() => setTrackerNumberForSellerModal(true)}
-    //           >
-    //             Provide Tracking Number
-    //           </PrimaryButton>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   )
-    //   break
-    case 18:
+    case 17:
       actionToTake = (
         <div>
-          {closeReimbusmentModal && (
-            <ReleasePaymentToBuyer
+          {testingAndHandlingServices && (
+            <TestingAndHandlingServices
               isLoading={isLoading}
-              closeModal={() => setcloseReimbusmentModal(false)}
-              acceptance={handleCloseReimbusment}
+              closeModal={() => settestingAndHandlingServices(false)}
+              acceptance={testingAndHandlingServicesHandler}
+              sellerCourier={data.seller_courier}
               errorInfo={errorInfo}
             />
           )}
@@ -804,9 +849,94 @@ export default function OrderDetails({ session, routeParam }) {
                 className="mx-1"
                 size="sm"
                 disabled={isLoading}
-                onClick={() => setcloseReimbusmentModal(true)}
+                onClick={() => settestingAndHandlingServices(true)}
               >
-                Release Payment to Buyer
+                Testing and Handling Services
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+    case 18:
+      actionToTake = (
+        <div>
+          {testingAndHandlingServices && (
+            <TestingAndHandlingServices
+              isLoading={isLoading}
+              closeModal={() => settestingAndHandlingServices(false)}
+              acceptance={testingAndHandlingServicesHandler}
+              sellerCourier={data.seller_courier}
+              errorInfo={errorInfo}
+            />
+          )}
+
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => settestingAndHandlingServices(true)}
+              >
+                Testing and Handling Services
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+    case 21:
+      actionToTake = (
+        <div>
+          {requestUpdateTestingPayment && (
+            <RequestUpdateTestingPayment
+              isLoading={isLoading}
+              closeModal={() => setrequestUpdateTestingPayment(false)}
+              acceptance={requestUpdateTestingPaymentHandler}
+              errorInfo={errorInfo}
+            />
+          )}
+
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setrequestUpdateTestingPayment(true)}
+              >
+                Request Update Testing Payment
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+    case 22:
+      actionToTake = (
+        <div>
+          {trackerNumberForSellerModal && (
+            <TrackerNumberForSeler
+              isLoading={isLoading}
+              closeModal={() => setTrackerNumberForSellerModal(false)}
+              acceptance={handleTrackerNumberForSellerModal}
+              errorInfo={errorInfo}
+            />
+          )}
+
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setTrackerNumberForSellerModal(true)}
+              >
+                Provide Tracking Number
               </PrimaryButton>
             </div>
           </div>

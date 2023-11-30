@@ -142,7 +142,7 @@ export default function SuperadminDashboard({ session, message }) {
               name={'Pending Shipment'}
             />
             <ComponentCardAdminDashboard
-              dataName={data.order_process_two.release_payment}
+              dataName={data.order_process_two?.release_payment}
               url={
                 '/admin/superadmin/orders/allorders?orderStatus=invoice-uploaded'
               }
@@ -217,7 +217,7 @@ export default function SuperadminDashboard({ session, message }) {
                 name={'Pending Shipment'}
               />
               <ComponentCardAdminDashboard
-                dataName={data.order_process_two.release_payment || 0}
+                dataName={data.order_process_two?.release_payment || 0}
                 url={
                   '/admin/superadmin/orders/allorders?orderStatus=invoice-uploaded'
                 }
