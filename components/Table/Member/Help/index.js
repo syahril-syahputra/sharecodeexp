@@ -1,28 +1,29 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import moment from 'moment'
 import BaseTable from '@/components/Interface/Table/BaseTable'
 import Pagination from '@/components/Shared/Component/Pagination'
 import NoData from '@/components/Interface/Table/NoData'
 import MetaData from '@/components/Interface/Table/MetaData'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
-import { checkValue } from '@/utils/general'
+import {checkValue} from '@/utils/general'
 import HeaderTable from '@/components/Interface/Table/HeaderTable'
 import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
-import { useSession } from 'next-auth/react'
+import {useSession} from 'next-auth/react'
 import HelpRequestModal from '@/components/Modal/Component/HelpRequestModal'
 import axios from 'lib/axios'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 
-export default function Help({  ...props }) {
-  const session = useSession()
+export default function Help({session, ...props}) {
   const [showHelpRequestModal, setShowHelpRequestModal] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const role = session.data.user.userDetail.role_id
+  const [isLoadingModal, setIsLoadingModal] = useState(false)
 
+  const role = session?.user?.userDetail?.role_id
   const handleAddHelpRequest = async (stateSubject, stateMessage) => {
     setShowHelpRequestModal(false)
     setIsLoading(true)
+    setIsLoadingModal(true)
     await axios
       .post(
         `/member/help-request`,
@@ -38,12 +39,14 @@ export default function Help({  ...props }) {
       )
       .then(() => {
         toast.success('The help request has been sent.', toastOptions)
+        setIsLoadingModal(false)
       })
       .catch((error) => {
         toast.error(
           'Something went wrong. Cannot sent help request.',
           toastOptions
         )
+        setIsLoadingModal(false)
       })
       .finally(() => {
         props.loadData(1)
@@ -53,7 +56,7 @@ export default function Help({  ...props }) {
   return (
     <>
       <PrimaryWrapper>
-      { role == 2 &&    <HeaderTable
+        {role == 2 && <HeaderTable
           title=""
           action={
             <>
@@ -145,6 +148,7 @@ export default function Help({  ...props }) {
         <HelpRequestModal
           setShowModal={setShowHelpRequestModal}
           acceptModal={handleAddHelpRequest}
+          isLoading={[isLoadingModal, setIsLoadingModal]}
         />
       ) : null}
     </>

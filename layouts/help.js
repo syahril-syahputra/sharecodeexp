@@ -1,15 +1,15 @@
 import React from 'react'
 import Link from 'next/link'
 import classNames from '@/utils/classNames'
-import { Disclosure } from '@headlessui/react'
-import { ChevronRightIcon } from '@heroicons/react/20/solid'
-import { help } from './navigation'
-import { VendorUrl } from '@/route/route-url'
-import { ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/outline'
+import {Disclosure} from '@headlessui/react'
+import {ChevronRightIcon} from '@heroicons/react/20/solid'
+import {help} from './navigation'
+import {VendorUrl} from '@/route/route-url'
+import {ChatBubbleLeftEllipsisIcon} from '@heroicons/react/24/outline'
 
 function HelpNavigation() {
   return (
-    <ul role="list" className="flex flex-1 flex-col gap-y-7">
+    <ul role="list" className="flex flex-col">
       <li>
         <ul role="list" className="-mx-2 space-y-1">
           <Link

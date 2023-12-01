@@ -1,34 +1,28 @@
 import React from 'react'
 
-export function Tooltip({ children, tooltipText }) {
-  const tipRef = React.createRef(null)
-  function handleMouseEnter() {
-    tipRef.current.style.opacity = 1
-    tipRef.current.style.marginLeft = '20px'
-  }
-  function handleMouseLeave() {
-    tipRef.current.style.opacity = 0
-    tipRef.current.style.marginLeft = '10px'
-  }
+export function Tooltip({children, tooltipText}) {
+  const tooltipRef = React.useRef(null)
+  const container = React.useRef(null)
 
   return (
     <div
-      className="relative flex items-center"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      ref={container}
+      onMouseEnter={({clientY}) => {
+        if (!tooltipRef.current || !container.current) return;
+        const {left} = container.current.getBoundingClientRect();
+
+        tooltipRef.current.style.left = clientY - left + 'px'
+      }}
+      className='group relative inline-block'
     >
-      <div
-        className="absolute whitespace-no-wrap bg-gradient-to-r from-black to-gray-700 text-white px-4 py-2 rounded flex items-center transition-all duration-150"
-        style={{ left: '100%', opacity: 0 }}
-        ref={tipRef}
-      >
-        <div
-          className="bg-black h-3 w-3 absolute"
-          style={{ left: '-6px', transform: 'rotate(45deg)' }}
-        />
-        {tooltipText}
-      </div>
       {children}
+      {tooltipText ? (
+        <div ref={tooltipRef} id="tooltip-default" role="tooltip" className="absolute z-10 invisible group-hover:visible inline-block px-3 py-2 text-sm group-hover:opacity-100  font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+          {tooltipText}
+          <div className="tooltip-arrow" data-popper-arrow></div>
+        </div>
+      ) : null}
     </div>
   )
+
 }

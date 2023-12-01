@@ -1,13 +1,13 @@
 import React from 'react'
-import { vendorsNavigation } from './navigation'
-import { HomeIcon } from '@heroicons/react/24/outline'
+import {vendorsNavigation} from './navigation'
+import {HomeIcon} from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import classNames from '@/utils/classNames'
 import useCompany from '@/hooks/useCompany'
-import { useSession } from 'next-auth/react'
-import { VendorUrl } from '@/route/route-url'
-import { Disclosure } from '@headlessui/react'
-import { ChevronRightIcon } from '@heroicons/react/20/solid'
+import {useSession} from 'next-auth/react'
+import {VendorUrl} from '@/route/route-url'
+import {Disclosure} from '@headlessui/react'
+import {ChevronRightIcon} from '@heroicons/react/20/solid'
 import LoadingState from '@/components/Interface/Loader/LoadingState'
 import SellerDahsboardNavigation from './Seller/Dashboard'
 import BuyerDashboardNavigation from './Buyer/Dashboard'
@@ -18,7 +18,6 @@ import BadgesWithBell from '@/components/Interface/Badges/BadgesWithBell'
 
 function SideNavigation() {
   const session = useSession()
-  console.log(session, '<<<session')
   const status = session.data.user.userDetail.status_id
   const company = useCompany(
     session.data.user.userDetail,
@@ -71,12 +70,12 @@ function SideNavigation() {
         </>
       )}
       {company?.is_confirmed === 'accepted' &&
-      session.data.user.dashboardStatus == 'buyer' ? (
+        session.data.user.dashboardStatus == 'buyer' ? (
         <MainSidebarBuyer />
       ) : null}
 
       {company?.is_confirmed === 'accepted' &&
-      session.data.user.dashboardStatus == 'seller' ? (
+        session.data.user.dashboardStatus == 'seller' ? (
         <MainSidebarSeller />
       ) : null}
 
@@ -104,7 +103,7 @@ function SideNavigation() {
                       </Link>
                     ) : (
                       <Disclosure as="div">
-                        {({ open }) => (
+                        {({open}) => (
                           <>
                             <Disclosure.Button
                               className={classNames(
@@ -120,7 +119,7 @@ function SideNavigation() {
                               />
                               {item.name}
                               {isReason_notNull !== null &&
-                              is_confirmed_company?.toLowerCase() ===
+                                is_confirmed_company?.toLowerCase() ===
                                 'pending' ? (
                                 <WarningBadges />
                               ) : null}
@@ -151,7 +150,7 @@ function SideNavigation() {
                                     {subItem.name === 'My Company' ? (
                                       <>
                                         {isReason_notNull !== null &&
-                                        is_confirmed_company?.toLowerCase() ===
+                                          is_confirmed_company?.toLowerCase() ===
                                           'pending' ? (
                                           <>
                                             <div className="transition-all flex justify-between items-center pr-4 space-x-4">

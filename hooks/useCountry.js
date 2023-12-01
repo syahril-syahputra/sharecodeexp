@@ -1,9 +1,8 @@
 import axios from '@/lib/axios'
-const { useState, useEffect } = require('react')
+const {useState, useEffect} = require('react')
 
 function useDataCountry() {
   const [data, setData] = useState([])
-  console.log(data, '<<<Data')
 
   useEffect(() => {
     async function fetchData() {
@@ -13,6 +12,7 @@ function useDataCountry() {
     }
     fetchData()
   }, [])
+
   return data
 }
 

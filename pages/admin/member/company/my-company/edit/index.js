@@ -1,11 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'lib/axios'
+import * as Yup from 'yup'
 import {getSession} from 'next-auth/react'
 import Link from 'next/link'
-import Image from 'next/image'
-import ErrorInput from '@/components/Shared/ErrorInput'
 import {useRouter} from 'next/router'
-import CountrySelectorInitial from '@/components/Shared/CountrySelectorInitial'
 import {toast} from 'react-toastify'
 import {toastOptions} from '@/lib/toastOptions'
 import Admin from 'layouts/Admin.js'
@@ -13,12 +11,7 @@ import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import DangerNotification from '@/components/Interface/Notification/DangerNotification'
-import TextInput from '@/components/Interface/Form/TextInput'
-import SelectInput from '@/components/Interface/Form/SelectInput'
-import AreaInput from '@/components/Interface/Form/AreaInput'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
-import ProvinceSelectorInitial from '@/components/Shared/ProvinceSelectorInitial'
-import CitySelectorInitial from '@/components/Shared/CitySelectorInitial'
 import useDataCountry from '@/hooks/useCountry'
 import useDataProvince from '@/hooks/useProvince'
 import {Form, Formik} from 'formik'
@@ -31,17 +24,22 @@ import ProvinceSelector from '@/components/Shared/ProvinceSelector'
 import CitySelector from '@/components/Shared/CitySelector'
 import useDataCity from '@/hooks/useCity'
 import AreaInputValidation from '@/components/Interface/Form/AreaInputValidation'
+import ErrorInput from '@/components/Shared/ErrorInput';
+import {PostalCode} from '@/utils/postalCode'
+import TextInput from '@/components/Interface/Form/TextInput'
+import {getValue} from '@/utils/general'
 
-export default function MyCompany({session, sectorlist}) {
+export default function MyCompany({session, sectorlist, countryList}) {
   const [errorInfo, setErrorInfo] = useState({})
   const [companySector, setCompanySector] = useState(null)
   const [stateDataCountry, setStateDataCountry] = useState(null)
   const [companyProvince, setCompanyProvince] = useState(null)
   const [companyCity, setCompanyCity] = useState(null)
-  const [provinceCompanyData, setProvinceCompanyData] = useState(null)
   const [companyCodeCountry, setCompanyCodeCountry] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const [stateProvince, setStateProvince] = useState(null)
+  const [stateCity, setStateCity] = useState(null)
+  const [dataSector, setDataSector] = useState([{value: 'other', label: 'Other'}]);
   const [firstAddressCharacterCount, setFirstAddressCharacterCount] =
     useState(0)
 
@@ -49,10 +47,14 @@ export default function MyCompany({session, sectorlist}) {
     useState(0)
   const secondAddressCharacterLimit = 100
   const firstAddressCharacterLimit = 100
-  function isEmailCompany(email) {
-    return /^[a-zA-Z0-9._%+-]+@(?!gmail.com)(?!yahoo.com)(?!hotmail.com)(?!yahoo.co.id)(?!aol.com)(?!live.com)(?!outlook.com)(?!inbox.com)(?!icloud.com)(?!mail.com)(?!gmx.com)(?!yandex.com)[a-zA-Z0-9_-]+.[a-zA-Z0-9-.]{2,61}$/gm.test(
-      email
-    )
+
+
+  const secondAddressHandler = (input) => {
+    setSecondAddressCharacterCount(input.length)
+  }
+
+  const firstAddressHandler = (input) => {
+    setFirstAddressCharacterCount(input.length)
   }
 
   function isMatchPostalCodePattern({id, Country, value}) {
@@ -61,14 +63,74 @@ export default function MyCompany({session, sectorlist}) {
     )
     const regex = findCodeRegex?.Regex
 
-    return regex.test(value)
+    return regex?.test(value)
   }
 
-  const countries = useDataCountry()
+  /**
+   * Validation
+   */
+
+  const validationSchema = Yup.object({
+    name: Yup.string().required('The company name field is required'),
+    sector: Yup.mixed().required('The company sector field is required'),
+    phone: Yup.mixed().required('The company phone field is required'),
+    country: Yup.mixed().required(
+      'The company country field is required'
+    ),
+    state: Yup.mixed().required(
+      'The company province field is required'
+    ),
+    city: Yup.mixed().required('The company city field is required'),
+    zip_code: Yup.mixed()
+      .required('The company zip field is required')
+      .test(
+        'is-valid-compant-zip',
+        "The company zip field should following country's zip code",
+        (value) =>
+          isMatchPostalCodePattern({
+            id: stateDataCountry?.id,
+            country: stateDataCountry?.value,
+            value,
+          })
+      ),
+    address: Yup.mixed()
+      .test(
+        'len',
+        'The Company address 1 field is required at least 2 characters and not more than 100',
+        (val) => {
+          if (val === undefined) {
+            return true
+          }
+
+          return val.length === 0 || (val.length >= 2 && val.length <= 100)
+        }
+      )
+      .required('The Company address 1 field is required'),
+    address2: Yup.mixed()
+      .test(
+        'len',
+        'The Company address 2 field is required at least 2 characters and not more than 100 characters',
+        (val) => {
+          if (val === undefined) {
+            return true
+          }
+
+          return val.length === 0 || (val.length >= 2 && val.length <= 100)
+        }
+      )
+      .notRequired(),
+  })
+
+  const countries = countryList
   const provincies = useDataProvince(stateDataCountry?.id)
-  console.log(provincies, '<<<provincies')
   const cities = useDataCity(stateProvince?.id)
+  const sectors = sectorlist
+
   const [isLoading, setIsLoading] = useState(true)
+
+
+
+
   const getDataFunc = async () => {
     setIsLoading(true)
     await axios
@@ -79,7 +141,6 @@ export default function MyCompany({session, sectorlist}) {
       })
       .then((response) => {
         let result = response.data.data
-        console.log(result, '<<<result')
         setInputData({
           name: result.name,
           address: result.address,
@@ -87,15 +148,14 @@ export default function MyCompany({session, sectorlist}) {
           country: result.country,
           sector: result.sector,
           phone: result.phone,
-          company_code_country: result.phone,
+          country_code: result.country_code,
           state: result?.state,
-          company_other: '',
           city: result?.city,
           zip_code: result?.zip_code,
         })
 
-        let oldSector = sectors.find((item) => item.value == result.sector)
-        console.log(oldSector, '<<<oldSector')
+
+        let oldSector = dataSector.find((item) => item.value == result.sector)
         let oldCountry = countries.find((e) => e.name == result.country)
         setStateDataCountry({...oldCountry})
         if (oldSector) {
@@ -108,6 +168,7 @@ export default function MyCompany({session, sectorlist}) {
 
         if (oldCountry) {
           setCountry({
+            ...stateCountry,
             value: result.country,
             label: result.country,
           })
@@ -128,7 +189,7 @@ export default function MyCompany({session, sectorlist}) {
         }
 
         let oldCity = cities?.find((item) => item?.name == result?.city)
-        console.log(oldCity, '<<oldCity')
+        setStateCity({...oldCity})
         if (oldCity) {
           setCompanyCity({value: result.city, label: result.city})
         } else {
@@ -145,21 +206,6 @@ export default function MyCompany({session, sectorlist}) {
         setIsLoading(false)
       })
   }
-
-  const UseProvince = (countryId) => {
-    console.log(countryId, '<<<countryId')
-    if (countryId) {
-      const provinces = useDataProvince(countryId)
-      console.log(provinces, '<<<<provinces')
-    }
-
-  }
-
-  useEffect(() => {
-    getDataFunc()
-  }, [])
-
-  // update data
   const [inputData, setInputData] = useState({
     name: '',
     address: '',
@@ -172,80 +218,61 @@ export default function MyCompany({session, sectorlist}) {
     zip_code: '',
     state_other: '',
     city_other: '',
-    company_other: '',
-    company_code_country: '',
+    country_code: '',
   })
 
   const setDataHandler = (input) => {
     setInputData({...inputData, [input.name]: input.value})
   }
 
-  //country handle
+
+  useEffect(() => {
+    getDataFunc()
+    setDataSector([...sectors, {value: 'other', label: 'Other'}]);
+
+  }, [])
+
+
+  useEffect(() => {
+    setCountry({
+      ...stateCountry,
+      label: inputData?.country,
+      label: inputData.country
+    })
+    setCompanyProvince({
+      ...companyProvince,
+      label: inputData?.state,
+      value: inputData?.state
+    })
+    setCompanyCity({
+      ...companyCity,
+      label: inputData?.city,
+      value: inputData?.city
+    })
+  }, [inputData?.state, inputData?.city])
+
   const [stateCountry, setCountry] = useState()
-
-  const countryHandleChange = (value) => {
-    setInputData({...inputData, country: value.label})
-    setCountry(value)
-  }
-
-  const [stateData, setStateData] = useState(null)
-  const provinceHandleChange = (value) => {
-    setInputData({...inputData, state: ''})
-    setStateData(value)
-    if (value?.value != 'other') {
-      setInputData({...inputData, state: value.value})
-    }
-  }
-
-  const [stateDataCity, setStateDataCity] = useState(null)
-  console.log(stateDataCity, '<<<stateDataCity')
-  const cityHandleChange = (value) => {
-    console.log(value, '<<<valueCityHandle')
-    setInputData({...inputData, city: ''})
-    // setStateDataCity(value)
-    if (value?.value != 'other') {
-      // setStateDataCity(value)
-      setInputData({...inputData, city: value.value})
-    }
-  }
-
-  // const [sectors, setSectors] = useState([
-  //   ...sectorlist,
-  //   { value: 'other', label: 'Other' },
-  // ])
-
-  const sectors = useSctor()
-  console.log(sectors, '<<<sectors')
   const [sector, setSector] = useState(null)
-  const handleSectorChange = (value) => {
-    setInputData({...inputData, sector: ''})
-    setSector(value)
-    if (value.value != 'other') {
-      setInputData({...inputData, sector: value.value})
-    }
-  }
 
-  //update handler
   const router = useRouter()
   const handleSubmit = async (values) => {
-    console.log(values, '<<<values')
     setIsLoading(true)
     setErrorInfo({})
     setErrorMessage(null)
     let payloadData = {}
-    payloadData['state'] = values.province.value
-    // payloadData['state'] =
-    //   inputData?.state?.toLowerCase() === 'other'
-    //     ? inputData?.state_other
-    //     : inputData?.state
+    payloadData['state'] = getValue(values?.state)
     payloadData['address'] = values?.address
     payloadData['address2'] = values?.address2
     payloadData['name'] = values?.name
-    payloadData['country'] = values?.country?.value
-    payloadData['sector'] = values?.sector?.value
+    payloadData['country'] = getValue(values?.country)
+    payloadData['sector'] = values?.sector ?? ''
     payloadData['phone'] = values?.phone
-    payloadData['city'] = values?.city?.value
+    payloadData['city'] = getValue(values?.city)
     payloadData['zip_code'] = values?.zip_code
+    payloadData['country_code'] = companyCodeCountry?.value ?? ''
+    !inputData?.RegistrationDocument ? null : payloadData['RegistrationDocument'] = inputData?.RegistrationDocument
+    !inputData?.CertificationofActivity ? null : payloadData['CertificationofActivity'] = inputData?.CertificationofActivity
+
 
     let formData = new FormData()
     for (const key in payloadData) {
@@ -258,8 +285,7 @@ export default function MyCompany({session, sectorlist}) {
           Authorization: `Bearer ${session.accessToken}`,
         },
       })
-      .then((response) => {
-        let result = response.data.data
+      .then(() => {
         router.replace('/admin/member')
         toast.success(
           'Your company have been updated successfully.',
@@ -270,11 +296,14 @@ export default function MyCompany({session, sectorlist}) {
         setErrorMessage('Please fill your form correctly')
         toast.error('Something went wrong.', toastOptions)
         setErrorInfo(error.data.data)
+        setIsLoading(false)
       })
       .finally(() => {
         setIsLoading(false)
       })
   }
+
+
 
   return (
     <PrimaryWrapper>
@@ -294,11 +323,11 @@ export default function MyCompany({session, sectorlist}) {
         }
       ></PageHeader>
       {errorMessage && <DangerNotification message={errorMessage} />}
-      {/* <form onSubmit={handleSubmit} className="p-2"></form> */}
       <Formik
         initialValues={inputData}
         onSubmit={handleSubmit}
         enableReinitialize
+        validationSchema={validationSchema}
       >
         {({values, errors, ...formikProps}) => {
           return (
@@ -331,38 +360,35 @@ export default function MyCompany({session, sectorlist}) {
                     name={'sector'}
                     value={companySector}
                     required
-                    options={sectors}
+                    options={dataSector}
                     errorMsg={errorInfo?.sector}
                     onChange={(value) => {
                       setCompanySector(value)
                       formikProps.setFieldValue('sector', value)
+                      setInputData({...inputData, sector: ''})
+                      if (value.value != 'other') {
+                        setInputData({...inputData, sector: value.value})
+                      }
                     }}
                     onBlur={formikProps.onBlur}
                     error={formikProps.touched.sector && Boolean(errors.sector)}
                     helperText={formikProps.touched.sector && errors.sector}
                   />
-                  {companySector?.value === 'other' && (
-                    <div className="mt-2">
-                      <TextInputValidate
-                        id="company_other"
+                  {
+                    companySector?.value == 'other' && (
+                      <TextInput
+                        id="sector"
                         className="w-full"
                         required
                         type="text"
-                        name="company_other"
-                        value={values.company_other}
-                        errorMsg={errorInfo?.company_other}
-                        onChange={formikProps.handleChange}
-                        error={
-                          formikProps.touched.company_other &&
-                          Boolean(errors.company_other)
-                        }
-                        helperText={
-                          formikProps.touched.company_other &&
-                          errors.company_other
-                        }
+                        name="sector"
+                        value={inputData?.sector}
+                        error={errorInfo?.sector}
+                        errorMsg={errorInfo?.sector}
+                        onChange={(input) => setDataHandler(input)}
                       />
-                    </div>
-                  )}
+                    )
+                  }
                 </div>
               </div>
               <div className="flex flex-wrap mb-6">
@@ -375,24 +401,24 @@ export default function MyCompany({session, sectorlist}) {
                     required
                     type="text"
                     name="phone"
-                    name2="company_code_country"
+                    name2="country_code"
                     value={values.phone}
                     value2={companyCodeCountry}
                     errorMsg={errorInfo?.phone}
                     onChange={formikProps.handleChange}
                     onChange2={(event) => {
-                      formikProps.setFieldValue('company_code_country', event)
+                      formikProps.setFieldValue('country_code', event)
                       setCompanyCodeCountry(event)
                     }}
                     error={
                       (formikProps.touched.phone && Boolean(errors.phone)) ||
-                      (formikProps.touched.company_code_country &&
-                        Boolean(errors.company_code_country))
+                      (formikProps.touched.country_code &&
+                        Boolean(errors.country_code))
                     }
                     helperText={
                       (formikProps.touched.phone && errors.phone) ||
-                      (formikProps.touched.company_code_country &&
-                        errors.company_code_country)
+                      (formikProps.touched.country_code &&
+                        errors.country_code)
                     }
                     placeholder="Please enter company phone number here..."
                   />
@@ -416,6 +442,7 @@ export default function MyCompany({session, sectorlist}) {
                         (e) => e?.name == value?.value
                       )
                       setStateDataCountry({...Country})
+                      setCompanyCity(null)
                     }}
                     onBlur={formikProps.onBlur}
                     errorMsg={errorInfo?.country}
@@ -428,26 +455,27 @@ export default function MyCompany({session, sectorlist}) {
                 <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                   <ProvinceSelector
                     searchable
-                    name="province"
+                    name="state"
                     label="Province"
                     value={companyProvince}
                     required
                     onChange={(value) => {
-                      formikProps.setFieldValue('province', value)
+                      formikProps.setFieldValue('state', value)
                       setCompanyProvince(value)
                       formikProps.setFieldValue('city', '')
                       const province = provincies?.find(
                         (e) => e?.name == value.value
                       )
                       setStateProvince({...province})
+                      setCompanyCity(null)
                     }}
                     countryId={stateDataCountry?.id}
                     onBlur={formikProps.onBlur}
-                    errorMsg={errorInfo?.province}
+                    errorMsg={errorInfo?.state}
                     error={
-                      formikProps.touched.province && Boolean(errors.province)
+                      formikProps.touched.state && Boolean(errors.state)
                     }
-                    helperText={formikProps.touched.province && errors.province}
+                    helperText={formikProps.touched.state && errors.state}
                   />
                 </div>
               </div>
@@ -465,7 +493,11 @@ export default function MyCompany({session, sectorlist}) {
                     provinceId={stateProvince?.id}
                     onChange={(value) => {
                       formikProps.setFieldValue('city', value)
-                      // setStateDataCity(value)
+                      setCompanyCity(value)
+                      const citiesArr = cities?.find(
+                        (e) => e?.name == value.value
+                      )
+                      setStateCity({...citiesArr})
                     }}
                     error={formikProps.touched.city && Boolean(errors.city)}
                     helperText={formikProps.touched.city && errors.city}
@@ -558,6 +590,71 @@ export default function MyCompany({session, sectorlist}) {
                   />
                 </div>
               </div>
+
+              <div className="mt-8 mb-20">
+                <div className="relative flex py-5 items-center w-full mx-auto">
+                  <div className="flex-grow border-t border-blueGray-700"></div>
+                  <div className="flex-shrink mx-4"><h2 className="font-semibold text-xl text-blueGray-500">Documents</h2></div>
+                  <div className="flex-grow border-t border-blueGray-700"></div>
+                </div>
+                <div className="flex flex-wrap mb-6">
+                  <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                      Company Registration Document (Upload if only change)
+                    </label>
+                    <div className="p-5 border-dashed border-2 border-indigo-200">
+                      <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>
+                        <div className='text-center my-auto'>
+                          <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
+                        </div>
+                        <div className="text-xs ">
+                          <p>PDF file size no more than 10MB</p>
+                          <input
+                            className="mt-3"
+                            type="file"
+                            accept='.pdf'
+                            name='RegistrationDocument'
+                            onChange={({target}) =>
+                              setInputData({...inputData, RegistrationDocument: target.files[0]})
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    {errorInfo.RegistrationDocument &&
+                      <ErrorInput error={errorInfo.RegistrationDocument} />
+                    }
+                  </div>
+                  <div className="w-full md:w-1/2 px-3">
+                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                      Certification of Activity (Upload if only change)
+                    </label>
+                    <div className="p-5 border-dashed border-2 border-indigo-200">
+                      <div className='grid gap-4 lg:grid-cols-2 md:grid-cols-1'>
+                        <div className='text-center my-auto'>
+                          <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
+                        </div>
+                        <div className="text-xs ">
+                          <p>PDF file size no more than 10MB</p>
+                          <input
+                            className="mt-3"
+                            type="file"
+                            accept='.pdf'
+                            name="CertificationofActivity"
+                            onChange={({target}) =>
+                              setInputData({...inputData, CertificationofActivity: target.files[0]})
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    {errorInfo.CertificationofActivity &&
+                      <ErrorInput error={errorInfo.CertificationofActivity} />
+                    }
+                  </div>
+                </div>
+              </div>
+
               <div className="text-center mb-10 w-1/2 mx-auto">
                 <i className="text-light italic text-red-500">Note: Updating your Company causing your Member Status become pending.</i>
               </div>
@@ -598,13 +695,16 @@ MyCompany.layout = Admin
 export async function getServerSideProps(context) {
   const session = await getSession(context)
   const loadSectors = await axios.get(`/sectorlist`)
+  const loadCountries = await axios.get(`/region/country`)
   const sectorlist = loadSectors.data.data
+  const countryList = loadCountries?.data.data
 
   return {
     props: {
       session,
       routeParam: context.query,
       sectorlist,
+      countryList
     },
   }
 }
