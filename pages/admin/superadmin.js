@@ -1,23 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import { getSession } from 'next-auth/react'
-import axios from '@/lib/axios'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
-import Link from 'next/link'
-
-// superadmin
-import PendingCompany from '@/components/Dashboard/Superadmin/PendingCompany'
-import NewInquiries from '@/components/Dashboard/Superadmin/NewInquiries'
-import StatusUpdateOngoingOrder from '@/components/Dashboard/Superadmin/StatusUpdateOngoingOrder'
-import PendingShipment from '@/components/Dashboard/Superadmin/PendingShipment'
-import PendingPayment from '@/components/Dashboard/Superadmin/PendingPayment'
-import MemberStatistic from '@/components/Dashboard/Superadmin/MemberStatistic'
-
-// layout for page
 import Admin from 'layouts/Admin.js'
+import axios from '@/lib/axios'
+import {getSession} from 'next-auth/react'
+import Link from 'next/link'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
+import React, {useState, useEffect} from 'react'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 
-function ComponentCardAdminDashboard({ dataName, name, url }) {
+function ComponentCardAdminDashboard({dataName, name, url}) {
   return (
     <PrimaryWrapper className="border border-blue-500">
       <div className="p-4 mb-auto">
@@ -41,7 +31,7 @@ function ComponentCardAdminDashboard({ dataName, name, url }) {
   )
 }
 
-export default function SuperadminDashboard({ session, message }) {
+export default function SuperadminDashboard({session, message}) {
   const status_id = session?.user?.userDetail?.status_id
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({
@@ -142,7 +132,7 @@ export default function SuperadminDashboard({ session, message }) {
               name={'Pending Shipment'}
             />
             <ComponentCardAdminDashboard
-              dataName={data.order_process_two.release_payment}
+              dataName={data?.order_process_two?.release_payment}
               url={
                 '/admin/superadmin/orders/allorders?orderStatus=invoice-uploaded'
               }
@@ -217,7 +207,7 @@ export default function SuperadminDashboard({ session, message }) {
                 name={'Pending Shipment'}
               />
               <ComponentCardAdminDashboard
-                dataName={data.order_process_two.release_payment || 0}
+                dataName={data?.order_process_two?.release_payment || 0}
                 url={
                   '/admin/superadmin/orders/allorders?orderStatus=invoice-uploaded'
                 }

@@ -3,7 +3,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import axios from 'lib/axios'
 import {getSession} from 'next-auth/react'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
 // layout for page
 import Admin from 'layouts/Admin.js'

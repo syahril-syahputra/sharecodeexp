@@ -1,10 +1,8 @@
 /* eslint-disable react/jsx-no-target-blank */
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { Router, useRouter } from 'next/router'
-import { PageSEO } from '@/components/Utils/SEO'
+import React, { } from "react";
+import {useRouter} from 'next/router'
+import {PageSEO} from '@/components/Utils/SEO'
 import siteMetadata from '@/utils/siteMetadata'
-import axios from "lib/axios";
 
 //components
 import IndexNavbar from "components/Navbars/IndexNavbar.js";

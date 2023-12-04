@@ -1,7 +1,7 @@
 import axios from 'lib/axios'
-import { getSession } from 'next-auth/react'
+import {getSession} from 'next-auth/react'
 
-export default function Dashboard({ session }) {}
+export default function Dashboard({session}) { }
 
 async function fetchUser(context, accessToken) {
   try {
@@ -32,7 +32,6 @@ export async function getServerSideProps(context) {
     }
   }
 
-  // redirection member or superadmin
   let nextDestination = '/admin/member'
 
   if (session.user.userDetail.role_id == 1) {

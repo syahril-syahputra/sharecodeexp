@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-target-blank */
 import * as Yup from 'yup'
 import React, {useState} from 'react'
 import axios from 'lib/axios'
@@ -169,7 +168,6 @@ export default function Index() {
           if (val === undefined) {
             return true
           }
-
           return val.length === 0 || (val.length >= 2 && val.length <= 100)
         }
       )
@@ -195,29 +193,32 @@ export default function Index() {
     ),
   })
 
-  const [, setRegistrationInfo] = useState({
-    // Account Information
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
+  /**
+   * This code comment due to fixing bugs process for performance issues 12/2/2023
+   */
+  // const [_, setRegistrationInfo] = useState({
+  //   // Account Information
+  //   name: '',
+  //   email: '',
+  //   password: '',
+  //   password_confirmation: '',
 
-    // Company Information
-    company_name: '',
-    company_sector: '',
-    company_phone: '',
-    company_country: '',
-    company_address: '',
-    company_address2: '',
-    company_zip: '',
-    company_province: '',
-    company_city: '',
+  //   // Company Information
+  //   company_name: '',
+  //   company_sector: '',
+  //   company_phone: '',
+  //   company_country: '',
+  //   company_address: '',
+  //   company_address2: '',
+  //   company_zip: '',
+  //   company_province: '',
+  //   company_city: '',
 
-    // Documents
-    company_img: '',
-    company_RegistrationDocument: '',
-    company_CertificationofActivity: '',
-  })
+  //   // Documents
+  //   company_img: '',
+  //   company_RegistrationDocument: '',
+  //   company_CertificationofActivity: '',
+  // })
 
   const [firstAddressCharacterCount, setFirstAddressCharacterCount] =
     useState(0)
@@ -233,8 +234,6 @@ export default function Index() {
   const firstAddressHandler = (input) => {
     setFirstAddressCharacterCount(input.length)
   }
-
-  const [country, setCountry] = useState(null)
 
   const [errorInfo, setErrorInfo] = useState({})
   const [errorMessage, setErrorMessage] = useState(null)
@@ -260,7 +259,6 @@ export default function Index() {
       company_address2: values.company_address2,
       country_code: values.company_code_country?.value,
       company_phone: values.company_phone,
-      // company_phone: `${values.company_code_country?.value}${values.company_phone}`,
       company_sector:
         companySector?.value?.toLowerCase() === 'other'
           ? values.company_other
@@ -281,7 +279,7 @@ export default function Index() {
       tac_of_sale_agreement: isAgreeTermCondtionOfSale,
       tac_of_export_agreement: isAgreeTermCondtionOfExport,
     }
-    console.log(payload, '<<<payload')
+
     if (!isAgreeTermCondtionOfSale) {
       setIsAgreeTermCondtionOfSaleMessage(
         'Please agreed the Term and Conditions of Sale before continue.'
@@ -935,45 +933,6 @@ export default function Index() {
                                 errors.company_CertificationofActivity
                               }
                             />
-
-                            {/* <div className="w-full md:w-1/2 px-3">
-                              <label
-                                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                htmlFor="grid-last-name"
-                              >
-                                Certification of Activity
-                              </label>
-                              <div className="p-5 border-dashed border-2 border-indigo-200">
-                                <div className="grid gap-4 lg:grid-cols-2 md:grid-cols-1">
-                                  <div className="text-center my-auto">
-                                    <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl" />
-                                  </div>
-                                  <div className="text-xs ">
-                                    <p>PDF file size no more than 10MB</p>
-                                    <input
-                                      className="mt-3"
-                                      type="file"
-                                      name="company_CertificationofActivity"
-                                      accept=".pdf"
-                                      onChange={({ target }) =>
-                                        setRegistrationInfo({
-                                          ...registrationInfo,
-                                          company_CertificationofActivity:
-                                            target.files[0],
-                                        })
-                                      }
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                              {errorInfo?.company_CertificationofActivity && (
-                                <ErrorInput
-                                  error={
-                                    errorInfo?.company_CertificationofActivity
-                                  }
-                                />
-                              )}
-                            </div> */}
                           </div>
                         </div>
 

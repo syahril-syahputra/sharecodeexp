@@ -12,12 +12,10 @@ import PageHeader from '@/components/Interface/Page/PageHeader'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import DangerNotification from '@/components/Interface/Notification/DangerNotification'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
-import useDataCountry from '@/hooks/useCountry'
 import useDataProvince from '@/hooks/useProvince'
 import {Form, Formik} from 'formik'
 import TextInputValidate from '@/components/Interface/Form/TextInputValidation'
 import SelectInputSector from '@/components/Interface/Form/SelectInputSector'
-import useSctor from '@/hooks/useSctor'
 import TextInputPhoneValidate from '@/components/Interface/Form/TextInputPhoneValidate'
 import CountrySelector from '@/components/Shared/CountrySelector'
 import ProvinceSelector from '@/components/Shared/ProvinceSelector'
@@ -40,6 +38,8 @@ export default function MyCompany({session, sectorlist, countryList}) {
   const [stateProvince, setStateProvince] = useState(null)
   const [stateCity, setStateCity] = useState(null)
   const [dataSector, setDataSector] = useState([{value: 'other', label: 'Other'}]);
+  const [dataState, setDataState] = useState({value: 'other', label: 'Other'});
+
   const [firstAddressCharacterCount, setFirstAddressCharacterCount] =
     useState(0)
 
@@ -80,7 +80,21 @@ export default function MyCompany({session, sectorlist, countryList}) {
     state: Yup.mixed().required(
       'The company province field is required'
     ),
+    state_other: Yup.mixed().when('state', {
+      is: (value) => typeof (value) === undefined ? value : typeof (value) == 'object' ? value?.value === 'Other' : value == 'Other',
+      then: () =>
+        Yup.mixed().required(
+          'The company province with other field is required'
+        ),
+      otherwise: () => Yup.mixed().notRequired(),
+    }),
     city: Yup.mixed().required('The company city field is required'),
+    city_other: Yup.mixed().when('city', {
+      is: (value) => typeof (value) === undefined ? value : typeof (value) == 'object' ? value?.value === 'Other' : value == 'Other',
+      then: () =>
+        Yup.mixed().required('The company city with other field is required'),
+      otherwise: () => Yup.mixed().notRequired(),
+    }),
     zip_code: Yup.mixed()
       .required('The company zip field is required')
       .test(
@@ -150,7 +164,9 @@ export default function MyCompany({session, sectorlist, countryList}) {
           phone: result.phone,
           country_code: result.country_code,
           state: result?.state,
+          state_other: result?.state_other,
           city: result?.city,
+          city_other: result?.city,
           zip_code: result?.zip_code,
         })
 
@@ -214,10 +230,10 @@ export default function MyCompany({session, sectorlist, countryList}) {
     sector: '',
     phone: '',
     state: '',
-    city: '',
-    zip_code: '',
     state_other: '',
+    city: '',
     city_other: '',
+    zip_code: '',
     country_code: '',
   })
 
@@ -229,7 +245,7 @@ export default function MyCompany({session, sectorlist, countryList}) {
   useEffect(() => {
     getDataFunc()
     setDataSector([...sectors, {value: 'other', label: 'Other'}]);
-
+    // 
   }, [])
 
 
@@ -249,25 +265,25 @@ export default function MyCompany({session, sectorlist, countryList}) {
       label: inputData?.city,
       value: inputData?.city
     })
-  }, [inputData?.state, inputData?.city])
+  }, [inputData?.state, inputData?.city,])
 
   const [stateCountry, setCountry] = useState()
   const [sector, setSector] = useState(null)
 
   const router = useRouter()
   const handleSubmit = async (values) => {
-    setIsLoading(true)
+    setIsLoading(false)
     setErrorInfo({})
     setErrorMessage(null)
     let payloadData = {}
-    payloadData['state'] = getValue(values?.state)
+    payloadData['state'] = getValue(values?.state) == 'Other' ? values.state_other : getValue(values?.state)
     payloadData['address'] = values?.address
     payloadData['address2'] = values?.address2
     payloadData['name'] = values?.name
     payloadData['country'] = getValue(values?.country)
     payloadData['sector'] = values?.sector ?? ''
     payloadData['phone'] = values?.phone
-    payloadData['city'] = getValue(values?.city)
+    payloadData['city'] = getValue(values?.city) == 'Other' ? values.city_other : getValue(values?.city)
     payloadData['zip_code'] = values?.zip_code
     payloadData['country_code'] = companyCodeCountry?.value ?? ''
     !inputData?.RegistrationDocument ? null : payloadData['RegistrationDocument'] = inputData?.RegistrationDocument
@@ -435,7 +451,7 @@ export default function MyCompany({session, sectorlist, countryList}) {
                     onChange={(value) => {
                       setCountry(value)
                       formikProps.setFieldValue('country', value)
-                      formikProps.setFieldValue('province', '')
+                      formikProps.setFieldValue('state', '')
                       formikProps.setFieldValue('')
                       setCompanyProvince(null)
                       const Country = countries.find(
@@ -455,17 +471,20 @@ export default function MyCompany({session, sectorlist, countryList}) {
                 <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                   <ProvinceSelector
                     searchable
+                    id="state"
                     name="state"
                     label="Province"
                     value={companyProvince}
                     required
                     onChange={(value) => {
                       formikProps.setFieldValue('state', value)
+                      formikProps.setFieldValue('state_other', '')
                       setCompanyProvince(value)
                       formikProps.setFieldValue('city', '')
                       const province = provincies?.find(
                         (e) => e?.name == value.value
                       )
+                      setInputData({...inputData, state: value.value})
                       setStateProvince({...province})
                       setCompanyCity(null)
                     }}
@@ -473,10 +492,25 @@ export default function MyCompany({session, sectorlist, countryList}) {
                     onBlur={formikProps.onBlur}
                     errorMsg={errorInfo?.state}
                     error={
-                      formikProps.touched.state && Boolean(errors.state)
+                      (formikProps.touched.state && Boolean(errors.state)) || (formikProps.touched.state_other &&
+                        Boolean(errors.state_other))
                     }
-                    helperText={formikProps.touched.state && errors.state}
+                    helperText={(formikProps.touched.state && errors.state) || (formikProps.touched.state_other &&
+                      errors.state_other)}
                   />
+                  {
+                    companyProvince?.value?.toLowerCase() == 'other' && (
+                      <TextInputValidate
+                        id="state_other"
+                        className="w-full"
+                        required
+                        type="text"
+                        name="state_other"
+                        value={values.state_other}
+                        onChange={formikProps.handleChange}
+                      />
+                    )
+                  }
                 </div>
               </div>
               <div className="flex flex-wrap mb-6">
@@ -493,15 +527,34 @@ export default function MyCompany({session, sectorlist, countryList}) {
                     provinceId={stateProvince?.id}
                     onChange={(value) => {
                       formikProps.setFieldValue('city', value)
+                      formikProps.setFieldValue('city_other', '')
                       setCompanyCity(value)
                       const citiesArr = cities?.find(
                         (e) => e?.name == value.value
                       )
                       setStateCity({...citiesArr})
                     }}
-                    error={formikProps.touched.city && Boolean(errors.city)}
-                    helperText={formikProps.touched.city && errors.city}
+                    error={(formikProps.touched.city && Boolean(errors.city)) || formikProps.touched.city_other &&
+                      Boolean(errors.city_other)}
+                    helperText={(formikProps.touched.city && errors.city) || (formikProps.touched.city_other &&
+                      errors.city_other)}
                   />
+                  {
+                    companyCity?.value?.toLowerCase() == 'other' &&
+                    (
+                      <div className='mt-2'>
+                        <TextInputValidate
+                          id="city_other"
+                          className="w-full"
+                          required
+                          type="text"
+                          name="city_other"
+                          value={values?.city_other}
+                          onChange={formikProps?.handleChange}
+                        />
+                      </div>
+                    )
+                  }
                 </div>
                 <div className="w-full md:w-1/2 px-3">
                   <div className="w-full md:w-1/2 lg:w-1/2 2xl:w-1/2">
