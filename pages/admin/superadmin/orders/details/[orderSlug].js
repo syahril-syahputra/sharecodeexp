@@ -37,6 +37,8 @@ import DangerButton from '@/components/Interface/Buttons/DangerButton'
 import TerminateOrder from '@/components/Modal/OrderComponent/Superadmin/TerminateOrder'
 import TestingAndHandlingServices from '@/components/Modal/OrderComponent/Superadmin/TestingAndHandlingServices'
 import RequestUpdateTestingPayment from '@/components/Modal/OrderComponent/Superadmin/RequestUpdateTestingPayment'
+import CloseNotReturned from '@/components/Modal/OrderComponent/Superadmin/CloseNotReturned'
+import CloseReturned from '@/components/Modal/OrderComponent/Superadmin/CloseReturned'
 
 export default function OrderDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -442,6 +444,70 @@ export default function OrderDetails({ session, routeParam }) {
         setIsLoading(false)
       })
   }
+
+  const [closeOrderNotReturnedModal, setcloseOrderNotReturnedModal] =
+    useState(false)
+  const closeOrderNotReturnedHandler = async (reviewed, accepted, close) => {
+    setIsLoading(true)
+    setErrorInfo({})
+
+    const response = await axios
+      .post(
+        `/admin/orders/close-not-returned`,
+        {
+          order_slug: data.slug,
+          payment_reviewed: reviewed,
+          payment_accepted: accepted,
+          close_order: close,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setcloseOrderNotReturnedModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(error.data.message, toastOptions)
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
+
+  const [closeOrderReturnedModal, setcloseOrderReturnedModal] = useState(false)
+  const closeOrderReturnedHandler = async (close) => {
+    setIsLoading(true)
+    setErrorInfo({})
+
+    const response = await axios
+      .post(
+        `/admin/orders/close-returned`,
+        {
+          order_slug: data.slug,
+          product_returned: close,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setcloseOrderReturnedModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(error.data.message, toastOptions)
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
+
   const [requestUpdateTestingPayment, setrequestUpdateTestingPayment] =
     useState(false)
   const requestUpdateTestingPaymentHandler = async (reason) => {
@@ -898,9 +964,28 @@ export default function OrderDetails({ session, routeParam }) {
               errorInfo={errorInfo}
             />
           )}
+          {closeOrderNotReturnedModal && (
+            <CloseNotReturned
+              isLoading={isLoading}
+              closeModal={() => setcloseOrderNotReturnedModal(false)}
+              acceptance={closeOrderNotReturnedHandler}
+              orderSlug={routeParam.orderSlug}
+              file={publicDir + data.buyer_receipt_path}
+              errorInfo={errorInfo}
+            />
+          )}
 
           <div className="flex justify-center">
             <div className="mx-2 my-4">
+              <DangerButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setcloseOrderNotReturnedModal(true)}
+              >
+                Close Reimbursement
+              </DangerButton>
               <PrimaryButton
                 outline
                 className="mx-1"
@@ -937,6 +1022,34 @@ export default function OrderDetails({ session, routeParam }) {
                 onClick={() => setTrackerNumberForSellerModal(true)}
               >
                 Provide Tracking Number
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+    case 25:
+      actionToTake = (
+        <div>
+          {closeOrderReturnedModal && (
+            <CloseReturned
+              isLoading={isLoading}
+              closeModal={() => setcloseOrderReturnedModal(false)}
+              acceptance={closeOrderReturnedHandler}
+              errorInfo={errorInfo}
+            />
+          )}
+
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setcloseOrderReturnedModal(true)}
+              >
+                Close Reimbursement
               </PrimaryButton>
             </div>
           </div>
