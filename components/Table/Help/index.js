@@ -14,7 +14,6 @@ import {toast} from 'react-toastify'
 import {toastOptions} from '@/lib/toastOptions'
 
 export default function HelpTable({session, ...props}) {
-  console.log(session, '<<<session')
   const [showHelpRequestModal, setShowHelpRequestModal] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [isLoadingModal, setIsLoadingModal] = useState(false)

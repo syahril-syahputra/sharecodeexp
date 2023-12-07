@@ -28,7 +28,6 @@ import TextInput from '@/components/Interface/Form/TextInput'
 import {getValue} from '@/utils/general'
 
 export default function MyCompany({session, sectorlist, countryList}) {
-  console.log(countryList, '<<<countryList')
   const [errorInfo, setErrorInfo] = useState({})
   const [companySector, setCompanySector] = useState(null)
   const [stateDataCountry, setStateDataCountry] = useState(null)

@@ -55,7 +55,6 @@ export default function UserVerificatinButton(navBarV2 = false) {
   const {username, loadUsername} = useContext(GlobalContext)
   const [logoutModal, setLogoutModal] = useState(false)
   const [data, setData] = useState()
-  console.log(data, '<<<<data')
 
   async function fetchUser(accessToken) {
     try {

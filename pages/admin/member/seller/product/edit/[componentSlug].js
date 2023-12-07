@@ -99,7 +99,6 @@ export default function EditComponent({session, routeParam, packaginglist}) {
         toast.success('Product has been updated.', toastOptions)
       })
       .catch((error) => {
-        console.log(error)
         toast.error(
           'Something went wrong. Check your form correctly.',
           toastOptions
