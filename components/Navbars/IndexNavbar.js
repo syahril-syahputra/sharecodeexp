@@ -4,6 +4,7 @@ import Link from 'next/link'
 // components
 import ImageLogo from '@/components/ImageLogo/ImageLogo'
 import LoginButton from './LoginButton'
+import UserVerificatinButton from './UserVerificationNavbar'
 
 export default function Navbar(props) {
   return (
@@ -20,6 +21,7 @@ export default function Navbar(props) {
             </div>
           </Link>
         )}
+        {props.emailVerification && <UserVerificatinButton />}
         {!props.hideLogin && <LoginButton />}
       </div>
     </nav>

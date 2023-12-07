@@ -1,41 +1,27 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, {Fragment, useState} from 'react'
 import axios from 'lib/axios'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
-import { PageSEO } from '@/components/Utils/SEO'
+import {PageSEO} from '@/components/Utils/SEO'
 import siteMetadata from '@/utils/siteMetadata'
 import IndexNavbar from 'components/Navbars/IndexNavbar.js'
 import Footer from '@/components/Footers/Footer'
-import { signOut } from 'next-auth/react'
-import { getSession } from 'next-auth/react'
+import {signOut} from 'next-auth/react'
+import {getSession} from 'next-auth/react'
 import ImageLogo from '@/components/ImageLogo/ImageLogo'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import LogoutModal from '@/components/Modal/Logout/Logout'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import ResendEmailVerification from '@/components/Modal/ResendEmail'
-import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
-import { CountdownTimer } from '@/components/CounterdownTime'
 
-export default function VerifyEmail({ session }) {
-  let time = 1
+export default function VerifyEmail({session}) {
   const [loading, setLoading] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
-  const [isLoadingModal, setIsLoadingModal] = useState(false)
   const [logoutModal, setLogoutModal] = useState(false)
   const [resendModal, setResendModal] = useState(false)
   const [dialogState, setDialogState] = useState(false)
   const [isSucces, setIsSucces] = useState(false)
-  const THREE_DAYS_IN_MS = 1 * 1 * 2 * 60 * 1000
-  const NOW_IN_MS = new Date().getTime()
-  const dateTimeAfterThreeDays = NOW_IN_MS + THREE_DAYS_IN_MS
 
-  if (typeof window !== 'undefined') {
-    time = parseInt(localStorage.getItem('end_date'), 10)
-  }
-
-  const countDownData = () => {
-    return <CountdownTimer setDialogState={setDialogState} targetDate={time} />
-  }
   const handleResendEmail = async () => {
     await axios
       .post(
@@ -53,12 +39,6 @@ export default function VerifyEmail({ session }) {
         setDialogState(true)
         setResendModal(false)
         setLoading(true)
-        if (localStorage.getItem('end_date') === null) {
-          localStorage.setItem(
-            'end_date',
-            JSON.stringify(dateTimeAfterThreeDays)
-          )
-        }
       })
       .catch((error) => {
         toast.error(`${error?.data?.message}`, toastOptions)
@@ -73,12 +53,6 @@ export default function VerifyEmail({ session }) {
       <IndexNavbar fixed />
       <section className="relative py-14 overflow-hidden h-3/6 ">
         <div className="container mx-auto mt-10 xs:pb-10 xs:pt-8 px-4">
-          {dialogState ? (
-            <PrimaryNotification
-              message={'Email notification has been resend successfully'}
-              timer={countDownData()}
-            />
-          ) : null}
           <PrimaryWrapper className={'mt-6'}>
             {
               <div className="text-center pb-20 pt-20">
@@ -98,11 +72,7 @@ export default function VerifyEmail({ session }) {
                     disabled={dialogState}
                     onClick={() => setResendModal(true)}
                   >
-                    {dialogState ? (
-                      <i className="px-3 fas fa-hourglass fa-spin"></i>
-                    ) : (
-                      'Resend'
-                    )}
+                    Resend
                   </PrimaryButton>
                   <PrimaryButton
                     className="m-2"

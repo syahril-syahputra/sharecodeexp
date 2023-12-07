@@ -1,9 +1,12 @@
+/**
+ * This code should be refactored
+ */
 import React from 'react'
 import useDataCountry from '@/hooks/useCountry'
 import Select from 'react-tailwindcss-select'
 import ErrorInput from './ErrorInput'
 
-export default function CountrySelector(props) {
+export default function CountrySelectorEdit(props) {
   const countries = useDataCountry()
   const options =
     countries?.map((e) => {

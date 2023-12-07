@@ -1,21 +1,21 @@
 import axios from 'lib/axios'
-import React, { Fragment, useState, useEffect } from 'react'
+import React, {Fragment, useState, useEffect} from 'react'
 import IndexNavbar from 'components/Navbars/IndexNavbar.js'
 import Footer from '@/components/Footers/Footer'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import ImageLogo from '@/components/ImageLogo/ImageLogo'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
-import { useRouter } from 'next/router'
+import {useRouter} from 'next/router'
 import LoadingState from '@/components/Interface/Loader/LoadingState'
-import { timeoutPromise } from '@/utils/general'
-import { CountdownTimer } from '@/components/CounterdownTime'
+import {timeoutPromise} from '@/utils/general'
+import {CountdownTimer} from '@/components/CounterdownTime'
 import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
 import ResendEmailVerification from '@/components/Modal/ResendEmail'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
-import { getSession } from 'next-auth/react'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
+import {getSession} from 'next-auth/react'
 
-export default function EmailVerify({ session }) {
+export default function EmailVerify({session}) {
   let time = 1
   const router = useRouter()
   const [stateExpires, setStateExpires] = useState('')
@@ -102,7 +102,7 @@ export default function EmailVerify({ session }) {
     if (params?.length > 0) {
       let param = ''
       const queryParams = {}
-      for (let i = 0; i < params?.length; i++) {
+      for (let i = 0;i < params?.length;i++) {
         param = params[i]?.split('=')
         queryParams[param[0]] = param[1]
       }
@@ -157,7 +157,7 @@ export default function EmailVerify({ session }) {
 
   return (
     <Fragment>
-      <IndexNavbar fixed hideLogin={false} emailVerification={true} />
+      <IndexNavbar hideLogin={true} fixed emailVerification={true} />
       <section className="relative py-14 overflow-hidden h-3/6 ">
         <div className="container mx-auto mt-10 xs:pb-10 xs:pt-8 px-4">
           {dialogState ? (
@@ -194,7 +194,7 @@ export default function EmailVerify({ session }) {
                           disabled={dialogState || isSucces}
                           onClick={() => setResendModal(true)}
                         >
-                          {dialogState || isSucces ? (
+                          {dialogState ? (
                             <i className="px-3 fas fa-hourglass fa-spin"></i>
                           ) : (
                             'Resend'

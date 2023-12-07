@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import Admin from 'layouts/Admin.js'
 import axios from '@/lib/axios'
-import { getSession } from 'next-auth/react'
-import InfoButton from '@/components/Interface/Buttons/InfoButton'
-import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
-import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
-import TextInput from '@/components/Interface/Form/TextInput'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
-import HelpTable from '@/components/Table/Member/Help'
+import {getSession} from 'next-auth/react'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
+import HelpTable from '@/components/Table/Help/index'
+import MiniSearchBar from '@/components/Shared/MiniSearchBar'
 
-export default function InquiredProduct({ session }) {
+export default function InquiredProduct({session}) {
   const [isLoading, setIsLoading] = useState(true)
+  const placeholder = "Search by Subject"
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
   const [metaData, setMetaData] = useState({
@@ -20,20 +18,12 @@ export default function InquiredProduct({ session }) {
     lastPage: 0,
   })
 
-  const [pageNumber, setPageNumber] = useState('')
-  const [stateSearch, setStateSearch] = useState('')
-  const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
-  const loadData = async (
-    page = 1,
-    searchState = '',
-    startStateDate = '',
-    endStateDate = ''
-  ) => {
-    setPageNumber(page)
+  const [search, setSearch] = useState('')
+  async function searchData(searchParam = '', page = 1) {
+    setSearch(searchParam)
     setIsLoading(true)
     await axios
-      .get(`/member/help-request?page=${page}&search=${searchState}&sort_by=updated_at&sort_type=DESC&start_date=${startStateDate}&end_date=${endStateDate}`,
+      .get(`/member/help-request?page=${page}&search=${searchParam}&sort_by=updated_at&sort_type=DESC&start_date&end_date`,
         {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
@@ -54,90 +44,42 @@ export default function InquiredProduct({ session }) {
         })
       })
       .catch((error) => {
-        toast.error('Something went wrong. Cannot load order.', toastOptions)
+        setData([])
+        toast.error(
+          error?.message || 'Something went wrong. Cannot load component.',
+          toastOptions
+        )
       })
       .finally(() => {
         setIsLoading(false)
       })
   }
-  const handleSearchData = () => {
-    loadData(
-      1,
-      stateSearch,
-      startDate,
-      endDate,
-    )
-  }
-
-  const handleResetSearchFilter = () => {
-    setStateSearch('')
-    setStartDate('')
-    setEndDate('')
-    loadData()
-  }
   const setPage = (pageNumber) => {
-    loadData(pageNumber)
+    searchData(search, pageNumber)
   }
-
   useEffect(() => {
-    loadData()
+    searchData()
   }, [])
-
+  const handleSearch = (searchResult) => {
+    searchData(searchResult)
+  }
 
   return (
     <>
       <div className="mb-10">
-        <h1 className="font-semibold text-2xl">Help Request</h1>
-        <PrimaryWrapper className={`mt-5 p-5`}>
-          {/* <h2 className="text-xl text-center">Search Help Request</h2> */}
-          <div className="grid grid-cols-2 gap-3 mt-2">
-            <div className="text-center">
-              <TextInput
-                label="Subject"
-                value={stateSearch}
-                onChange={(target) => setStateSearch(target.value)}
-                placeholder="Search By Subject"
-              />
-            </div>
-            <div className="text-center">
-              <TextInput
-                type="date"
-                label="Start Date"
-                value={startDate}
-                onChange={(target) => setStartDate(target.value)}
-                placeholder="Order Date"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3 mt-2">
-            <div className="text-center">
-              <TextInput
-                type="date"
-                label="End Date"
-                value={endDate}
-                onChange={(target) => setEndDate(target.value)}
-                placeholder="Order Date"
-              />
-            </div>
-          </div>
-
-          <div className="mt-10 text-center">
-            <PrimaryButton onClick={handleSearchData} className="w-1/2 mr-2">
-              Search
-            </PrimaryButton>
-            <InfoButton onClick={handleResetSearchFilter} className="w-1/6">
-              Reset
-            </InfoButton>
-          </div>
-        </PrimaryWrapper>
+        <div className='mb-5 w-full lg:w-1/2'>
+          <MiniSearchBar placeholder={placeholder} searchItem={handleSearch} />
+        </div>
         <HelpTable
+          title={'Help Request'}
           filterStatus
           setPage={setPage}
           isLoading={isLoading}
           data={data}
+          search={search}
           session={session}
           links={links}
-          loadData={loadData}
+          loadData={searchData}
           metaData={metaData}
         />
       </div>
@@ -149,7 +91,7 @@ InquiredProduct.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
-  
+
   return {
     props: {
       session,

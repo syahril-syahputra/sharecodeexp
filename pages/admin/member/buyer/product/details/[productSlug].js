@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import Link from 'next/link'
 import axios from 'lib/axios'
-import { useRouter } from 'next/router'
-import { getSession } from 'next-auth/react'
+import {useRouter} from 'next/router'
+import {getSession} from 'next-auth/react'
 import GlobalContext from '@/store/global-context'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
 
 // components
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
@@ -21,9 +21,9 @@ import LoadingState from '@/components/Interface/Loader/LoadingState'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
 
-export default function AddToInquiryList({ session, routeParam }) {
+export default function AddToInquiryList({session, routeParam}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
-  const { updateInquiryList } = useContext(GlobalContext)
+  const {updateInquiryList} = useContext(GlobalContext)
   //data search
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({})
@@ -196,8 +196,8 @@ export default function AddToInquiryList({ session, routeParam }) {
                 <td className="text-sm px-2 py-4">
                   {' '}
                   {data.AvailableQuantity === null ||
-                  parseInt(data?.AvailableQuantity) === 0 ||
-                  data.AvailableQuantity === undefined
+                    parseInt(data?.AvailableQuantity) === 0 ||
+                    data.AvailableQuantity === undefined
                     ? 'Out of Stock'
                     : data?.AvailableQuantity}
                 </td>
@@ -212,8 +212,8 @@ export default function AddToInquiryList({ session, routeParam }) {
                 <td className="text-sm px-2 py-4">
                   {' '}
                   {data.moq === null ||
-                  parseInt(data?.moq) === 0 ||
-                  data.moq === undefined
+                    parseInt(data?.moq) === 0 ||
+                    data.moq === undefined
                     ? 'Out of Stock'
                     : data?.moq}
                 </td>

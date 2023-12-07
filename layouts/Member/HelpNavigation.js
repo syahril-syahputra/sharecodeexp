@@ -1,13 +1,10 @@
 import React from 'react'
 import Link from 'next/link'
 import classNames from '@/utils/classNames'
-import {Disclosure} from '@headlessui/react'
-import {ChevronRightIcon} from '@heroicons/react/20/solid'
-import {help} from './navigation'
 import {VendorUrl} from '@/route/route-url'
 import {ChatBubbleLeftEllipsisIcon} from '@heroicons/react/24/outline'
 
-function HelpNavigation() {
+function MemberHelpNavigation() {
   return (
     <ul role="list" className="flex flex-col">
       <li>
@@ -31,4 +28,4 @@ function HelpNavigation() {
   )
 }
 
-export default HelpNavigation
+export default MemberHelpNavigation

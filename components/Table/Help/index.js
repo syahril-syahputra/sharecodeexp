@@ -8,56 +8,57 @@ import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import {checkValue} from '@/utils/general'
 import HeaderTable from '@/components/Interface/Table/HeaderTable'
 import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
-import {useSession} from 'next-auth/react'
 import HelpRequestModal from '@/components/Modal/Component/HelpRequestModal'
 import axios from 'lib/axios'
 import {toast} from 'react-toastify'
 import {toastOptions} from '@/lib/toastOptions'
 
-export default function Help({session, ...props}) {
+export default function HelpTable({session, ...props}) {
+  console.log(session, '<<<session')
   const [showHelpRequestModal, setShowHelpRequestModal] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [isLoadingModal, setIsLoadingModal] = useState(false)
 
   const role = session?.user?.userDetail?.role_id
-  const handleAddHelpRequest = async (stateSubject, stateMessage) => {
-    setShowHelpRequestModal(false)
-    setIsLoading(true)
-    setIsLoadingModal(true)
-    await axios
-      .post(
-        `/member/help-request`,
-        {
-          subject: stateSubject,
-          message: stateMessage,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session?.accessToken}`,
-          },
-        }
-      )
-      .then(() => {
-        toast.success('The help request has been sent.', toastOptions)
-        setIsLoadingModal(false)
-      })
-      .catch((error) => {
-        toast.error(
-          'Something went wrong. Cannot sent help request.',
-          toastOptions
-        )
-        setIsLoadingModal(false)
-      })
-      .finally(() => {
-        props.loadData(1)
-      })
-  }
+  // const handleAddHelpRequest = async (stateSubject, stateMessage) => {
+  //   setIsLoading(true)
+  //   setIsLoadingModal(true)
+  //   await axios
+  //     .post(
+  //       `/member/help-request`,
+  //       {
+  //         subject: stateSubject,
+  //         message: stateMessage,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${session?.accessToken}`,
+  //         },
+  //       }
+  //     )
+  //     .then((response) => {
+  //       toast.success(response?.data?.message, toastOptions)
+  //       setIsLoadingModal(false)
+  //       setShowHelpRequestModal(false)
+  //     })
+  //     .catch((error) => {
+  //       toast.error(
+  //         error.data?.message,
+  //         toastOptions
+  //       )
+  //       setIsLoadingModal(false)
+  //       setShowHelpRequestModal(false)
+  //     })
+  //     .finally(() => {
+  //       props.loadData(props.search, 1)
+  //     })
+  // }
 
   return (
     <>
       <PrimaryWrapper>
         {role == 2 && <HeaderTable
-          title=""
+          title={props.title || ''}
           action={
             <>
               <SecondaryButton
@@ -74,24 +75,15 @@ export default function Help({session, ...props}) {
           isBusy={props.isLoading}
           header={
             <>
+
               <th scope="col" className="px-6 py-3">
-                ID
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Created On
+                Subject
               </th>
               <th scope="col" className="px-6 py-3">
                 Message
               </th>
               <th scope="col" className="px-6 py-3">
-                Subject
-              </th>
-
-              <th scope="col" className="px-6 py-3">
-                Updated On
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Status
+                Created On
               </th>
             </>
           }
@@ -103,34 +95,22 @@ export default function Help({session, ...props}) {
                     key={index}
                     className="bg-white border-b hover:bg-gray-50"
                   >
+                    <td className="text-sm px-6 py-4">
+                      {checkValue(item.subject)}
+                    </td>
                     <td scope="row" className="text-sm px-6 py-4">
-                      {checkValue(item.id)}
+                      {checkValue(item.message)}
                     </td>
                     <td className="text-sm px-6 py-4">
                       {item.created_at
                         ? moment(item.created_at).format('dddd, D MMMM YYYY')
                         : '-'}
                     </td>
-                    <td scope="row" className="text-sm px-6 py-4">
-                      {item.message}
-                    </td>
-                    <td className="text-sm px-6 py-4">
-                      {checkValue(item.subject)}
-                    </td>
-
-                    <td className="text-sm px-6 py-4">
-                      {item.updated_at
-                        ? moment(item.updated_at).format('dddd, D MMMM YYYY')
-                        : '-'}
-                    </td>
-                    <td className="text-sm px-6 py-4">
-                      {checkValue(item.status)}
-                    </td>
                   </tr>
                 )
               })}
               {!props.isLoading && props.metaData.total === 0 && (
-                <NoData colSpan={6} />
+                <NoData colSpan={3} />
               )}
             </>
           }
@@ -147,8 +127,11 @@ export default function Help({session, ...props}) {
       {showHelpRequestModal ? (
         <HelpRequestModal
           setShowModal={setShowHelpRequestModal}
-          acceptModal={handleAddHelpRequest}
           isLoading={[isLoadingModal, setIsLoadingModal]}
+          session={session}
+          callback={() => {
+            props.loadData(props.search, 1)
+          }}
         />
       ) : null}
     </>

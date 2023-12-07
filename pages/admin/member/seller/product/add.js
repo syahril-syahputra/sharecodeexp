@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import axios from 'lib/axios'
-import { getSession } from 'next-auth/react'
-import { useRouter } from 'next/router'
+import {getSession} from 'next-auth/react'
+import {useRouter} from 'next/router'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
@@ -11,8 +11,8 @@ import Admin from 'layouts/Admin.js'
 // components
 import CountrySelectorInitial from '@/components/Shared/CountrySelectorInitial'
 import ErrorInput from '@/components/Shared/ErrorInput'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
@@ -22,8 +22,10 @@ import TextInput from '@/components/Interface/Form/TextInput'
 import SelectInput from '@/components/Interface/Form/SelectInput'
 import AreaInput from '@/components/Interface/Form/AreaInput'
 import NumberInput from '@/components/Interface/Form/NumberInput'
+import {Tooltip} from '@/components/Tooltip'
 
-export default function MyProduct({ session }) {
+export default function MyProduct({session}) {
+  const tooltipText = `If product stock have different manufacturing date, please add the oldest manufacturing date. For example, if you have 20 products in stock that were manufacture between 2020 and 2023, your date code for this product will be 2020+ or 20+`
   const [inputData, setInputData] = useState({
     AvailableQuantity: '',
     moq: '',
@@ -43,13 +45,13 @@ export default function MyProduct({ session }) {
   const [errorMessage, setErrorMessage] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const setDataHandler = (input) => {
-    setInputData({ ...inputData, [input.name]: input.value })
+    setInputData({...inputData, [input.name]: input.value})
   }
 
   //country handle
   const [country, setCountry] = useState()
   const countryHandleChange = (value) => {
-    setInputData({ ...inputData, country: value.label })
+    setInputData({...inputData, country: value.label})
     setCountry(value)
   }
   const [showPassword, setShowPassword] = useState(false)
@@ -58,7 +60,7 @@ export default function MyProduct({ session }) {
   const descriptionLimit = 100
   const descriptionHandler = (input) => {
     setDescriptionCount(input.value.length)
-    setInputData({ ...inputData, [input.name]: input.value })
+    setInputData({...inputData, [input.name]: input.value})
   }
 
   const router = useRouter()
@@ -70,13 +72,13 @@ export default function MyProduct({ session }) {
 
     //regex check
     if (!/^[0-9+]*([+]?)+$/.test(inputData.dateCode)) {
-      setErrorInfo({ dateCode: ['Wrong format!'] })
+      setErrorInfo({dateCode: ['Wrong format!']})
       setIsLoading(false)
       return
     }
 
     if (descriptionCount > descriptionLimit) {
-      setErrorInfo({ Description: ['Exceed maximum character!'] })
+      setErrorInfo({Description: ['Exceed maximum character!']})
       setIsLoading(false)
       return
     }
@@ -116,7 +118,7 @@ export default function MyProduct({ session }) {
   //option
   //packaging option
   const [packagings, setPackagings] = useState([
-    { value: 'other', label: 'Other' },
+    {value: 'other', label: 'Other'},
   ])
   useEffect(() => {
     const loadPackagings = async () => {
@@ -125,11 +127,10 @@ export default function MyProduct({ session }) {
         .then((response) => {
           setPackagings([
             ...response.data.data,
-            { value: 'other', label: 'Other' },
+            {value: 'other', label: 'Other'},
           ])
         })
         .catch((error) => {
-          // console.log('failed to load packaginglist')
         })
     }
     loadPackagings()
@@ -137,10 +138,10 @@ export default function MyProduct({ session }) {
 
   const [packaging, setPackaging] = useState(null)
   const handlePackagingChange = (value) => {
-    setInputData({ ...inputData, packaging: '' })
+    setInputData({...inputData, packaging: ''})
     setPackaging(value)
     if (value.value != 'other') {
-      setInputData({ ...inputData, packaging: value.value })
+      setInputData({...inputData, packaging: value.value})
     }
   }
 
@@ -197,7 +198,7 @@ export default function MyProduct({ session }) {
     const fileReader = new FileReader()
     fileReader.onload = function (e) {
       setImage(e.target.result)
-      setInputData({ ...inputData, img: file })
+      setInputData({...inputData, img: file})
     }
     if (file) {
       fileReader.readAsDataURL(file)
@@ -347,7 +348,7 @@ export default function MyProduct({ session }) {
             onChange={(input) => descriptionHandler(input)}
           />
         </div>
-        <div className="w-full lg:w-1/2 px-3 mb-6">
+        {/* <div className="w-full lg:w-1/2 px-3 mb-6">
           <TextInput
             label="Date Code"
             placeholder="eg. 2023, 2023+"
@@ -360,6 +361,31 @@ export default function MyProduct({ session }) {
             onChange={(input) => setDataHandler(input)}
             isDateCode={true}
           />
+        </div> */}
+        <div className='flex flex-wrap mb-6'>
+          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <div className='relative w-full'>
+              <TextInput
+                label="Date Code"
+                placeholder="eg. 2023, 2023+"
+                className="w-full"
+                disabled={isLoading}
+                required
+                name="dateCode"
+                value={inputData.dateCode}
+                errorMsg={errorInfo?.dateCode}
+                onChange={(input) => setDataHandler(input)}
+              />
+              <div
+                className="absolute inset-y-0 right-4 top-9 flex items-start cursor-pointer"
+
+              >
+                <Tooltip tooltipText={tooltipText}>
+                  <i className="fas fa-regular fa-circle-info text-slate-500" data-tooltip-target="tooltip-default" />
+                </Tooltip>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="w-full lg:w-1/2 px-3 mb-6">
           <SelectInput

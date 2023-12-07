@@ -11,8 +11,8 @@ import MemberNav from './Member/SideNavigation'
 import SmallSideSuperadminNav from './Superadmin/SmallSideNavigation'
 import SmallSideMemberNav from './Member/SmallSideNavigation'
 import MyAccount from './MyAccount'
-import HelpNavigation from './help'
-import AdminHelpNavigation from './AdminHelp'
+import HelpNavigation from './Member/HelpNavigation'
+import AdminHelpNavigation from './Superadmin/HelpNavigation'
 
 export default function Admin({children}) {
   const session = useSession()
