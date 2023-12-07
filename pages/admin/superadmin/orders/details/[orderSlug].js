@@ -1104,6 +1104,42 @@ export default function OrderDetails({ session, routeParam }) {
         </div>
       )
       break
+    case 24:
+      const utcMoment2 = moment.utc(
+        data.arrival_estimation_to_seller_date,
+        'YYYY-MM-DD HH:mm:ss'
+      )
+      const available2 = utcMoment2.local()
+      const thisTime2 = moment()
+      if (available2.isBefore(thisTime2)) {
+        actionToTake = (
+          <div>
+            {closeOrderReturnedModal && (
+              <CloseReturned
+                isLoading={isLoading}
+                closeModal={() => setcloseOrderReturnedModal(false)}
+                acceptance={closeOrderReturnedHandler}
+                errorInfo={errorInfo}
+              />
+            )}
+
+            <div className="flex justify-center">
+              <div className="mx-2 my-4">
+                <PrimaryButton
+                  outline
+                  className="mx-1"
+                  size="sm"
+                  disabled={isLoading}
+                  onClick={() => setcloseOrderReturnedModal(true)}
+                >
+                  Close Reimbursement
+                </PrimaryButton>
+              </div>
+            </div>
+          </div>
+        )
+      }
+      break
     case 25:
       actionToTake = (
         <div>
