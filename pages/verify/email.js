@@ -15,6 +15,8 @@ import {toastOptions} from '@/lib/toastOptions'
 import ResendEmailVerification from '@/components/Modal/ResendEmail'
 
 export default function VerifyEmail({session}) {
+  console.log(session, '<<<session')
+
   const [loading, setLoading] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [logoutModal, setLogoutModal] = useState(false)
@@ -60,9 +62,9 @@ export default function VerifyEmail({session}) {
                   <ImageLogo size={250} />
                 </div>
                 <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
-                  Your email verification has been sent,
+                  Your email verification has been sent
                   <br />
-                  please verify the email.
+                  {`to ${session?.user?.userDetail?.email ?? ''}  please verify the email.`}
                 </h3>
                 <div className="mt-20">
                   <PrimaryButton

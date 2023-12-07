@@ -1,16 +1,16 @@
-import React, { Fragment, useEffect, useState } from 'react'
-import { CountdownTimer } from '../CounterdownTime'
+import React, {Fragment, useEffect, useState} from 'react'
+import {CountdownTimer} from '../CounterdownTime'
 import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import ImageLogo from '@/components/ImageLogo/ImageLogo'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import axios from 'lib/axios'
 import LogoutModal from '@/components/Modal/Logout/Logout'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import ResendEmailVerification from '@/components/Modal/ResendEmail'
 
-const VerifyComp = ({ session, signOut }) => {
+const VerifyComp = ({session, signOut}) => {
   let time = null
   const [loading, setLoading] = useState(true)
   const [logoutModal, setLogoutModal] = useState(false)
@@ -81,7 +81,7 @@ const VerifyComp = ({ session, signOut }) => {
                 <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
                   Your email verification has been sent,
                   <br />
-                  please verify the email.
+                  {`to ${session?.user?.userDetail?.email ?? ''}  please verify the email.`}
                 </h3>
                 <div className="mt-20">
                   <PrimaryButton

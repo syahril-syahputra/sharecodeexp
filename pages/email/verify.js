@@ -174,7 +174,6 @@ export default function EmailVerify({session}) {
               {isLoading ? (
                 <LoadingState className={'py-20 m-2'} />
               ) : (
-                // border-blue-500border-blue-500
                 <div className="flex justify-center border w-1/2 flex-col mx-auto  py-12">
                   {verified ? (
                     <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
