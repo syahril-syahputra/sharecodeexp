@@ -157,7 +157,6 @@ export default function MyCompany({session, sectorlist, countryList}) {
       })
       .then((response) => {
         let result = response.data.data
-        console.log(result, '<<<result')
         setInputData({
           name: result.name,
           address: result.address,
@@ -182,11 +181,9 @@ export default function MyCompany({session, sectorlist, countryList}) {
         })
         setStateDataCountry({...oldCountry})
         if (oldSector) {
-          // setSector({value: result.sector, label: result.sector})
           setCompanySector({value: result.sector, label: result.sector})
           setPackaging({value: result.sector, label: result.sector})
         } else {
-          // setSector({value: 'other', label: 'Other'})
           setCompanySector({value: 'other', label: 'Other'})
           setPackaging({value: 'other', label: 'Other'})
         }
@@ -251,7 +248,6 @@ export default function MyCompany({session, sectorlist, countryList}) {
 
   useEffect(() => {
     getDataFunc()
-    // setDataSector([...sectors, {value: 'other', label: 'Other'}]);
   }, [])
 
 
@@ -308,7 +304,7 @@ export default function MyCompany({session, sectorlist, countryList}) {
         },
       })
       .then(() => {
-        router.replace('/admin/member')
+        router.replace('/admin/member/company/my-company')
         toast.success(
           'Your company have been updated successfully.',
           toastOptions
