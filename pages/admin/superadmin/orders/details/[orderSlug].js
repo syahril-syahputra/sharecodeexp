@@ -39,6 +39,7 @@ import TestingAndHandlingServices from '@/components/Modal/OrderComponent/Supera
 import RequestUpdateTestingPayment from '@/components/Modal/OrderComponent/Superadmin/RequestUpdateTestingPayment'
 import CloseNotReturned from '@/components/Modal/OrderComponent/Superadmin/CloseNotReturned'
 import CloseReturned from '@/components/Modal/OrderComponent/Superadmin/CloseReturned'
+import AcceptSellerPayment from '@/components/Modal/OrderComponent/Superadmin/AcceptSellerPayment'
 
 export default function OrderDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -469,6 +470,37 @@ export default function OrderDetails({ session, routeParam }) {
       .then((response) => {
         toast.success(response.data.message, toastOptions)
         setcloseOrderNotReturnedModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(error.data.message, toastOptions)
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
+  const [acceptSellerPaymentModal, setacceptSellerPaymentModal] =
+    useState(false)
+  const acceptSellerPaymentHandler = async (reviewed, accepted) => {
+    setIsLoading(true)
+    setErrorInfo({})
+
+    const response = await axios
+      .post(
+        `/admin/orders/accept-test-handling-payment`,
+        {
+          order_slug: data.slug,
+          payment_reviewed: reviewed,
+          payment_accepted: accepted,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setacceptSellerPaymentModal(false)
         loadData()
       })
       .catch((error) => {
@@ -936,7 +968,14 @@ export default function OrderDetails({ session, routeParam }) {
               errorInfo={errorInfo}
             />
           )}
-
+          {closeReimbusmentModal && (
+            <ReleasePaymentToBuyer
+              isLoading={isLoading}
+              closeModal={() => setcloseReimbusmentModal(false)}
+              acceptance={handleCloseReimbusment}
+              errorInfo={errorInfo}
+            />
+          )}
           <div className="flex justify-center">
             <div className="mx-2 my-4">
               <PrimaryButton
@@ -947,6 +986,15 @@ export default function OrderDetails({ session, routeParam }) {
                 onClick={() => settestingAndHandlingServices(true)}
               >
                 Testing and Handling Services
+              </PrimaryButton>
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setcloseReimbusmentModal(true)}
+              >
+                Release Payment to Buyer
               </PrimaryButton>
             </div>
           </div>
@@ -970,22 +1018,46 @@ export default function OrderDetails({ session, routeParam }) {
               closeModal={() => setcloseOrderNotReturnedModal(false)}
               acceptance={closeOrderNotReturnedHandler}
               orderSlug={routeParam.orderSlug}
-              file={publicDir + data.buyer_receipt_path}
+              file={publicDir + data.seller_lab_payment_receipt_path}
+              errorInfo={errorInfo}
+            />
+          )}
+
+          {acceptSellerPaymentModal && (
+            <AcceptSellerPayment
+              isLoading={isLoading}
+              closeModal={() => setacceptSellerPaymentModal(false)}
+              acceptance={acceptSellerPaymentHandler}
+              orderSlug={routeParam.orderSlug}
+              file={publicDir + data.seller_lab_payment_receipt_path}
               errorInfo={errorInfo}
             />
           )}
 
           <div className="flex justify-center">
             <div className="mx-2 my-4">
-              <DangerButton
-                outline
-                className="mx-1"
-                size="sm"
-                disabled={isLoading}
-                onClick={() => setcloseOrderNotReturnedModal(true)}
-              >
-                Close Reimbursement
-              </DangerButton>
+              {data.seller_return_courier ? (
+                <PrimaryButton
+                  outline
+                  className="mx-1"
+                  size="sm"
+                  disabled={isLoading}
+                  onClick={() => setacceptSellerPaymentModal(true)}
+                >
+                  Accept Seller Payment
+                </PrimaryButton>
+              ) : (
+                <PrimaryButton
+                  outline
+                  className="mx-1"
+                  size="sm"
+                  disabled={isLoading}
+                  onClick={() => setcloseOrderNotReturnedModal(true)}
+                >
+                  Close Order
+                </PrimaryButton>
+              )}
+
               <PrimaryButton
                 outline
                 className="mx-1"
