@@ -63,7 +63,7 @@ export default function SellerDashboard({ session }) {
         <PrimaryWrapper className="border border-blue-500">
           <div className="p-4 mb-auto">
             <h1 className="font-semibold text-7xl mb-3">
-              {data.excel_product_file.update_request}
+              {data.excel_product_file?.update_request || 0}
             </h1>
             <span className="text-md italic">Update Requested</span>
           </div>
@@ -88,7 +88,7 @@ export default function SellerDashboard({ session }) {
         <PrimaryWrapper className="border border-blue-500">
           <div className="p-4 mb-auto">
             <h1 className="font-semibold text-7xl mb-3">
-              {data.order.incoming_inquiries}
+              {data.order?.incoming_inquiries}
             </h1>
             <span className="text-md italic">
               Verified / Reject New Inquiries
@@ -111,7 +111,7 @@ export default function SellerDashboard({ session }) {
         <PrimaryWrapper className="border border-blue-500">
           <div className="p-4 mb-auto">
             <h1 className="font-semibold text-7xl mb-3">
-              {data.order.provide_tracking_number}
+              {data.order?.provide_tracking_number}
             </h1>
             <span className="text-md italic">Orders Need Tracking Number</span>
           </div>
@@ -132,7 +132,7 @@ export default function SellerDashboard({ session }) {
         <PrimaryWrapper className="border border-blue-500">
           <div className="p-4 mb-auto">
             <h1 className="font-semibold text-7xl mb-3">
-              {data.order.good_test_result}
+              {data.order?.good_test_result}
             </h1>
             <span className="text-md italic">Good Test Result</span>
           </div>
@@ -153,7 +153,7 @@ export default function SellerDashboard({ session }) {
         <PrimaryWrapper className="border border-blue-500">
           <div className="p-4 mb-auto">
             <h1 className="font-semibold text-7xl mb-3">
-              {data.order.waiting_for_payment || 0}
+              {data.order?.waiting_for_payment || 0}
             </h1>
             <span className="text-md italic">Waiting For Payment</span>
           </div>
@@ -174,7 +174,7 @@ export default function SellerDashboard({ session }) {
         <PrimaryWrapper className="border border-blue-500">
           <div className="p-4 mb-auto">
             <h1 className="font-semibold text-7xl mb-3">
-              {data.order.bad_test_result || 0}
+              {data.order?.bad_test_result || 0}
             </h1>
             <span className="text-md italic">Bad Test Result</span>
           </div>

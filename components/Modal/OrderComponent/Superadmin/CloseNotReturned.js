@@ -9,15 +9,16 @@ import { toastOptions } from '@/lib/toastOptions'
 import { useSession } from 'next-auth/react'
 import axios from '@/lib/axios'
 
-export default function AcceptPayment(props) {
+export default function CloseNotReturned(props) {
   const [isReviewd, setisReviewd] = useState(false)
   const [isAccept, setisAccept] = useState(false)
+  const [isClose, setisClose] = useState(false)
   const [isLoadingOpenReceipt, setisLoadingOpenReceipt] = useState(false)
 
   const { data: session } = useSession()
   const acceptHandler = () => {
-    if (isReviewd && isAccept) {
-      props.acceptance(isReviewd, isAccept)
+    if (isReviewd && isAccept && isClose) {
+      props.acceptance(isReviewd, isAccept, isClose)
     } else {
       toast.error(
         'Please check the payment is reviewed and accepted!',
@@ -30,7 +31,7 @@ export default function AcceptPayment(props) {
     try {
       setisLoadingOpenReceipt(true)
       await axios.post(
-        `/admin/orders/verification-action/open-buyer-payment-receipt`,
+        `/admin/orders/verification-action/open-seller-payment-receipt`,
         {
           order_slug: props.orderSlug,
         },
@@ -50,15 +51,14 @@ export default function AcceptPayment(props) {
 
   return (
     <BaseModalMedium
-      title="Accept Payment"
+      title="Close Order"
       onClick={() => props.closeModal()}
       body={
         <>
           <div className="space-y-4">
             <div className="text-blueGray-500 text-lg leading-relaxed">
-              Do you agree to{' '}
-              <span className="text-blueGray-700 font-bold">accept</span> the
-              payment?
+              Do you want to{' '}
+              <span className="text-blueGray-700 font-bold">close</span> order?
             </div>
             <SecondaryButton
               onClick={openPaymentReceiptHandler}
@@ -76,28 +76,43 @@ export default function AcceptPayment(props) {
                 <input
                   type="checkbox"
                   checked={isReviewd}
-                  id="reviewBuyerPayment"
+                  id="reviePayment"
                   onChange={(e) => setisReviewd(!isReviewd)}
                 />
                 <label
-                  htmlFor="reviewBuyerPayment"
+                  htmlFor="reviePayment"
                   className="ml-2 text-sm font-medium text-gray-900"
                 >
-                  Reviewed Buyer&lsquo;s Payment
+                  Reviewed Payment
                 </label>
               </li>
               <li className="item-center flex space-x-2">
                 <input
                   type="checkbox"
                   checked={isAccept}
-                  id="acceptBuyerPayment"
+                  id="accepPayment"
                   onChange={(e) => setisAccept(!isAccept)}
                 />
                 <label
-                  htmlFor="acceptBuyerPayment"
+                  htmlFor="accepPayment"
                   className="ml-2 text-sm font-medium text-gray-900"
                 >
-                  Accept Buyer&lsquo;s Payment
+                  Accept Payment
+                </label>
+              </li>
+
+              <li className="item-center flex space-x-2">
+                <input
+                  type="checkbox"
+                  checked={isClose}
+                  id="closeOrder"
+                  onChange={(e) => setisClose(!isClose)}
+                />
+                <label
+                  htmlFor="closeOrder"
+                  className="ml-2 text-sm font-medium text-gray-900"
+                >
+                  Close Order
                 </label>
               </li>
             </ul>
@@ -123,7 +138,7 @@ export default function AcceptPayment(props) {
             {props.isLoading && (
               <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
             )}
-            Accept Payment
+            Close Order
           </PrimaryButton>
         </>
       }
