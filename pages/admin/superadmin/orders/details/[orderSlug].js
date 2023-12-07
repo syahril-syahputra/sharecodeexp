@@ -598,6 +598,10 @@ export default function OrderDetails({ session, routeParam }) {
     )
   }
 
+  //cannot terminate
+
+  const cannotTerminateIds = [20, 21, 15, 26, 27, 28, 29]
+
   //notification
   let notification = (
     <PrimaryNotification
@@ -2002,38 +2006,35 @@ export default function OrderDetails({ session, routeParam }) {
               </div>
               {actionToTake}
             </PrimaryWrapper>
-            {parseInt(data.order_status_id) !== 20 &&
-              parseInt(data.order_status_id) !== 21 &&
-              parseInt(data.order_status_id) !== 15 &&
-              parseInt(data.order_status_id) !== 29 && (
-                <PrimaryWrapper className="p-1">
-                  <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+            {!cannotTerminateIds.includes(parseInt(data.order_status_id)) && (
+              <PrimaryWrapper className="p-1">
+                <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                  Terminate Order
+                </div>
+                <div className="flex flex-col space-y-4 items-center p-4 justify-center">
+                  {terminateOrderModal && (
+                    <TerminateOrder
+                      isLoading={isLoading}
+                      closeModal={() => setterminateOrderModal(false)}
+                      acceptance={terminateOrderHandler}
+                      errorInfo={errorInfo}
+                    />
+                  )}
+                  <div className="text-center text-sm text-red-500">
+                    Please click the button below to cancel the order
+                  </div>
+                  <DangerButton
+                    outline
+                    className="mx-1"
+                    size="sm"
+                    disabled={isLoading}
+                    onClick={() => setterminateOrderModal(true)}
+                  >
                     Terminate Order
-                  </div>
-                  <div className="flex flex-col space-y-4 items-center p-4 justify-center">
-                    {terminateOrderModal && (
-                      <TerminateOrder
-                        isLoading={isLoading}
-                        closeModal={() => setterminateOrderModal(false)}
-                        acceptance={terminateOrderHandler}
-                        errorInfo={errorInfo}
-                      />
-                    )}
-                    <div className="text-center text-sm text-red-500">
-                      Please click the button below to cancel the order
-                    </div>
-                    <DangerButton
-                      outline
-                      className="mx-1"
-                      size="sm"
-                      disabled={isLoading}
-                      onClick={() => setterminateOrderModal(true)}
-                    >
-                      Terminate Order
-                    </DangerButton>
-                  </div>
-                </PrimaryWrapper>
-              )}
+                  </DangerButton>
+                </div>
+              </PrimaryWrapper>
+            )}
 
             <PrimaryWrapper className="p-1">
               <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
