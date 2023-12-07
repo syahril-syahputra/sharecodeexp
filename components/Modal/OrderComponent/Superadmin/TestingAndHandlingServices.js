@@ -3,6 +3,7 @@ import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
 import TextInput from '@/components/Interface/Form/TextInput'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import NumberInput from '@/components/Interface/Form/NumberInput'
 
 export default function TestingAndHandlingServices(props) {
   const [testingLabAmount, settestingLabAmount] = useState('150')
@@ -23,23 +24,23 @@ export default function TestingAndHandlingServices(props) {
       body={
         <>
           <div className="mb-4">
-            <TextInput
+            <NumberInput
               label="Testing Lab Amount (USD)"
               name="testingLabAmount"
               value={testingLabAmount}
               onChange={(input) => settestingLabAmount(input.value)}
-              errorMsg={props.errorInfo?.testingLabAmount}
-            ></TextInput>
+              errorMsg={props.errorInfo?.testing_lab_amount}
+            ></NumberInput>
           </div>
           {props.sellerCourier === null && (
             <div className="mb-4">
-              <TextInput
+              <NumberInput
                 label="Handling Services Amount (USD)"
                 name="handlingServicesAmount"
                 value={handlingServicesAmount}
                 onChange={(input) => sethandlingServicesAmount(input.value)}
-                errorMsg={props.errorInfo?.handlingServicesAmount}
-              ></TextInput>
+                errorMsg={props.errorInfo?.handling_charge_amount}
+              ></NumberInput>
             </div>
           )}
         </>
