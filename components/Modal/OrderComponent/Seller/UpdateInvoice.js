@@ -4,7 +4,7 @@ import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import FileInput from '@/components/Interface/Form/FileInput'
 
-export default function UploadInvoice(props) {
+export default function UpdateInvoice(props) {
   const [invoice, setInvoice] = useState()
   const handleSubmit = () => {
     props.acceptance(invoice)
@@ -12,7 +12,7 @@ export default function UploadInvoice(props) {
 
   return (
     <BaseModalMedium
-      title="Upload Payment Receipt"
+      title="Update Payment Receipt"
       onClick={() => props.closeModal()}
       body={
         <div>

@@ -21,15 +21,14 @@ export default function CloseReturned(props) {
 
   return (
     <BaseModalMedium
-      title="Close Reimbursement"
+      title="Close Order"
       onClick={() => props.closeModal()}
       body={
         <>
           <div className="space-y-4">
             <div className="text-blueGray-500 text-lg leading-relaxed">
               Do you want to{' '}
-              <span className="text-blueGray-700 font-bold">close</span>{' '}
-              Reimbursement?
+              <span className="text-blueGray-700 font-bold">close</span> order?
             </div>
 
             <ul className="py-2 space-y-2">
@@ -44,7 +43,7 @@ export default function CloseReturned(props) {
                   htmlFor="closeOrder"
                   className="ml-2 text-sm font-medium text-gray-900"
                 >
-                  Return Product
+                  Product has been returned
                 </label>
               </li>
             </ul>
@@ -70,7 +69,7 @@ export default function CloseReturned(props) {
             {props.isLoading && (
               <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
             )}
-            Close Reimbursement
+            Close Order
           </PrimaryButton>
         </>
       }

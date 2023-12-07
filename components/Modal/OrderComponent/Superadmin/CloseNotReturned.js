@@ -51,15 +51,14 @@ export default function CloseNotReturned(props) {
 
   return (
     <BaseModalMedium
-      title="Close Reimbursement"
+      title="Close Order"
       onClick={() => props.closeModal()}
       body={
         <>
           <div className="space-y-4">
             <div className="text-blueGray-500 text-lg leading-relaxed">
               Do you want to{' '}
-              <span className="text-blueGray-700 font-bold">close</span>{' '}
-              Reimbursement?
+              <span className="text-blueGray-700 font-bold">close</span> order?
             </div>
             <SecondaryButton
               onClick={openPaymentReceiptHandler}
@@ -113,7 +112,7 @@ export default function CloseNotReturned(props) {
                   htmlFor="closeOrder"
                   className="ml-2 text-sm font-medium text-gray-900"
                 >
-                  Close Reimbursement
+                  Close Order
                 </label>
               </li>
             </ul>
@@ -139,7 +138,7 @@ export default function CloseNotReturned(props) {
             {props.isLoading && (
               <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
             )}
-            Close Reimbursement
+            Close Order
           </PrimaryButton>
         </>
       }

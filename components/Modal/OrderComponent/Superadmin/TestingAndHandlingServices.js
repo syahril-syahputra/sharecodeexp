@@ -14,13 +14,17 @@ export default function TestingAndHandlingServices(props) {
 
   return (
     <BaseModalMedium
-      title="Testing And Handling Services"
+      title={
+        props.sellerCourier
+          ? 'Testing Services'
+          : 'Testing and Handling Services'
+      }
       onClick={() => props.closeModal()}
       body={
         <>
           <div className="mb-4">
             <TextInput
-              label="Testing Lab Amount"
+              label="Testing Lab Amount (USD)"
               name="testingLabAmount"
               value={testingLabAmount}
               onChange={(input) => settestingLabAmount(input.value)}
@@ -30,7 +34,7 @@ export default function TestingAndHandlingServices(props) {
           {props.sellerCourier === null && (
             <div className="mb-4">
               <TextInput
-                label="Handling Services Amount"
+                label="Handling Services Amount (USD)"
                 name="handlingServicesAmount"
                 value={handlingServicesAmount}
                 onChange={(input) => sethandlingServicesAmount(input.value)}

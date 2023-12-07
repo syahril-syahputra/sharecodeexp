@@ -30,6 +30,7 @@ import InfoNotification from '@/components/Interface/Notification/InfoNotificati
 import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
 import calculateDayDifference from '@/lib/calculateDayDifference'
 import AccpetProduct from '@/components/Modal/OrderComponent/Seller/AcceptProduct'
+import UpdateInvoice from '@/components/Modal/OrderComponent/Seller/UpdateInvoice'
 
 export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -61,6 +62,7 @@ export default function InquiryDetails({ session, routeParam }) {
       )
       .then((response) => {
         toast.success(response.data.message, toastOptions)
+        setcourierModal(false)
         loadData()
       })
       .catch((error) => {
@@ -354,6 +356,36 @@ export default function InquiryDetails({ session, routeParam }) {
       .then((response) => {
         toast.success(response.data.message, toastOptions)
         setuploadReceipt(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot upload the invoice.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }
+  const [updatePaymentReceiptModal, setupdatePaymentReceiptModal] =
+    useState(false)
+  const updatePaymentReceiptHandler = async (invoice) => {
+    setIsLoading(true)
+    setErrorInfo({})
+    let formData = new FormData()
+    formData.append('order_slug', data.slug)
+    formData.append('payment_receipt', invoice)
+    const response = await axios
+      .post(`/seller/order/update-payment-receipt`, formData, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      })
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setupdatePaymentReceiptModal(false)
         loadData()
       })
       .catch((error) => {
@@ -737,6 +769,33 @@ export default function InquiryDetails({ session, routeParam }) {
                 onClick={() => setuploadReceipt(true)}
               >
                 Upload Payment Receipt
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+    case 23:
+      actionToTake = (
+        <div>
+          {updatePaymentReceiptModal && (
+            <UpdateInvoice
+              isLoading={isLoading}
+              closeModal={() => setupdatePaymentReceiptModal(false)}
+              acceptance={updatePaymentReceiptHandler}
+              errorInfo={errorInfo}
+            />
+          )}
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setupdatePaymentReceiptModal(true)}
+              >
+                Update Payment Receipt
               </PrimaryButton>
             </div>
           </div>

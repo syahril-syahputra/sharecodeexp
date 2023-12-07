@@ -935,7 +935,7 @@ export default function OrderDetails({ session, routeParam }) {
               isLoading={isLoading}
               closeModal={() => settestingAndHandlingServices(false)}
               acceptance={testingAndHandlingServicesHandler}
-              sellerCourier={data.seller_courier}
+              sellerCourier={data.seller_return_courier}
               errorInfo={errorInfo}
             />
           )}
@@ -949,7 +949,9 @@ export default function OrderDetails({ session, routeParam }) {
                 disabled={isLoading}
                 onClick={() => settestingAndHandlingServices(true)}
               >
-                Testing and Handling Services
+                {data.seller_return_courier
+                  ? 'Testing Services'
+                  : 'Testing and Handling Services'}
               </PrimaryButton>
             </div>
           </div>
@@ -978,15 +980,17 @@ export default function OrderDetails({ session, routeParam }) {
           )}
           <div className="flex justify-center">
             <div className="mx-2 my-4">
-              <PrimaryButton
-                outline
-                className="mx-1"
-                size="sm"
-                disabled={isLoading}
-                onClick={() => settestingAndHandlingServices(true)}
-              >
-                Testing and Handling Services
-              </PrimaryButton>
+              {!data.seller_return_courier && (
+                <PrimaryButton
+                  outline
+                  className="mx-1"
+                  size="sm"
+                  disabled={isLoading}
+                  onClick={() => settestingAndHandlingServices(true)}
+                >
+                  Testing and Handling Services
+                </PrimaryButton>
+              )}
               <PrimaryButton
                 outline
                 className="mx-1"
