@@ -966,7 +966,7 @@ export default function OrderDetails({ session, routeParam }) {
               isLoading={isLoading}
               closeModal={() => settestingAndHandlingServices(false)}
               acceptance={testingAndHandlingServicesHandler}
-              sellerCourier={data.seller_courier}
+              sellerCourier={data.seller_return_courier}
               errorInfo={errorInfo}
             />
           )}
@@ -980,7 +980,18 @@ export default function OrderDetails({ session, routeParam }) {
           )}
           <div className="flex justify-center">
             <div className="mx-2 my-4">
-              {!data.seller_return_courier && (
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => settestingAndHandlingServices(true)}
+              >
+                {data.seller_return_courier
+                  ? 'Testing Services'
+                  : 'Testing and Handling Services'}
+              </PrimaryButton>
+              {/* {!data.seller_return_courier && (
                 <PrimaryButton
                   outline
                   className="mx-1"
@@ -990,16 +1001,18 @@ export default function OrderDetails({ session, routeParam }) {
                 >
                   Testing and Handling Services
                 </PrimaryButton>
+              )} */}
+              {!data.admin_reimbursement_receipt_path && (
+                <PrimaryButton
+                  outline
+                  className="mx-1"
+                  size="sm"
+                  disabled={isLoading}
+                  onClick={() => setcloseReimbusmentModal(true)}
+                >
+                  Release Payment to Buyer
+                </PrimaryButton>
               )}
-              <PrimaryButton
-                outline
-                className="mx-1"
-                size="sm"
-                disabled={isLoading}
-                onClick={() => setcloseReimbusmentModal(true)}
-              >
-                Release Payment to Buyer
-              </PrimaryButton>
             </div>
           </div>
         </div>
@@ -1013,6 +1026,8 @@ export default function OrderDetails({ session, routeParam }) {
               isLoading={isLoading}
               closeModal={() => setrequestUpdateTestingPayment(false)}
               acceptance={requestUpdateTestingPaymentHandler}
+              orderSlug={routeParam.orderSlug}
+              file={publicDir + data.seller_lab_payment_receipt_path}
               errorInfo={errorInfo}
             />
           )}
@@ -1163,6 +1178,36 @@ export default function OrderDetails({ session, routeParam }) {
               >
                 Close Reimbursement
               </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+    case 29:
+      actionToTake = (
+        <div>
+          {closeReimbusmentModal && (
+            <ReleasePaymentToBuyer
+              isLoading={isLoading}
+              closeModal={() => setcloseReimbusmentModal(false)}
+              acceptance={handleCloseReimbusment}
+              errorInfo={errorInfo}
+            />
+          )}
+
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              {parseInt(data.reimbursement) === 1 && (
+                <PrimaryButton
+                  outline
+                  className="mx-1"
+                  size="sm"
+                  disabled={isLoading}
+                  onClick={() => setcloseReimbusmentModal(true)}
+                >
+                  Release Reimbursement
+                </PrimaryButton>
+              )}
             </div>
           </div>
         </div>
@@ -1959,7 +2004,8 @@ export default function OrderDetails({ session, routeParam }) {
             </PrimaryWrapper>
             {parseInt(data.order_status_id) !== 20 &&
               parseInt(data.order_status_id) !== 21 &&
-              parseInt(data.order_status_id) !== 15 && (
+              parseInt(data.order_status_id) !== 15 &&
+              parseInt(data.order_status_id) !== 29 && (
                 <PrimaryWrapper className="p-1">
                   <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                     Terminate Order
