@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
 import { useSession } from 'next-auth/react'
 import axios from '@/lib/axios'
+
 export default function AcceptPayment(props) {
   const [isReviewd, setisReviewd] = useState(false)
   const [isAccept, setisAccept] = useState(false)

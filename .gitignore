@@ -34,3 +34,5 @@ yarn-error.log*
 
 # build
 *.zip
+
+noted.txt

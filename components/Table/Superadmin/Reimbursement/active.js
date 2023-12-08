@@ -17,6 +17,9 @@ export default function ReimbursementActiveCompletedTable(props) {
           header={
             <>
               <th scope="col" className="px-6 py-3">
+                Action Required
+              </th>
+              <th scope="col" className="px-6 py-3">
                 Order Number
               </th>
               <th scope="col" className="px-6 py-3">
@@ -50,6 +53,18 @@ export default function ReimbursementActiveCompletedTable(props) {
                     key={index}
                     className="bg-white border-b hover:bg-gray-50"
                   >
+                    <td scope="row" className="text-sm px-6 py-4">
+                      {item?.order_status?.admin_to_act ? (
+                        <span className="relative flex text-xl">
+                          <span className="animate-ping absolute inline-flex opacity-75">
+                            <i className="fas fa-circle fa-2xs text-orange-500" />
+                          </span>
+                          <span className="relative inline-flex">
+                            <i className="fas fa-circle fa-2xs text-orange-500" />
+                          </span>
+                        </span>
+                      ) : undefined}
+                    </td>
                     <td scope="row" className="text-sm px-6 py-4">
                       {checkValue(item.order_number)}
                     </td>

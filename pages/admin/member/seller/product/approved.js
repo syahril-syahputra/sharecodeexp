@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import axios from 'lib/axios'
-import { getSession } from 'next-auth/react'
+import {getSession} from 'next-auth/react'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
@@ -8,8 +8,8 @@ import Admin from 'layouts/Admin.js'
 // components
 import ComponentList from '@/components/Table/Member/Components/ComponentsList'
 import MiniSearchBar from '@/components/Shared/MiniSearchBar'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import InfoNotification from '@/components/Interface/Notification/InfoNotification'
 import {
   BaseModalLarge,
@@ -18,7 +18,7 @@ import {
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import Link from 'next/link'
 
-export default function MyProduct({ session, notification }) {
+export default function MyProduct({session, notification}) {
   //data search
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
@@ -34,7 +34,7 @@ export default function MyProduct({ session, notification }) {
   async function searchData(searchParam = '', page = 1) {
     setSearch(searchParam)
     setIsLoading(true)
-    const response = await axios
+    await axios
       .get(
         `/companyproduct?page=${page}&status=approved&search=${searchParam}`,
         {

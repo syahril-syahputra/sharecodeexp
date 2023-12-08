@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { getSession } from 'next-auth/react'
+import React, {useState, useEffect} from 'react'
+import {getSession} from 'next-auth/react'
 import axios from '@/lib/axios'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -12,8 +12,8 @@ import SendPaymentDocsModal from '@/components/Modal/OrderComponent/Buyer/SendPa
 import SendUpdatedPaymentDocsModal from '@/components/Modal/OrderComponent/Buyer/SendUpdatedPaymentDocs'
 import AcceptOrderModal from '@/components/Modal/OrderComponent/Buyer/AcceptOrder'
 import DidntReceiveAnyModal from '@/components/Modal/OrderComponent/Buyer/DidntReceiveAny'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
@@ -21,16 +21,16 @@ import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
 import LightButton from '@/components/Interface/Buttons/LightButton'
-import { VendorUrl } from '@/route/route-url'
+import {VendorUrl} from '@/route/route-url'
 import InfoNotification from '@/components/Interface/Notification/InfoNotification'
 import WarningNotification from '@/components/Interface/Notification/WarningNotification'
 import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
-import { checkValue } from '@/utils/general'
+import {checkValue} from '@/utils/general'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import calculateTimeDifference from '@/lib/calculateTimeDifference'
 import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
 
-export default function InquiryDetails({ session, routeParam }) {
+export default function InquiryDetails({session, routeParam}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   //data search
   const [isLoading, setIsLoading] = useState(true)
@@ -39,7 +39,7 @@ export default function InquiryDetails({ session, routeParam }) {
   const [isOrderValid, setIsOrderValid] = useState(true)
   const [acceptQuotationModal, setAcceptQuotationModal] = useState(false)
   const [rejectionReason, setRejectionReasons] = useState([
-    { value: 'other', label: 'Other' },
+    {value: 'other', label: 'Other'},
   ])
   const [rejectQuotationModal, setRejectQuotationModal] = useState(false)
   const [sendPaymentDocsModal, setSendPaymentDocsModal] = useState(false)
@@ -189,11 +189,6 @@ export default function InquiryDetails({ session, routeParam }) {
           toast.error(error.data.message, toastOptions)
         }
 
-        // console.log(error.data.data.available_after)
-        // const momentObject = moment.parse('2023-10-27 15:11:13')
-        // const localTimeZone = moment.local()
-        // momentObject.tz(localTimeZone)
-        // const localTime = momentObject.format('YYYY-MM-DD HH:mm:ss')
         setErrorInfo(error.data.data)
       })
       .finally(() => {
@@ -209,7 +204,7 @@ export default function InquiryDetails({ session, routeParam }) {
         let result = response.data
         setRejectionReasons([
           ...result.data,
-          { value: 'other', label: 'Other' },
+          {value: 'other', label: 'Other'},
         ])
       })
       .catch((error) => {
@@ -848,8 +843,8 @@ export default function InquiryDetails({ session, routeParam }) {
                     ) : (
                       <div className="animate-pulse">
                         {data?.companies_products?.moq === 0 ||
-                        parseInt(data?.companies_products?.moq) === 0 ||
-                        data?.companies_products?.moq === null ? (
+                          parseInt(data?.companies_products?.moq) === 0 ||
+                          data?.companies_products?.moq === null ? (
                           <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
                             Out of Stock
                           </div>
@@ -870,7 +865,7 @@ export default function InquiryDetails({ session, routeParam }) {
                     ) : (
                       <div className="animate-pulse">
                         {data?.companies_products?.AvailableQuantity === 0 ||
-                        data?.companies_products?.AvailableQuantity === null ? (
+                          data?.companies_products?.AvailableQuantity === null ? (
                           <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
                             Out of Stock
                           </div>
@@ -1109,6 +1104,22 @@ export default function InquiryDetails({ session, routeParam }) {
                       <Link
                         target="_blank"
                         href={`pdf/buyer-invoice/${data.slug}`}
+                        className="underline text-blue-500"
+                      >
+                        view
+                      </Link>
+                    ) : (
+                      <span className="underline text-gray-500">view</span>
+                    )}
+                  </div>
+                </div>
+                <div className="mx-2 mt-1 text-sm">
+                  <div className="flex flex-wrap justify-between">
+                    <span>Reimbursement Receipt</span>
+                    {data.admin_reimbursement_receipt_path ? (
+                      <Link
+                        target="_blank"
+                        href={publicDir + data.admin_reimbursement_receipt_path}
                         className="underline text-blue-500"
                       >
                         view

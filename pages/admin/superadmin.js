@@ -1,30 +1,26 @@
-import React, { useState, useEffect } from 'react'
-import { getSession } from 'next-auth/react'
 import axios from '@/lib/axios'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {getSession} from 'next-auth/react'
 import Link from 'next/link'
-
-// superadmin
-import PendingCompany from '@/components/Dashboard/Superadmin/PendingCompany'
-import NewInquiries from '@/components/Dashboard/Superadmin/NewInquiries'
-import StatusUpdateOngoingOrder from '@/components/Dashboard/Superadmin/StatusUpdateOngoingOrder'
-import PendingShipment from '@/components/Dashboard/Superadmin/PendingShipment'
-import PendingPayment from '@/components/Dashboard/Superadmin/PendingPayment'
-import MemberStatistic from '@/components/Dashboard/Superadmin/MemberStatistic'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
+import SuccessBadges from '@/components/Interface/Badges/SuccessBadges'
 
-function ComponentCardAdminDashboard({ dataName, name, url }) {
+function ComponentCardAdminDashboard({onClick, dataName, name, url, dataNameNotification}) {
   return (
     <PrimaryWrapper className="border border-blue-500">
       <div className="p-4 mb-auto">
-        <h1 className="font-semibold text-7xl mb-3">{dataName}</h1>
+        <div className="flex justify-between">
+          <h1 className="font-semibold text-7xl mb-3">{dataName}</h1>
+          {!!dataNameNotification &&
+            <SuccessBadges title={dataNameNotification} className={"italic pr-3 py-1 h-7"} />
+          }
+        </div>
         <span className="text-md italic">{name}</span>
       </div>
       <Link
+        onClick={onClick}
         href={url}
         className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
       >
@@ -41,7 +37,7 @@ function ComponentCardAdminDashboard({ dataName, name, url }) {
   )
 }
 
-export default function SuperadminDashboard({ session, message }) {
+export default function SuperadminDashboard({session, message}) {
   const status_id = session?.user?.userDetail?.status_id
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({
@@ -66,31 +62,42 @@ export default function SuperadminDashboard({ session, message }) {
     },
   })
 
+  async function fetchData() {
+    await axios
+      .get(`/admin/dashboard/all`, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      })
+      .then((response) => {
+        let result = response.data.data
+        setData(result)
+      })
+      .catch((error) => {
+        setData({})
+        toast.error(error.data.message, toastOptions)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }
   useEffect(() => {
     if (!!message) {
       toast.warning(message, toastOptions)
     }
-    async function fetchData() {
-      const response = await axios
-        .get(`/admin/dashboard/all`, {
+    fetchData()
+  }, [])
+
+  async function resetCounter(counterKey) {
+    await axios
+      .post(`/admin/dashboard/counter-checker/${counterKey}`,
+        {},
+        {
           headers: {
             Authorization: `Bearer ${session.accessToken}`,
           },
         })
-        .then((response) => {
-          let result = response.data.data
-          setData(result)
-        })
-        .catch((error) => {
-          setData({})
-          toast.error(error.data.message, toastOptions)
-        })
-        .finally(() => {
-          setIsLoading(false)
-        })
-    }
-    fetchData()
-  }, [])
+  }
 
   const componentDashboardCard = () => {
     switch (status_id) {
@@ -118,12 +125,12 @@ export default function SuperadminDashboard({ session, message }) {
         return (
           <div className="grid grid-cols-4 gap-4 mt-5">
             <ComponentCardAdminDashboard
-              dataName={data?.order_process_one?.active_order || 0}
+              dataName={data?.order?.active_order || 0}
               url={'/admin/superadmin/orders/allorders'}
               name={'Status Update for Active Orders'}
             />
             <ComponentCardAdminDashboard
-              dataName={data.order_process_one?.approve_reject_payment || 0}
+              dataName={data.order?.approve_reject_payment || 0}
               url={
                 '/admin/superadmin/orders/allorders?orderStatus=payment-uploaded'
               }
@@ -135,14 +142,14 @@ export default function SuperadminDashboard({ session, message }) {
         return (
           <div className="grid grid-cols-4 gap-4 mt-5">
             <ComponentCardAdminDashboard
-              dataName={data.order_process_two?.pending_shipment || 0}
+              dataName={data.order?.pending_shipment || 0}
               url={
                 '/admin/superadmin/orders/allorders?orderStatus=payment-accepted'
               }
               name={'Pending Shipment'}
             />
             <ComponentCardAdminDashboard
-              dataName={data.order_process_two.release_payment}
+              dataName={data.order.release_payment}
               url={
                 '/admin/superadmin/orders/allorders?orderStatus=invoice-uploaded'
               }
@@ -156,14 +163,18 @@ export default function SuperadminDashboard({ session, message }) {
             <h1 className="font-normal text-2xl mb-3 mt-4">Registry</h1>
             <div className="grid grid-cols-4 gap-4 mt-5">
               <ComponentCardAdminDashboard
-                dataName={data?.registry?.pending_companies}
+                dataName={data?.registry?.pending_companies || 0}
+                dataNameNotification={data.registry?.newly_update?.pending_companies}
+                onClick={() => resetCounter('registry-pending-companies')}
                 url={'/admin/superadmin/registry/pendingcompany'}
                 name={'Pending Company Registry'}
               />
               <ComponentCardAdminDashboard
-                dataName={data?.registry?.uploaded_additional_documents}
+                dataName={data?.registry?.uploaded_additional_documents || 0}
+                dataNameNotification={data.registry?.newly_update?.uploaded_additional_documents}
+                onClick={() => resetCounter('registry-uploaded-additional-documents')}
                 url={'/admin/superadmin/product/pending'}
-                name={'Uploaded Additional Documents'}
+                name={'Additional Document Need to Review'}
               />
             </div>
             <hr className="border-gray-500 my-4" />
@@ -172,7 +183,9 @@ export default function SuperadminDashboard({ session, message }) {
             </h1>
             <div className="grid grid-cols-4 gap-4 mt-5">
               <ComponentCardAdminDashboard
-                dataName={data?.product_management?.pending_product}
+                dataName={data?.product_management?.pending_products || 0}
+                dataNameNotification={data.product_management?.newly_update?.pending_products}
+                onClick={() => resetCounter('product-management-pending-products')}
                 url={'/admin/superadmin/product/pending'}
                 name={'Pending Product Approval'}
               />
@@ -183,13 +196,16 @@ export default function SuperadminDashboard({ session, message }) {
             </h1>
             <div className="grid grid-cols-4 gap-4 mt-5">
               <ComponentCardAdminDashboard
-                dataName={data?.excel_product_file?.uploaded_file}
+                dataName={data?.excel_product_file?.uploaded_file || 0}
+                dataNameNotification={data.excel_product_file?.newly_update?.uploaded_file}
+                onClick={() => resetCounter('excel-product-file-uploaded-file')}
                 url={'/admin/superadmin/product/uploaded'}
                 name={'New File Uploaded'}
               />
-
               <ComponentCardAdminDashboard
-                dataName={data?.excel_product_file?.in_progress}
+                dataName={data?.excel_product_file?.in_progress || 0}
+                dataNameNotification={data.excel_product_file?.newly_update?.in_progress}
+                onClick={() => resetCounter('excel-product-file-in-progress')}
                 url={'/admin/superadmin/product/uploaded'}
                 name={'File In Progress'}
               />
@@ -198,40 +214,67 @@ export default function SuperadminDashboard({ session, message }) {
             <h1 className="font-normal text-2xl mb-3 mt-4">Orders</h1>
             <div className="grid grid-cols-4 gap-4 mt-5">
               <ComponentCardAdminDashboard
-                dataName={data?.order_process_one?.active_order || 0}
+                dataName={data?.order?.active_order || 0}
+                dataNameNotification={data.order?.newly_update?.active_order}
+                onClick={() => resetCounter('order-active-order')}
                 url={'/admin/superadmin/orders/allorders'}
                 name={'Status Update for Active Orders'}
               />
               <ComponentCardAdminDashboard
-                dataName={data.order_process_one?.approve_reject_payment || 0}
+                dataName={data.order?.approve_reject_payment || 0}
+                dataNameNotification={data.order?.newly_update?.approve_reject_payment}
+                onClick={() => resetCounter('order-approve-reject-payment')}
                 url={
                   '/admin/superadmin/orders/allorders?orderStatus=payment-uploaded'
                 }
                 name={'Approve/Reject Payment of Buyer'}
               />
               <ComponentCardAdminDashboard
-                dataName={data.order_process_two?.pending_shipment || 0}
+                dataName={data.order?.pending_shipment || 0}
+                dataNameNotification={data.order?.newly_update?.pending_shipment}
+                onClick={() => resetCounter('order-pending-shipment')}
                 url={
                   '/admin/superadmin/orders/allorders?orderStatus=payment-accepted'
                 }
                 name={'Pending Shipment'}
               />
               <ComponentCardAdminDashboard
-                dataName={data.order_process_two.release_payment || 0}
+                dataName={data.order?.ongoing_test || 0}
+                dataNameNotification={data.order?.newly_update?.ongoing_test}
+                onClick={() => resetCounter('order-ongoing-test')}
                 url={
-                  '/admin/superadmin/orders/allorders?orderStatus=invoice-uploaded'
+                  '/admin/superadmin/orders/allorders?orderStatus=shipped-to-lab'
+                }
+                name={'Ongoing Test'}
+              />
+              <ComponentCardAdminDashboard
+                dataName={data.order?.reimbursement_active || 0}
+                dataNameNotification={data.order?.newly_update?.reimbursement_active}
+                onClick={() => resetCounter('order-reimbursement-active')}
+                url={
+                  '/admin/superadmin/orders/allorders?orderStatus=product-accepted'
                 }
                 name={'Release Payment to Seller'}
               />
+            </div>
+            <hr className="border-gray-500 my-4" />
+            <h1 className="font-normal text-2xl mb-3 mt-4">Bad Test Result</h1>
+            <div className="grid grid-cols-4 gap-4 mt-5">
               <ComponentCardAdminDashboard
-                dataName={data.uploaded_additional_documents || 0}
-                url={'/admin/superadmin/registry/uploadedcompany'}
-                name={'Additional Document Need to Review'}
+                dataName={data.order?.bad_test_result || 0}
+                dataNameNotification={data.order?.newly_update?.bad_test_result}
+                onClick={() => resetCounter('order-bad-test-result')}
+                url={
+                  '/admin/superadmin/orders/allorders?orderStatus=bad-test-result'
+                }
+                name={'Bad Test Result'}
               />
               <ComponentCardAdminDashboard
-                dataName={data.reimbursement || 0}
+                dataName={data.order?.reimbursement_active || 0}
+                dataNameNotification={data.order?.newly_update?.reimbursement_active}
+                onClick={() => resetCounter('order-reimbursement-active')}
                 url={'/admin/superadmin/reimbursement/active'}
-                name={'Reimbursement'}
+                name={'Release Payment to Buyer'}
               />
             </div>
           </>

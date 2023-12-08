@@ -29,6 +29,8 @@ import WarningNotification from '@/components/Interface/Notification/WarningNoti
 import InfoNotification from '@/components/Interface/Notification/InfoNotification'
 import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
 import calculateDayDifference from '@/lib/calculateDayDifference'
+import AccpetProduct from '@/components/Modal/OrderComponent/Seller/AcceptProduct'
+import UpdateInvoice from '@/components/Modal/OrderComponent/Seller/UpdateInvoice'
 
 export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -60,6 +62,7 @@ export default function InquiryDetails({ session, routeParam }) {
       )
       .then((response) => {
         toast.success(response.data.message, toastOptions)
+        setcourierModal(false)
         loadData()
       })
       .catch((error) => {
@@ -266,6 +269,35 @@ export default function InquiryDetails({ session, routeParam }) {
         setIsLoading(false)
       })
   }
+  const [acceptProductModal, setacceptProductModal] = useState(false)
+  const acceptProductHandler = async (inputData) => {
+    setIsLoading(true)
+    setErrorInfo({})
+    axios
+      .post(
+        `/seller/order/accept-returned-product`,
+        {
+          order_slug: data.slug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setacceptProductModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(error.data.message, toastOptions)
+        setErrorInfo(error.data.data)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }
 
   const [shipProductModal, setShipProductModal] = useState(false)
   const shipProductHanlde = async (
@@ -308,22 +340,52 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
-  const [uploadInvoiceModal, setUploadInvoiceModal] = useState(false)
-  const uploadInvoiceHandler = async (invoice) => {
+  const [uploadReceipt, setuploadReceipt] = useState(false)
+  const uploadReceiptHandler = async (invoice) => {
     setIsLoading(true)
     setErrorInfo({})
     let formData = new FormData()
-    formData.append('seller_invoice', invoice)
     formData.append('order_slug', data.slug)
+    formData.append('payment_receipt', invoice)
     const response = await axios
-      .post(`/seller/order/upload-invoice`, formData, {
+      .post(`/seller/order/upload-payment-receipt`, formData, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
         },
       })
       .then((response) => {
         toast.success(response.data.message, toastOptions)
-        setShipProductModal(false)
+        setuploadReceipt(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot upload the invoice.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }
+  const [updatePaymentReceiptModal, setupdatePaymentReceiptModal] =
+    useState(false)
+  const updatePaymentReceiptHandler = async (invoice) => {
+    setIsLoading(true)
+    setErrorInfo({})
+    let formData = new FormData()
+    formData.append('order_slug', data.slug)
+    formData.append('payment_receipt', invoice)
+    const response = await axios
+      .post(`/seller/order/update-payment-receipt`, formData, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      })
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setupdatePaymentReceiptModal(false)
         loadData()
       })
       .catch((error) => {
@@ -536,6 +598,7 @@ export default function InquiryDetails({ session, routeParam }) {
         </div>
       )
       break
+
     // case 13:
     //   const utcMoment = moment.utc(
     //     data.arrival_estimation_to_buyer_date,
@@ -603,6 +666,7 @@ export default function InquiryDetails({ session, routeParam }) {
     //     </div>
     //   )
     //   break
+    case 16:
     case 17:
       actionToTake = (
         <div>
@@ -624,6 +688,88 @@ export default function InquiryDetails({ session, routeParam }) {
                 onClick={() => setcourierModal(true)}
               >
                 Insert Courier Details
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+    case 19:
+    case 20:
+      actionToTake = (
+        <div>
+          {uploadReceipt && (
+            <UploadInvoiceModal
+              isLoading={isLoading}
+              closeModal={() => setuploadReceipt(false)}
+              acceptance={uploadReceiptHandler}
+              errorInfo={errorInfo}
+            />
+          )}
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setuploadReceipt(true)}
+              >
+                Upload Payment Receipt
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+    case 23:
+      actionToTake = (
+        <div>
+          {updatePaymentReceiptModal && (
+            <UpdateInvoice
+              isLoading={isLoading}
+              closeModal={() => setupdatePaymentReceiptModal(false)}
+              acceptance={updatePaymentReceiptHandler}
+              errorInfo={errorInfo}
+            />
+          )}
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setupdatePaymentReceiptModal(true)}
+              >
+                Update Payment Receipt
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )
+      break
+    case 24:
+      actionToTake = (
+        <div>
+          {acceptProductModal && (
+            <AccpetProduct
+              isLoading={isLoading}
+              closeModal={() => setacceptProductModal(false)}
+              acceptance={acceptProductHandler}
+              errorInfo={errorInfo}
+            />
+          )}
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setacceptProductModal(true)}
+              >
+                Accept Product
               </PrimaryButton>
             </div>
           </div>

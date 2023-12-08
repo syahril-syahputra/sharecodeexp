@@ -19,3 +19,13 @@ export function timeoutPromise(ms, promise) {
     )
   })
 }
+
+export function getValue(val) {
+  if (typeof val == 'object') {
+    return val.value
+  } else if (typeof val == 'string') {
+    return val
+  } else {
+    return ''
+  }
+}

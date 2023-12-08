@@ -6,6 +6,7 @@ import GlobalContext from '@/store/global-context'
 import React, { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
+import axios from '@/lib/axios'
 import { Menu, Transition } from '@headlessui/react'
 import { Bars3Icon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
@@ -32,7 +33,27 @@ function TopNavigation({ setSidebarOpen, role }) {
     route.push('/admin/member/seller/dashboard')
   }
 
+  const refreshSession = async () => {
+    try {
+      const response = await axios.get(`/company`, {
+        headers: {
+          Authorization: `Bearer ${session.data.accessToken}`,
+        },
+      })
+      const newSession = {
+        userDetail: {
+          ...session?.data?.user?.userDetail,
+          company: response.data.data,
+        },
+      }
+      await session.update(newSession)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
+    //ada bug disini.. selected user hilang
+    refreshSession()
     loadUsername(session.data.accessToken)
   }, [])
 
@@ -116,6 +137,7 @@ function TopNavigation({ setSidebarOpen, role }) {
                       )}
                     </Menu.Item>
                   ))}
+
                   {session.data.user.dashboardStatus === 'seller' &&
                     !session.data.user.userDetail.company
                       .buying_restriction && (

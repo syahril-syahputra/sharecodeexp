@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react'
-import { getSession } from 'next-auth/react'
-import { useRouter } from 'next/router'
+import React, {useState, useEffect} from 'react'
+import {getSession} from 'next-auth/react'
+import {useRouter} from 'next/router'
 import axios from '@/lib/axios'
 
 // components
 import CompanyList from '@/components/Table/Superadmin/Registry/CompanyList'
 import MiniSearchBar from '@/components/Shared/MiniSearchBar'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
 
-export default function UploadedCompany({ session }) {
+export default function UploadedCompany({session}) {
   //data search
   const [isLoading, setIsLoading] = useState(false)
   const [data, setData] = useState([])
@@ -95,6 +95,7 @@ UploadedCompany.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+
   return {
     props: {
       session,

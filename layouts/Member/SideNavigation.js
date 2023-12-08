@@ -1,13 +1,13 @@
 import React from 'react'
-import { vendorsNavigation } from './navigation'
-import { HomeIcon } from '@heroicons/react/24/outline'
+import {vendorsNavigation} from './navigation'
+import {HomeIcon} from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import classNames from '@/utils/classNames'
 import useCompany from '@/hooks/useCompany'
-import { useSession } from 'next-auth/react'
-import { VendorUrl } from '@/route/route-url'
-import { Disclosure } from '@headlessui/react'
-import { ChevronRightIcon } from '@heroicons/react/20/solid'
+import {useSession} from 'next-auth/react'
+import {VendorUrl} from '@/route/route-url'
+import {Disclosure} from '@headlessui/react'
+import {ChevronRightIcon} from '@heroicons/react/20/solid'
 import LoadingState from '@/components/Interface/Loader/LoadingState'
 import SellerDahsboardNavigation from './Seller/Dashboard'
 import BuyerDashboardNavigation from './Buyer/Dashboard'
@@ -70,12 +70,12 @@ function SideNavigation() {
         </>
       )}
       {company?.is_confirmed === 'accepted' &&
-      session.data.user.dashboardStatus == 'buyer' ? (
+        session.data.user.dashboardStatus == 'buyer' ? (
         <MainSidebarBuyer />
       ) : null}
 
       {company?.is_confirmed === 'accepted' &&
-      session.data.user.dashboardStatus == 'seller' ? (
+        session.data.user.dashboardStatus == 'seller' ? (
         <MainSidebarSeller />
       ) : null}
 
@@ -103,7 +103,7 @@ function SideNavigation() {
                       </Link>
                     ) : (
                       <Disclosure as="div">
-                        {({ open }) => (
+                        {({open}) => (
                           <>
                             <Disclosure.Button
                               className={classNames(
@@ -119,7 +119,7 @@ function SideNavigation() {
                               />
                               {item.name}
                               {isReason_notNull !== null &&
-                              is_confirmed_company?.toLowerCase() ===
+                                is_confirmed_company?.toLowerCase() ===
                                 'pending' ? (
                                 <WarningBadges />
                               ) : null}
@@ -147,11 +147,10 @@ function SideNavigation() {
                                       'block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700'
                                     )}
                                   >
-                                    {/* name === 'My Company' */}
                                     {subItem.name === 'My Company' ? (
                                       <>
                                         {isReason_notNull !== null &&
-                                        is_confirmed_company?.toLowerCase() ===
+                                          is_confirmed_company?.toLowerCase() ===
                                           'pending' ? (
                                           <>
                                             <div className="transition-all flex justify-between items-center pr-4 space-x-4">

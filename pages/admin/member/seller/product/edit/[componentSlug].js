@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import axios from 'lib/axios'
-import { getSession } from 'next-auth/react'
+import {getSession} from 'next-auth/react'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
@@ -10,9 +10,9 @@ import ErrorInput from '@/components/Shared/ErrorInput'
 
 // components
 import CountrySelectorInitial from '@/components/Shared/CountrySelectorInitial'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
-import { useRouter } from 'next/router'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
+import {useRouter} from 'next/router'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
@@ -22,9 +22,11 @@ import TextInput from '@/components/Interface/Form/TextInput'
 import NumberInput from '@/components/Interface/Form/NumberInput'
 import AreaInput from '@/components/Interface/Form/AreaInput'
 import SelectInput from '@/components/Interface/Form/SelectInput'
+import {Tooltip} from '@/components/Tooltip'
 
-export default function EditComponent({ session, routeParam, packaginglist }) {
+export default function EditComponent({session, routeParam, packaginglist}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
+  const tooltipText = `If product stock have different manufacturing date, please add the oldest manufacturing date. For example, if you have 20 products in stock that were manufacture between 2020 and 2023, your date code for this product will be 2020+ or 20+`
   const [inputData, setInputData] = useState({
     id: '',
     AvailableQuantity: '',
@@ -43,13 +45,13 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
   const [errorInfo, setErrorInfo] = useState({})
   const [errorMessage, setErrorMessage] = useState(null)
   const setDataHandler = (input) => {
-    setInputData({ ...inputData, [input.name]: input.value })
+    setInputData({...inputData, [input.name]: input.value})
   }
 
   //country handle
   const [country, setCountry] = useState()
   const countryHandleChange = (value) => {
-    setInputData({ ...inputData, country: value.label })
+    setInputData({...inputData, country: value.label})
     setCountry(value)
   }
 
@@ -57,7 +59,7 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
   const descriptionLimit = 100
   const descriptionHandler = (input) => {
     setDescriptionCount(input.value.length)
-    setInputData({ ...inputData, [input.name]: input.value })
+    setInputData({...inputData, [input.name]: input.value})
   }
 
   const router = useRouter()
@@ -69,13 +71,13 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
 
     //regex check
     if (!/^[0-9+]*([+]?)+$/.test(inputData.dateCode)) {
-      setErrorInfo({ dateCode: ['Wrong format!'] })
+      setErrorInfo({dateCode: ['Wrong format!']})
       setIsLoading(false)
       return
     }
 
     if (descriptionCount > descriptionLimit) {
-      setErrorInfo({ Description: ['Exceed maximum character!'] })
+      setErrorInfo({Description: ['Exceed maximum character!']})
       setIsLoading(false)
       return
     }
@@ -97,7 +99,6 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
         toast.success('Product has been updated.', toastOptions)
       })
       .catch((error) => {
-        console.log(error)
         toast.error(
           'Something went wrong. Check your form correctly.',
           toastOptions
@@ -112,14 +113,14 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
   //packaging option
   const [packagings, setPackagings] = useState([
     ...packaginglist,
-    { value: 'other', label: 'Other' },
+    {value: 'other', label: 'Other'},
   ])
   const [packaging, setPackaging] = useState(null)
   const handlePackagingChange = (value) => {
-    setInputData({ ...inputData, packaging: '' })
+    setInputData({...inputData, packaging: ''})
     setPackaging(value)
     if (value.value != 'other') {
-      setInputData({ ...inputData, packaging: value.value })
+      setInputData({...inputData, packaging: value.value})
     }
   }
 
@@ -201,9 +202,9 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
           (item) => item.value == result.packaging
         )
         if (oldPackaging) {
-          setPackaging({ value: result.packaging, label: result.packaging })
+          setPackaging({value: result.packaging, label: result.packaging})
         } else {
-          setPackaging({ value: 'other', label: 'Other' })
+          setPackaging({value: 'other', label: 'Other'})
         }
       })
       .catch((error) => {
@@ -227,7 +228,7 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
     const fileReader = new FileReader()
     fileReader.onload = function (e) {
       setImage(e.target.result)
-      setInputData({ ...inputData, img: file })
+      setInputData({...inputData, img: file})
     }
     if (file) {
       fileReader.readAsDataURL(file)
@@ -318,9 +319,10 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
                   <Image
                     src={image}
                     className="mx-auto"
+                    alt="product"
                     height={180}
                     width={180}
-                  ></Image>
+                  />
                 </div>
               </div>
             </div>
@@ -399,18 +401,30 @@ export default function EditComponent({ session, routeParam, packaginglist }) {
             onChange={(input) => setDataHandler(input)}
           />
         </div>
-        <div className="w-full lg:w-1/2 px-3 mb-6">
-          <TextInput
-            label="Date Code"
-            placeholder="eg. 2023, 2023+"
-            className="w-full"
-            disabled={isLoading}
-            required
-            name="dateCode"
-            value={inputData.dateCode}
-            errorMsg={errorInfo?.dateCode}
-            onChange={(input) => setDataHandler(input)}
-          />
+        <div className='flex flex-wrap mb-6'>
+          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <div className='relative w-full'>
+              <TextInput
+                label="Date Code"
+                placeholder="eg. 2023, 2023+"
+                className="w-full"
+                disabled={isLoading}
+                required
+                name="dateCode"
+                value={inputData.dateCode}
+                errorMsg={errorInfo?.dateCode}
+                onChange={(input) => setDataHandler(input)}
+              />
+              <div
+                className="absolute inset-y-0 right-4 top-9 flex items-start cursor-pointer"
+
+              >
+                <Tooltip tooltipText={tooltipText}>
+                  <i className="fas fa-regular fa-circle-info text-slate-500" data-tooltip-target="tooltip-default" />
+                </Tooltip>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="w-full lg:w-1/2 px-3 mb-6">
           <SelectInput
