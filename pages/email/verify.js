@@ -8,15 +8,12 @@ import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import {useRouter} from 'next/router'
 import LoadingState from '@/components/Interface/Loader/LoadingState'
 import {timeoutPromise} from '@/utils/general'
-import {CountdownTimer} from '@/components/CounterdownTime'
-import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
 import ResendEmailVerification from '@/components/Modal/ResendEmail'
 import {toast} from 'react-toastify'
 import {toastOptions} from '@/lib/toastOptions'
 import {getSession} from 'next-auth/react'
 
 export default function EmailVerify({session}) {
-
   const router = useRouter()
   const [stateExpires, setStateExpires] = useState('')
   const [stateEmailVerifyUrl, setEmailVerifyUrl] = useState('')
@@ -30,6 +27,7 @@ export default function EmailVerify({session}) {
   const [dialogState, setDialogState] = useState(false)
   const [resendModal, setResendModal] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [stateDisabledResend, setStateDisabledResend] = useState(false)
 
   const handleResendEmail = async () => {
     await axios
@@ -48,6 +46,8 @@ export default function EmailVerify({session}) {
         setResendModal(false)
         setLoading(false)
         setIsSucces(false)
+        setStateDisabledResend(true)
+        router.push('/verify/email')
       })
       .catch((error) => {
         toast.error(`${error?.data?.message}`, toastOptions)
@@ -136,13 +136,11 @@ export default function EmailVerify({session}) {
 
   useEffect(() => {
     if (verified) {
-
       if (session === null || session == undefined) {
         router.push('/auth/login')
       } else {
         router.push('/admin/dashboard')
       }
-
     }
   }, [verified])
 
@@ -178,6 +176,7 @@ export default function EmailVerify({session}) {
                               className="m-2"
                               size="lg"
                               outline
+                              disabled={stateDisabledResend}
                               onClick={() => setResendModal(true)}
                             >
                               Resend

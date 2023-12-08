@@ -25,6 +25,7 @@ export default function VerifyEmail({session, ...props}) {
   const [isSucces, setIsSucces] = useState(false)
   const [changeEmailModal, setChangeEmailModal] = useState(false)
   const [stateData, setStateData] = useState()
+  const [stateDisabledResend, setStateDisabledResend] = useState(false)
   const router = useRouter()
 
   const handleResendEmail = async () => {
@@ -44,6 +45,7 @@ export default function VerifyEmail({session, ...props}) {
         setLoading(false)
         setIsLoading(false)
         setDialogState(false)
+        setStateDisabledResend(true)
       })
       .catch((error) => {
         toast.error(`${error?.data?.message}`, toastOptions)
@@ -103,6 +105,7 @@ export default function VerifyEmail({session, ...props}) {
                     className="m-2"
                     size="lg"
                     outline
+                    disabled={stateDisabledResend}
                     onClick={() => setResendModal(true)}
                   >
                     Resend
