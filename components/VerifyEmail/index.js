@@ -9,11 +9,13 @@ import LogoutModal from '@/components/Modal/Logout/Logout'
 import {toast} from 'react-toastify'
 import {toastOptions} from '@/lib/toastOptions'
 import ResendEmailVerification from '@/components/Modal/ResendEmail'
+import ChangeEmaiVerification from '@/components/Modal/ChangeEmail'
 
 const VerifyComp = ({session, signOut}) => {
   let time = null
   const [loading, setLoading] = useState(true)
   const [logoutModal, setLogoutModal] = useState(false)
+  const [changeEmailModal, setChangeEmailModal] = useState(false)
   const [resendModal, setResendModal] = useState(false)
   const [dialogState, setDialogState] = useState(false)
   const isServer = typeof window === 'undefined'
@@ -97,6 +99,13 @@ const VerifyComp = ({session, signOut}) => {
                     Logout
                   </PrimaryButton>
                 </div>
+                <div className="text-center py-2  hover:underline hover:text-footer-resources">
+                  <span className="font-medium text-gray-900 dark:text-gray-300" onClick={() => {
+                    setChangeEmailModal(true)
+                  }}>
+                    Change Email
+                  </span>
+                </div>
               </div>
             }
           </PrimaryWrapper>
@@ -115,6 +124,15 @@ const VerifyComp = ({session, signOut}) => {
           session={session}
         />
       ) : null}
+      {
+        changeEmailModal ?
+          <ChangeEmaiVerification
+            closeModalEmail={setChangeEmailModal}
+            session={session}
+          />
+          :
+          null
+      }
     </>
   )
 }

@@ -44,15 +44,17 @@ export default function EmailVerify({session}) {
       )
       .then((response) => {
         toast.success(`${response?.data?.message}`, toastOptions)
-        setDialogState(true)
+        setDialogState(false)
         setResendModal(false)
-        setLoading(true)
-        setIsSucces(true)
+        setLoading(false)
+        setIsSucces(false)
       })
       .catch((error) => {
         toast.error(`${error?.data?.message}`, toastOptions)
         setIsSucces(false)
         setResendModal(false)
+        setIsLoading(false)
+        setDialogState(false)
       })
   }
 

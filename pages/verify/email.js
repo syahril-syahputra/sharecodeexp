@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react'
+import React, {Fragment, useEffect, useState} from 'react'
 import axios from 'lib/axios'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import {PageSEO} from '@/components/Utils/SEO'
@@ -13,15 +13,19 @@ import LogoutModal from '@/components/Modal/Logout/Logout'
 import {toast} from 'react-toastify'
 import {toastOptions} from '@/lib/toastOptions'
 import ResendEmailVerification from '@/components/Modal/ResendEmail'
+import ChangeEmaiVerification from '@/components/Modal/ChangeEmail'
+import {useRouter} from 'next/router'
 
-export default function VerifyEmail({session}) {
-
+export default function VerifyEmail({session, ...props}) {
   const [loading, setLoading] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [logoutModal, setLogoutModal] = useState(false)
   const [resendModal, setResendModal] = useState(false)
   const [dialogState, setDialogState] = useState(false)
   const [isSucces, setIsSucces] = useState(false)
+  const [changeEmailModal, setChangeEmailModal] = useState(false)
+  const [stateData, setStateData] = useState()
+  const router = useRouter()
 
   const handleResendEmail = async () => {
     await axios
@@ -50,6 +54,33 @@ export default function VerifyEmail({session}) {
       })
   }
 
+  async function fetchData() {
+    try {
+      const data = await axios.get(`/my-account`, {
+        headers: {
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+      })
+      setStateData(data?.data)
+    } catch (error) {
+      throw error
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  useEffect(() => {
+    if (stateData?.data?.email_verified_at) {
+      if (session === null || session === undefined) {
+        router.push('/auth/login')
+      } else {
+        router.push('/admin/dashboard')
+      }
+    }
+  }, [stateData?.data?.email_verified_at])
+
   return (
     <Fragment>
       <PageSEO title={siteMetadata?.title} />
@@ -65,7 +96,7 @@ export default function VerifyEmail({session}) {
                 <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
                   Your email verification has been sent
                   <br />
-                  {`to ${session?.user?.userDetail?.email ?? ''}  please verify the email.`}
+                  {`to ${stateData?.data.email ?? ''}  please verify the email.`}
                 </h3>
                 <div className="mt-20">
                   <PrimaryButton
@@ -84,6 +115,13 @@ export default function VerifyEmail({session}) {
                   >
                     Logout
                   </PrimaryButton>
+                </div>
+                <div className="text-center py-2  hover:underline hover:text-footer-resources">
+                  <span className="font-medium text-gray-900 dark:text-gray-300" onClick={() => {
+                    setChangeEmailModal(true)
+                  }}>
+                    Change Email
+                  </span>
                 </div>
               </div>
             }
@@ -110,13 +148,25 @@ export default function VerifyEmail({session}) {
           session={session}
         />
       ) : null}
+      {
+        changeEmailModal ?
+          <ChangeEmaiVerification
+            closeModalEmail={setChangeEmailModal}
+            session={session}
+            callback={() => {
+              fetchData()
+            }}
+          />
+          :
+          null
+      }
     </Fragment>
   )
 }
 
+
 export async function getServerSideProps(context) {
   const session = await getSession(context)
-
   if (!session) {
     return {
       redirect: {

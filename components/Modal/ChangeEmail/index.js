@@ -24,9 +24,9 @@ export default function ChangeEmaiVerification({session, ...props}) {
     }).then((response) => {
       toast.success(response?.data?.message, toastOptions)
       props.closeModalEmail()
-      props.closeModal()
       setErrorInfo(null)
       setIsLoading(false)
+      props.callback()
     }).catch((error) => {
       const erroEmptyStr = error?.data?.message == '' ? 'Something went wrong' : error?.data?.message
       setErrorInfo(error?.data?.data)
@@ -44,7 +44,6 @@ export default function ChangeEmaiVerification({session, ...props}) {
         title="Change Email and Resend Verification"
         onClick={() => {
           props.closeModalEmail()
-          props.closeModal()
           setIsLoading(false)
         }}
         body={
@@ -64,10 +63,9 @@ export default function ChangeEmaiVerification({session, ...props}) {
             <LightButton
               className="mr-2"
               size="sm"
-              disabled={!stateEmail}
+              disabled={!stateEmail || isLoading}
               onClick={() => {
                 props.closeModalEmail()
-                props.closeModal()
                 setIsLoading(false)
               }}
             >
@@ -75,7 +73,7 @@ export default function ChangeEmaiVerification({session, ...props}) {
             </LightButton>
             <PrimaryButton
               size="sm"
-              disabled={!stateEmail}
+              disabled={!stateEmail || isLoading}
               onClick={() => {
                 handleSubmitEmail(stateEmail)
               }}

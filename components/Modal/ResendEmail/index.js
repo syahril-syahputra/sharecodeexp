@@ -26,13 +26,13 @@ export default function ResendEmailVerification({session, ...props}) {
               Resend Email Verification
             </span>
             ?
-            <div className="text-lg my-4 hover:underline hover:text-footer-resources">
+            {/* <div className="text-lg my-4 hover:underline hover:text-footer-resources">
               <span className="font-medium text-gray-900 dark:text-gray-300" onClick={() => {
                 setChangeEmailModal(true)
               }}>
                 or change your email address
               </span>
-            </div>
+            </div> */}
           </p>
         }
         action={
@@ -65,7 +65,7 @@ export default function ResendEmailVerification({session, ...props}) {
           </>
         }
       />
-      {
+      {/* {
         changeEmailModal ?
           <ChangeEmaiVerification
             closeModalEmail={setChangeEmailModal}
@@ -74,7 +74,7 @@ export default function ResendEmailVerification({session, ...props}) {
           />
           :
           null
-      }
+      } */}
     </>
   )
 }
