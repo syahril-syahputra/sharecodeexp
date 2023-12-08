@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import { useSession } from 'next-auth/react'
+import {useSession} from 'next-auth/react'
 import FooterAdmin from '@/components/Footers/FooterAdmin'
-import { PageSEO } from '@/components/Utils/SEO'
+import {PageSEO} from '@/components/Utils/SEO'
 import siteMetadata from '@/utils/siteMetadata'
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import TopNavigation from './TopNavigation'
 import ImageLogo from '@/components/ImageLogo/ImageLogo'
 import SuperadminNav from './Superadmin/SideNavigation'
@@ -11,8 +11,10 @@ import MemberNav from './Member/SideNavigation'
 import SmallSideSuperadminNav from './Superadmin/SmallSideNavigation'
 import SmallSideMemberNav from './Member/SmallSideNavigation'
 import MyAccount from './MyAccount'
+import HelpNavigation from './Member/HelpNavigation'
+import AdminHelpNavigation from './Superadmin/HelpNavigation'
 
-export default function Admin({ children }) {
+export default function Admin({children}) {
   const session = useSession()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -76,9 +78,26 @@ export default function Admin({ children }) {
 
             {/* Divider */}
             <hr className="md:min-w-full" />
-            <nav className="flex flex-1 flex-col mb-20">
+            <nav className="flex flex-1 flex-col ">
               <MyAccount />
             </nav>
+            {role == 2 &&
+              <>
+                <hr className="md:min-w-full" />
+                <nav className="flex flex-col">
+                  <HelpNavigation />
+                </nav>
+              </>
+
+            }
+            {role == 1 &&
+              <>
+                <hr className="md:min-w-full" />
+                <nav className="flex  flex-col ">
+                  <AdminHelpNavigation />
+                </nav>
+              </>
+            }
           </div>
         </div>
 

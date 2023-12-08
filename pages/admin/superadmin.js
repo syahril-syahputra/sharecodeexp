@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { getSession } from 'next-auth/react'
 import axios from '@/lib/axios'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {getSession} from 'next-auth/react'
 import Link from 'next/link'
 
 // layout for page
@@ -10,14 +7,14 @@ import Admin from 'layouts/Admin.js'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import SuccessBadges from '@/components/Interface/Badges/SuccessBadges'
 
-function ComponentCardAdminDashboard({ onClick, dataName, name, url, dataNameNotification }) {
+function ComponentCardAdminDashboard({onClick, dataName, name, url, dataNameNotification}) {
   return (
     <PrimaryWrapper className="border border-blue-500">
       <div className="p-4 mb-auto">
         <div className="flex justify-between">
-          <h1 className="font-semibold text-7xl mb-3">{dataName}</h1> 
-          {!!dataNameNotification && 
-            <SuccessBadges title={dataNameNotification} className={"italic pr-3 py-1 h-7"}/>
+          <h1 className="font-semibold text-7xl mb-3">{dataName}</h1>
+          {!!dataNameNotification &&
+            <SuccessBadges title={dataNameNotification} className={"italic pr-3 py-1 h-7"} />
           }
         </div>
         <span className="text-md italic">{name}</span>
@@ -40,7 +37,7 @@ function ComponentCardAdminDashboard({ onClick, dataName, name, url, dataNameNot
   )
 }
 
-export default function SuperadminDashboard({ session, message }) {
+export default function SuperadminDashboard({session, message}) {
   const status_id = session?.user?.userDetail?.status_id
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({
@@ -93,13 +90,13 @@ export default function SuperadminDashboard({ session, message }) {
 
   async function resetCounter(counterKey) {
     await axios
-      .post(`/admin/dashboard/counter-checker/${counterKey}`, 
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${session.accessToken}`,
-        },
-      })
+      .post(`/admin/dashboard/counter-checker/${counterKey}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        })
   }
 
   const componentDashboardCard = () => {

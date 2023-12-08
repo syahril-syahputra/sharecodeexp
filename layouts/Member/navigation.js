@@ -5,6 +5,7 @@ import {
   ShoppingCartIcon,
   FolderIcon,
   lifebuoy,
+  ChatBubbleLeftEllipsisIcon,
 } from '@heroicons/react/24/outline'
 
 export const dahsboard = [
@@ -79,8 +80,8 @@ export const vendorsNavigation = [
 export const help = [
   {
     name: 'Dashboard',
-    href: routeUrl.VendorUrl.dahsboard,
-    icon: HomeIcon,
+    href: routeUrl.VendorUrl.help,
+    icon: ChatBubbleLeftEllipsisIcon,
     current: false,
   },
 ]

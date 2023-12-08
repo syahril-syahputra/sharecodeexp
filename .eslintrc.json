@@ -40,6 +40,11 @@
         "allowArrayStart": true
       }
     ],
+    "newlines-between": "always",
+    "alphabetize": {
+      "order": "asc",
+      "caseInsensitive": true
+    },
     "newline-before-return": "warn", // Tech debts
     // add new line below import
     "import/newline-after-import": [
@@ -47,6 +52,15 @@
       {
         "count": 1
       }
+    ],
+    "import/order":
+    [
+      "error",
+      {
+        "alphabetize": { "caseInsensitive": true, "order": "asc" },
+        "groups": [["external", "builtin"], "internal", "parent", "sibling", "index"],
+        "newlines-between": "never"
+      },
     ]
   }
 }

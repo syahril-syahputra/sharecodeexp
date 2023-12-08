@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import axios from 'lib/axios'
-import { getSession } from 'next-auth/react'
+import {getSession} from 'next-auth/react'
 import Link from 'next/link'
 
 // layout for page
@@ -10,8 +10,8 @@ import Admin from 'layouts/Admin.js'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
 import UploadAdditionalDocsModal from '@/components/Modal/Member/Company/UploadAdditinalDocs'
 import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import DangerNotification from '@/components/Interface/Notification/DangerNotification'
@@ -25,7 +25,7 @@ import UpdateImageModal from '@/components/Modal/Member/Company/UpdateImage'
 import UpdateCertificationofActivityModal from '@/components/Modal/Member/Company/UpdateCertificationofActivity'
 import UpdateRegistrationDocumentModal from '@/components/Modal/Member/Company/UpdateRegistrationDoc'
 
-export default function MyCompany({ session }) {
+export default function MyCompany({session}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   //data search
   const [isLoading, setIsLoading] = useState(true)
@@ -43,7 +43,6 @@ export default function MyCompany({ session }) {
         setCompanyData(result)
       })
       .catch((error) => {
-        // console.log(error.response)
       })
       .finally(() => {
         setIsLoading(false)
@@ -242,8 +241,8 @@ export default function MyCompany({ session }) {
                 {companyData.country}, {companyData.address}
               </div>
               {companyData?.address2 === '' ||
-              companyData.address2 === null ||
-              companyData.address2 === undefined ? null : (
+                companyData.address2 === null ||
+                companyData.address2 === undefined ? null : (
                 <div className="text-sm leading-normal mt-2 mb-2 text-blueGray-400 font-bold uppercase">
                   <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{' '}
                   {companyData.address2}
@@ -251,7 +250,7 @@ export default function MyCompany({ session }) {
               )}
               <div className="text-sm leading-normal mt-2 mb-2 text-blueGray-400 font-bold uppercase">
                 <i className="fas fa-phone mr-2 text-lg text-blueGray-400"></i>{' '}
-                {companyData.phone}
+                {`${companyData.country_code ?? ''}${companyData.phone}`}
               </div>
               <div className="mb-2 text-blueGray-600 mt-10">
                 <i className="fas fa-circle-dot mr-2 text-lg text-blueGray-400"></i>

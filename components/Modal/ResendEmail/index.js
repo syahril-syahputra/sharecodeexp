@@ -1,11 +1,14 @@
-import React from 'react'
+import React, {useState} from 'react'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
-import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
+import {BaseModalMedium} from '@/components/Interface/Modal/BaseModal'
+import ChangeEmaiVerification from '../ChangeEmail'
 
-export default function ResendEmailVerification(props) {
+
+export default function ResendEmailVerification({session, ...props}) {
   const [loadingEmail, setLoadingEmail] = props.isLoading
   const [loadingDialogSuccess, setLoadingDialogSuccess] = props?.isLoadingDialog
+  const [changeEmailModal, setChangeEmailModal] = useState(false)
 
   return (
     <>
@@ -23,6 +26,13 @@ export default function ResendEmailVerification(props) {
               Resend Email Verification
             </span>
             ?
+            {/* <div className="text-lg my-4 hover:underline hover:text-footer-resources">
+              <span className="font-medium text-gray-900 dark:text-gray-300" onClick={() => {
+                setChangeEmailModal(true)
+              }}>
+                or change your email address
+              </span>
+            </div> */}
           </p>
         }
         action={
@@ -35,7 +45,6 @@ export default function ResendEmailVerification(props) {
             >
               No
             </LightButton>
-
             <PrimaryButton
               size="sm"
               isLoading={props.isLoading}
@@ -43,7 +52,8 @@ export default function ResendEmailVerification(props) {
               onClick={() => {
                 props?.acceptance(),
                   setLoadingEmail(true),
-                  setLoadingDialogSuccess(false)
+                  setLoadingDialogSuccess(true)
+                setChangeEmailModal(false)
               }}
             >
               {loadingEmail || loadingDialogSuccess ? (
@@ -55,6 +65,16 @@ export default function ResendEmailVerification(props) {
           </>
         }
       />
+      {/* {
+        changeEmailModal ?
+          <ChangeEmaiVerification
+            closeModalEmail={setChangeEmailModal}
+            closeModal={props.closeModal}
+            session={session}
+          />
+          :
+          null
+      } */}
     </>
   )
 }

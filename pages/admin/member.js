@@ -1,17 +1,16 @@
-import React, { useEffect } from 'react'
-import { useSession, getSession } from 'next-auth/react'
-import axios from '@/lib/axios'
-import { useRouter } from 'next/router'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
 import Admin from 'layouts/Admin.js'
-import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
-import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses'
+import axios from '@/lib/axios'
+import {CompanyStatusesIcon} from '@/components/Shared/Company/Statuses'
 import Link from 'next/link'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
+import React, {useEffect} from 'react'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
+import {useSession, getSession} from 'next-auth/react'
+import {useRouter} from 'next/router'
 import WarningNotification from '@/components/Interface/Notification/WarningNotification'
-
-export default function MemberDashboard({ company, message, session }) {
+export default function MemberDashboard({company, message, session}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   useEffect(() => {
     if (!!message) {
@@ -19,7 +18,7 @@ export default function MemberDashboard({ company, message, session }) {
     }
   }, [])
 
-  const { update } = useSession()
+  const {update} = useSession()
   const router = useRouter()
   const handleDashboard = async (status) => {
     await update({
@@ -34,29 +33,32 @@ export default function MemberDashboard({ company, message, session }) {
     }
   }
 
-  const handleResendEmail = async () => {
-    await axios
-      .post(
-        `/email/resend`,
-        {},
-        {
-          headers: {
-            Authorization: `${session.accessToken}`,
-          },
-        }
-      )
-      .then((response) => {
-        toast.success(`${response?.message}`, toastOptions)
-      })
-      .catch((error) => {
-        toast.error(`${error.message}`, toastOptions)
-      })
-  }
+  /**
+   * This comment due to bugs fixing process for performance issue date: 12/2/2023
+   */
+
+  // const handleResendEmail = async () => {
+  //   await axios
+  //     .post(
+  //       `/email/resend`,
+  //       {},
+  //       {
+  //         headers: {
+  //           Authorization: `${session.accessToken}`,
+  //         },
+  //       }
+  //     )
+  //     .then((response) => {
+  //       toast.success(`${response?.message}`, toastOptions)
+  //     })
+  //     .catch((error) => {
+  //       toast.error(`${error.message}`, toastOptions)
+  //     })
+  // }
 
   return (
     <>
       <div>
-        {/* Rejected */}
         {company.is_confirmed == 'rejected' && (
           <PrimaryWrapper>
             <div className="text-center pb-10 mt-10">
@@ -86,7 +88,6 @@ export default function MemberDashboard({ company, message, session }) {
             </div>
           </PrimaryWrapper>
         )}
-        {/* Pending */}
         {company.is_confirmed == 'pending' && (
           <div className="container mx-auto mt-10 xs:pb-10 xs:pt-8 px-4">
             {company?.reason !== null ? (

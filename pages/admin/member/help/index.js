@@ -1,20 +1,15 @@
 import React, {useState, useEffect} from 'react'
-import {getSession} from 'next-auth/react'
-import {useRouter} from 'next/router'
+import Admin from 'layouts/Admin.js'
 import axios from '@/lib/axios'
-
-// components
-import CompanyList from '@/components/Table/Superadmin/Registry/CompanyList'
-import MiniSearchBar from '@/components/Shared/MiniSearchBar'
+import {getSession} from 'next-auth/react'
 import {toast} from 'react-toastify'
 import {toastOptions} from '@/lib/toastOptions'
+import HelpTable from '@/components/Table/Help/index'
+import MiniSearchBar from '@/components/Shared/MiniSearchBar'
 
-// layout for page
-import Admin from 'layouts/Admin.js'
-
-export default function UploadedCompany({session}) {
-  //data search
-  const [isLoading, setIsLoading] = useState(false)
+export default function InquiredProduct({session}) {
+  const [isLoading, setIsLoading] = useState(true)
+  const placeholder = "Search by Subject"
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
   const [metaData, setMetaData] = useState({
@@ -23,25 +18,20 @@ export default function UploadedCompany({session}) {
     lastPage: 0,
   })
 
-  useEffect(() => {
-    searchData()
-  }, [])
   const [search, setSearch] = useState('')
-  const searchData = async (searchParam = '', page = 1) => {
+  async function searchData(searchParam = '', page = 1) {
     setSearch(searchParam)
     setIsLoading(true)
-    const response = await axios
-      .get(
-        `/admin/companies/uploaded-additional-document?page=${page}&status=pending&search=${searchParam}`,
+    await axios
+      .get(`/member/help-request?page=${page}&search=${searchParam}&sort_by=updated_at&sort_type=DESC&start_date&end_date`,
         {
           headers: {
-            Authorization: `Bearer ${session.accessToken}`,
+            Authorization: `Bearer ${session?.accessToken}`,
           },
         }
       )
       .then((response) => {
         let result = response.data.data
-        // console.log(result)
         setData(result.data)
         setLinks(result.links)
         setMetaData({
@@ -54,9 +44,9 @@ export default function UploadedCompany({session}) {
         })
       })
       .catch((error) => {
-        // console.log(error.response)
+        setData([])
         toast.error(
-          'Something went wrong. Cannot load companies.',
+          error?.message || 'Something went wrong. Cannot load component.',
           toastOptions
         )
       })
@@ -67,7 +57,9 @@ export default function UploadedCompany({session}) {
   const setPage = (pageNumber) => {
     searchData(search, pageNumber)
   }
-
+  useEffect(() => {
+    searchData()
+  }, [])
   const handleSearch = (searchResult) => {
     searchData(searchResult)
   }
@@ -75,15 +67,19 @@ export default function UploadedCompany({session}) {
   return (
     <>
       <div className="mb-10">
-        <div className="mb-5 w-full lg:w-1/2">
-          <MiniSearchBar searchItem={handleSearch} />
+        <div className='mb-5 w-full lg:w-1/2'>
+          <MiniSearchBar placeholder={placeholder} searchItem={handleSearch} />
         </div>
-        <CompanyList
-          title="Review Additional Documents"
+        <HelpTable
+          title={'Help Request'}
+          filterStatus
           setPage={setPage}
           isLoading={isLoading}
           data={data}
+          search={search}
+          session={session}
           links={links}
+          loadData={searchData}
           metaData={metaData}
         />
       </div>
@@ -91,7 +87,7 @@ export default function UploadedCompany({session}) {
   )
 }
 
-UploadedCompany.layout = Admin
+InquiredProduct.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)

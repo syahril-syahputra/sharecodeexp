@@ -1,9 +1,10 @@
-import { useState } from "react"
+import {useState} from "react"
 import TextInput from "../Interface/Form/TextInput";
 import InfoButton from "../Interface/Buttons/InfoButton";
 import PrimaryButton from "../Interface/Buttons/PrimaryButton";
 
-export default function MiniSearchBar(props){
+export default function MiniSearchBar({placeholder, ...props}) {
+    const placeholderProps = placeholder || 'Find here...';
     const [search, setSearch] = useState('')
     const handleEnter = (e) => {
         if (e.key === 'Enter' && !!search) {
@@ -23,24 +24,24 @@ export default function MiniSearchBar(props){
         <>
             <div className="relative flex">
                 <TextInput
-                    placeholder="Find here..."
+                    placeholder={placeholderProps}
                     value={search}
                     onKeyDown={handleEnter}
-                    onChange={(input) => setSearch(input.value)}  
+                    onChange={(input) => setSearch(input.value)}
                 />
                 <PrimaryButton
                     type="button"
                     className="mr-2"
-                    onClick={onSubmit}                  
+                    onClick={onSubmit}
                 >
                     Search
-                </PrimaryButton>   
+                </PrimaryButton>
                 <InfoButton
                     type="button"
-                    onClick={onReset}                  
+                    onClick={onReset}
                 >
                     <i className="fas fa-refresh"></i>
-                </InfoButton>          
+                </InfoButton>
             </div>
         </>
     )

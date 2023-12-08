@@ -1,12 +1,11 @@
-/* eslint-disable react/jsx-no-target-blank */
 import * as Yup from 'yup'
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import axios from 'lib/axios'
 import Link from 'next/link'
 import IndexNavbar from 'components/Navbars/IndexNavbar.js'
 import Footer from 'components/Footers/Footer.js'
-import { Formik, Form } from 'formik'
-import { PageSEO } from '@/components/Utils/SEO'
+import {Formik, Form} from 'formik'
+import {PageSEO} from '@/components/Utils/SEO'
 import siteMetadata from '@/utils/siteMetadata'
 import ImageLogo from '@/components/ImageLogo/ImageLogo'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
@@ -20,7 +19,7 @@ import useCountry from '@/hooks/useCountry'
 import ProvinceSelector from '@/components/Shared/ProvinceSelector'
 import useDataProvince from '@/hooks/useProvince'
 import CitySelector from '@/components/Shared/CitySelector'
-import { PostalCode } from '@/utils/postalCode'
+import {PostalCode} from '@/utils/postalCode'
 import AreaInputValidation from '@/components/Interface/Form/AreaInputValidation'
 import TermAndConditionOfSaleModal from '@/components/Modal/Component/TermAndConditionOfSaleModal'
 import TermsandConditionofExportModal from '@/components/Modal/Component/TermsandConditionofExportModal'
@@ -76,7 +75,7 @@ export default function Index() {
     )
   }
 
-  function isMatchPostalCodePattern({ id, Country, value }) {
+  function isMatchPostalCodePattern({id, Country, value}) {
     const findCodeRegex = PostalCode?.find(
       (e) => e?.id === id && e.country === Country
     )
@@ -169,7 +168,6 @@ export default function Index() {
           if (val === undefined) {
             return true
           }
-
           return val.length === 0 || (val.length >= 2 && val.length <= 100)
         }
       )
@@ -195,29 +193,32 @@ export default function Index() {
     ),
   })
 
-  const [, setRegistrationInfo] = useState({
-    // Account Information
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
+  /**
+   * This code comment due to fixing bugs process for performance issues 12/2/2023
+   */
+  // const [_, setRegistrationInfo] = useState({
+  //   // Account Information
+  //   name: '',
+  //   email: '',
+  //   password: '',
+  //   password_confirmation: '',
 
-    // Company Information
-    company_name: '',
-    company_sector: '',
-    company_phone: '',
-    company_country: '',
-    company_address: '',
-    company_address2: '',
-    company_zip: '',
-    company_province: '',
-    company_city: '',
+  //   // Company Information
+  //   company_name: '',
+  //   company_sector: '',
+  //   company_phone: '',
+  //   company_country: '',
+  //   company_address: '',
+  //   company_address2: '',
+  //   company_zip: '',
+  //   company_province: '',
+  //   company_city: '',
 
-    // Documents
-    company_img: '',
-    company_RegistrationDocument: '',
-    company_CertificationofActivity: '',
-  })
+  //   // Documents
+  //   company_img: '',
+  //   company_RegistrationDocument: '',
+  //   company_CertificationofActivity: '',
+  // })
 
   const [firstAddressCharacterCount, setFirstAddressCharacterCount] =
     useState(0)
@@ -234,8 +235,6 @@ export default function Index() {
     setFirstAddressCharacterCount(input.length)
   }
 
-  const [country, setCountry] = useState(null)
-
   const [errorInfo, setErrorInfo] = useState({})
   const [errorMessage, setErrorMessage] = useState(null)
   const [succesStatus, setSuccesStatus] = useState(false)
@@ -249,6 +248,7 @@ export default function Index() {
   const [stateTOCSale, setStateTOCSale] = useState(false)
   const [stateTOCExport, setStateTOCExport] = useState(false)
   const handleSubmit = async (values) => {
+
     const payload = {
       name: values.name,
       email: values.email,
@@ -257,7 +257,8 @@ export default function Index() {
       company_name: values.company_name,
       company_address: values.company_address,
       company_address2: values.company_address2,
-      company_phone: `${values.company_code_country?.value}${values.company_phone}`,
+      country_code: values.company_code_country?.value,
+      company_phone: values.company_phone,
       company_sector:
         companySector?.value?.toLowerCase() === 'other'
           ? values.company_other
@@ -278,6 +279,7 @@ export default function Index() {
       tac_of_sale_agreement: isAgreeTermCondtionOfSale,
       tac_of_export_agreement: isAgreeTermCondtionOfExport,
     }
+
     if (!isAgreeTermCondtionOfSale) {
       setIsAgreeTermCondtionOfSaleMessage(
         'Please agreed the Term and Conditions of Sale before continue.'
@@ -339,7 +341,7 @@ export default function Index() {
                     initialValues={initialValue}
                     validationSchema={validationSchema}
                   >
-                    {({ values, errors, ...formikProps }) => (
+                    {({values, errors, ...formikProps}) => (
                       <Form
                         className="pb-20"
                         id="register-form"
@@ -655,7 +657,7 @@ export default function Index() {
                                 const Country = countries?.find(
                                   (e) => e?.name == value?.value
                                 )
-                                setStatCountry({ ...Country })
+                                setStatCountry({...Country})
                               }}
                               onBlur={formikProps.onBlur}
                               errorMsg={errorInfo?.company_country}
@@ -689,7 +691,7 @@ export default function Index() {
                                 const province = provincies?.find(
                                   (e) => e?.name == value.value
                                 )
-                                setStateProvince({ ...province })
+                                setStateProvince({...province})
                                 setCompanyProvince(value)
                               }}
                               countryId={stateCountry?.id}
@@ -706,29 +708,29 @@ export default function Index() {
                             />
                             {companyProvince?.value?.toLowerCase() ==
                               'other' && (
-                              <div className="mt-2">
-                                <TextInputValidate
-                                  id="company_province_other"
-                                  className="w-full"
-                                  required
-                                  type="text"
-                                  name="company_province_other"
-                                  value={values.company_province_other}
-                                  errorMsg={errorInfo?.company_province_other}
-                                  onChange={formikProps.handleChange}
-                                  error={
-                                    formikProps.touched
-                                      .company_province_other &&
-                                    Boolean(errors.company_province_other)
-                                  }
-                                  helperText={
-                                    formikProps.touched
-                                      .company_province_other &&
-                                    errors.company_province_other
-                                  }
-                                />
-                              </div>
-                            )}
+                                <div className="mt-2">
+                                  <TextInputValidate
+                                    id="company_province_other"
+                                    className="w-full"
+                                    required
+                                    type="text"
+                                    name="company_province_other"
+                                    value={values.company_province_other}
+                                    errorMsg={errorInfo?.company_province_other}
+                                    onChange={formikProps.handleChange}
+                                    error={
+                                      formikProps.touched
+                                        .company_province_other &&
+                                      Boolean(errors.company_province_other)
+                                    }
+                                    helperText={
+                                      formikProps.touched
+                                        .company_province_other &&
+                                      errors.company_province_other
+                                    }
+                                  />
+                                </div>
+                              )}
                           </div>
                         </div>
                         <div className="flex flex-wrap mb-6">
@@ -762,27 +764,27 @@ export default function Index() {
                             />
                             {companyCityOther?.value?.toLowerCase() ===
                               'other' && (
-                              <div className="mt-2">
-                                <TextInputValidate
-                                  id="company_city_other"
-                                  className="w-full"
-                                  required
-                                  type="text"
-                                  name="company_city_other"
-                                  value={values.company_city_other}
-                                  errorMsg={errorInfo?.company_city_other}
-                                  onChange={formikProps.handleChange}
-                                  error={
-                                    formikProps.touched.company_city_other &&
-                                    Boolean(errors.company_city_other)
-                                  }
-                                  helperText={
-                                    formikProps.touched.company_city_other &&
-                                    errors.company_city_other
-                                  }
-                                />
-                              </div>
-                            )}
+                                <div className="mt-2">
+                                  <TextInputValidate
+                                    id="company_city_other"
+                                    className="w-full"
+                                    required
+                                    type="text"
+                                    name="company_city_other"
+                                    value={values.company_city_other}
+                                    errorMsg={errorInfo?.company_city_other}
+                                    onChange={formikProps.handleChange}
+                                    error={
+                                      formikProps.touched.company_city_other &&
+                                      Boolean(errors.company_city_other)
+                                    }
+                                    helperText={
+                                      formikProps.touched.company_city_other &&
+                                      errors.company_city_other
+                                    }
+                                  />
+                                </div>
+                              )}
                           </div>
                           <div className="w-full md:w-1/2 px-3">
                             <div className="w-full md:w-1/2 lg:w-1/2 2xl:w-1/2">
@@ -808,7 +810,6 @@ export default function Index() {
                             </div>
                           </div>
                         </div>
-
                         <div className="flex flex-wrap mb-6">
                           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <AreaInputValidation
@@ -841,18 +842,6 @@ export default function Index() {
                             />
                           </div>
                           <div className="w-full md:w-1/2 px-3">
-                            {/* <AreaInput
-                              rows={5}
-                              characterCount={secondAddressCharacterCount}
-                              characterLimit={secondAddressCharacterLimit}
-                              label="Address 2"
-                              name="company_address2"
-                              required
-                              placeholder="Please enter company address 2 here..."
-                              value={registrationInfo.company_address2}
-                              errorMsg={errorInfo?.company_address2}
-                              onChange={(input) => secondAddressHandler(input)}
-                            /> */}
                             <AreaInputValidation
                               rows={5}
                               label="Address 2"
@@ -893,51 +882,13 @@ export default function Index() {
                             <div className="flex-grow border-t border-blueGray-700" />
                           </div>
                           <div className="flex flex-wrap mb-6">
-                            {/* <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                              <label
-                                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                htmlFor="grid-last-name"
-                              >
-                                Company Registration Document
-                              </label>
-                              <div className="p-5 border-dashed border-2 border-indigo-200">
-                                <div className="grid gap-4 lg:grid-cols-2 md:grid-cols-1">
-                                  <div className="text-center my-auto">
-                                    <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl" />
-                                  </div>
-                                  <div className="text-xs ">
-                                    <p>PDF file size no more than 10MB</p>
-                                    <input
-                                      className="mt-3"
-                                      type="file"
-                                      name="company_RegistrationDocument"
-                                      accept=".pdf"
-                                      onChange={({ target }) =>
-                                        setRegistrationInfo({
-                                          ...registrationInfo,
-                                          company_RegistrationDocument:
-                                            target.files[0],
-                                        })
-                                      }
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                              {errorInfo?.company_RegistrationDocument && (
-                                <ErrorInput
-                                  error={
-                                    errorInfo?.company_RegistrationDocument
-                                  }
-                                />
-                              )}
-                            </div> */}
                             <TextInputDocument
                               label="Company Registration Document"
                               id="company_RegistrationDocument"
                               name="company_RegistrationDocument"
                               className=""
                               type="file"
-                              onChange={({ target }) => {
+                              onChange={({target}) => {
                                 formikProps.setFieldValue(
                                   'company_RegistrationDocument',
                                   target?.files[0]
@@ -962,7 +913,7 @@ export default function Index() {
                               className=""
                               type="file"
                               required
-                              onChange={({ target }) => {
+                              onChange={({target}) => {
                                 formikProps.setFieldValue(
                                   'company_CertificationofActivity',
                                   target?.files[0]
@@ -982,45 +933,6 @@ export default function Index() {
                                 errors.company_CertificationofActivity
                               }
                             />
-
-                            {/* <div className="w-full md:w-1/2 px-3">
-                              <label
-                                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                htmlFor="grid-last-name"
-                              >
-                                Certification of Activity
-                              </label>
-                              <div className="p-5 border-dashed border-2 border-indigo-200">
-                                <div className="grid gap-4 lg:grid-cols-2 md:grid-cols-1">
-                                  <div className="text-center my-auto">
-                                    <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl" />
-                                  </div>
-                                  <div className="text-xs ">
-                                    <p>PDF file size no more than 10MB</p>
-                                    <input
-                                      className="mt-3"
-                                      type="file"
-                                      name="company_CertificationofActivity"
-                                      accept=".pdf"
-                                      onChange={({ target }) =>
-                                        setRegistrationInfo({
-                                          ...registrationInfo,
-                                          company_CertificationofActivity:
-                                            target.files[0],
-                                        })
-                                      }
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                              {errorInfo?.company_CertificationofActivity && (
-                                <ErrorInput
-                                  error={
-                                    errorInfo?.company_CertificationofActivity
-                                  }
-                                />
-                              )}
-                            </div> */}
                           </div>
                         </div>
 

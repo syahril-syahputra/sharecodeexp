@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 
 import Admin from 'layouts/Admin.js'
-import { getSession } from 'next-auth/react'
+import {getSession} from 'next-auth/react'
 import axios from 'lib/axios'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import TableExcel from '@/components/Table/Member/Excel/ExcelUploadedList'
 import ExcelComponent from '@/components/Modal/Component/ExcelComponent'
 import MiniSearchBar from '@/components/Shared/MiniSearchBar'
-import { useRouter } from 'next/router'
+import {useRouter} from 'next/router'
 
 Uploaded.layout = Admin
 
-export default function Uploaded({ session }) {
+export default function Uploaded({session}) {
   const router = useRouter()
-  console.log(router.query)
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
@@ -31,8 +30,7 @@ export default function Uploaded({ session }) {
     setIsLoading(true)
     try {
       const response = await axios.get(
-        `/seller/product/excel?paginate=5&page=${page}&status=${
-          router.query.status || ''
+        `/seller/product/excel?paginate=5&page=${page}&status=${router.query.status || ''
         }`,
         {
           headers: {
@@ -92,7 +90,7 @@ export default function Uploaded({ session }) {
         .catch((error) => reject(error))
     })
   }
-  const handleSearch = () => {}
+  const handleSearch = () => { }
 
   return (
     <>

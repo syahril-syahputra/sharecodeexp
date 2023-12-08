@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import moment from 'moment'
 // components
 import CompanyStatus from './CompanyStatus'
@@ -65,7 +65,7 @@ export default function CompanyList(props) {
                     <td className="px-6 py-4">{item.country}</td>
                     <td className="px-6 py-4">{item.address}</td>
                     <td className="px-6 py-4">{item.sector}</td>
-                    <td className="px-6 py-4">{item.phone}</td>
+                    <td className="px-6 py-4">{`${item.country_code ?? ''}${item.phone}`}</td>
                     <td className="px-6 py-4">
                       <CompanyStatus
                         status={item.is_confirmed}
@@ -77,14 +77,7 @@ export default function CompanyList(props) {
                       {moment(item.created_at).format('dddd, D MMMM YYYY')}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      {/* {!props.isLoading &&
-                                            <div className="inline-flex">
-                                                <PrimaryButton
-                                                    size="sm"
-                                                    onClick={()=> props.viewHandler(item.id)}>
-                                                View</PrimaryButton>
-                                            </div>
-                                        } */}
+
                       {!props.isLoading && (
                         <Link
                           href={`/admin/superadmin/registry/details/${item.id}`}
