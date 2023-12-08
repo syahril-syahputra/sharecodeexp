@@ -116,12 +116,14 @@ export default function VerifyEmail({session, ...props}) {
                     Logout
                   </PrimaryButton>
                 </div>
-                <div className="text-center py-2  hover:underline hover:text-footer-resources">
-                  <span className="font-medium text-gray-900 dark:text-gray-300" onClick={() => {
+                <div className="text-center py-7">
+                  <button type="button" className="font-medium text-gray-900 dark:text-gray-300" onClick={() => {
                     setChangeEmailModal(true)
                   }}>
-                    Change Email
-                  </span>
+                    <span className='underline'>
+                      Change Email
+                    </span>
+                  </button>
                 </div>
               </div>
             }

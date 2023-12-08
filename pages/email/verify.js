@@ -170,16 +170,22 @@ export default function EmailVerify({session}) {
                       <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
                         Your token has invalid.{' '}
                       </h3>
-                      <div className="flex justify-center">
-                        <PrimaryButton
-                          className="m-2"
-                          size="lg"
-                          outline
-                          onClick={() => setResendModal(true)}
-                        >
-                          Resend
-                        </PrimaryButton>
-                      </div>
+
+                      {
+                        session != null || session != undefined ?
+                          <div className="flex justify-center">
+                            <PrimaryButton
+                              className="m-2"
+                              size="lg"
+                              outline
+                              onClick={() => setResendModal(true)}
+                            >
+                              Resend
+                            </PrimaryButton>
+                          </div>
+                          :
+                          null
+                      }
                     </>
                   )}
                 </div>
