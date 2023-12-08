@@ -15,7 +15,6 @@ import {toastOptions} from '@/lib/toastOptions'
 import ResendEmailVerification from '@/components/Modal/ResendEmail'
 
 export default function VerifyEmail({session}) {
-  console.log(session, '<<<session')
 
   const [loading, setLoading] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
@@ -37,15 +36,17 @@ export default function VerifyEmail({session}) {
       )
       .then((response) => {
         toast.success(`${response?.data?.message}`, toastOptions)
-        setIsSucces(true)
-        setDialogState(true)
         setResendModal(false)
-        setLoading(true)
+        setLoading(false)
+        setIsLoading(false)
+        setDialogState(false)
       })
       .catch((error) => {
         toast.error(`${error?.data?.message}`, toastOptions)
         setIsSucces(false)
         setResendModal(false)
+        setIsLoading(false)
+        setDialogState(false)
       })
   }
 
@@ -71,7 +72,6 @@ export default function VerifyEmail({session}) {
                     className="m-2"
                     size="lg"
                     outline
-                    disabled={dialogState}
                     onClick={() => setResendModal(true)}
                   >
                     Resend
@@ -107,6 +107,7 @@ export default function VerifyEmail({session}) {
           closeModal={setResendModal}
           acceptance={handleResendEmail}
           isLoading={[isLoading, setIsLoading]}
+          session={session}
         />
       ) : null}
     </Fragment>

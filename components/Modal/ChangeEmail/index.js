@@ -1,33 +1,41 @@
-import React, {useState, useRef} from 'react';
-import * as Yup from 'yup'
-import {Formik, Form} from 'formik'
-import TextInputValidate from '@/components/Interface/Form/TextInputValidation'
+import React, {useState} from 'react';
 import {BaseModalMedium} from '@/components/Interface/Modal/BaseModal';
 import LightButton from '@/components/Interface/Buttons/LightButton';
+import TextInputEmail from '@/components/Interface/Form/TextInputEmail'
+import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import axios from 'lib/axios'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 
-export default function ChangeEmaiVerification(props) {
+export default function ChangeEmaiVerification({session, ...props}) {
+  const [stateEmail, setStateEmail] = useState()
+  const [errorInfo, setErrorInfo] = useState({})
+  const [isLoading, setIsLoading] = useState(false)
 
-  function isEmailCompany(email) {
-    return /^[a-zA-Z0-9._%+-]+@(?!gmail.com)(?!yahoo.com)(?!hotmail.com)(?!yahoo.co.id)(?!aol.com)(?!live.com)(?!outlook.com)(?!inbox.com)(?!icloud.com)(?!mail.com)(?!gmx.com)(?!yandex.com)[a-zA-Z0-9_-]+.[a-zA-Z0-9-.]{2,61}$/gm.test(
-      email
-    )
-  }
-
-  const validationSchema = Yup.object({
-    email: Yup.string()
-      .email('Must be a valid email address')
-      .test('is-valid-email', 'The email field should email company', (value) =>
-        isEmailCompany(value)
+  const handleSubmitEmail = async (stateEmail) => {
+    setErrorInfo(null)
+    setIsLoading(true)
+    await axios.post(`/email/change-email`, {
+      email: stateEmail
+    }, {
+      headers: {
+        Authorization: `Bearer ${session?.accessToken}`,
+      },
+    }).then((response) => {
+      toast.success(response?.data?.message, toastOptions)
+      props.closeModalEmail()
+      props.closeModal()
+      setErrorInfo(null)
+      setIsLoading(false)
+    }).catch((error) => {
+      const erroEmptyStr = error?.data?.message == '' ? 'Something went wrong' : error?.data?.message
+      setErrorInfo(error?.data?.data)
+      toast.error(
+        erroEmptyStr,
+        toastOptions
       )
-      .required('The email field is required'),
-  })
-
-  const initialValue = {
-    email: '',
-  }
-
-  const handleSubmit = () => {
-
+      setIsLoading(false)
+    })
   }
 
   return (
@@ -35,48 +43,20 @@ export default function ChangeEmaiVerification(props) {
       <BaseModalMedium
         title="Change Email and Resend Verification"
         onClick={() => {
+          props.closeModalEmail()
           props.closeModal()
+          setIsLoading(false)
         }}
         body={
-          <div className="w-full md:w-10/12 md:shadow-md p-5 bg-white">
-            <Formik
-              onSubmit={handleSubmit}
-              initialValues={initialValue}
-              validationSchema={validationSchema}
-            >
-              {({values, errors, ...formikProps}) => (
-                <Form
-                  className="pb-20"
-                  id="register-form"
-                  aria-label="form"
-                  noValidate
-                >
-                  <div className='mt-8'>
-                    <div className="flex flex-wrap mb-6">
-                      <div className="w-full px-3 mb-6 md:mb-0">
-                        <TextInputValidate
-                          id="email"
-                          label="New Email"
-                          type="email"
-                          className="w-full"
-                          required
-                          value={values.email}
-                          onChange={formikProps.handleChange}
-                          placeholder="Please enter company email here..."
-                          error={
-                            formikProps.touched.email &&
-                            Boolean(errors.email)
-                          }
-                          helperText={
-                            formikProps.touched.email && errors.email
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </Form>
-              )}
-            </Formik>
+          <div className="w-full my-4">
+            <TextInputEmail
+              label="Email"
+              name="stateEmail"
+              placeholder="Write your subject here"
+              value={stateEmail}
+              onChange={(input) => setStateEmail(input.value)}
+              errorMsg={errorInfo?.email}
+            />
           </div>
         }
         action={
@@ -84,15 +64,32 @@ export default function ChangeEmaiVerification(props) {
             <LightButton
               className="mr-2"
               size="sm"
-
+              disabled={!stateEmail}
+              onClick={() => {
+                props.closeModalEmail()
+                props.closeModal()
+                setIsLoading(false)
+              }}
             >
-
+              No
             </LightButton>
+            <PrimaryButton
+              size="sm"
+              disabled={!stateEmail}
+              onClick={() => {
+                handleSubmitEmail(stateEmail)
+              }}
+            >
+              {isLoading ? (
+                <i className="px-3 fas fa-hourglass fa-spin"></i>
+              ) : (
+                'Yes, Send'
+              )}
+            </PrimaryButton>
           </>
 
         }
       />
-
     </>
   )
 

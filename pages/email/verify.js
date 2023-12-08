@@ -16,7 +16,7 @@ import {toastOptions} from '@/lib/toastOptions'
 import {getSession} from 'next-auth/react'
 
 export default function EmailVerify({session}) {
-  let time = 1
+
   const router = useRouter()
   const [stateExpires, setStateExpires] = useState('')
   const [stateEmailVerifyUrl, setEmailVerifyUrl] = useState('')
@@ -30,17 +30,6 @@ export default function EmailVerify({session}) {
   const [dialogState, setDialogState] = useState(false)
   const [resendModal, setResendModal] = useState(false)
   const [loading, setLoading] = useState(true)
-  const THREE_DAYS_IN_MS = 1 * 1 * 2 * 60 * 1000
-  const NOW_IN_MS = new Date().getTime()
-  const dateTimeAfterThreeDays = NOW_IN_MS + THREE_DAYS_IN_MS
-
-  if (typeof window !== 'undefined') {
-    time = parseInt(localStorage.getItem('end_date'), 10)
-  }
-
-  const countDownData = () => {
-    return <CountdownTimer setDialogState={setDialogState} targetDate={time} />
-  }
 
   const handleResendEmail = async () => {
     await axios
@@ -58,12 +47,6 @@ export default function EmailVerify({session}) {
         setDialogState(true)
         setResendModal(false)
         setLoading(true)
-        if (localStorage.getItem('end_date') === null) {
-          localStorage.setItem(
-            'end_date',
-            JSON.stringify(dateTimeAfterThreeDays)
-          )
-        }
         setIsSucces(true)
       })
       .catch((error) => {
@@ -151,7 +134,13 @@ export default function EmailVerify({session}) {
 
   useEffect(() => {
     if (verified) {
-      router.push('/admin/dashboard')
+
+      if (session === null || session == undefined) {
+        router.push('/auth/login')
+      } else {
+        router.push('/admin/dashboard')
+      }
+
     }
   }, [verified])
 
@@ -160,12 +149,6 @@ export default function EmailVerify({session}) {
       <IndexNavbar hideLogin={true} fixed emailVerification={true} />
       <section className="relative py-14 overflow-hidden h-3/6 ">
         <div className="container mx-auto mt-10 xs:pb-10 xs:pt-8 px-4">
-          {dialogState ? (
-            <PrimaryNotification
-              message={'Email notification has been resend successfully'}
-              timer={countDownData()}
-            />
-          ) : null}
           <PrimaryWrapper className={'mt-6'}>
             <div className="text-center py-20">
               <div className="flex items-center mb-6 text-2xl font-semibold text-gray-900">
@@ -174,11 +157,11 @@ export default function EmailVerify({session}) {
               {isLoading ? (
                 <LoadingState className={'py-20 m-2'} />
               ) : (
-                <div className="flex justify-center border w-1/2 flex-col mx-auto  py-12">
+                <div className="flex justify-center  w-1/2 flex-col mx-auto  py-12">
                   {verified ? (
                     <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
                       Your email has been verified, please wait you will
-                      redirect to dashboard.
+                      redirect to {`${session === undefined || session == null ? 'login' : 'dashboard'}`}.
                     </h3>
                   ) : (
                     <>
@@ -190,14 +173,9 @@ export default function EmailVerify({session}) {
                           className="m-2"
                           size="lg"
                           outline
-                          disabled={dialogState || isSucces}
                           onClick={() => setResendModal(true)}
                         >
-                          {dialogState ? (
-                            <i className="px-3 fas fa-hourglass fa-spin"></i>
-                          ) : (
-                            'Resend'
-                          )}{' '}
+                          Resend
                         </PrimaryButton>
                       </div>
                     </>
@@ -215,23 +193,11 @@ export default function EmailVerify({session}) {
           closeModal={setResendModal}
           acceptance={handleResendEmail}
           isLoading={[isLoadingButton, setIsLoadingButton]}
+          session={session}
         />
       ) : null}
     </Fragment>
   )
-}
-async function fetchUser(context, accessToken) {
-  try {
-    const data = await axios.get(`/my-account`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-
-    return data
-  } catch (error) {
-    throw error
-  }
 }
 export async function getServerSideProps(context) {
   const session = await getSession(context)

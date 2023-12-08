@@ -23,13 +23,13 @@ const VerifyComp = ({session, signOut}) => {
   const NOW_IN_MS = new Date().getTime()
   const dateTimeAfterThreeDays = NOW_IN_MS + THREE_DAYS_IN_MS
 
-  if (typeof window !== 'undefined') {
-    time = parseInt(localStorage.getItem('end_date'), 10)
-  }
+  // if (typeof window !== 'undefined') {
+  //   time = parseInt(localStorage.getItem('end_date'), 10)
+  // }
 
-  const countDownData = () => {
-    return <CountdownTimer setDialogState={setDialogState} targetDate={time} />
-  }
+  // const countDownData = () => {
+  //   return <CountdownTimer setDialogState={setDialogState} targetDate={time} />
+  // }
 
   const handleResendEmail = async () => {
     await axios
@@ -44,16 +44,11 @@ const VerifyComp = ({session, signOut}) => {
       )
       .then((response) => {
         toast.success(`${response?.data?.message}`, toastOptions)
-        setIsSucces(true)
+        setIsSucces(false)
         setDialogState(true)
         setResendModal(false)
-        setLoading(true)
-        if (localStorage.getItem('end_date') === null) {
-          localStorage.setItem(
-            'end_date',
-            JSON.stringify(dateTimeAfterThreeDays)
-          )
-        }
+        setLoading(false)
+
       })
       .catch((error) => {
         toast.error(`${error?.data?.message}`, toastOptions)
@@ -66,12 +61,12 @@ const VerifyComp = ({session, signOut}) => {
     <>
       <section className="relative py-14 overflow-hidden h-3/6 ">
         <div className="container mx-auto mt-10 xs:pb-10 xs:pt-8 px-4">
-          {dialogState || Boolean(time) ? (
+          {/* {dialogState || Boolean(time) ? (
             <PrimaryNotification
               message={'Email notification has been resend successfully'}
               timer={countDownData()}
             />
-          ) : null}
+          ) : null} */}
           <PrimaryWrapper className={'mt-6'}>
             {
               <div className="text-center pb-20 pt-20">
@@ -117,6 +112,7 @@ const VerifyComp = ({session, signOut}) => {
         <ResendEmailVerification
           closeModal={setResendModal}
           acceptance={handleResendEmail}
+          session={session}
         />
       ) : null}
     </>
