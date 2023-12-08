@@ -1,4 +1,3 @@
-import Admin from 'layouts/Admin.js'
 import axios from '@/lib/axios'
 import {getSession} from 'next-auth/react'
 import Link from 'next/link'
