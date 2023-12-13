@@ -116,7 +116,7 @@ export default function SellerDashboard({ session }) {
             <span className="text-md italic">Orders Need Tracking Number</span>
           </div>
           <Link
-            href={`${VendorUrl.sellingProduct.incomingInquiries.index}/?orderStatus=proforma-invoice-sent`}
+            href={`${VendorUrl.sellingProduct.incomingInquiries.index}/?orderStatus=payment-accepted`}
             className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
           >
             <div className="">

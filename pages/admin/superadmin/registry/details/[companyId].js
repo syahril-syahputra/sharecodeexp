@@ -323,7 +323,7 @@ export default function CompanyDetail({session, routeParam}) {
               onClick={() => setShowSendEmailModal(true)}
             >
               <i className="mr-2 ml-1 fas fa-envelope text-white"></i>
-              Send Email
+              Request Additional Documents
             </SecondaryButton>
             {(companyData.is_confirmed == 'pending' ||
               companyData.is_confirmed == 'rejected') && (
