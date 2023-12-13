@@ -50,15 +50,17 @@ export default function PendingPayment(props) {
                     </td>
                     <td className="text-sm px-6 py-4">{item.id}</td>
                     <td className="text-sm px-6 py-4">
+                      {/* set to local time */}
                       {item.piUploadedDate
-                        ? moment(item.piUploadedDate).format(
+                        ? moment(item.piUploadedDate).local().format(
                             'dddd, D MMMM YYYY'
                           )
                         : '-'}
                     </td>
                     <td className="text-sm px-6 py-4">
+                      {/* set to local time */}
                       {item.piUploadedDate
-                        ? moment(item.piUploadedDate).format('HH:mm:s')
+                        ? moment(item.piUploadedDate).local().format('HH:mm:s')
                         : '-'}
                     </td>
                     <td className="text-sm px-6 py-4 text-right">

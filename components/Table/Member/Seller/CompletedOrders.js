@@ -50,9 +50,9 @@ export default function CompletedOrders(props) {
                       {item.companies_products.ManufacturerNumber}
                     </td>
                     <td className="text-sm px-6 py-4">
-                      {moment(item.completedOrdersDate).format(
+                      {moment(item.completedOrdersDate).local().format(
                         'dddd, D MMMM YYYY'
-                      )}
+                      )} {/* set to local time */}
                     </td>
                     <td className="text-sm px-6 py-4">
                       {item.companies_products.Manufacture}

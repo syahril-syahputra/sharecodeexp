@@ -55,8 +55,9 @@ export default function RejectedQuotation(props) {
                     <td className="text-sm px-6 py-4">{item.buyer?.country}</td>
                     <td className="text-sm px-6 py-4">{item.reason}</td>
                     <td className="text-sm px-6 py-4">
+                      {/* set to local time */}
                       {item.QuotationRejectedDate
-                        ? moment(item.QuotationRejectedDate).format(
+                        ? moment(item.QuotationRejectedDate).local().format(
                             'dddd, D MMMM YYYY'
                           )
                         : '-'}

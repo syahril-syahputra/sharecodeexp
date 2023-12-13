@@ -48,11 +48,12 @@ export default function PendingShipment(props) {
                       {item.companies_products?.ManufacturerNumber}
                     </td>
                     <td className="px-6 align-middle p-2">
+                      {/* set to local time */}
                       {item.expectedShippingDateBuyer
-                        ? moment(item.expectedShippingDateBuyer).format(
+                        ? moment(item.expectedShippingDateBuyer).local().format(
                             'dddd, D MMMM YYYY'
                           )
-                        : '-'}
+                        : '-'} {/* set to local time */}  
                     </td>
                     <td className="px-6 align-middle p-2 text-right">
                       <Link

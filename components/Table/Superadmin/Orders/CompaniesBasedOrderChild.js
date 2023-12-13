@@ -68,8 +68,9 @@ export default function CompaniesBasedOrder(props) {
                       {item.order_status.name}
                     </td>
                     <td className="text-sm px-6 py-4">
+                      {/* set to local time */}
                       {item.created_at
-                        ? moment(item.created_at).format('dddd, D MMMM YYYY')
+                        ? moment(item.created_at).local().format('dddd, D MMMM YYYY')
                         : '-'}
                     </td>
                     <td className="text-sm px-6 py-4 text-right">

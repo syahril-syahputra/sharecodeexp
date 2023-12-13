@@ -1511,8 +1511,9 @@ export default function OrderDetails({ session, routeParam }) {
                     Inquired Date
                   </div>
                   <div className="mx-2 text-md">
+                    {/* set to local time */}  
                     {!!data.companies_products?.created_at ? (
-                      moment(data.created_at).format('dddd, D MMMM YYYY')
+                      moment(data.created_at).local().format('dddd, D MMMM YYYY')
                     ) : (
                       <div className="animate-pulse">
                         <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
@@ -1523,9 +1524,10 @@ export default function OrderDetails({ session, routeParam }) {
                     Order Date
                   </div>
                   <div className="mx-2 text-md">
+                    {/* set to local time */}  
                     {!isLoading ? (
                       data.order_date ? (
-                        moment(data.order_date).format('dddd, D MMMM YYYY')
+                        moment(data.order_date).local().format('dddd, D MMMM YYYY')
                       ) : (
                         '-'
                       )

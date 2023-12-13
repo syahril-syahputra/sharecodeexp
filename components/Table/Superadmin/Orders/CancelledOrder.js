@@ -48,8 +48,9 @@ export default function IncomingInquiry(props) {
                       {item.buyer?.country}
                     </td>
                     <td scope="row" className="text-sm px-6 py-4">
+                      {/* set to local time */}
                       {item.OrderCancellationDate
-                        ? moment(item.OrderCancellationDate).format(
+                        ? moment(item.OrderCancellationDate).local().format(
                             'dddd, D MMMM YYYY'
                           )
                         : '-'}

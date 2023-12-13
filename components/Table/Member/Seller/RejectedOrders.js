@@ -57,9 +57,9 @@ export default function RejectedOrders(props) {
                     </td>
                     <td className="text-sm px-6 py-4">{item.qty}</td>
                     <td className="text-sm px-6 py-4">
-                      {moment(item.OrderReturnedDate).format(
+                      {moment(item.OrderReturnedDate).local().format(
                         'dddd, D MMMM YYYY'
-                      )}
+                      )} {/* set to local time */}
                     </td>
                     <td className="text-sm px-6 py-4 text-right">
                       <div className="inline-flex">

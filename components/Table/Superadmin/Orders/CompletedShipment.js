@@ -54,8 +54,9 @@ export default function CompletedShipment(props) {
                     <td className="text-sm px-6 py-4">{item.trackingBuyer}</td>
                     <td className="text-sm px-6 py-4">{item.trackingSeller}</td>
                     <td className="text-sm px-6 py-4">
+                      {/* set to local time */}
                       {item.arrivalDate
-                        ? moment(item.arrivalDate).format('dddd, D MMMM YYYY')
+                        ? moment(item.arrivalDate).local().format('dddd, D MMMM YYYY')
                         : '-'}
                     </td>
                     <td className="text-sm px-6 py-4 text-right">
