@@ -51,7 +51,7 @@ export default function NewInquiries(props) {
                       {item.companies_products?.ManufacturerNumber}
                     </td>
                     <td className="px-6 align-middle p-2">
-                      {moment(item.created_at).format('dddd, D MMMM YYYY')}
+                      {moment(item.created_at).local().format('dddd, D MMMM YYYY')}
                     </td>
                     <td className="px-6 align-middle p-2 text-right">
                       <Link

@@ -101,8 +101,9 @@ export default function HelpTable({session, ...props}) {
                       {checkValue(item.message)}
                     </td>
                     <td className="text-sm px-6 py-4">
+                      {/* set to local time */}
                       {item.created_at
-                        ? moment(item.created_at).format('dddd, D MMMM YYYY')
+                        ? moment(item.created_at).local().format('dddd, D MMMM YYYY')
                         : '-'}
                     </td>
                   </tr>

@@ -54,7 +54,7 @@ export default function StatusUpdateOngoingOrder(props) {
                       {item.order_status?.name}
                     </td>
                     <td className="px-6 align-middle p-2">
-                      {moment(item.updated_at).format('dddd, D MMMM YYYY')}
+                      {moment(item.updated_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}
                     </td>
                     <td className="px-6 align-middle p-2 text-right">
                       <Link

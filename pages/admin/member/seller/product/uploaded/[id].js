@@ -128,7 +128,7 @@ export default function DetailUploadedExcel({ session, data }) {
                   :
                 </td>
                 <td className="text-sm px-2 py-4">
-                  {moment(data.created_at).format('dddd, D MMMM YYYY')}
+                  {moment(data.created_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}  
                 </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
@@ -139,7 +139,7 @@ export default function DetailUploadedExcel({ session, data }) {
                   :
                 </td>
                 <td className="text-sm px-2 py-4">
-                  {moment(data.updated_at).format('dddd, D MMMM YYYY')}
+                  {moment(data.updated_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}  
                 </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
@@ -204,7 +204,7 @@ export default function DetailUploadedExcel({ session, data }) {
           {data.event_history?.map((item) => (
             <li key={item.id} className="flex">
               <span className="text-cyan-700 mr-2 w-1/5 ">
-                {moment(item.updated_at).local().format('DD MMM YYYY hh:mm')}
+                {moment(item.updated_at).local().format('DD MMM YYYY hh:mm')} {/* set to local time */}  
               </span>
               <div>
                 <span className="font-bold">{item.description}</span>

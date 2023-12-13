@@ -69,8 +69,9 @@ export default function ReimbursementSellerActiveCompletedTable(props) {
                       {checkValue(item.order_number)}
                     </td>
                     <td className="text-sm px-6 py-4">
+                      {/* set to local time */}
                       {item.order_date
-                        ? moment(item.order_date).format('dddd, D MMMM YYYY')
+                        ? moment(item.order_date).local().format('dddd, D MMMM YYYY')
                         : '-'}
                     </td>
                     <td scope="row" className="text-sm px-6 py-4">
