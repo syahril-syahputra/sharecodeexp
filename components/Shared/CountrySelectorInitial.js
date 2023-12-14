@@ -1,6 +1,6 @@
 import React from 'react'
 import countryList from 'react-select-country-list'
-import { useMemo } from 'react'
+import {useMemo} from 'react'
 import SelectInput from '../Interface/Form/SelectInput'
 import useDataCountry from '@/hooks/useCountry'
 
@@ -19,7 +19,7 @@ export default function CountrySelectorInitial(props) {
     let countyCode = countries
       .filter((obj) => obj.name == props.value)
       .map((x) => x.id)
-    inputData = { value: countyCode[0], label: props.value }
+    inputData = {value: countyCode[0], label: props.value}
   }
 
   return (
@@ -27,7 +27,7 @@ export default function CountrySelectorInitial(props) {
       <SelectInput
         searchable
         disabled={props.disabled}
-        label="Country"
+        label={props?.label}
         name={props.name}
         value={inputData}
         options={options}

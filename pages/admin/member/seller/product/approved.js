@@ -135,7 +135,7 @@ export default function MyProduct({session, notification}) {
                 </tbody>
               </table>
             }
-          ></BaseModalLarge>
+          />
         )}
         <ComponentList
           title="My Products"
@@ -144,7 +144,7 @@ export default function MyProduct({session, notification}) {
           data={data}
           links={links}
           metaData={metaData}
-        ></ComponentList>
+        />
       </div>
     </>
   )

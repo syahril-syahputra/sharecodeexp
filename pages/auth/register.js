@@ -148,18 +148,18 @@ export default function Index() {
         Yup.mixed().required('The company city with other field is required'),
       otherwise: () => Yup.mixed().notRequired(),
     }),
-    company_zip: Yup.mixed()
-      .required('The company zip field is required')
-      .test(
-        'is-valid-compant-zip',
-        "The company zip field should following country's zip code",
-        (value) =>
-          isMatchPostalCodePattern({
-            id: stateCountry?.id,
-            country: stateCountry?.value,
-            value,
-          })
-      ),
+    // company_zip: Yup.mixed()
+    //   .required('The company zip field is required')
+    //   .test(
+    //     'is-valid-compant-zip',
+    //     "The company zip field should following country's zip code",
+    //     (value) =>
+    //       isMatchPostalCodePattern({
+    //         id: stateCountry?.id,
+    //         country: stateCountry?.value,
+    //         value,
+    //       })
+    //   ),
     company_address: Yup.mixed()
       .test(
         'len',
@@ -798,14 +798,14 @@ export default function Index() {
                                 errorMsg={errorInfo?.company_zip}
                                 onChange={formikProps.handleChange}
                                 placeholder="Please enter company zip here..."
-                                error={
-                                  formikProps.touched.company_zip &&
-                                  Boolean(errors.company_zip)
-                                }
-                                helperText={
-                                  formikProps.touched.company_zip &&
-                                  errors.company_zip
-                                }
+                              // error={
+                              //   formikProps.touched.company_zip &&
+                              //   Boolean(errors.company_zip)
+                              // }
+                              // helperText={
+                              //   formikProps.touched.company_zip &&
+                              //   errors.company_zip
+                              // }
                               />
                             </div>
                           </div>

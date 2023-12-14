@@ -1141,7 +1141,7 @@ export const PostalCode = [
     Country: 'Mexico',
     ISO: 'MX',
     Format: 'NNNNN',
-    Regex: /^\\d{5}$/,
+    Regex: /^\d{5}$/,
   },
   {
     id: '143',

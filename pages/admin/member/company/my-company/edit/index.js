@@ -96,18 +96,18 @@ export default function MyCompany({session, sectorlist, countryList}) {
         Yup.mixed().required('The company city with other field is required'),
       otherwise: () => Yup.mixed().notRequired(),
     }),
-    zip_code: Yup.mixed()
-      .required('The company zip field is required')
-      .test(
-        'is-valid-compant-zip',
-        "The company zip field should following country's zip code",
-        (value) =>
-          isMatchPostalCodePattern({
-            id: stateDataCountry?.id,
-            country: stateDataCountry?.value,
-            value,
-          })
-      ),
+    // zip_code: Yup.mixed()
+    //   .required('The company zip field is required')
+    //   .test(
+    //     'is-valid-compant-zip',
+    //     "The company zip field should following country's zip code",
+    //     (value) =>
+    //       isMatchPostalCodePattern({
+    //         id: stateDataCountry?.id,
+    //         country: stateDataCountry?.value,
+    //         value,
+    //       })
+    //   ),
     address: Yup.mixed()
       .test(
         'len',
@@ -570,14 +570,14 @@ export default function MyCompany({session, sectorlist, countryList}) {
                       errorMsg={errorInfo?.zip_code}
                       onChange={formikProps.handleChange}
                       placeholder="Please enter company zip here..."
-                      error={
-                        formikProps.touched.zip_code &&
-                        Boolean(errors.zip_code)
-                      }
-                      helperText={
-                        formikProps.touched.zip_code &&
-                        errors.zip_code
-                      }
+                    // error={
+                    //   formikProps.touched.zip_code &&
+                    //   Boolean(errors.zip_code)
+                    // }
+                    // helperText={
+                    //   formikProps.touched.zip_code &&
+                    //   errors.zip_code
+                    // }
                     />
                   </div>
                 </div>
