@@ -98,7 +98,7 @@ export default function ComponentList(props) {
                       {item.companies_products.packaging}
                     </td>
                     <td className="text-sm px-6 py-4">
-                      {moment(item.created_at).format('dddd, D MMMM YYYY')}
+                      {moment(item.created_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}
                     </td>
                     <td className="py-2 text-right w-32">
                       <div className="inline-flex">

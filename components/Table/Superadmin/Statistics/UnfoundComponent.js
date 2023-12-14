@@ -41,7 +41,7 @@ export default function UnfoundComponent(props) {
                                             {item.ManufacturerNumber}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {moment(item.created_at).format('dddd, D MMMM YYYY')}
+                                            {moment(item.created_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}
                                         </td>
                                     </tr>
                                 )

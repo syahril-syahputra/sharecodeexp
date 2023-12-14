@@ -73,7 +73,7 @@ export default function TableExcel(props) {
                       {item.company.country}
                     </td>
                     <td className="text-sm px-6 py-4">
-                      {moment(item.updated_at).format('dddd, D MMMM YYYY')}
+                      {moment(item.updated_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}
                     </td>
                     <td className=" space-x-4 flex-nowrap whitespace-nowrap text-sm px-6 py-4 text-right">
                       <Link href={'/admin/superadmin/product/excel/' + item.id}>

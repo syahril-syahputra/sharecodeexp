@@ -48,11 +48,12 @@ export default function PendingPayment(props) {
                       {item.companies_products?.ManufacturerNumber}
                     </td>
                     <td className="px-6 align-middle p-2">
+                      {/* set to local time */}
                       {item.piUploadedDate
-                        ? moment(item.piUploadedDate).format(
+                        ? moment(item.piUploadedDate).local().format(
                             'dddd, D MMMM YYYY | HH:mm:s'
                           )
-                        : '-'}
+                        : '-'} {/* set to local time */}  
                     </td>
                     <td className="px-6 align-middle p-2 text-right">
                       <Link
