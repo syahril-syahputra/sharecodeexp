@@ -80,7 +80,7 @@ export default function DetailProduct({data, ...props}) {
                           :
                         </td>
                         <td className="text-sm px-2 py-4">
-                          {checkValue(dataArr?.company?.sector)}
+                          {checkValue(dataArr?.company_sector)}
                         </td>
                       </tr>
                       <tr className="text-black hover:bg-slate-100">
