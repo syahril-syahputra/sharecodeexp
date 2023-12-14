@@ -43,7 +43,7 @@ const Invoice = ({ data }) => (
       {/* table */}
       <View>
         <View style={styles.tableHead}>
-          <Text style={styles.titleCol}>title</Text>
+          <Text style={styles.titleCol}>Description</Text>
           <Text style={styles.total}>Total (USD)</Text>
         </View>
         <View style={styles.tableBody}>

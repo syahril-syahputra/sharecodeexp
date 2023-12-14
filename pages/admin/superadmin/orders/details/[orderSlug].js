@@ -1812,7 +1812,7 @@ export default function OrderDetails({ session, routeParam }) {
               <div className="mx-2 mt-1 text-sm">
                 <span className="text-gray-500">From Seller</span>
               </div>
-              <div className="mx-2 mt-1 text-sm border-b mb-2">
+              <div className="mx-2 mt-1 text-sm ">
                 <div className="flex flex-wrap justify-between">
                   <span>Seller's Invoice</span>
                   {data.seller_invoice_path ? (
@@ -1828,6 +1828,27 @@ export default function OrderDetails({ session, routeParam }) {
                   )}
                 </div>
               </div>
+              <div className="mx-2 mt-1 text-sm  border-b mb-2">
+                <div className="flex flex-wrap justify-between">
+                  <span>
+                    {data.seller_return_courier
+                      ? 'Testing Payment Receipt'
+                      : 'Testing and Handling Service Payment Receipt'}
+                  </span>
+                  {data.seller_lab_payment_receipt_path ? (
+                    <Link
+                      target="_blank"
+                      href={publicDir + data.seller_lab_payment_receipt_path}
+                      className="underline text-blue-500"
+                    >
+                      view
+                    </Link>
+                  ) : (
+                    <span className="underline text-gray-500">view</span>
+                  )}
+                </div>
+              </div>
+
               <div className="mb-5">
                 <div className="mx-2 mt-1 text-sm">
                   <span className="text-gray-500">Exepart</span>
@@ -2012,7 +2033,11 @@ export default function OrderDetails({ session, routeParam }) {
               </div>
               <div className="mx-2 mt-1 text-sm">
                 <div className="flex flex-wrap justify-between">
-                  <span>Testing Innvoice</span>
+                  <span>
+                    {data.seller_return_courier
+                      ? 'Testing Innvoice'
+                      : 'Testing and Handling Invoice'}
+                  </span>
                   {data.testing_invoice_available ? (
                     <Link
                       target="_blank"
@@ -2026,24 +2051,8 @@ export default function OrderDetails({ session, routeParam }) {
                   )}
                 </div>
               </div>
-              <div className="mx-2 mt-1 text-sm">
-                <div className="flex flex-wrap justify-between">
-                  <span>Testing and Handling Invoice</span>
-                  {data.testing_and_handling_invoice_available ? (
-                    <Link
-                      target="_blank"
-                      href={`pdf/testing-and-handling-invoice/${data.slug}`}
-                      className="underline text-blue-500"
-                    >
-                      view
-                    </Link>
-                  ) : (
-                    <span className="underline text-gray-500">view</span>
-                  )}
-                </div>
-              </div>
 
-              <div className="mx-2 mt-1 text-sm">
+              <div className="mx-2 mt-1 text-sm mb-2">
                 <div className="flex flex-wrap justify-between">
                   <span>Return Invoice</span>
                   {data.return_invoice_available ? (

@@ -1153,7 +1153,7 @@ export default function InquiryDetails({ session, routeParam }) {
               <div className="mx-2 mt-1 text-sm">
                 <span className="text-gray-500">Seller</span>
               </div>
-              <div className="mx-2 mt-1 text-sm border-b mb-2">
+              <div className="mx-2 mt-1 text-sm">
                 <div className="flex flex-wrap justify-between">
                   <span>Seller's Invoice</span>
                   {data.seller_invoice_path ? (
@@ -1169,7 +1169,26 @@ export default function InquiryDetails({ session, routeParam }) {
                   )}
                 </div>
               </div>
-
+              <div className="mx-2 mt-1 text-sm  border-b mb-2">
+                <div className="flex flex-wrap justify-between">
+                  <span>
+                    {data.seller_return_courier
+                      ? 'Testing Payment Receipt'
+                      : 'Testing and Handling Service Payment Receipt'}
+                  </span>
+                  {data.seller_lab_payment_receipt_path ? (
+                    <Link
+                      target="_blank"
+                      href={publicDir + data.seller_lab_payment_receipt_path}
+                      className="underline text-blue-500"
+                    >
+                      view
+                    </Link>
+                  ) : (
+                    <span className="underline text-gray-500">view</span>
+                  )}
+                </div>
+              </div>
               <div className="mb-5">
                 <div className="mx-2 mt-1 text-sm">
                   <span className="text-gray-500">Exepart</span>
@@ -1257,6 +1276,43 @@ export default function InquiryDetails({ session, routeParam }) {
                       <Link
                         target="_blank"
                         href={publicDir + data.admin_receipt_path}
+                        className="underline text-blue-500"
+                      >
+                        view
+                      </Link>
+                    ) : (
+                      <span className="underline text-gray-500">view</span>
+                    )}
+                  </div>
+                </div>
+                <div className="mx-2 mt-1 text-sm">
+                  <div className="flex flex-wrap justify-between">
+                    <span>
+                      {data.seller_return_courier
+                        ? 'Testing Innvoice'
+                        : 'Testing and Handling Invoice'}
+                    </span>
+                    {data.testing_invoice_available ? (
+                      <Link
+                        target="_blank"
+                        href={`pdf/testing-and-handling-invoice/${data.slug}`}
+                        className="underline text-blue-500"
+                      >
+                        view
+                      </Link>
+                    ) : (
+                      <span className="underline text-gray-500">view</span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mx-2 mt-1 text-sm">
+                  <div className="flex flex-wrap justify-between">
+                    <span>Return Invoice</span>
+                    {data.return_invoice_available ? (
+                      <Link
+                        target="_blank"
+                        href={`pdf/return-invoice/${data.slug}`}
                         className="underline text-blue-500"
                       >
                         view
