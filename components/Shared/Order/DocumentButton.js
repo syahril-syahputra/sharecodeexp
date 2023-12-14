@@ -6,7 +6,7 @@ export default function DocumentButton(props) {
   const { title, isActive, onClick, href, isLoading } = props
 
   return (
-    <div className="flex  justify-between items-center py-2 odd:bg-gray-100 even:bg-gray-50 px-2">
+    <div className="flex  justify-between items-center py-2 odd:bg-gray-50 even:bg-gray-100 px-2">
       <span>{title}</span>
       {href ? (
         isActive ? (
