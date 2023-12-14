@@ -5,20 +5,26 @@ import SelectInput from '@/components/Interface/Form/SelectInput'
 import TextInput from '@/components/Interface/Form/TextInput'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
 
 export default function RejectQuotation(props) {
   const [rejectionReason, setRejectionReason] = useState()
   const handleRejectionChange = (value) => {
-    setRejectionData('')
     setRejectionReason(value)
-    if (value.value != 'Other') {
-      setRejectionData(value.value)
-    }
+    setRejectionData(value.value)
+    setotherReason('')
   }
 
   const [rejectionData, setRejectionData] = useState()
+  const [otherReason, setotherReason] = useState('')
   const handleRejection = () => {
-    props.acceptance(rejectionData)
+    if (rejectionData === 'Other' && otherReason === '') {
+      toast.error('Please Input Other Reason', toastOptions)
+
+      return
+    }
+    props.acceptance(rejectionData, otherReason)
   }
 
   return (
@@ -30,7 +36,7 @@ export default function RejectQuotation(props) {
           <p className="mb-4 text-blueGray-500 text-lg leading-relaxed">
             Do you agree to{' '}
             <span className="text-blueGray-700 font-bold">reject</span> this
-            quotation? Select the reason bellow to continue rejecting.
+            quotation? Select the reason below to continue rejecting.
           </p>
           <div className="w-full mb-6">
             <SelectInput
@@ -47,9 +53,10 @@ export default function RejectQuotation(props) {
                 <TextInput
                   disabled={props.isLoading}
                   required
-                  name="rejectionData"
-                  value={rejectionData}
-                  onChange={(input) => setRejectionData(input.value)}
+                  name="otherReason"
+                  value={otherReason}
+                  placeholder="Reason"
+                  onChange={(input) => setotherReason(input.value)}
                 />
               </div>
             )}

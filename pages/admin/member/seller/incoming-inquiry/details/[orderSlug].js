@@ -230,7 +230,7 @@ export default function InquiryDetails({ session, routeParam }) {
         `/seller/order/reject-inquiry`,
         {
           order_slug: data.slug,
-          reason: reason.value,
+          reason,
           other_reason,
         },
         {
@@ -1140,6 +1140,16 @@ export default function InquiryDetails({ session, routeParam }) {
                 occur.
               </div>
             </PrimaryWrapper>
+            {data.inquiry_rejection_reason === 'Other' && (
+              <PrimaryWrapper className="p-1">
+                <div className="mx-2 my-1 text-md">
+                  Inquiry Rejection Reason
+                </div>
+                <div className="text-center p-4">
+                  {data.inquiry_rejection_reason_other}
+                </div>
+              </PrimaryWrapper>
+            )}
           </div>
         </div>
 
@@ -1292,7 +1302,8 @@ export default function InquiryDetails({ session, routeParam }) {
                         ? 'Testing Innvoice'
                         : 'Testing and Handling Invoice'}
                     </span>
-                    {data.testing_invoice_available ? (
+                    {data.testing_invoice_available ||
+                    data.testing_and_handling_invoice ? (
                       <Link
                         target="_blank"
                         href={`pdf/testing-and-handling-invoice/${data.slug}`}

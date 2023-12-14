@@ -2038,7 +2038,8 @@ export default function OrderDetails({ session, routeParam }) {
                       ? 'Testing Innvoice'
                       : 'Testing and Handling Invoice'}
                   </span>
-                  {data.testing_invoice_available ? (
+                  {data.testing_invoice_available ||
+                  data.testing_and_handling_invoice ? (
                     <Link
                       target="_blank"
                       href={`pdf/testing-and-handling-invoice/${data.slug}`}

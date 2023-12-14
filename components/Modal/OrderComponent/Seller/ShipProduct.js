@@ -37,6 +37,7 @@ export default function ShipProduct(props) {
 
       return
     }
+
     if (!file) {
       toast.error('Please select invoice file', toastOptions)
 
@@ -108,16 +109,16 @@ export default function ShipProduct(props) {
             <div className="flex flex-wrap mb-6 space-y-4 flex-1">
               <div className="w-full px-3">
                 <TextInput
-                  label="HTS*"
+                  label="HTS"
                   name="hts"
                   value={hts}
                   onChange={(input) => sethts(input.value)}
-                  errorMsg={props.errorInfo?.trhtsackingSeller}
+                  errorMsg={props.errorInfo?.hts}
                 />
               </div>
               <div className="w-full px-3">
                 <TextInput
-                  label="COO*"
+                  label="COO"
                   name="coo"
                   value={coo}
                   onChange={(input) => setcoo(input.value)}

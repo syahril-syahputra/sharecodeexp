@@ -10,20 +10,21 @@ import { toastOptions } from '@/lib/toastOptions'
 export default function RejectInquiry(props) {
   const [rejectionReason, setRejectionReason] = useState()
   const handleRejectionChange = (value) => {
-    setRejectionData('')
     setRejectionReason(value)
-    if (value.value != 'Other') {
-      setRejectionData(value.value)
-    }
+    setRejectionData(value.value)
+    setotherReason('')
   }
   const [rejectionData, setRejectionData] = useState('')
+  const [otherReason, setotherReason] = useState('')
+  useState
   const handleRejection = () => {
-    if (rejectionReason.value != 'Other' && rejectionData === '') {
-      toast.error('Failed to load rejection reason.', toastOptions)
+    if (rejectionData === 'Other' && otherReason === '') {
+      toast.error('Please Input Other Reason', toastOptions)
 
       return
     }
-    props.acceptance(rejectionReason, rejectionData)
+
+    props.acceptance(rejectionData, rejectionData)
   }
 
   return (
@@ -52,10 +53,10 @@ export default function RejectInquiry(props) {
                 <TextInput
                   disabled={props.isLoading}
                   required
-                  name="rejectionData"
-                  value={rejectionData}
+                  name="otherReason"
+                  value={otherReason}
                   placeholder="Reason"
-                  onChange={(input) => setRejectionData(input.value)}
+                  onChange={(input) => setotherReason(input.value)}
                 />
               </div>
             )}
@@ -81,7 +82,7 @@ export default function RejectInquiry(props) {
             {props.isLoading && (
               <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
             )}
-            Confirm r
+            Confirm
           </WarningButton>
         </>
       }

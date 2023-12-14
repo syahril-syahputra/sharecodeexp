@@ -233,14 +233,15 @@ export default function InquiryDetails({ session, routeParam }) {
       })
   }
 
-  const rejectQuotationModalHandle = async (quotationRejectionReason) => {
+  const rejectQuotationModalHandle = async (reason, other_reason) => {
     setIsLoading(true)
     await axios
       .post(
         `/buyer/order/reject-quotation`,
         {
           order_slug: data.slug,
-          reason: quotationRejectionReason,
+          reason,
+          other_reason,
         },
         {
           headers: {
@@ -997,7 +998,10 @@ export default function InquiryDetails({ session, routeParam }) {
                   <span className="text-gray-500">Test Lab Fee (USD)</span>
                   {!isLoading ? (
                     <span>
-                      ${data.order_price_amount?.test_fee_amount || 0}
+                      $
+                      {isQuotateionAvailable
+                        ? data.order_price_amount?.test_fee_amount || 0
+                        : 0}
                     </span>
                   ) : (
                     <div className="animate-pulse">
@@ -1045,6 +1049,16 @@ export default function InquiryDetails({ session, routeParam }) {
                 occur.
               </div>
             </PrimaryWrapper>
+            {data.quotation_rejection_reason === 'Other' && (
+              <PrimaryWrapper className="p-1">
+                <div className="mx-2 my-1 text-md">
+                  Quotation Rejection Reason
+                </div>
+                <div className="text-center p-4">
+                  {data.quotation_rejection_reason_other}
+                </div>
+              </PrimaryWrapper>
+            )}
           </div>
         </div>
 
@@ -1081,7 +1095,7 @@ export default function InquiryDetails({ session, routeParam }) {
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Quotation</span>
-                    {data.quotation_available == 1 ? (
+                    {data.quotation_available == 1 && isQuotateionAvailable ? (
                       <label
                         onClick={openQuotationHandler}
                         className={
