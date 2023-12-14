@@ -43,7 +43,22 @@ export default function InquiryDetails({ session, routeParam }) {
   const [isLoadingPurchaseOrder, setisLoadingPurchaseOrder] = useState(false)
 
   const [courierModal, setcourierModal] = useState(false)
-
+  const [rejectionReason, setRejectionReasons] = useState([])
+  const loadRejectionReason = async () => {
+    setIsLoading(true)
+    await axios
+      .get(`/rejection/inquiry-rejection`)
+      .then((response) => {
+        let result = response.data
+        setRejectionReasons([...result.data])
+      })
+      .catch((error) => {
+        toast.error('Failed to load rejection reason.', toastOptions)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }
   const handlelCourierDetailsModal = (courier) => {
     setIsLoading(true)
     setErrorInfo({})
@@ -140,8 +155,10 @@ export default function InquiryDetails({ session, routeParam }) {
         setIsLoading(false)
       })
   }
+
   useEffect(() => {
     loadData()
+    loadRejectionReason()
   }, [])
 
   if (!isOrderValid) {
@@ -205,7 +222,7 @@ export default function InquiryDetails({ session, routeParam }) {
   }
 
   const [rejectInquiryModal, setRejectInquiryModal] = useState(false)
-  const rejectInquiryModalHandle = async (inputData) => {
+  const rejectInquiryModalHandle = async (reason, other_reason) => {
     setIsLoading(true)
     setErrorInfo({})
     const response = await axios
@@ -213,7 +230,8 @@ export default function InquiryDetails({ session, routeParam }) {
         `/seller/order/reject-inquiry`,
         {
           order_slug: data.slug,
-          ...inputData,
+          reason: reason.value,
+          other_reason,
         },
         {
           headers: {
@@ -301,20 +319,28 @@ export default function InquiryDetails({ session, routeParam }) {
 
   const [shipProductModal, setShipProductModal] = useState(false)
   const shipProductHanlde = async (
+    hts,
+    coo,
+    eccn,
     trackingNumber,
     courier,
     isDownloadedPurchaseOrder,
     isDownloadedPackingList,
+    isconfirm,
     invoice
   ) => {
     setIsLoading(true)
     setErrorInfo({})
     let formData = new FormData()
     formData.append('order_slug', data.slug)
+    formData.append('hts', hts)
+    formData.append('coo', coo)
+    formData.append('eccn', eccn)
     formData.append('trackingSeller', trackingNumber)
     formData.append('courier', courier)
     formData.append('download_packing_list', isDownloadedPackingList)
     formData.append('download_purchase_order', isDownloadedPurchaseOrder)
+    formData.append('all_input_are_correct', isconfirm)
     formData.append('seller_invoice', invoice)
     const response = await axios
       .post(`/seller/order/shipping-product`, formData, {
@@ -499,6 +525,7 @@ export default function InquiryDetails({ session, routeParam }) {
           {rejectInquiryModal && (
             <RejectInquiryModal
               isLoading={isLoading}
+              rejectionReason={rejectionReason}
               closeModal={() => setRejectInquiryModal(false)}
               acceptance={rejectInquiryModalHandle}
               errorInfo={errorInfo}

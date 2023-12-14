@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
-import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
+import {
+  BaseModalLarge,
+  BaseModalMedium,
+} from '@/components/Interface/Modal/BaseModal'
 import TextInput from '@/components/Interface/Form/TextInput'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
@@ -11,20 +14,24 @@ import axios from '@/lib/axios'
 import FileInput from '@/components/Interface/Form/FileInput'
 
 export default function ShipProduct(props) {
+  const [hts, sethts] = useState('')
+  const [coo, setcoo] = useState('')
+  const [eccn, seteccn] = useState('')
   const [trackingNumber, setTrackingNumber] = useState('')
   const [courier, setcourier] = useState('')
   const { data: session } = useSession()
   const [isDownloadedPurchaseOrder, setisDownloadedPurchaseOrder] =
     useState(false)
   const [isDownloadedPackingList, setisDownloadedPackingList] = useState(false)
+  const [isconfirm, setisconfirm] = useState(false)
   const [isLoadingPurchaseOrder, setisLoadingPurchaseOrder] = useState(false)
   const [isLoadingPackingList, setisLoadingPackingList] = useState(false)
   const [file, setFile] = useState(null)
 
   const handleSubmit = () => {
-    if (!isDownloadedPackingList || !isDownloadedPurchaseOrder) {
+    if (!isDownloadedPackingList || !isDownloadedPurchaseOrder || !isconfirm) {
       toast.error(
-        'Please check if you have downloaded Purchase Order and Packing List',
+        'Please check if you have downloaded Purchase Order and Packing List and all input are correct',
         toastOptions
       )
 
@@ -36,10 +43,14 @@ export default function ShipProduct(props) {
       return
     }
     props.acceptance(
+      hts,
+      coo,
+      eccn,
       trackingNumber,
       courier,
       isDownloadedPurchaseOrder,
       isDownloadedPackingList,
+      isconfirm,
       file.files[0]
     )
   }
@@ -88,13 +99,40 @@ export default function ShipProduct(props) {
   }
 
   return (
-    <BaseModalMedium
+    <BaseModalLarge
       title="Ship Product to LAB"
       onClick={() => props.closeModal()}
       body={
         <>
-          <div className="">
-            <div className="flex flex-wrap mb-6 space-y-4">
+          <div className="flex space-x-4 items-start">
+            <div className="flex flex-wrap mb-6 space-y-4 flex-1">
+              <div className="w-full px-3">
+                <TextInput
+                  label="HTS*"
+                  name="hts"
+                  value={hts}
+                  onChange={(input) => sethts(input.value)}
+                  errorMsg={props.errorInfo?.trhtsackingSeller}
+                />
+              </div>
+              <div className="w-full px-3">
+                <TextInput
+                  label="COO*"
+                  name="coo"
+                  value={coo}
+                  onChange={(input) => setcoo(input.value)}
+                  errorMsg={props.errorInfo?.coo}
+                />
+              </div>
+              <div className="w-full px-3">
+                <TextInput
+                  label="ECCN"
+                  name="eccn"
+                  value={eccn}
+                  onChange={(input) => seteccn(input.value)}
+                  errorMsg={props.errorInfo?.eccn}
+                />
+              </div>
               <div className="w-full px-3">
                 <TextInput
                   label="Courier Company"
@@ -113,6 +151,8 @@ export default function ShipProduct(props) {
                   errorMsg={props.errorInfo?.trackingSeller}
                 />
               </div>
+            </div>
+            <div className="flex flex-col mb-6 space-y-4 flex-1">
               <div className="w-full px-3  border-b border-gray-300 pb-4">
                 <FileInput
                   label="Invoice"
@@ -190,6 +230,23 @@ export default function ShipProduct(props) {
                     Downloaded Packing List
                   </label>
                 </li>
+                <li className="item-center flex space-x-2">
+                  <input
+                    type="checkbox"
+                    id="isconfirm"
+                    name="isconfirm"
+                    checked={isconfirm}
+                    onChange={() => setisconfirm(!isconfirm)}
+                  />
+                  <label
+                    htmlFor="isconfirm"
+                    className="ml-2 text-sm font-medium text-gray-900"
+                  >
+                    We hereby confirm that the above mentioned details are
+                    correct to the best of our knowledge and we are responsible
+                    for the smooth delivery of products to the laboratory.
+                  </label>
+                </li>
               </ul>
             </div>
           </div>
@@ -218,6 +275,6 @@ export default function ShipProduct(props) {
           </PrimaryButton>
         </>
       }
-    ></BaseModalMedium>
+    ></BaseModalLarge>
   )
 }

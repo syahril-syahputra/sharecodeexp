@@ -1756,6 +1756,26 @@ export default function OrderDetails({ session, routeParam }) {
                 occur.
               </div>
             </PrimaryWrapper>
+            {data.inquiry_rejection_reason === 'Other' && (
+              <PrimaryWrapper className="p-1">
+                <div className="mx-2 my-1 text-md">
+                  Inquiry Rejection Reason
+                </div>
+                <div className="text-center p-4">
+                  {data.inquiry_rejection_reason_other}
+                </div>
+              </PrimaryWrapper>
+            )}
+            {data.quotation_rejection_reason === 'Other' && (
+              <PrimaryWrapper className="p-1">
+                <div className="mx-2 my-1 text-md">
+                  Quotation Rejection Reason
+                </div>
+                <div className="text-center p-4">
+                  {data.quotation_rejection_reason_other}
+                </div>
+              </PrimaryWrapper>
+            )}
           </div>
         </div>
 
@@ -1785,13 +1805,6 @@ export default function OrderDetails({ session, routeParam }) {
                       {isLoadingOpenReceipt ? 'loading' : 'view'}
                     </label>
                   ) : (
-                    // <Link
-                    //   target="_blank"
-                    //   href={publicDir + data.buyer_receipt_path}
-                    //   className="underline text-blue-500"
-                    // >
-                    //   view
-                    // </Link>
                     <span className="underline text-gray-500">view</span>
                   )}
                 </div>
@@ -1995,6 +2008,55 @@ export default function OrderDetails({ session, routeParam }) {
                       <span className="underline text-gray-500">view</span>
                     )}
                   </div>
+                </div>
+              </div>
+              <div className="mx-2 mt-1 text-sm">
+                <div className="flex flex-wrap justify-between">
+                  <span>Testing Innvoice</span>
+                  {data.testing_invoice_available ? (
+                    <Link
+                      target="_blank"
+                      href={`pdf/testing-and-handling-invoice/${data.slug}`}
+                      className="underline text-blue-500"
+                    >
+                      view
+                    </Link>
+                  ) : (
+                    <span className="underline text-gray-500">view</span>
+                  )}
+                </div>
+              </div>
+              <div className="mx-2 mt-1 text-sm">
+                <div className="flex flex-wrap justify-between">
+                  <span>Testing and Handling Invoice</span>
+                  {data.testing_and_handling_invoice_available ? (
+                    <Link
+                      target="_blank"
+                      href={`pdf/testing-and-handling-invoice/${data.slug}`}
+                      className="underline text-blue-500"
+                    >
+                      view
+                    </Link>
+                  ) : (
+                    <span className="underline text-gray-500">view</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="mx-2 mt-1 text-sm">
+                <div className="flex flex-wrap justify-between">
+                  <span>Return Invoice</span>
+                  {data.return_invoice_available ? (
+                    <Link
+                      target="_blank"
+                      href={`pdf/return-invoice/${data.slug}`}
+                      className="underline text-blue-500"
+                    >
+                      view
+                    </Link>
+                  ) : (
+                    <span className="underline text-gray-500">view</span>
+                  )}
                 </div>
               </div>
             </PrimaryWrapper>
