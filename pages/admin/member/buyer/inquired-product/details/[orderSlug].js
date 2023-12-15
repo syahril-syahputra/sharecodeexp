@@ -1137,7 +1137,7 @@ export default function InquiryDetails({ session, routeParam }) {
                 </div>
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
-                    <span>Buyer&lsquo;s Invoice</span>
+                    <span>Invoice</span>
                     {/* {data.admin_reimbursement_receipt_path ? ( */}
                     {data.buyer_invoice_available == 1 ? (
                       <Link
@@ -1154,7 +1154,7 @@ export default function InquiryDetails({ session, routeParam }) {
                 </div>
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
-                    <span>Reimbursement Receipt</span>
+                    <span>Receipt of Reimbursement</span>
                     {data.admin_reimbursement_receipt_path ? (
                       <Link
                         target="_blank"

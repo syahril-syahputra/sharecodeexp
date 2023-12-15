@@ -1281,7 +1281,7 @@ export default function InquiryDetails({ session, routeParam }) {
                 </div>
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
-                    <span>Admin's Receipt</span>
+                    <span>Admin's Payment Receipt</span>
                     {data.admin_receipt_path ? (
                       <Link
                         target="_blank"
