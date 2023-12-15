@@ -33,7 +33,7 @@ export default function OutofStock({ session }) {
     setIsLoading(true)
     await axios
       .get(
-        `/seller/product/list?stock_country=${countryParam}&manufacturer_part_number=${manufacturerPartNumberParam}&sort_by=updated_at&sort_type=Desc`,
+        `/seller/product/list?out_of_stock=true&stock_country=${countryParam}&manufacturer_part_number=${manufacturerPartNumberParam}&sort_by=updated_at&sort_type=Desc`,
         {
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
