@@ -1882,7 +1882,7 @@ export default function OrderDetails({ session, routeParam }) {
                     }
                     isActive={
                       data.testing_invoice_available ||
-                      data.testing_and_handling_invoice
+                      data.testing_and_handling_invoice_available
                     }
                     href={`pdf/testing-and-handling-invoice/${data.slug}`}
                   />

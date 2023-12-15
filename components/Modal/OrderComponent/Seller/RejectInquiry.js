@@ -24,7 +24,7 @@ export default function RejectInquiry(props) {
       return
     }
 
-    props.acceptance(rejectionData, rejectionData)
+    props.acceptance(rejectionData, otherReason)
   }
 
   return (

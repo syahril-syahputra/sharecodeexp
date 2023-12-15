@@ -1303,7 +1303,7 @@ export default function InquiryDetails({ session, routeParam }) {
                         : 'Testing and Handling Invoice'}
                     </span>
                     {data.testing_invoice_available ||
-                    data.testing_and_handling_invoice ? (
+                    data.testing_and_handling_invoice_available ? (
                       <Link
                         target="_blank"
                         href={`pdf/testing-and-handling-invoice/${data.slug}`}
