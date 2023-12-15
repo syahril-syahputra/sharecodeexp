@@ -89,14 +89,13 @@ export default function VerifyOrder(props) {
             <span className="text-blueGray-700 font-bold">accept</span> this
             quotation?
           </p>
-          {!test_free ||
-            (!cek(props.availableDate) && (
-              <p className="text-sm text-orange-500 italic mb-5">
-                The amount to be paid is below $1,000.00, hence this order is
-                charged separately for test payment at the LAB. Check Quotation
-                for more further.
-              </p>
-            ))}
+          {!test_free && !cek(props.availableDate) && (
+            <p className="text-sm text-orange-500 italic mb-5">
+              The amount to be paid is below $1,000.00, hence this order is
+              charged separately for test payment at the LAB. Check Quotation
+              for more further.
+            </p>
+          )}
           {!cek(props.availableDate) && (
             <SecondaryButton
               onClick={() => openQuotationHandler()}
