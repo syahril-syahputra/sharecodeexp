@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react'
-import { getSession } from 'next-auth/react'
+import React, {useState, useEffect} from 'react'
+import {getSession} from 'next-auth/react'
 import axios from '@/lib/axios'
 import Link from 'next/link'
 import Image from 'next/image'
 import moment from 'moment'
-import { VendorUrl } from '@/route/route-url'
-import { checkValue } from '@/utils/general'
+import {VendorUrl} from '@/route/route-url'
+import {checkValue} from '@/utils/general'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
 
 // components
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import VerifyInquiryModal from '@/components/Modal/OrderComponent/Seller/VerifyInquiry'
 import RejectInquiryModal from '@/components/Modal/OrderComponent/Seller/RejectInquiry'
 import UpdateVerifiedInquiryModal from '@/components/Modal/OrderComponent/Seller/UpdateVerifiedInquiry'
@@ -32,7 +32,7 @@ import calculateDayDifference from '@/lib/calculateDayDifference'
 import AccpetProduct from '@/components/Modal/OrderComponent/Seller/AcceptProduct'
 import UpdateInvoice from '@/components/Modal/OrderComponent/Seller/UpdateInvoice'
 
-export default function InquiryDetails({ session, routeParam }) {
+export default function InquiryDetails({session, routeParam}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   //data search
   const [isLoading, setIsLoading] = useState(true)
@@ -330,7 +330,7 @@ export default function InquiryDetails({ session, routeParam }) {
       .catch((error) => {
         toast.error(
           'Something went wrong. Cannot ship the product. ' +
-            error.data.message,
+          error.data.message,
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -896,7 +896,7 @@ export default function InquiryDetails({ session, routeParam }) {
             <PrimaryWrapper className="p-3">
               <div className="lg:flex lg:justify-around">
                 <div className="w-full lg:w-1/2 mr-4 border">
-                  {isLoading && (
+                  {/* {isLoading && (
                     <div className="animate-pulse">
                       <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
                         <svg
@@ -909,8 +909,8 @@ export default function InquiryDetails({ session, routeParam }) {
                         </svg>
                       </div>
                     </div>
-                  )}
-                  {data.companies_products?.img && !isLoading && (
+                  )} */}
+                  {/* {data.companies_products?.img && !isLoading && (
                     <div className="flex justify-center items-center">
                       <Image
                         src={
@@ -928,7 +928,7 @@ export default function InquiryDetails({ session, routeParam }) {
                     <div className="flex justify-center items-center h-40">
                       no image
                     </div>
-                  )}
+                  )} */}
                 </div>
                 <div className="w-full lg:w-1/2">
                   <div className="mx-2 my-1 text-xl">
@@ -968,7 +968,7 @@ export default function InquiryDetails({ session, routeParam }) {
                   <div className="mx-2 text-md">
                     {/* set to local time */}
                     {!!data.companies_products?.created_at ? (
-                      moment(data.created_at).local().format('dddd, D MMMM YYYY') 
+                      moment(data.created_at).local().format('dddd, D MMMM YYYY')
                     ) : (
                       <div className="animate-pulse">
                         <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
@@ -979,7 +979,7 @@ export default function InquiryDetails({ session, routeParam }) {
                     Order Date
                   </div>
                   <div className="mx-2 text-md">
-                    {/* set to local time */}  
+                    {/* set to local time */}
                     {!isLoading ? (
                       data.order_date ? (
                         moment(data.order_date).local().format('dddd, D MMMM YYYY')

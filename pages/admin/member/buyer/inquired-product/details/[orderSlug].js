@@ -738,7 +738,7 @@ export default function InquiryDetails({session, routeParam}) {
             <PrimaryWrapper className="p-3">
               <div className="lg:flex lg:justify-around">
                 <div className="w-full lg:w-1/2 mr-4 border">
-                  {isLoading && (
+                  {/* {isLoading && (
                     <div className="animate-pulse">
                       <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
                         <svg
@@ -770,7 +770,7 @@ export default function InquiryDetails({session, routeParam}) {
                     <div className="flex justify-center items-center h-40">
                       no image
                     </div>
-                  )}
+                  )} */}
                 </div>
                 <div className="w-full lg:w-1/2">
                   <div className="mx-2 my-1 text-xl">
