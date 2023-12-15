@@ -27,7 +27,7 @@ export default function CountrySelectorInitial(props) {
       <SelectInput
         searchable
         disabled={props.disabled}
-        label={props?.label}
+        label={props?.label ? props?.label : "Country"}
         name={props.name}
         value={inputData}
         options={options}
