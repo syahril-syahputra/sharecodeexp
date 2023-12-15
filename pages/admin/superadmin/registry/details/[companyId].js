@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import axios from 'lib/axios'
-import { getSession } from 'next-auth/react'
+import {getSession} from 'next-auth/react'
 import Link from 'next/link'
 import Admin from 'layouts/Admin.js'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 
 // components
 import SendEmailModal from '@/components/Modal/Registry/SendEmail'
@@ -24,17 +24,17 @@ import {
   CompanyStatusesIcon,
   CompanyStatusesText,
 } from '@/components/Shared/Company/Statuses'
-import { useRouter } from 'next/router'
+import {useRouter} from 'next/router'
 import RemoveCompany from '@/components/Modal/Registry/RemoveCompany'
 import InfoNotification from '@/components/Interface/Notification/InfoNotification'
 import DangerNotification from '@/components/Interface/Notification/DangerNotification'
-import { useContext } from 'react'
+import {useContext} from 'react'
 import GlobalContext from '@/store/global-context'
-import { Tooltip } from '@/components/Tooltip'
+import {Tooltip} from '@/components/Tooltip'
 import SuccessButton from '@/components/Interface/Buttons/SuccessButton'
 import classNames from '@/utils/classNames'
 
-export default function CompanyDetail({ session, routeParam }) {
+export default function CompanyDetail({session, routeParam}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   const context = useContext(GlobalContext)
   //data search
@@ -323,41 +323,41 @@ export default function CompanyDetail({ session, routeParam }) {
               onClick={() => setShowSendEmailModal(true)}
             >
               <i className="mr-2 ml-1 fas fa-envelope text-white"></i>
-              Send Email
+              Request Additional Documents
             </SecondaryButton>
             {(companyData.is_confirmed == 'pending' ||
               companyData.is_confirmed == 'rejected') && (
-              <PrimaryButton
-                size="sm"
-                className="mr-2"
-                onClick={() => setShowAcceptModal(true)}
-              >
-                <i className="mr-2 ml-1 fas fa-check text-white"></i>
-                Accept
-              </PrimaryButton>
-            )}
+                <PrimaryButton
+                  size="sm"
+                  className="mr-2"
+                  onClick={() => setShowAcceptModal(true)}
+                >
+                  <i className="mr-2 ml-1 fas fa-check text-white"></i>
+                  Accept
+                </PrimaryButton>
+              )}
             {(companyData.is_confirmed == 'accepted' ||
               companyData.is_confirmed == 'rejected') && (
-              <WarningButton
-                size="sm"
-                className="mr-2"
-                onClick={() => setShowPendingModal(true)}
-              >
-                <i className="mr-2 ml-1 fas fa-clock text-white"></i>
-                Pending
-              </WarningButton>
-            )}
+                <WarningButton
+                  size="sm"
+                  className="mr-2"
+                  onClick={() => setShowPendingModal(true)}
+                >
+                  <i className="mr-2 ml-1 fas fa-clock text-white"></i>
+                  Pending
+                </WarningButton>
+              )}
             {(companyData.is_confirmed == 'accepted' ||
               companyData.is_confirmed == 'pending') && (
-              <DangerButton
-                size="sm"
-                className=""
-                onClick={() => setShowRejectModal(true)}
-              >
-                <i className="mr-2 ml-1 fas fa-times text-white"></i>
-                Reject
-              </DangerButton>
-            )}
+                <DangerButton
+                  size="sm"
+                  className=""
+                  onClick={() => setShowRejectModal(true)}
+                >
+                  <i className="mr-2 ml-1 fas fa-times text-white"></i>
+                  Reject
+                </DangerButton>
+              )}
           </>
         }
       ></PageHeader>
@@ -432,8 +432,8 @@ export default function CompanyDetail({ session, routeParam }) {
             </div>
             {/* <Tooltip tooltipText={'Country and Address 2'}> */}
             {companyData?.address2 === '' ||
-            companyData.address2 === null ||
-            companyData.address2 === undefined ? null : (
+              companyData.address2 === null ||
+              companyData.address2 === undefined ? null : (
               <div className="text-sm leading-normal mt-2 mb-2 text-blueGray-400 font-bold uppercase">
                 <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>{' '}
                 {companyData.address2}
@@ -442,7 +442,7 @@ export default function CompanyDetail({ session, routeParam }) {
             {/* </Tooltip> */}
             <div className="text-sm leading-normal mt-2 mb-2 text-blueGray-400 font-bold uppercase">
               <i className="fas fa-phone mr-2 text-lg text-blueGray-400"></i>{' '}
-              {companyData.phone}
+              {`${companyData.country_code ?? ''}${companyData.phone}`}
             </div>
             <div className="mb-2 text-blueGray-600 mt-10">
               <i className="fas fa-circle-dot mr-2 text-lg text-blueGray-400"></i>

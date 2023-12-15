@@ -80,8 +80,9 @@ export default function OrderList(props) {
                       {checkValue(item.order_number)}
                     </td>
                     <td className="text-xs px-6 py-4">
+                      {/* set to local time */}
                       {item.order_date
-                        ? moment(item.order_date).format('dddd, D MMMM YYYY')
+                        ? moment(item.order_date).local().format('dddd, D MMMM YYYY')
                         : '-'}
                     </td>
                     <td scope="row" className="text-xs px-8 py-4">

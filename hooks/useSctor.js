@@ -1,4 +1,5 @@
 import axios from '@/lib/axios';
+
 const {useState, useEffect} = require('react');
 
 function useData() {
@@ -12,6 +13,7 @@ function useData() {
     }
     fetchData();
   }, []);
+
   return data;
 }
 

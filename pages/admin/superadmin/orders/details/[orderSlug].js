@@ -1,7 +1,7 @@
 import moment from 'moment'
-import { checkValue } from '@/utils/general'
-import React, { useState, useEffect } from 'react'
-import { getSession } from 'next-auth/react'
+import {checkValue} from '@/utils/general'
+import React, {useState, useEffect} from 'react'
+import {getSession} from 'next-auth/react'
 import Image from 'next/image'
 import axios from '@/lib/axios'
 import Link from 'next/link'
@@ -10,7 +10,7 @@ import Link from 'next/link'
 import Admin from 'layouts/Admin.js'
 
 //route
-import { AdminUrl } from '@/route/route-url'
+import {AdminUrl} from '@/route/route-url'
 
 // components
 import SendProformaInvoiceModal from '@/components/Modal/OrderComponent/Superadmin/SendProformaInvoice'
@@ -20,13 +20,13 @@ import GoodResultModal from '@/components/Modal/OrderComponent/Superadmin/GoodRe
 import BadResultModal from '@/components/Modal/OrderComponent/Superadmin/BadResult'
 import TrackerNumberForBuyerModal from '@/components/Modal/OrderComponent/Superadmin/TrackerNumberForBuyer'
 import CompleteOrderModal from '@/components/Modal/OrderComponent/Superadmin/CompleteOrder'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
-import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses'
+import {CompanyStatusesIcon} from '@/components/Shared/Company/Statuses'
 import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import WarningNotification from '@/components/Interface/Notification/WarningNotification'
@@ -42,7 +42,7 @@ import CloseReturned from '@/components/Modal/OrderComponent/Superadmin/CloseRet
 import AcceptSellerPayment from '@/components/Modal/OrderComponent/Superadmin/AcceptSellerPayment'
 import DocumentButton from '@/components/Shared/Order/DocumentButton'
 
-export default function OrderDetails({ session, routeParam }) {
+export default function OrderDetails({session, routeParam}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   //data search
   const [isLoading, setIsLoading] = useState(true)
@@ -1441,8 +1441,8 @@ export default function OrderDetails({ session, routeParam }) {
           <div className="w-full lg:w-2/3 mr-4">
             <PrimaryWrapper className="p-3">
               <div className="lg:flex lg:justify-around">
-                <div className="w-full lg:w-1/2 mr-4 border">
-                  {isLoading && (
+                {/* <div className="w-full lg:w-1/2 mr-4 border"> */}
+                {/* {isLoading && (
                     <div className="animate-pulse">
                       <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
                         <svg
@@ -1455,8 +1455,8 @@ export default function OrderDetails({ session, routeParam }) {
                         </svg>
                       </div>
                     </div>
-                  )}
-                  {data.companies_products?.img && !isLoading && (
+                  )} */}
+                {/* {data.companies_products?.img && !isLoading && (
                     <div className="flex justify-center items-center">
                       <Image
                         src={
@@ -1469,14 +1469,14 @@ export default function OrderDetails({ session, routeParam }) {
                         alt="exepart-product"
                       ></Image>
                     </div>
-                  )}
-                  {!data.companies_products?.img && !isLoading && (
+                  )} */}
+                {/* {!data.companies_products?.img && !isLoading && (
                     <div className="flex justify-center items-center h-40">
                       no image
                     </div>
-                  )}
-                </div>
-                <div className="w-full lg:w-1/2">
+                  )} */}
+                {/* </div> */}
+                <div className="w-full">
                   <div className="mx-2 my-1 text-xl">
                     {!!data.companies_products?.ManufacturerNumber ? (
                       data.companies_products?.ManufacturerNumber
@@ -1512,8 +1512,9 @@ export default function OrderDetails({ session, routeParam }) {
                     Inquired Date
                   </div>
                   <div className="mx-2 text-md">
+                    {/* set to local time */}  
                     {!!data.companies_products?.created_at ? (
-                      moment(data.created_at).format('dddd, D MMMM YYYY')
+                      moment(data.created_at).local().format('dddd, D MMMM YYYY')
                     ) : (
                       <div className="animate-pulse">
                         <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
@@ -1524,9 +1525,10 @@ export default function OrderDetails({ session, routeParam }) {
                     Order Date
                   </div>
                   <div className="mx-2 text-md">
+                    {/* set to local time */}  
                     {!isLoading ? (
                       data.order_date ? (
-                        moment(data.order_date).format('dddd, D MMMM YYYY')
+                        moment(data.order_date).local().format('dddd, D MMMM YYYY')
                       ) : (
                         '-'
                       )

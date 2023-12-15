@@ -6,7 +6,7 @@ import useDataCountry from '@/hooks/useCountry'
 export default function ProvinceSelectorInitial(props) {
   const countryId = props?.countryId
   const countries = useDataCountry() || []
-  const countryIdFilter = countries?.filter((e) => e?.name === countryId?.value)
+  const countryIdFilter = countries?.filter((e) => e?.name === countryId)
   const provinces = useDataProvince(countryIdFilter[0]?.id)
   let inputData = props.value
   const options =

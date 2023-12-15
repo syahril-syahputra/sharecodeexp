@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { getSession } from 'next-auth/react'
+import React, {useState, useEffect} from 'react'
+import {getSession} from 'next-auth/react'
 import axios from '@/lib/axios'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -12,8 +12,8 @@ import SendPaymentDocsModal from '@/components/Modal/OrderComponent/Buyer/SendPa
 import SendUpdatedPaymentDocsModal from '@/components/Modal/OrderComponent/Buyer/SendUpdatedPaymentDocs'
 import AcceptOrderModal from '@/components/Modal/OrderComponent/Buyer/AcceptOrder'
 import DidntReceiveAnyModal from '@/components/Modal/OrderComponent/Buyer/DidntReceiveAny'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
@@ -21,16 +21,16 @@ import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
 import LightButton from '@/components/Interface/Buttons/LightButton'
-import { VendorUrl } from '@/route/route-url'
+import {VendorUrl} from '@/route/route-url'
 import InfoNotification from '@/components/Interface/Notification/InfoNotification'
 import WarningNotification from '@/components/Interface/Notification/WarningNotification'
 import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
-import { checkValue } from '@/utils/general'
+import {checkValue} from '@/utils/general'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import calculateTimeDifference from '@/lib/calculateTimeDifference'
 import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
 
-export default function InquiryDetails({ session, routeParam }) {
+export default function InquiryDetails({session, routeParam}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   //data search
   const [isLoading, setIsLoading] = useState(true)
@@ -205,11 +205,6 @@ export default function InquiryDetails({ session, routeParam }) {
           toast.error(error.data.message, toastOptions)
         }
 
-        // console.log(error.data.data.available_after)
-        // const momentObject = moment.parse('2023-10-27 15:11:13')
-        // const localTimeZone = moment.local()
-        // momentObject.tz(localTimeZone)
-        // const localTime = momentObject.format('YYYY-MM-DD HH:mm:ss')
         setErrorInfo(error.data.data)
       })
       .finally(() => {
@@ -755,8 +750,8 @@ export default function InquiryDetails({ session, routeParam }) {
         <div className="lg:flex lg:justify-around">
           <div className="w-full lg:w-2/3 mr-4">
             <PrimaryWrapper className="p-3">
-              <div className="lg:flex lg:justify-around">
-                <div className="w-full lg:w-1/2 mr-4 border">
+              <div className="lg:flex">
+                {/* <div className="w-full lg:w-1/2 mr-4 border">
                   {isLoading && (
                     <div className="animate-pulse">
                       <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
@@ -790,8 +785,8 @@ export default function InquiryDetails({ session, routeParam }) {
                       no image
                     </div>
                   )}
-                </div>
-                <div className="w-full lg:w-1/2">
+                </div> */}
+                <div className="w-full">
                   <div className="mx-2 my-1 text-xl">
                     {!!data.companies_products?.ManufacturerNumber ? (
                       data.companies_products?.ManufacturerNumber
@@ -828,7 +823,7 @@ export default function InquiryDetails({ session, routeParam }) {
                   </div>
                   <div className="mx-2 text-md">
                     {!!data.companies_products?.created_at ? (
-                      moment(data.created_at).format('dddd, D MMMM YYYY')
+                      moment(data.created_at).local().format('dddd, D MMMM YYYY')
                     ) : (
                       <div className="animate-pulse">
                         <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
@@ -841,7 +836,7 @@ export default function InquiryDetails({ session, routeParam }) {
                   <div className="mx-2 text-md">
                     {!isLoading ? (
                       data.order_date ? (
-                        moment(data.order_date).format('dddd, D MMMM YYYY')
+                        moment(data.order_date).local().format('dddd, D MMMM YYYY')
                       ) : (
                         '-'
                       )
@@ -862,8 +857,8 @@ export default function InquiryDetails({ session, routeParam }) {
                     ) : (
                       <div className="animate-pulse">
                         {data?.companies_products?.moq === 0 ||
-                        parseInt(data?.companies_products?.moq) === 0 ||
-                        data?.companies_products?.moq === null ? (
+                          parseInt(data?.companies_products?.moq) === 0 ||
+                          data?.companies_products?.moq === null ? (
                           <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
                             Out of Stock
                           </div>
@@ -884,7 +879,7 @@ export default function InquiryDetails({ session, routeParam }) {
                     ) : (
                       <div className="animate-pulse">
                         {data?.companies_products?.AvailableQuantity === 0 ||
-                        data?.companies_products?.AvailableQuantity === null ? (
+                          data?.companies_products?.AvailableQuantity === null ? (
                           <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
                             Out of Stock
                           </div>

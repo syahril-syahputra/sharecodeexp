@@ -1,19 +1,21 @@
-import React, { Fragment, useEffect, useState } from 'react'
-import { CountdownTimer } from '../CounterdownTime'
+import React, {Fragment, useEffect, useState} from 'react'
+import {CountdownTimer} from '../CounterdownTime'
 import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import ImageLogo from '@/components/ImageLogo/ImageLogo'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import axios from 'lib/axios'
 import LogoutModal from '@/components/Modal/Logout/Logout'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import ResendEmailVerification from '@/components/Modal/ResendEmail'
+import ChangeEmaiVerification from '@/components/Modal/ChangeEmail'
 
-const VerifyComp = ({ session, signOut }) => {
+const VerifyComp = ({session, signOut}) => {
   let time = null
   const [loading, setLoading] = useState(true)
   const [logoutModal, setLogoutModal] = useState(false)
+  const [changeEmailModal, setChangeEmailModal] = useState(false)
   const [resendModal, setResendModal] = useState(false)
   const [dialogState, setDialogState] = useState(false)
   const isServer = typeof window === 'undefined'
@@ -23,13 +25,13 @@ const VerifyComp = ({ session, signOut }) => {
   const NOW_IN_MS = new Date().getTime()
   const dateTimeAfterThreeDays = NOW_IN_MS + THREE_DAYS_IN_MS
 
-  if (typeof window !== 'undefined') {
-    time = parseInt(localStorage.getItem('end_date'), 10)
-  }
+  // if (typeof window !== 'undefined') {
+  //   time = parseInt(localStorage.getItem('end_date'), 10)
+  // }
 
-  const countDownData = () => {
-    return <CountdownTimer setDialogState={setDialogState} targetDate={time} />
-  }
+  // const countDownData = () => {
+  //   return <CountdownTimer setDialogState={setDialogState} targetDate={time} />
+  // }
 
   const handleResendEmail = async () => {
     await axios
@@ -44,16 +46,11 @@ const VerifyComp = ({ session, signOut }) => {
       )
       .then((response) => {
         toast.success(`${response?.data?.message}`, toastOptions)
-        setIsSucces(true)
+        setIsSucces(false)
         setDialogState(true)
         setResendModal(false)
-        setLoading(true)
-        if (localStorage.getItem('end_date') === null) {
-          localStorage.setItem(
-            'end_date',
-            JSON.stringify(dateTimeAfterThreeDays)
-          )
-        }
+        setLoading(false)
+
       })
       .catch((error) => {
         toast.error(`${error?.data?.message}`, toastOptions)
@@ -66,12 +63,12 @@ const VerifyComp = ({ session, signOut }) => {
     <>
       <section className="relative py-14 overflow-hidden h-3/6 ">
         <div className="container mx-auto mt-10 xs:pb-10 xs:pt-8 px-4">
-          {dialogState || Boolean(time) ? (
+          {/* {dialogState || Boolean(time) ? (
             <PrimaryNotification
               message={'Email notification has been resend successfully'}
               timer={countDownData()}
             />
-          ) : null}
+          ) : null} */}
           <PrimaryWrapper className={'mt-6'}>
             {
               <div className="text-center pb-20 pt-20">
@@ -81,7 +78,7 @@ const VerifyComp = ({ session, signOut }) => {
                 <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
                   Your email verification has been sent,
                   <br />
-                  please verify the email.
+                  {`to ${session?.user?.userDetail?.email ?? ''}  please verify the email.`}
                 </h3>
                 <div className="mt-20">
                   <PrimaryButton
@@ -102,6 +99,13 @@ const VerifyComp = ({ session, signOut }) => {
                     Logout
                   </PrimaryButton>
                 </div>
+                <div className="text-center py-2  hover:underline hover:text-footer-resources">
+                  <span className="font-medium text-gray-900 dark:text-gray-300" onClick={() => {
+                    setChangeEmailModal(true)
+                  }}>
+                    Change Email
+                  </span>
+                </div>
               </div>
             }
           </PrimaryWrapper>
@@ -117,8 +121,18 @@ const VerifyComp = ({ session, signOut }) => {
         <ResendEmailVerification
           closeModal={setResendModal}
           acceptance={handleResendEmail}
+          session={session}
         />
       ) : null}
+      {
+        changeEmailModal ?
+          <ChangeEmaiVerification
+            closeModalEmail={setChangeEmailModal}
+            session={session}
+          />
+          :
+          null
+      }
     </>
   )
 }

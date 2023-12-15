@@ -56,7 +56,7 @@ export default function TableProduct(props) {
                 MOQ
               </th>
               <th scope="col" className="px-6 py-3">
-                Country
+                Stock Location
               </th>
               <th scope="col" className="px-6 py-3">
                 Date Code
@@ -89,7 +89,7 @@ export default function TableProduct(props) {
                     <td className="text-sm px-6 py-4">{item.Manufacture}</td>
                     <td className="text-sm px-8 py-4">
                       {item?.AvailableQuantity === null ||
-                      item?.AvailableQuantity == 0 ? (
+                        item?.AvailableQuantity == 0 ? (
                         <span>Out of Stock</span>
                       ) : (
                         <span>{item.AvailableQuantity}</span>
@@ -117,7 +117,7 @@ export default function TableProduct(props) {
                       />
                     </td>
                     <td className="text-sm px-6 py-4">
-                      {moment(item.created_at).format('dddd, D MMMM YYYY')}
+                      {moment(item.created_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}
                     </td>
                     <td className="text-sm px-6 py-4 text-right">
                       <div className="inline-flex">

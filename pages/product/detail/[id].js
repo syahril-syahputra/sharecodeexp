@@ -1,15 +1,16 @@
-import React, { Fragment, useState } from 'react'
+import React, {Fragment, useState} from 'react'
 import axios from 'lib/axios'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
-import { PageSEO } from '@/components/Utils/SEO'
+import {PageSEO} from '@/components/Utils/SEO'
 import siteMetadata from '@/utils/siteMetadata'
 import IndexNavbar from 'components/Navbars/IndexNavbar.js'
 import Footer from '@/components/Footers/Footer'
 import LoadingState from '@/components/Interface/Loader/LoadingState'
 import Link from 'next/link'
 import LightButton from '@/components/Interface/Buttons/LightButton'
+import {checkValue} from '@/utils/general'
 
-export default function DetailProduct({ data, ...props }) {
+export default function DetailProduct({data, ...props}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   const [dataArr, setDataArr] = useState(data)
 
@@ -35,7 +36,7 @@ export default function DetailProduct({ data, ...props }) {
               <LoadingState className={'pb-40'} />
             ) : (
               <>
-                <div className="w-full">
+                {/* <div className="w-full">
                   <div className="px-3 my-6 md:mb-0 text-center">
                     {dataArr?.img ? (
                       <div className="p-16 border mx-2 my-4">
@@ -56,7 +57,7 @@ export default function DetailProduct({ data, ...props }) {
                   <div className="md:w-25 mt-5">
                     <div></div>
                   </div>
-                </div>
+                </div> */}
                 <div className="overflow-x-auto pb-10">
                   <table className="w-50 text-sm text-left text-gray-500 bg-white">
                     <tbody>
@@ -69,6 +70,17 @@ export default function DetailProduct({ data, ...props }) {
                         </td>
                         <td className="text-sm px-2 py-4">
                           {dataArr?.part_number}
+                        </td>
+                      </tr>
+                      <tr className="text-black hover:bg-slate-100">
+                        <th scope="col" className="px-6 py-3">
+                          Sector
+                        </th>
+                        <td scope="row" className="text-sm px-6 py-4">
+                          :
+                        </td>
+                        <td className="text-sm px-2 py-4">
+                          {checkValue(dataArr?.company_sector)}
                         </td>
                       </tr>
                       <tr className="text-black hover:bg-slate-100">
