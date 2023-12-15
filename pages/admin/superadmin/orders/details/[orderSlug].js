@@ -40,6 +40,7 @@ import RequestUpdateTestingPayment from '@/components/Modal/OrderComponent/Super
 import CloseNotReturned from '@/components/Modal/OrderComponent/Superadmin/CloseNotReturned'
 import CloseReturned from '@/components/Modal/OrderComponent/Superadmin/CloseReturned'
 import AcceptSellerPayment from '@/components/Modal/OrderComponent/Superadmin/AcceptSellerPayment'
+import DocumentButton from '@/components/Shared/Order/DocumentButton'
 
 export default function OrderDetails({session, routeParam}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -1758,6 +1759,26 @@ export default function OrderDetails({session, routeParam}) {
                 occur.
               </div>
             </PrimaryWrapper>
+            {data.inquiry_rejection_reason === 'Other' && (
+              <PrimaryWrapper className="p-1">
+                <div className="mx-2 my-1 text-md">
+                  Inquiry Rejection Reason
+                </div>
+                <div className="text-center p-4">
+                  {data.inquiry_rejection_reason_other}
+                </div>
+              </PrimaryWrapper>
+            )}
+            {data.quotation_rejection_reason === 'Other' && (
+              <PrimaryWrapper className="p-1">
+                <div className="mx-2 my-1 text-md">
+                  Quotation Rejection Reason
+                </div>
+                <div className="text-center p-4">
+                  {data.quotation_rejection_reason_other}
+                </div>
+              </PrimaryWrapper>
+            )}
           </div>
         </div>
 
@@ -1768,235 +1789,128 @@ export default function OrderDetails({session, routeParam}) {
               <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                 Documents
               </div>
-              <div className="mx-2 mt-1 text-sm">
-                <span className="text-gray-500">From Buyer</span>
+              <div className="mx-2 mt-4 text-sm">
+                <span className="text-gray-500 font-bold">From Buyer</span>
               </div>
               <div className="mx-2 mt-1 text-sm border-b mb-2">
-                <div className="flex flex-wrap justify-between">
-                  <span>Buyer's Payment</span>
-                  {data.buyer_receipt_path ? (
-                    <label
-                      onClick={openPaymentReceiptHandler}
-                      className={
-                        'underline ' +
-                        (isLoadingOpenReceipt
-                          ? 'text-blue-300 cursor-wait'
-                          : 'text-blue-500 cursor-pointer')
-                      }
-                    >
-                      {isLoadingOpenReceipt ? 'loading' : 'view'}
-                    </label>
-                  ) : (
-                    // <Link
-                    //   target="_blank"
-                    //   href={publicDir + data.buyer_receipt_path}
-                    //   className="underline text-blue-500"
-                    // >
-                    //   view
-                    // </Link>
-                    <span className="underline text-gray-500">view</span>
-                  )}
-                </div>
+                <DocumentButton
+                  title="Buyer's Payment"
+                  isActive={data.buyer_receipt_path}
+                  isLoading={isLoadingOpenReceipt}
+                  onClick={openPaymentReceiptHandler}
+                />
               </div>
-              <div className="mx-2 mt-1 text-sm">
-                <span className="text-gray-500">From Seller</span>
+              <div className="mx-2 mt-4 text-sm">
+                <span className="text-gray-500 font-bold">From Seller</span>
               </div>
-              <div className="mx-2 mt-1 text-sm border-b mb-2">
-                <div className="flex flex-wrap justify-between">
-                  <span>Seller's Invoice</span>
-                  {data.seller_invoice_path ? (
-                    <Link
-                      target="_blank"
-                      href={publicDir + data.seller_invoice_path}
-                      className="underline text-blue-500"
-                    >
-                      view
-                    </Link>
-                  ) : (
-                    <span className="underline text-gray-500">view</span>
-                  )}
-                </div>
+              <div className="mx-2 mt-1 text-sm  border-b mb-2">
+                <DocumentButton
+                  title="Invoice"
+                  isActive={data.seller_invoice_path}
+                  href={publicDir + data.seller_invoice_path}
+                />
+                <DocumentButton
+                  title={
+                    data.seller_return_courier
+                      ? 'Testing Payment Receipt'
+                      : 'Testing and Handling Service Payment Receipt'
+                  }
+                  isActive={data.seller_lab_payment_receipt_path}
+                  href={publicDir + data.seller_lab_payment_receipt_path}
+                />
               </div>
-              <div className="mb-5">
+
+              <div className="mt-4">
                 <div className="mx-2 mt-1 text-sm">
-                  <span className="text-gray-500">Exepart</span>
+                  <span className="text-gray-500 font-bold">Exepart</span>
+                </div>
+                <div className="mx-2 mt-4 text-sm">
+                  <span className="text-gray-500">Buyer</span>
                 </div>
                 <div className="mx-2 mt-1 text-sm">
-                  <div className="flex flex-wrap justify-between">
-                    <span>Quotation</span>
-                    {data.quotation_available == 1 ? (
-                      <Link
-                        target="_blank"
-                        href={`pdf/quotation/${data.slug}`}
-                        className="underline text-blue-500"
-                      >
-                        view
-                      </Link>
-                    ) : (
-                      <span className="underline text-gray-500">view</span>
-                    )}
-                  </div>
+                  <DocumentButton
+                    title="Quotation"
+                    isActive={parseInt(data.quotation_available) === 1}
+                    href={`pdf/quotation/${data.slug}`}
+                  />
+                  <DocumentButton
+                    title="Proforma Invoice"
+                    isActive={parseInt(data.proforma_invoice_available) === 1}
+                    href={`pdf/proforma-invoice/${data.slug}`}
+                  />
+                  <DocumentButton
+                    title="Invoice"
+                    isActive={parseInt(data.buyer_invoice_available) === 1}
+                    href={`pdf/buyer-invoice/${data.slug}`}
+                  />
+                  <DocumentButton
+                    title="Receipt of Reimbursement"
+                    isActive={data.admin_reimbursement_receipt_path}
+                    href={publicDir + data.admin_reimbursement_receipt_path}
+                  />
                 </div>
-                <div className="mx-2 mt-1 text-sm">
-                  <div className="flex flex-wrap justify-between">
-                    <span>Purchase Order</span>
-                    {data.purchase_order_available == 1 ? (
-                      <Link
-                        target="_blank"
-                        href={`pdf/purchase-order/${data.slug}`}
-                        className="underline text-blue-500"
-                      >
-                        view
-                      </Link>
-                    ) : (
-                      <span className="underline text-gray-500">view</span>
-                    )}
-                  </div>
+
+                <div className="mx-2 mt-4 text-sm">
+                  <span className="text-gray-500">Seller</span>
                 </div>
-                <div className="mx-2 mt-1 text-sm">
-                  <div className="flex flex-wrap justify-between">
-                    <span>Proforma Invoice for Buyer</span>
-                    {data.proforma_invoice_available == 1 ? (
-                      <Link
-                        target="_blank"
-                        href={`pdf/proforma-invoice/${data.slug}`}
-                        className="underline text-blue-500"
-                      >
-                        view
-                      </Link>
-                    ) : (
-                      <span className="underline text-gray-500">view</span>
-                    )}
-                  </div>
+                <div className="mx-2 mt-1 text-sm ">
+                  <DocumentButton
+                    title="Purchase Order"
+                    isActive={parseInt(data.purchase_order_available) === 1}
+                    href={`pdf/purchase-order/${data.slug}`}
+                  />
+                  <DocumentButton
+                    title="Packing List"
+                    isActive={
+                      parseInt(data.seller_packing_list_available) === 1
+                    }
+                    href={`pdf/seller-packing-list/${data.slug}`}
+                  />
+                  <DocumentButton
+                    title="Test Result"
+                    isActive={data.test_result_path}
+                    href={publicDir + data.test_result_path}
+                  />
+                  <DocumentButton
+                    title="Admin's Payment Receipt"
+                    isActive={data.admin_receipt_path}
+                    href={publicDir + data.admin_receipt_path}
+                  />
+                  <DocumentButton
+                    title={
+                      data.seller_return_courier
+                        ? 'Testing Innvoice'
+                        : 'Testing and Handling Invoice'
+                    }
+                    isActive={
+                      data.testing_invoice_available ||
+                      data.testing_and_handling_invoice_available
+                    }
+                    href={`pdf/testing-and-handling-invoice/${data.slug}`}
+                  />
+
+                  <DocumentButton
+                    title="Return Invoice"
+                    isActive={data.return_invoice_available}
+                    href={`pdf/return-invoice/${data.slug}`}
+                  />
                 </div>
-                {/* <div className="mx-2 mt-1 text-sm">
-                  <div className="flex flex-wrap justify-between">
-                    <span>Proforma Invoice for Seller</span>
-                    {data.proforma_invoice_available == 1 ? (
-                      <Link
-                        target="_blank"
-                        href={`pdf/proforma-invoice-seller/${data.slug}`}
-                        className="underline text-blue-500"
-                      >
-                        view
-                      </Link>
-                    ) : (
-                      <span className="underline text-gray-500">view</span>
-                    )}
-                  </div>
-                </div> */}
-                <div className="mx-2 mt-1 text-sm">
-                  <div className="flex flex-wrap justify-between">
-                    <span>Buyer's Invoice</span>
-                    {data.buyer_invoice_available == 1 ? (
-                      <Link
-                        target="_blank"
-                        href={`pdf/buyer-invoice/${data.slug}`}
-                        className="underline text-blue-500"
-                      >
-                        view
-                      </Link>
-                    ) : (
-                      <span className="underline text-gray-500">view</span>
-                    )}
-                  </div>
-                </div>
-                <div className="mx-2 mt-1 text-sm">
-                  <div className="flex flex-wrap justify-between">
-                    <span>Packing List for Seller</span>
-                    {data.seller_packing_list_available == 1 ? (
-                      <Link
-                        target="_blank"
-                        href={`pdf/seller-packing-list/${data.slug}`}
-                        className="underline text-blue-500"
-                      >
-                        view
-                      </Link>
-                    ) : (
-                      <span className="underline text-gray-500">view</span>
-                    )}
-                  </div>
-                </div>
-                <div className="mx-2 mt-1 text-sm">
-                  <div className="flex flex-wrap justify-between">
-                    <span>Test Result</span>
-                    {data.test_result_path ? (
-                      <Link
-                        target="_blank"
-                        href={publicDir + data.test_result_path}
-                        className="underline text-blue-500"
-                      >
-                        view
-                      </Link>
-                    ) : (
-                      <span className="underline text-gray-500">view</span>
-                    )}
-                  </div>
-                </div>
-                <div className="mx-2 mt-1 text-sm">
-                  <div className="flex flex-wrap justify-between">
-                    <span>Packing List for White Horse (Bad Result)</span>
-                    {data.lab_to_seller_packing_list_available == 1 ? (
-                      <Link
-                        target="_blank"
-                        href={`pdf/to-seller-packing-list/${data.slug}`}
-                        className="underline text-blue-500"
-                      >
-                        view
-                      </Link>
-                    ) : (
-                      <span className="underline text-gray-500">view</span>
-                    )}
-                  </div>
-                </div>
-                <div className="mx-2 mt-1 text-sm">
-                  <div className="flex flex-wrap justify-between">
-                    <span>Packing List for White Horse (Good Result)</span>
-                    {data.lab_to_buyer_packing_list_available == 1 ? (
-                      <Link
-                        target="_blank"
-                        href={`pdf/to-buyer-packing-list/${data.slug}`}
-                        className="underline text-blue-500"
-                      >
-                        view
-                      </Link>
-                    ) : (
-                      <span className="underline text-gray-500">view</span>
-                    )}
-                  </div>
-                </div>
-                <div className="mx-2 mt-1 text-sm">
-                  <div className="flex flex-wrap justify-between">
-                    <span>Admin's Receipt</span>
-                    {data.admin_receipt_path ? (
-                      <Link
-                        target="_blank"
-                        href={publicDir + data.admin_receipt_path}
-                        className="underline text-blue-500"
-                      >
-                        view
-                      </Link>
-                    ) : (
-                      <span className="underline text-gray-500">view</span>
-                    )}
-                  </div>
-                </div>
-                {/*  */}
-                <div className="mx-2 mt-1 text-sm">
-                  <div className="flex flex-wrap justify-between">
-                    <span>Receipt of Reimbursement</span>
-                    {data.admin_reimbursement_receipt_path ? (
-                      <Link
-                        target="_blank"
-                        href={publicDir + data.admin_reimbursement_receipt_path}
-                        className="underline text-blue-500"
-                      >
-                        view
-                      </Link>
-                    ) : (
-                      <span className="underline text-gray-500">view</span>
-                    )}
-                  </div>
+
+                <div className="mx-2 mt-6 text-sm">
+                  <DocumentButton
+                    title="Packing List for White Horse (Bad Result)"
+                    isActive={
+                      parseInt(data.lab_to_seller_packing_list_available) === 1
+                    }
+                    href={`pdf/to-seller-packing-list/${data.slug}`}
+                  />
+                  <DocumentButton
+                    title="Packing List for White Horse (Good Result)"
+                    isActive={
+                      parseInt(data.lab_to_buyer_packing_list_available) === 1
+                    }
+                    href={`pdf/to-buyer-packing-list/${data.slug}`}
+                  />
                 </div>
               </div>
             </PrimaryWrapper>

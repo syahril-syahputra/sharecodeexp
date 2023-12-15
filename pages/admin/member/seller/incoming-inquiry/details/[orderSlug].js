@@ -43,7 +43,22 @@ export default function InquiryDetails({session, routeParam}) {
   const [isLoadingPurchaseOrder, setisLoadingPurchaseOrder] = useState(false)
 
   const [courierModal, setcourierModal] = useState(false)
-
+  const [rejectionReason, setRejectionReasons] = useState([])
+  const loadRejectionReason = async () => {
+    setIsLoading(true)
+    await axios
+      .get(`/rejection/inquiry-rejection`)
+      .then((response) => {
+        let result = response.data
+        setRejectionReasons([...result.data])
+      })
+      .catch((error) => {
+        toast.error('Failed to load rejection reason.', toastOptions)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }
   const handlelCourierDetailsModal = (courier) => {
     setIsLoading(true)
     setErrorInfo({})
@@ -140,8 +155,10 @@ export default function InquiryDetails({session, routeParam}) {
         setIsLoading(false)
       })
   }
+
   useEffect(() => {
     loadData()
+    loadRejectionReason()
   }, [])
 
   if (!isOrderValid) {
@@ -205,7 +222,7 @@ export default function InquiryDetails({session, routeParam}) {
   }
 
   const [rejectInquiryModal, setRejectInquiryModal] = useState(false)
-  const rejectInquiryModalHandle = async (inputData) => {
+  const rejectInquiryModalHandle = async (reason, other_reason) => {
     setIsLoading(true)
     setErrorInfo({})
     const response = await axios
@@ -213,7 +230,8 @@ export default function InquiryDetails({session, routeParam}) {
         `/seller/order/reject-inquiry`,
         {
           order_slug: data.slug,
-          ...inputData,
+          reason,
+          other_reason,
         },
         {
           headers: {
@@ -301,20 +319,28 @@ export default function InquiryDetails({session, routeParam}) {
 
   const [shipProductModal, setShipProductModal] = useState(false)
   const shipProductHanlde = async (
+    hts,
+    coo,
+    eccn,
     trackingNumber,
     courier,
     isDownloadedPurchaseOrder,
     isDownloadedPackingList,
+    isconfirm,
     invoice
   ) => {
     setIsLoading(true)
     setErrorInfo({})
     let formData = new FormData()
     formData.append('order_slug', data.slug)
+    formData.append('hts', hts)
+    formData.append('coo', coo)
+    formData.append('eccn', eccn)
     formData.append('trackingSeller', trackingNumber)
     formData.append('courier', courier)
     formData.append('download_packing_list', isDownloadedPackingList)
     formData.append('download_purchase_order', isDownloadedPurchaseOrder)
+    formData.append('all_input_are_correct', isconfirm)
     formData.append('seller_invoice', invoice)
     const response = await axios
       .post(`/seller/order/shipping-product`, formData, {
@@ -499,6 +525,7 @@ export default function InquiryDetails({session, routeParam}) {
           {rejectInquiryModal && (
             <RejectInquiryModal
               isLoading={isLoading}
+              rejectionReason={rejectionReason}
               closeModal={() => setRejectInquiryModal(false)}
               acceptance={rejectInquiryModalHandle}
               errorInfo={errorInfo}
@@ -1115,6 +1142,16 @@ export default function InquiryDetails({session, routeParam}) {
                 occur.
               </div>
             </PrimaryWrapper>
+            {data.inquiry_rejection_reason === 'Other' && (
+              <PrimaryWrapper className="p-1">
+                <div className="mx-2 my-1 text-md">
+                  Inquiry Rejection Reason
+                </div>
+                <div className="text-center p-4">
+                  {data.inquiry_rejection_reason_other}
+                </div>
+              </PrimaryWrapper>
+            )}
           </div>
         </div>
 
@@ -1128,7 +1165,7 @@ export default function InquiryDetails({session, routeParam}) {
               <div className="mx-2 mt-1 text-sm">
                 <span className="text-gray-500">Seller</span>
               </div>
-              <div className="mx-2 mt-1 text-sm border-b mb-2">
+              <div className="mx-2 mt-1 text-sm">
                 <div className="flex flex-wrap justify-between">
                   <span>Seller's Invoice</span>
                   {data.seller_invoice_path ? (
@@ -1144,7 +1181,26 @@ export default function InquiryDetails({session, routeParam}) {
                   )}
                 </div>
               </div>
-
+              <div className="mx-2 mt-1 text-sm  border-b mb-2">
+                <div className="flex flex-wrap justify-between">
+                  <span>
+                    {data.seller_return_courier
+                      ? 'Testing Payment Receipt'
+                      : 'Testing and Handling Service Payment Receipt'}
+                  </span>
+                  {data.seller_lab_payment_receipt_path ? (
+                    <Link
+                      target="_blank"
+                      href={publicDir + data.seller_lab_payment_receipt_path}
+                      className="underline text-blue-500"
+                    >
+                      view
+                    </Link>
+                  ) : (
+                    <span className="underline text-gray-500">view</span>
+                  )}
+                </div>
+              </div>
               <div className="mb-5">
                 <div className="mx-2 mt-1 text-sm">
                   <span className="text-gray-500">Exepart</span>
@@ -1227,11 +1283,49 @@ export default function InquiryDetails({session, routeParam}) {
                 </div>
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
-                    <span>Admin's Receipt</span>
+                    <span>Admin's Payment Receipt</span>
                     {data.admin_receipt_path ? (
                       <Link
                         target="_blank"
                         href={publicDir + data.admin_receipt_path}
+                        className="underline text-blue-500"
+                      >
+                        view
+                      </Link>
+                    ) : (
+                      <span className="underline text-gray-500">view</span>
+                    )}
+                  </div>
+                </div>
+                <div className="mx-2 mt-1 text-sm">
+                  <div className="flex flex-wrap justify-between">
+                    <span>
+                      {data.seller_return_courier
+                        ? 'Testing Innvoice'
+                        : 'Testing and Handling Invoice'}
+                    </span>
+                    {data.testing_invoice_available ||
+                    data.testing_and_handling_invoice_available ? (
+                      <Link
+                        target="_blank"
+                        href={`pdf/testing-and-handling-invoice/${data.slug}`}
+                        className="underline text-blue-500"
+                      >
+                        view
+                      </Link>
+                    ) : (
+                      <span className="underline text-gray-500">view</span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mx-2 mt-1 text-sm">
+                  <div className="flex flex-wrap justify-between">
+                    <span>Return Invoice</span>
+                    {data.return_invoice_available ? (
+                      <Link
+                        target="_blank"
+                        href={`pdf/return-invoice/${data.slug}`}
                         className="underline text-blue-500"
                       >
                         view

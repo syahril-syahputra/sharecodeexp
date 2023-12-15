@@ -86,6 +86,7 @@ export default function UpdateVerifiedInquiry(props) {
                   label="MOQ"
                   name="moq"
                   value={inputData.moq}
+                  disabled
                   onChange={(input) => setDataHandler(input)}
                   errorMsg={errorInfo?.moq}
                 />

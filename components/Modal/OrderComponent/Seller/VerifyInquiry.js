@@ -91,6 +91,7 @@ export default function VerifyOrder(props) {
                   required
                   label="MOQ"
                   name="moq"
+                  disabled
                   value={inputData.moq}
                   onChange={(input) => setDataHandler(input)}
                   errorMsg={errorInfo?.moq}
@@ -136,7 +137,6 @@ export default function VerifyOrder(props) {
               <div className="w-1/2 pr-4 mb-6">
                 <NumberInput
                   label="Total Price (USD)"
-                  className="cursor-not-allowed"
                   disabled
                   step={0.01}
                   value={total}
