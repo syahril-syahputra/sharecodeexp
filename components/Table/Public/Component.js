@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/router'
+import React, {useState} from 'react'
+import {useSession} from 'next-auth/react'
+import {useRouter} from 'next/router'
 import NeedLoginModal from '@/components/Modal/NeedLogin/NeedLogin'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import BaseTable from '@/components/Interface/Table/BaseTable'
@@ -9,15 +9,16 @@ import NoData from '@/components/Interface/Table/NoData'
 import MetaData from '@/components/Interface/Table/MetaData'
 import Pagination from '@/components/Shared/Component/Pagination'
 import DetailProdutModal from '@/components/Modal/DetailProdutModal/DetailProdutModal'
+import {checkValue} from '@/utils/general'
 
 export default function TableComponent(props) {
-  const { status } = useSession()
+  const {status} = useSession()
   const router = useRouter()
   const [isInquiryClicked, setIsInquiryClicked] = useState(false)
   const [isDetailClicked, setIsDetailClicked] = useState(false)
   const [slugState, setSlugState] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [cartLoading, setCartLoading] = useState({ id: 0 })
+  const [cartLoading, setCartLoading] = useState({id: 0})
   const [cartLoadingDetail, setCartLoadingDetail] = useState({
     id: 0,
     slug: '',
@@ -54,13 +55,16 @@ export default function TableComponent(props) {
                 Part Number
               </th>
               <th scope="col" className="px-6 py-3">
+                Sector
+              </th>
+              <th scope="col" className="px-6 py-3">
                 Manufacturer
               </th>
               <th scope="col" className="px-6 py-3">
                 Description
               </th>
               <th scope="col" className="px-8 py-3">
-                Available Stocks
+                Available Quantity
               </th>
               <th scope="col" className="px-8 py-3">
                 MOQ
@@ -87,11 +91,12 @@ export default function TableComponent(props) {
                     >
                       {item.ManufacturerNumber}
                     </th>
+                    <th className='px-6 py-4'>{checkValue(item.company?.sector)}</th>
                     <td className="px-6 py-4">{item.Manufacture}</td>
                     <td className="px-6 py-4">{item.Description}</td>
                     {(item?.AvailableQuantity === null ||
                       item?.AvailableQuantity === 0) &&
-                    (item?.moq === null || item?.moq === 0) ? (
+                      (item?.moq === null || item?.moq === 0) ? (
                       <>
                         <td className="px-8">Out of Stock</td>
                       </>
@@ -102,7 +107,7 @@ export default function TableComponent(props) {
                     )}
                     {(item?.AvailableQuantity === null ||
                       item?.AvailableQuantity === 0) &&
-                    (item?.moq === null || item?.moq === 0) ? (
+                      (item?.moq === null || item?.moq === 0) ? (
                       <>
                         <td className="px-8">Out of Stock</td>
                       </>
@@ -114,9 +119,8 @@ export default function TableComponent(props) {
                     <td className="px-6 py-4">{item.country}</td>
                     <td className="px-6 py-4 text-right">
                       <div
-                        className={`items-center  ${
-                          status === 'unauthenticated' ? 'flex-1 space-x-2' : ''
-                        }`}
+                        className={`items-center  ${status === 'unauthenticated' ? 'flex-1 space-x-2' : ''
+                          }`}
                       >
                         <PrimaryButton
                           id={item?.id}

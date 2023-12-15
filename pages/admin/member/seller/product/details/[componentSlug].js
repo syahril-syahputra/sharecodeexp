@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import moment from 'moment'
 import Link from 'next/link'
 import axios from 'lib/axios'
-import { getSession } from 'next-auth/react'
+import {getSession} from 'next-auth/react'
 import Admin from 'layouts/Admin.js'
 import ComponentStatus from '@/components/Shared/Component/Statuses'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
-import { toastOptions } from '@/lib/toastOptions'
+import {toastOptions} from '@/lib/toastOptions'
 import DangerNotification from '@/components/Interface/Notification/DangerNotification'
 import LoadingState from '@/components/Interface/Loader/LoadingState'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
-import { toast } from 'react-toastify'
+import {toast} from 'react-toastify'
 import DangerButton from '@/components/Interface/Buttons/DangerButton'
 import OutofStockDialog from '@/components/Modal/OutofStockDialog'
 
-export default function MyProduct({ session, routeParam }) {
+export default function MyProduct({session, routeParam}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   const [isLoading, setIsLoading] = useState(true)
   const [isLoadingModal, setIsLoadingModal] = useState(false)
@@ -59,9 +59,9 @@ export default function MyProduct({ session, routeParam }) {
             <>
               {!!data.id &&
                 (data?.moq === 0 ||
-                data?.AvailableQuantity === 0 ||
-                data?.moq === null ||
-                data?.AvailableQuantity === null ? undefined : (
+                  data?.AvailableQuantity === 0 ||
+                  data?.moq === null ||
+                  data?.AvailableQuantity === null ? undefined : (
                   <DangerButton
                     size="sm"
                     className="mr-2"
@@ -96,7 +96,7 @@ export default function MyProduct({ session, routeParam }) {
         )}
         {!isLoading ? (
           <>
-            <div className="w-full">
+            {/* <div className="w-full">
               {data.img ? (
                 <div className="p-16 border mx-2 my-4">
                   <img
@@ -112,7 +112,7 @@ export default function MyProduct({ session, routeParam }) {
                   </div>
                 </div>
               )}
-            </div>
+            </div> */}
             <div className="overflow-x-auto pb-10">
               <table className="w-50 text-sm text-left text-gray-500 bg-white">
                 <tbody>
@@ -145,8 +145,8 @@ export default function MyProduct({ session, routeParam }) {
                     </td>
                     <td className="text-sm px-2 py-4">
                       {data.AvailableQuantity === null ||
-                      parseInt(data?.AvailableQuantity) === 0 ||
-                      data.AvailableQuantity === undefined
+                        parseInt(data?.AvailableQuantity) === 0 ||
+                        data.AvailableQuantity === undefined
                         ? 'Out of Stock'
                         : data?.AvailableQuantity}
                     </td>
@@ -161,8 +161,8 @@ export default function MyProduct({ session, routeParam }) {
                     <td className="text-sm px-2 py-4">
                       {' '}
                       {data.moq === null ||
-                      parseInt(data?.moq) === 0 ||
-                      data.moq === undefined
+                        parseInt(data?.moq) === 0 ||
+                        data.moq === undefined
                         ? 'Out of Stock'
                         : data?.moq}
                     </td>

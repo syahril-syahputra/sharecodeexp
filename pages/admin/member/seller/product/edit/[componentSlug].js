@@ -260,7 +260,10 @@ export default function EditComponent({session, routeParam, packaginglist}) {
       {errorMessage && <DangerNotification message={errorMessage} />}
 
       {/* component image */}
-      <div className="w-full">
+      {/* This code should be comment include on improvement development
+          no. https://venatronics-dev.atlassian.net/jira/software/projects/EX/boards/2?assignee=712020%3A7e9286ec-874a-4a10-826a-81ccef33c4c3&selectedIssue=EX-338
+        */}
+      {/* <div className="w-full">
         {showImage ? (
           <div className="p-16 border mx-2 my-4">
             <img
@@ -276,10 +279,13 @@ export default function EditComponent({session, routeParam, packaginglist}) {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
 
       <form className="ml-2" onSubmit={handleSubmit}>
-        <div className="flex flex-wrap mb-6">
+        {/* This code should be comment include on improvement development
+          no. https://venatronics-dev.atlassian.net/jira/software/projects/EX/boards/2?assignee=712020%3A7e9286ec-874a-4a10-826a-81ccef33c4c3&selectedIssue=EX-338
+        */}
+        {/* <div className="flex flex-wrap mb-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -327,7 +333,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
         <div className="w-full lg:w-1/2 px-3 mb-6">
           <TextInput
             label="Manufacturer Part Number"
@@ -380,7 +386,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
           <CountrySelectorInitial
             setInisiate
             disabled={isLoading}
-            label="Stock Location"
+            label="Country (Stock Location)"
             name="country"
             value={inputData.country}
             countryHandleChange={countryHandleChange}

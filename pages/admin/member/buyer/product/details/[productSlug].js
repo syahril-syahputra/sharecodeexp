@@ -116,8 +116,10 @@ export default function AddToInquiryList({session, routeParam}) {
           </>
         }
       ></PageHeader>
-
-      <div className="">
+      {/* This code should be comment include on improvement development
+          no.https://venatronics-dev.atlassian.net/jira/software/projects/EX/boards/2?assignee=712020%3A7e9286ec-874a-4a10-826a-81ccef33c4c3&selectedIssue=EX-337
+        */}
+      {/* <div className="">
         <div className="flex flex-wrap w-full bg-white">
           <div className="px-3 mb-6 md:mb-0 text-center">
             {data.img ? (
@@ -160,7 +162,7 @@ export default function AddToInquiryList({session, routeParam}) {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {isLoading ? (
         <LoadingState className="pb-10" />
@@ -168,6 +170,30 @@ export default function AddToInquiryList({session, routeParam}) {
         <div className="overflow-x-auto pb-10">
           <table className="w-50 text-sm text-left text-gray-500 bg-white">
             <tbody>
+              <div className="md:w-25 m-6">
+                <div>
+                  <NumberInput
+                    label="QTY(s)"
+                    name="qty"
+                    disabled={isLoading}
+                    value={orderQuantity}
+                    onChange={(input) => setDataHandler(input)}
+                    errorMsg={errorInfo?.qty}
+                    min="1"
+                  ></NumberInput>
+                </div>
+                <div className="mt-5">
+                  <PrimaryButton
+                    disabled={isLoading}
+                    size="sm"
+                    onClick={handleInquireNow}
+                  >
+                    <i className="mr-2 ml-1 fas fa-cart-shopping text-white"></i>
+                    Inquire Now
+                  </PrimaryButton>
+                </div>
+              </div>
+
               <tr className="text-black hover:bg-slate-100">
                 <th scope="col" className="px-6 py-3">
                   Manufacturer Part Number

@@ -736,8 +736,8 @@ export default function InquiryDetails({session, routeParam}) {
         <div className="lg:flex lg:justify-around">
           <div className="w-full lg:w-2/3 mr-4">
             <PrimaryWrapper className="p-3">
-              <div className="lg:flex lg:justify-around">
-                <div className="w-full lg:w-1/2 mr-4 border">
+              <div className="lg:flex">
+                {/* <div className="w-full lg:w-1/2 mr-4 border">
                   {isLoading && (
                     <div className="animate-pulse">
                       <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
@@ -771,8 +771,8 @@ export default function InquiryDetails({session, routeParam}) {
                       no image
                     </div>
                   )}
-                </div>
-                <div className="w-full lg:w-1/2">
+                </div> */}
+                <div className="w-full">
                   <div className="mx-2 my-1 text-xl">
                     {!!data.companies_products?.ManufacturerNumber ? (
                       data.companies_products?.ManufacturerNumber
@@ -808,7 +808,6 @@ export default function InquiryDetails({session, routeParam}) {
                     Inquired Date
                   </div>
                   <div className="mx-2 text-md">
-                    {/* set to local time */}
                     {!!data.companies_products?.created_at ? (
                       moment(data.created_at).local().format('dddd, D MMMM YYYY')
                     ) : (
@@ -821,7 +820,6 @@ export default function InquiryDetails({session, routeParam}) {
                     Order Date
                   </div>
                   <div className="mx-2 text-md">
-                    {/* set to local time */}
                     {!isLoading ? (
                       data.order_date ? (
                         moment(data.order_date).local().format('dddd, D MMMM YYYY')
