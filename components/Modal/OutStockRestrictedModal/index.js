@@ -19,7 +19,6 @@ export default function OutStockRestrictedModal({session, ...props}) {
         onClick={() => {
           props.closeModalRestrictedEditProduct()
           setIsLoading(false)
-          props.closeModalOutOfStock(false)
         }}
         body={
           <>
