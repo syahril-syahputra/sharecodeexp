@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
+import React, {useState, useEffect} from 'react'
+import {useRouter} from 'next/router'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
-import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
+import {BaseModalMedium} from '@/components/Interface/Modal/BaseModal'
 import axios from 'lib/axios'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
+import RestrictedEditProduct from '../RestrictedEditProduct'
+import OutStockRestrictedModal from '../OutStockRestrictedModal'
 
-export default function OutofStockDialog({ session, ...props }) {
+export default function OutofStockDialog({session, ...props}) {
   const router = useRouter()
   const [isLoading, setIsLoading] = props.isLoading
-
+  const [isError, setIsError] = useState(false)
+  const [errorInfo, setErrorInfo] = useState({})
   const handleOutofStock = async () => {
     await axios
       .post(
@@ -29,8 +32,10 @@ export default function OutofStockDialog({ session, ...props }) {
         props.callback()
       })
       .catch((error) => {
+        setIsError(true)
         toast.error(`${error?.data?.message}`, toastOptions)
-        props.setShowModal(false)
+        // props.setShowModal(false)
+        setErrorInfo(error.data.data)
         setIsLoading(false)
       })
   }
@@ -77,6 +82,15 @@ export default function OutofStockDialog({ session, ...props }) {
               ' Yes, Out of Stock'
             )}
           </PrimaryButton>
+          {
+            isError ?
+              <OutStockRestrictedModal
+                closeModalRestrictedEditProduct={setIsError}
+                errorInfo={errorInfo}
+              />
+              :
+              null
+          }
         </>
       }
     />

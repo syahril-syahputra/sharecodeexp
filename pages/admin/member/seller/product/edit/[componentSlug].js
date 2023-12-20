@@ -23,6 +23,9 @@ import NumberInput from '@/components/Interface/Form/NumberInput'
 import AreaInput from '@/components/Interface/Form/AreaInput'
 import SelectInput from '@/components/Interface/Form/SelectInput'
 import {Tooltip} from '@/components/Tooltip'
+import TextInputValidate from '@/components/Interface/Form/TextInputValidation'
+import ChangeEmaiVerification from '@/components/Modal/ChangeEmail'
+import RestrictedEditProduct from '@/components/Modal/RestrictedEditProduct'
 
 export default function EditComponent({session, routeParam, packaginglist}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -43,6 +46,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
     note: '',
   })
   const [errorInfo, setErrorInfo] = useState({})
+  const [isError, setIsError] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
   const setDataHandler = (input) => {
     setInputData({...inputData, [input.name]: input.value})
@@ -99,6 +103,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
         toast.success('Product has been updated.', toastOptions)
       })
       .catch((error) => {
+        setIsError(true)
         toast.error(
           'Something went wrong. Check your form correctly.',
           toastOptions
@@ -337,25 +342,27 @@ export default function EditComponent({session, routeParam, packaginglist}) {
         <div className="w-full lg:w-1/2 px-3 mb-6">
           <TextInput
             label="Manufacturer Part Number"
-            className="w-full"
-            disabled={isLoading}
+            disabled={true}
             required
             name="ManufacturerNumber"
             value={inputData.ManufacturerNumber}
             errorMsg={errorInfo?.ManufacturerNumber}
             onChange={(input) => setDataHandler(input)}
+            className={'bg-slate-400'}
+            style={{backgroundColor: '#d3d3d3'}}
           />
         </div>
         <div className="w-full lg:w-1/2 px-3 mb-6">
           <TextInput
             label="Manufacturer"
-            className="w-full"
-            disabled={isLoading}
+            disabled={true}
             required
             name="Manufacture"
             value={inputData.Manufacture}
             errorMsg={errorInfo?.Manufacture}
             onChange={(input) => setDataHandler(input)}
+            className={'bg-slate-400'}
+            style={{backgroundColor: '#d3d3d3'}}
           />
         </div>
         <div className="w-full lg:w-1/2 px-3 mb-6">
@@ -513,6 +520,16 @@ export default function EditComponent({session, routeParam, packaginglist}) {
           </WarningButton>
         </div>
       </form>
+      {
+        isError ?
+          <RestrictedEditProduct
+            closeModalRestrictedEditProduct={setIsError}
+            session={session}
+            errorInfo={errorInfo}
+          />
+          :
+          null
+      }
     </PrimaryWrapper>
   )
 }

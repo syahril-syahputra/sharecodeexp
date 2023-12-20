@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import { getSession } from 'next-auth/react'
+import React, {useState, useEffect} from 'react'
+import {getSession} from 'next-auth/react'
 import axios from '@/lib/axios'
 import ComponentList from '@/components/Table/Superadmin/Components/ComponentList'
 import MiniSearchBar from '@/components/Shared/MiniSearchBar'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import Admin from 'layouts/Admin.js'
 
-export default function RejectedComponent({ session }) {
+export default function RejectedComponent({session}) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
@@ -20,9 +20,10 @@ export default function RejectedComponent({ session }) {
   const searchData = async (searchParam = '', page = 1) => {
     setSearch(searchParam)
     setIsLoading(true)
+
     await axios
       .get(
-        `/admin/product?page=${page}&status=rejected&search=${searchParam}`,
+        `/admin/product/list?page=${page}&status=rejected&search=${searchParam}`,
         {
           headers: {
             Authorization: `Bearer ${session.accessToken}`,

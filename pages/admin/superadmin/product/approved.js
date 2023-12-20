@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import { getSession } from 'next-auth/react'
-import { useRouter } from 'next/router'
+import React, {useState, useEffect} from 'react'
+import {getSession} from 'next-auth/react'
+import {useRouter} from 'next/router'
 import axios from '@/lib/axios'
 import ComponentList from '@/components/Table/Superadmin/Components/ComponentList'
 import MiniSearchBar from '@/components/Shared/MiniSearchBar'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import Admin from 'layouts/Admin.js'
 
-export default function ApprovedProduct({ session }) {
+export default function ApprovedProduct({session}) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
@@ -22,9 +22,9 @@ export default function ApprovedProduct({ session }) {
   const searchData = async (searchParam = '', page = 1) => {
     setSearch(searchParam)
     setIsLoading(true)
-    const request = await axios
+    await axios
       .get(
-        `/admin/product?page=${page}&status=approved&search=${searchParam}`,
+        `/admin/product/list?page=${page}&status=approved&search=${searchParam}`,
         {
           headers: {
             Authorization: `Bearer ${session.accessToken}`,
