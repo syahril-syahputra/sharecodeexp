@@ -5,14 +5,31 @@ import WarningButton from "@/components/Interface/Buttons/WarningButton";
 import DangerButton from "@/components/Interface/Buttons/DangerButton";
 import PrimaryWrapper from "@/components/Interface/Wrapper/PrimaryWrapper";
 import PrimaryButton from "@/components/Interface/Buttons/PrimaryButton";
+import PageHeader from "@/components/Interface/Page/PageHeader";
+import LightButton from "@/components/Interface/Buttons/LightButton";
+import NoData from "@/components/Interface/Table/NoData";
 
 export default function AdditionalDocument(props){
     const publicDir = process.env.NEXT_PUBLIC_DIR
     return (
         <PrimaryWrapper>
-            <HeaderTable
-                title={props.title}
-            />
+            <PageHeader
+                    leftTop={
+                        <h3 className="font-semibold text-lg text-blueGray-700">
+                            {props.title}
+                        </h3>
+                    }
+                    rightTop={
+                        <Link href={`/admin/member/company/my-company`}>
+                            <LightButton 
+                                size="sm" 
+                                className="mr-2">
+                                <i className="mr-2 ml-1 fas fa-arrow-left"></i>
+                                Back
+                            </LightButton>
+                        </Link>
+                    }
+                ></PageHeader>
             <BaseTable   
                 isBusy={props.isLoading}              
                 header={
@@ -49,6 +66,9 @@ export default function AdditionalDocument(props){
                                 </tr>
                             )
                         })}
+                        {!props.isLoading && props.items.length === 0 && (
+                            <NoData colSpan={2} />
+                        )}
                     </>
                 }                    
             />
