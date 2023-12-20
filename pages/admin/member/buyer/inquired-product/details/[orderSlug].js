@@ -38,9 +38,7 @@ export default function InquiryDetails({session, routeParam}) {
   const [data, setData] = useState([])
   const [isOrderValid, setIsOrderValid] = useState(true)
   const [acceptQuotationModal, setAcceptQuotationModal] = useState(false)
-  const [rejectionReason, setRejectionReasons] = useState([
-    {value: 'other', label: 'Other'},
-  ])
+  const [rejectionReason, setRejectionReasons] = useState([])
   const [rejectQuotationModal, setRejectQuotationModal] = useState(false)
   const [sendPaymentDocsModal, setSendPaymentDocsModal] = useState(false)
   const [sendUpdatedPaymentDocsModal, setSendUpdatedPaymentDocsModal] =
@@ -50,6 +48,7 @@ export default function InquiryDetails({session, routeParam}) {
   const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
   const [isLoadingOpenQUotation, setisLoadingOpenQUotation] = useState(false)
   const [courierModal, setcourierModal] = useState(false)
+  const [isQuotateionAvailable, setisQuotateionAvailable] = useState(false)
   const openQuotationHandler = async () => {
     try {
       setisLoadingOpenQUotation(true)
@@ -71,6 +70,7 @@ export default function InquiryDetails({session, routeParam}) {
       setisLoadingOpenQUotation(false)
     }
   }
+
   const loadData = async () => {
     setIsLoading(true)
     setErrorInfo({})
@@ -82,6 +82,13 @@ export default function InquiryDetails({session, routeParam}) {
       })
       .then((response) => {
         let result = response.data.data
+
+        const intervalId = setInterval(() => {
+          if (cek(result.update_verified_inquiry_expiration_date)) {
+            setisQuotateionAvailable(true)
+            clearTimeout(intervalId)
+          }
+        }, 1000)
         setData(result)
         setIsOrderValid(true)
       })
@@ -94,10 +101,19 @@ export default function InquiryDetails({session, routeParam}) {
       })
   }
 
+  const cek = (availableDate) => {
+    //update_verified_inquiry_expiration_date
+    const utcMoment = moment.utc(availableDate, 'YYYY-MM-DD HH:mm:ss')
+    const available = utcMoment.local()
+    const thisTime = moment()
+    if (available.isAfter(thisTime)) {
+      return false
+    }
+
+    return true
+  }
   useEffect(() => {
     loadRejectionReason()
-  }, [])
-  useEffect(() => {
     loadData()
   }, [])
 
@@ -199,13 +215,10 @@ export default function InquiryDetails({session, routeParam}) {
   const loadRejectionReason = async () => {
     setIsLoading(true)
     await axios
-      .get(`/reason`)
+      .get(`/rejection/quotation-rejection`)
       .then((response) => {
         let result = response.data
-        setRejectionReasons([
-          ...result.data,
-          {value: 'other', label: 'Other'},
-        ])
+        setRejectionReasons([...result.data])
       })
       .catch((error) => {
         toast.error('Failed to load rejection reason.', toastOptions)
@@ -215,14 +228,15 @@ export default function InquiryDetails({session, routeParam}) {
       })
   }
 
-  const rejectQuotationModalHandle = async (quotationRejectionReason) => {
+  const rejectQuotationModalHandle = async (reason, other_reason) => {
     setIsLoading(true)
     await axios
       .post(
         `/buyer/order/reject-quotation`,
         {
           order_slug: data.slug,
-          reason: quotationRejectionReason,
+          reason,
+          other_reason,
         },
         {
           headers: {
@@ -964,7 +978,9 @@ export default function InquiryDetails({session, routeParam}) {
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500">Unit Price (USD)</span>
                   {!isLoading ? (
-                    <span>${data.price_profite || 0}</span>
+                    <span>
+                      ${isQuotateionAvailable ? data.price_profite || 0 : 0}
+                    </span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -977,7 +993,10 @@ export default function InquiryDetails({session, routeParam}) {
                   <span className="text-gray-500">Test Lab Fee (USD)</span>
                   {!isLoading ? (
                     <span>
-                      ${data.order_price_amount?.test_fee_amount || 0}
+                      $
+                      {isQuotateionAvailable
+                        ? data.order_price_amount?.test_fee_amount || 0
+                        : 0}
                     </span>
                   ) : (
                     <div className="animate-pulse">
@@ -992,7 +1011,12 @@ export default function InquiryDetails({session, routeParam}) {
                     Total Price (USD)
                   </span>
                   {!isLoading ? (
-                    <span>${data.order_price_amount?.grand_total || 0}</span>
+                    <span>
+                      $
+                      {isQuotateionAvailable
+                        ? data.order_price_amount?.grand_total || 0
+                        : 0}
+                    </span>
                   ) : (
                     <div className="animate-pulse">
                       <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>
@@ -1020,6 +1044,16 @@ export default function InquiryDetails({session, routeParam}) {
                 occur.
               </div>
             </PrimaryWrapper>
+            {data.quotation_rejection_reason === 'Other' && (
+              <PrimaryWrapper className="p-1">
+                <div className="mx-2 my-1 text-md">
+                  Quotation Rejection Reason
+                </div>
+                <div className="text-center p-4">
+                  {data.quotation_rejection_reason_other}
+                </div>
+              </PrimaryWrapper>
+            )}
           </div>
         </div>
 
@@ -1056,7 +1090,7 @@ export default function InquiryDetails({session, routeParam}) {
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Quotation</span>
-                    {data.quotation_available == 1 ? (
+                    {data.quotation_available == 1 && isQuotateionAvailable ? (
                       <label
                         onClick={openQuotationHandler}
                         className={
@@ -1098,7 +1132,7 @@ export default function InquiryDetails({session, routeParam}) {
                 </div>
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
-                    <span>Buyer&lsquo;s Invoice</span>
+                    <span>Invoice</span>
                     {/* {data.admin_reimbursement_receipt_path ? ( */}
                     {data.buyer_invoice_available == 1 ? (
                       <Link
@@ -1115,7 +1149,7 @@ export default function InquiryDetails({session, routeParam}) {
                 </div>
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
-                    <span>Reimbursement Receipt</span>
+                    <span>Receipt of Reimbursement</span>
                     {data.admin_reimbursement_receipt_path ? (
                       <Link
                         target="_blank"
