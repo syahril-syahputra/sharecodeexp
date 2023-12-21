@@ -1921,12 +1921,6 @@ export default function OrderDetails({ session, routeParam }) {
               </div>
               {actionToTake}
             </PrimaryWrapper>
-            <UploadPaymentReceiptForSeller
-              isLoading={isLoading}
-              closeModal={() => setUploadPaymentReceiptForSellerModal(false)}
-              acceptance={handleUploadPaymentReceiptForSeller}
-              errorInfo={errorInfo}
-            />
             {data.is_good_test && !data.admin_receipt_path && (
               <PrimaryWrapper className="p-1">
                 <div className="flex flex-col items-center p-4 justify-center">
