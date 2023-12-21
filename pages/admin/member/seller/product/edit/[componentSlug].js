@@ -86,12 +86,23 @@ export default function EditComponent({session, routeParam, packaginglist}) {
       return
     }
 
+
+    console.log(inputData, '<<<inputData')
     let formData = new FormData()
     for (const key in inputData) {
       formData.append(key, inputData[key])
     }
+    const payload = {
+      moq: inputData?.moq,
+      available_quantity: inputData?.AvailableQuantity,
+      country: inputData?.country,
+      description: inputData?.Description,
+      date_code: inputData?.dateCode,
+      packaging: inputData?.packaging,
+      note: inputData?.Note,
+    }
     await axios
-      .post(`/companyproduct/${inputData.id}/update`, formData, {
+      .post(`/seller/product/${inputData.id}/update`, payload, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
         },
@@ -103,14 +114,18 @@ export default function EditComponent({session, routeParam, packaginglist}) {
         toast.success('Product has been updated.', toastOptions)
       })
       .catch((error) => {
-        setIsError(true)
         toast.error(
-          'Something went wrong. Check your form correctly.',
+          error?.data?.message,
           toastOptions
         )
-        setErrorInfo(error.data.data)
-        setErrorMessage(error.data.message)
-        setIsLoading(false)
+        if (error?.data?.data?.count) {
+          setIsError(true)
+          setErrorInfo(error.data.data)
+        } else {
+          setErrorInfo(error.data.data)
+          setErrorMessage(error.data.message)
+          setIsLoading(false)
+        }
       })
   }
 
@@ -128,52 +143,6 @@ export default function EditComponent({session, routeParam, packaginglist}) {
       setInputData({...inputData, packaging: value.value})
     }
   }
-
-  //option
-  //categories option
-  // const [categories, setCategories] = useState([{value: "loading", label: "loading", disabled: true}])
-  // const loadCategories = async () => {
-  //     const response = await axios.get(`/categories`)
-  //     .then((response) => {
-  //         setCategories(response.data.data)
-  //     }).catch((error) => {
-  //         console.log('failed to load categories')
-  //     })
-  // }
-  // useEffect(() => {
-  //     loadCategories()
-  // },[])
-
-  // const [category, setCategory] = useState(null);
-  // const handleCategoryChange = value => {
-  //     // loadSubCategory(value.value)
-  //     setSubCategory(null);
-  //     setInputData({...inputData, subcategory_id:''})
-  //     setCategory(value);
-  //     setInputData({...inputData, category:value.value})
-  // };
-
-  //option
-  //sub-categories option
-  // const [subcategories, setSubCategories] = useState([{value: 'select category first', label: 'Select Category First', disabled: true}])
-  // const loadSubCategory = async (parent) => {
-  //     setSubCategories([{value: 'select category first', label: 'Select Category First', disabled: true}])
-  // const response = await axios.get(`/${parent}/subcategories?drop=1`)
-  //   .then((response) => {
-  //     setSubCategories(response.data.data)
-  //   }).catch((error) => {
-  //     console.log('failed to load subcategories')
-  //   })
-  // }
-  // useEffect(() => {
-  //     loadSubCategory(category?.value)
-  // },[category])
-
-  // const [subcategory, setSubCategory] = useState(null);
-  // const handleSubCategoryChange = value => {
-  //     setSubCategory(value);
-  //     setInputData({...inputData, subcategory_id:value.value})
-  // };
 
   //data search
   const [showImage, setShowImage] = useState()
@@ -264,81 +233,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
 
       {errorMessage && <DangerNotification message={errorMessage} />}
 
-      {/* component image */}
-      {/* This code should be comment include on improvement development
-          no. https://venatronics-dev.atlassian.net/jira/software/projects/EX/boards/2?assignee=712020%3A7e9286ec-874a-4a10-826a-81ccef33c4c3&selectedIssue=EX-338
-        */}
-      {/* <div className="w-full">
-        {showImage ? (
-          <div className="p-16 border mx-2 my-4">
-            <img
-              className="object-contain mb-3 h-40 mx-auto"
-              alt={inputData.ManufacturerNumber}
-              src={publicDir + '/product_images/' + showImage}
-            />
-          </div>
-        ) : (
-          <div className="px-3 mb-6 md:mb-0 text-center">
-            <div className="p-24 border mx-2 my-4">
-              product image {inputData.ManufacturerNumber}
-            </div>
-          </div>
-        )}
-      </div> */}
-
-      <form className="ml-2" onSubmit={handleSubmit}>
-        {/* This code should be comment include on improvement development
-          no. https://venatronics-dev.atlassian.net/jira/software/projects/EX/boards/2?assignee=712020%3A7e9286ec-874a-4a10-826a-81ccef33c4c3&selectedIssue=EX-338
-        */}
-        {/* <div className="flex flex-wrap mb-6">
-          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-last-name"
-            >
-              Product Image (Upload if only change)
-            </label>
-            <div className="p-10 border-dashed border-2 border-indigo-200">
-              <div className="grid gap-4 lg:grid-cols-2 md:grid-cols-1">
-                <div className="text-center my-auto">
-                  <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
-                </div>
-                <div className="text-xs ">
-                  <p>JPG, JPEG, PNG file size no more than 10MB</p>
-                  <input
-                    className="mt-3"
-                    type="file"
-                    name="img"
-                    accept=".png, .jpeg, .jpg"
-                    onChange={componentImageHandler}
-                  />
-                </div>
-              </div>
-            </div>
-            {errorInfo?.img && <ErrorInput error={errorInfo?.img} />}
-          </div>
-          {image && (
-            <div className="w-full md:w-1/2 px-3">
-              <label
-                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                htmlFor="grid-last-name"
-              >
-                Result
-              </label>
-              <div className="p-2 border-dashed border-2 border-indigo-200">
-                <div className="text-center grid gap-4 lg:grid-cols-1 md:grid-cols-1">
-                  <Image
-                    src={image}
-                    className="mx-auto"
-                    alt="product"
-                    height={180}
-                    width={180}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-        </div> */}
+      <form className="ml-2" onSubmit={handleSubmit} noValidate>
         <div className="w-full lg:w-1/2 px-3 mb-6">
           <TextInput
             label="Manufacturer Part Number"
@@ -410,7 +305,7 @@ export default function EditComponent({session, routeParam, packaginglist}) {
             required
             rows={4}
             value={inputData.Description}
-            errorMsg={errorInfo.Description}
+            errorMsg={errorInfo.description}
             onChange={(input) => setDataHandler(input)}
           />
         </div>
@@ -463,28 +358,6 @@ export default function EditComponent({session, routeParam, packaginglist}) {
             </div>
           )}
         </div>
-        {/* <div className="w-full lg:w-1/2 px-3 mb-6">
-                    <SelectInput
-                        disabled={isLoading}                              
-                        label="Category"
-                        name="category"
-                        value={category}
-                        options={categories}
-                        errorMsg={errorInfo?.category}
-                        onChange={handleCategoryChange}
-                    />
-                </div>
-                <div className="w-full lg:w-1/2 px-3 mb-16">
-                    <SelectInput
-                        disabled={isLoading}                              
-                        label="Sub-Category"
-                        name="subcategory_id"
-                        value={subcategory}
-                        options={subcategories}
-                        errorMsg={errorInfo?.subcategory_id}
-                        onChange={handleSubCategoryChange}
-                    />                    
-                </div>  */}
         <div className="w-full lg:w-1/2 px-3 mb-6">
           <TextInput
             label="Note"
@@ -524,8 +397,8 @@ export default function EditComponent({session, routeParam, packaginglist}) {
         isError ?
           <RestrictedEditProduct
             closeModalRestrictedEditProduct={setIsError}
-            session={session}
             errorInfo={errorInfo}
+            showLoading={[isLoading, setIsLoading]}
           />
           :
           null

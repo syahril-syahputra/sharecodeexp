@@ -9,6 +9,7 @@ export default function RestrictedEditProduct({session, ...props}) {
   const [errorInfo, setErrorInfo] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoadingSave, setIsLoadingSave] = props.showLoading
 
   return (
     <>
@@ -17,15 +18,15 @@ export default function RestrictedEditProduct({session, ...props}) {
         onClick={() => {
           props.closeModalRestrictedEditProduct()
           setIsLoading(false)
+          setIsLoadingSave(false)
         }}
         body={
           <>
-            <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-              {`You have ${props.errorInfo?.length} active${props.errorInfo?.length > 0 ? '' : '(s)'} order`}
-            </p>
             <Accordion>
               <Accordion.Panel isOpen={isOpen}>
-                <Accordion.Title>{`List of active${props.errorInfo.length > 0 ? '' : '(s)'} order`}</Accordion.Title>
+                <Accordion.Title>
+                  {`${props.errorInfo.notification ?? ''}`}
+                </Accordion.Title>
                 <Accordion.Content>
                   <div className="flex justify-between flex-wrap my-2">
                     <div>
@@ -40,12 +41,12 @@ export default function RestrictedEditProduct({session, ...props}) {
                     </div>
                   </div>
                   {
-                    props?.errorInfo?.map((value, index) => {
+                    props?.errorInfo?.orders?.map((value, index) => {
                       return (
-                        <div key={index + '-' + `${value.slug}`} className="flex justify-between flex-wrap">
+                        <div key={index + '-' + `${value.name}`} className="flex justify-between flex-wrap">
                           <div>
                             <p className="mb-2 text-gray-500 dark:text-gray-400">
-                              {value.slug}
+                              {value.name}
                             </p>
                           </div>
                           <div>
@@ -74,6 +75,7 @@ export default function RestrictedEditProduct({session, ...props}) {
               onClick={() => {
                 props.closeModalRestrictedEditProduct()
                 setIsLoading(false)
+                setIsLoadingSave(false)
               }}
             >
               Close
