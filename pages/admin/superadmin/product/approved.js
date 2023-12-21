@@ -10,6 +10,7 @@ import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import SelectInput from '@/components/Interface/Form/SelectInput'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import InfoButton from '@/components/Interface/Buttons/InfoButton'
+import TextInput from '@/components/Interface/Form/TextInput'
 
 export default function ApprovedProduct({session, routeParam}) {
   const router = useRouter()
@@ -17,6 +18,8 @@ export default function ApprovedProduct({session, routeParam}) {
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
   const [companyOptions, setCompanyOption] = useState([])
+  const [manufacturerPartNumber, setManufacturerPartNumber] = useState('')
+  const [stateCountry, setStateCountry] = useState('')
   const [companyStatus, setCompanyStatus] = useState({
     label: 'Select Company',
     value: '',
@@ -27,13 +30,14 @@ export default function ApprovedProduct({session, routeParam}) {
     lastPage: 0,
   })
   const [search, setSearch] = useState('')
+  // }/admin/product/list?status=approved&country=Finland&company_id=3&manufacturer_part_number=21&paginate&sort_by&sort_type
   let companyFromRoute = routeParam
-  const searchData = async (searchParam = '', page = 1, companyParam = companyFromRoute ? companyFromRoute : '') => {
-    setSearch(searchParam)
+  const searchData = async (page = 1, companyParam = companyFromRoute ? companyFromRoute : '', manufacturerPartNumberParam = '', countryParam = '',
+  ) => {
     setIsLoading(true)
     await axios
       .get(
-        `/admin/product/list?page=${page}&status=approved&company_id=${companyParam}&search=${searchParam}`,
+        `/admin/product/list?page=${page}&status=approved&company_id=${companyParam}&country=${countryParam}&manufacturer_part_number=${manufacturerPartNumberParam}`,
         {
           headers: {
             Authorization: `Bearer ${session.accessToken}`,
@@ -62,7 +66,7 @@ export default function ApprovedProduct({session, routeParam}) {
       })
   }
   const setPage = (pageNumber) => {
-    searchData(search, pageNumber)
+    searchData(pageNumber)
   }
 
   const loadCompanies = async () => {
@@ -91,13 +95,15 @@ export default function ApprovedProduct({session, routeParam}) {
   }, [])
 
   const handleSearch = () => {
-    searchData(search, 1, companyStatus?.value)
+    searchData(1, companyStatus?.value, manufacturerPartNumber, stateCountry)
   }
   const handleResetSearchFilter = () => {
     setCompanyStatus({
       label: 'Select Company',
       value: '',
     })
+    setManufacturerPartNumber('')
+    setStateCountry('')
     searchData()
   }
 
@@ -108,6 +114,20 @@ export default function ApprovedProduct({session, routeParam}) {
         <PrimaryWrapper className={'mt-5 p-5'}>
           <h2 className="text-xl text-center">Search Approved Product</h2>
           <div className='grid grid-cols-2 gap-3 mt-4'>
+            <div className="text-center">
+              <TextInput
+                value={manufacturerPartNumber}
+                onChange={(target) => setManufacturerPartNumber(target.value)}
+                placeholder="Manufacturer Part Number"
+              />
+            </div>
+            <div className="text-center">
+              <TextInput
+                value={stateCountry}
+                onChange={(target) => setStateCountry(target.value)}
+                placeholder="Stock Location"
+              />
+            </div>
             <div className='text-center'>
               <SelectInput
                 value={companyStatus}
@@ -116,6 +136,7 @@ export default function ApprovedProduct({session, routeParam}) {
               />
             </div>
           </div>
+
           <div className='mt-10 text-center'>
             <PrimaryButton onClick={handleSearch} className="w-1/2 mr-2">
               Search

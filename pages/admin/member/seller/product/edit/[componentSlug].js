@@ -1,12 +1,10 @@
 import React, {useState, useEffect} from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import axios from 'lib/axios'
 import {getSession} from 'next-auth/react'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
-import ErrorInput from '@/components/Shared/ErrorInput'
 
 // components
 import CountrySelectorInitial from '@/components/Shared/CountrySelectorInitial'
@@ -23,8 +21,6 @@ import NumberInput from '@/components/Interface/Form/NumberInput'
 import AreaInput from '@/components/Interface/Form/AreaInput'
 import SelectInput from '@/components/Interface/Form/SelectInput'
 import {Tooltip} from '@/components/Tooltip'
-import TextInputValidate from '@/components/Interface/Form/TextInputValidation'
-import ChangeEmaiVerification from '@/components/Modal/ChangeEmail'
 import RestrictedEditProduct from '@/components/Modal/RestrictedEditProduct'
 
 export default function EditComponent({session, routeParam, packaginglist}) {
