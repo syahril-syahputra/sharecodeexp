@@ -5,8 +5,6 @@ import {Accordion} from 'flowbite-react';
 import Link from 'next/link'
 
 export default function OutStockRestrictedModal({session, ...props}) {
-
-  console.log(props, '<<props')
   const [stateEmail, setStateEmail] = useState()
   const [errorInfo, setErrorInfo] = useState({})
   const [isLoading, setIsLoading] = useState(false)
@@ -19,12 +17,11 @@ export default function OutStockRestrictedModal({session, ...props}) {
         onClick={() => {
           props.closeModalRestrictedEditProduct()
           setIsLoading(false)
+          props.showModalProps(false)
         }}
         body={
           <>
-            <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-              {/* {`You have ${props.errorInfo?.length} active${props.errorInfo?.length > 0 ? '' : '(s)'} order`} */}
-            </p>
+
             <Accordion>
               <Accordion.Panel isOpen={isOpen}>
                 <Accordion.Title>
@@ -78,7 +75,7 @@ export default function OutStockRestrictedModal({session, ...props}) {
               onClick={() => {
                 props.closeModalRestrictedEditProduct()
                 setIsLoading(false)
-                // props.closeModalOutOfStock()
+                props.showModalProps(false)
               }}
             >
               Close

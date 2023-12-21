@@ -6,24 +6,34 @@ import MiniSearchBar from '@/components/Shared/MiniSearchBar'
 import {toast} from 'react-toastify'
 import {toastOptions} from '@/lib/toastOptions'
 import Admin from 'layouts/Admin.js'
-
-export default function RejectedComponent({session}) {
+import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
+import SelectInput from '@/components/Interface/Form/SelectInput'
+import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import InfoButton from '@/components/Interface/Buttons/InfoButton'
+export default function RejectedComponent({session, routeParam}) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
+  const [companyOptions, setCompanyOption] = useState([])
+  const [companyStatus, setCompanyStatus] = useState({
+    label: 'Select Company',
+    value: '',
+  })
   const [metaData, setMetaData] = useState({
     total: 0,
     perPage: 0,
     lastPage: 0,
   })
   const [search, setSearch] = useState('')
-  const searchData = async (searchParam = '', page = 1) => {
+  let companyFromRoute = routeParam
+
+  const searchData = async (searchParam = '', page = 1, companyParam = companyFromRoute ? companyFromRoute : '') => {
     setSearch(searchParam)
     setIsLoading(true)
 
     await axios
       .get(
-        `/admin/product/list?page=${page}&status=rejected&search=${searchParam}`,
+        `/admin/product/list?page=${page}&status=rejected&company_id=${companyParam}&search=${searchParam}`,
         {
           headers: {
             Authorization: `Bearer ${session.accessToken}`,
@@ -56,19 +66,68 @@ export default function RejectedComponent({session}) {
   const setPage = (pageNumber) => {
     searchData(search, pageNumber)
   }
+
+
+  const loadCompanies = async () => {
+    await axios
+      .get(`/companies`)
+      .then((response) => {
+        let res = response.data.data
+        setCompanyOption(res)
+        res.filter((option) => {
+          if (option.value === companyFromRoute) {
+            setCompanyStatus({
+              label: option.label,
+              value: option.value,
+            })
+          }
+        })
+      })
+      .catch(() => {
+        toast.error('Cannot load company', toastOptions)
+      })
+  }
+
   useEffect(() => {
     searchData()
+    loadCompanies()
   }, [])
 
-  const handleSearch = (searchResult) => {
-    searchData(searchResult)
+
+  const handleSearch = () => {
+    searchData(search, 1, companyStatus?.value)
+  }
+  const handleResetSearchFilter = () => {
+    setCompanyStatus({
+      label: 'Select Company',
+      value: '',
+    })
+    searchData()
   }
 
   return (
     <div className="mb-10">
-      <div className="mb-5 w-full lg:w-1/2">
-        <MiniSearchBar searchItem={handleSearch} />
-      </div>
+      <h1 className='font-semibold text-2xl'>Product</h1>
+      <PrimaryWrapper className={'mt-5 p-5'}>
+        <h2 className="text-xl text-center">Search Rejected Product</h2>
+        <div className='grid grid-cols-2 gap-3 mt-4'>
+          <div className='text-center'>
+            <SelectInput
+              value={companyStatus}
+              options={companyOptions}
+              onChange={(input) => setCompanyStatus(input)}
+            />
+          </div>
+        </div>
+        <div className='mt-10 text-center'>
+          <PrimaryButton onClick={handleSearch} className="w-1/2 mr-2">
+            Search
+          </PrimaryButton>
+          <InfoButton onClick={handleResetSearchFilter} className="w-1/6">
+            Reset
+          </InfoButton>
+        </div>
+      </PrimaryWrapper>
       <ComponentList
         title="Rejected Products"
         setPage={setPage}
@@ -85,10 +144,11 @@ RejectedComponent.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
-
+  const companyStatus = context?.query?.company ? context?.query?.company : null
   return {
     props: {
       session,
+      routeParam: companyStatus
     },
   }
 }
