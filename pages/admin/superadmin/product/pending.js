@@ -35,7 +35,7 @@ export default function PendingComponent({session, routeParam}) {
     setIsLoading(true)
 
     await axios
-      .get(`/admin/product/list?page=${page}&status=pending&company_id=${companyParam}&country=${countryParam}&manufacturer_part_number=${manufacturerPartNumberParam}`, {
+      .get(`/admin/product/list?page=${page}&status=pending&company_id=${companyParam}&stock_country=${countryParam}&manufacturer_part_number=${manufacturerPartNumberParam}`, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
         },
@@ -85,7 +85,7 @@ export default function PendingComponent({session, routeParam}) {
   }
 
   const setPage = (pageNumber) => {
-    searchData(pageNumber)
+    searchData(pageNumber, companyStatus?.value, manufacturerPartNumber, stateCountry)
   }
   useEffect(() => {
     searchData()

@@ -30,14 +30,13 @@ export default function ApprovedProduct({session, routeParam}) {
     lastPage: 0,
   })
   const [search, setSearch] = useState('')
-  // }/admin/product/list?status=approved&country=Finland&company_id=3&manufacturer_part_number=21&paginate&sort_by&sort_type
   let companyFromRoute = routeParam
   const searchData = async (page = 1, companyParam = companyFromRoute ? companyFromRoute : '', manufacturerPartNumberParam = '', countryParam = '',
   ) => {
     setIsLoading(true)
     await axios
       .get(
-        `/admin/product/list?page=${page}&status=approved&company_id=${companyParam}&country=${countryParam}&manufacturer_part_number=${manufacturerPartNumberParam}`,
+        `/admin/product/list?page=${page}&status=approved&company_id=${companyParam}&stock_country=${countryParam}&manufacturer_part_number=${manufacturerPartNumberParam}`,
         {
           headers: {
             Authorization: `Bearer ${session.accessToken}`,
@@ -66,7 +65,7 @@ export default function ApprovedProduct({session, routeParam}) {
       })
   }
   const setPage = (pageNumber) => {
-    searchData(pageNumber)
+    searchData(pageNumber, companyStatus?.value, manufacturerPartNumber, stateCountry)
   }
 
   const loadCompanies = async () => {

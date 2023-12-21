@@ -36,7 +36,7 @@ export default function RejectedComponent({session, routeParam}) {
 
     await axios
       .get(
-        `/admin/product/list?page=${page}&status=rejected&company_id=${companyParam}&country=${countryParam}&manufacturer_part_number=${manufacturerPartNumberParam}`,
+        `/admin/product/list?page=${page}&status=rejected&company_id=${companyParam}&stock_country=${countryParam}&manufacturer_part_number=${manufacturerPartNumberParam}`,
         {
           headers: {
             Authorization: `Bearer ${session.accessToken}`,
@@ -67,7 +67,7 @@ export default function RejectedComponent({session, routeParam}) {
       })
   }
   const setPage = (pageNumber) => {
-    searchData(search, pageNumber)
+    searchData(pageNumber, companyStatus?.value, manufacturerPartNumber, stateCountry)
   }
 
 
