@@ -19,17 +19,14 @@ import NumberInput from '@/components/Interface/Form/NumberInput'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import LoadingState from '@/components/Interface/Loader/LoadingState'
 import LightButton from '@/components/Interface/Buttons/LightButton'
-import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
 
 export default function AddToInquiryList({session, routeParam}) {
-  const publicDir = process.env.NEXT_PUBLIC_DIR
   const {updateInquiryList} = useContext(GlobalContext)
-  //data search
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({})
   const getData = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .get(`/product/${routeParam.productSlug}`, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -41,7 +38,7 @@ export default function AddToInquiryList({session, routeParam}) {
         setOrderQuantity(result.moq)
       })
       .catch((error) => {
-        // console.log(error.response)
+        throw error
       })
       .finally(() => {
         setIsLoading(false)
@@ -61,7 +58,7 @@ export default function AddToInquiryList({session, routeParam}) {
     e.preventDefault()
     setIsLoading(true)
     setErrorInfo({})
-    const response = await axios
+    await axios
       .post(
         `/buyer/order/create-inquiry`,
         {
@@ -80,11 +77,12 @@ export default function AddToInquiryList({session, routeParam}) {
         toast.success(response.data.message, toastOptions)
       })
       .catch((error) => {
-        toast.error(
-          `Something went wrong. Cannot inquire the product. ${error.data.message}`,
-          toastOptions
-        )
-        setErrorInfo(error.data.data)
+        if (error.data?.data?.qty) {
+          toast.error(error.data.data?.qty, toastOptions)
+          setErrorInfo(error.data.data)
+        } else {
+          toast.error(error.data?.message, toastOptions)
+        }
         setIsLoading(false)
       })
   }
@@ -180,7 +178,7 @@ export default function AddToInquiryList({session, routeParam}) {
                     onChange={(input) => setDataHandler(input)}
                     errorMsg={errorInfo?.qty}
                     min="1"
-                  ></NumberInput>
+                  />
                 </div>
                 <div className="mt-5">
                   <PrimaryButton

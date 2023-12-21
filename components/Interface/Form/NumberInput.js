@@ -13,7 +13,7 @@ export default function NumberInput(props) {
         required={props.required || false}
         disabled={props.disabled || false}
         value={props.value}
-        onChange={({ target }) => props.onChange(target)}
+        onChange={({target}) => props.onChange(target)}
         placeholder={props.placeholder || ''}
         autoComplete="off"
         type="number"
@@ -26,7 +26,14 @@ export default function NumberInput(props) {
           `${props.className} shadow-sm placeholder-slate-300 appearance-none w-full bg-white text-gray-700 border py-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`
         )}
       />
-      {props.errorMsg && <ErrorInput errors={props.errorMsg} />}
+      {
+        typeof props.errorMsg === 'string' ?
+          (props.errorMsg && <span className="mt-1 text-md italic block text-red-500">
+            {props.errorMsg}
+          </span>)
+          :
+          (props.errorMsg && <ErrorInput errors={props.errorMsg} />)
+      }
     </>
   )
 }

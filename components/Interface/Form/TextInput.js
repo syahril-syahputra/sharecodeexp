@@ -18,15 +18,19 @@ export default function TextInput(props) {
         required={props.required || false}
         disabled={props.disabled || false}
         value={props.value}
-        onChange={({ target }) => props.onChange(target)}
+        onChange={({target}) => props.onChange(target)}
         onKeyDown={props.onKeyDown}
         placeholder={props.placeholder || ''}
         autoComplete="off"
         type={props.type || 'text'}
+        style={props.style}
         className={classNames(
           props.errorMsg ? 'border-red-500' : 'border-blue-200',
+
           props.setIcon && 'pl-10',
-          `${props.className} shadow-sm placeholder-slate-300 appearance-none w-full bg-white text-gray-700 border py-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`
+          `${props.className
+          } shadow-sm placeholder-slate-500 appearance-none w-full ${props.disabled ? 'bg-slate-800' : 'bg-white'
+          } text-gray-700 border py-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`
         )}
       />
 

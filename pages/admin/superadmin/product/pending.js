@@ -1,29 +1,41 @@
-import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
-import { getSession } from 'next-auth/react'
+import React, {useState, useEffect} from 'react'
+import {useRouter} from 'next/router'
+import {getSession} from 'next-auth/react'
 import axios from '@/lib/axios'
 import ComponentList from '@/components/Table/Superadmin/Components/ComponentList'
-import MiniSearchBar from '@/components/Shared/MiniSearchBar'
 import Admin from 'layouts/Admin.js'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
+import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
+import SelectInput from '@/components/Interface/Form/SelectInput'
+import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import InfoButton from '@/components/Interface/Buttons/InfoButton'
+import TextInput from '@/components/Interface/Form/TextInput'
 
-export default function PendingComponent({ session }) {
+export default function PendingComponent({session, routeParam}) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
+  const [companyOptions, setCompanyOption] = useState([])
+  const [manufacturerPartNumber, setManufacturerPartNumber] = useState('')
+  const [stateCountry, setStateCountry] = useState('')
+  const [companyStatus, setCompanyStatus] = useState({
+    label: 'Select Company',
+    value: '',
+  })
   const [metaData, setMetaData] = useState({
     total: 0,
     perPage: 0,
     lastPage: 0,
   })
   const [search, setSearch] = useState('')
-  const searchData = async (searchParam = '', page = 1) => {
-    setSearch(searchParam)
+  let companyFromRoute = routeParam
+  const searchData = async (page = 1, companyParam = companyFromRoute ? companyFromRoute : '', manufacturerPartNumberParam = '', countryParam = '',) => {
     setIsLoading(true)
+
     await axios
-      .get(`/admin/product?page=${page}&status=pending&search=${searchParam}`, {
+      .get(`/admin/product/list?page=${page}&status=pending&company_id=${companyParam}&stock_country=${countryParam}&manufacturer_part_number=${manufacturerPartNumberParam}`, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
         },
@@ -42,7 +54,6 @@ export default function PendingComponent({ session }) {
         })
       })
       .catch((error) => {
-        // console.log(error.response)
         toast.error(
           'Something went wrong. Cannot load component.',
           toastOptions
@@ -52,22 +63,86 @@ export default function PendingComponent({ session }) {
         setIsLoading(false)
       })
   }
+
+  const loadCompanies = async () => {
+    await axios
+      .get(`/companies`)
+      .then((response) => {
+        let res = response.data.data
+        setCompanyOption(res)
+        res.filter((option) => {
+          if (option.value === companyFromRoute) {
+            setCompanyStatus({
+              label: option.label,
+              value: option.value,
+            })
+          }
+        })
+      })
+      .catch(() => {
+        toast.error('Cannot load company', toastOptions)
+      })
+  }
+
   const setPage = (pageNumber) => {
-    searchData(search, pageNumber)
+    searchData(pageNumber, companyStatus?.value, manufacturerPartNumber, stateCountry)
   }
   useEffect(() => {
     searchData()
+    loadCompanies()
   }, [])
 
-  const handleSearch = (searchResult) => {
-    searchData(searchResult)
+  const handleSearch = () => {
+    searchData(1, companyStatus?.value, manufacturerPartNumber, stateCountry)
+  }
+
+  const handleResetSearchFilter = () => {
+    setCompanyStatus({
+      label: 'Select Company',
+      value: '',
+    })
+    setManufacturerPartNumber('')
+    setStateCountry('')
+    searchData()
   }
 
   return (
     <div className="mb-10">
-      <div className="mb-5 w-full lg:w-1/2">
-        <MiniSearchBar searchItem={handleSearch} />
-      </div>
+      <h1 className='font-semibold text-2xl'>Product</h1>
+      <PrimaryWrapper className={'mt-5 p-5'}>
+        <h2 className="text-xl text-center">Search Pending Product</h2>
+        <div className='grid grid-cols-2 gap-3 mt-4'>
+          <div className="text-center">
+            <TextInput
+              value={manufacturerPartNumber}
+              onChange={(target) => setManufacturerPartNumber(target.value)}
+              placeholder="Manufacturer Part Number"
+            />
+          </div>
+          <div className="text-center">
+            <TextInput
+              value={stateCountry}
+              onChange={(target) => setStateCountry(target.value)}
+              placeholder="Stock Location"
+            />
+          </div>
+          <div className='text-center'>
+            <SelectInput
+              value={companyStatus}
+              options={companyOptions}
+              onChange={(input) => setCompanyStatus(input)}
+            />
+          </div>
+        </div>
+        <div className='mt-10 text-center'>
+          <PrimaryButton onClick={handleSearch} className="w-1/2 mr-2">
+            Search
+          </PrimaryButton>
+          <InfoButton onClick={handleResetSearchFilter} className="w-1/6">
+            Reset
+          </InfoButton>
+        </div>
+      </PrimaryWrapper>
       <ComponentList
         title="Pending Products"
         setPage={setPage}
@@ -84,10 +159,12 @@ PendingComponent.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+  const companyStatus = context?.query?.company ? context?.query?.company : null
 
   return {
     props: {
       session,
+      routeParam: companyStatus
     },
   }
 }

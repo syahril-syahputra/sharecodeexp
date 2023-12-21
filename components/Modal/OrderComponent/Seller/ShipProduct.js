@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import {
   BaseModalLarge,
   BaseModalMedium,
@@ -7,9 +7,9 @@ import TextInput from '@/components/Interface/Form/TextInput'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
-import { useSession } from 'next-auth/react'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
+import {useSession} from 'next-auth/react'
 import axios from '@/lib/axios'
 import FileInput from '@/components/Interface/Form/FileInput'
 
@@ -19,7 +19,7 @@ export default function ShipProduct(props) {
   const [eccn, seteccn] = useState('')
   const [trackingNumber, setTrackingNumber] = useState('')
   const [courier, setcourier] = useState('')
-  const { data: session } = useSession()
+  const {data: session} = useSession()
   const [isDownloadedPurchaseOrder, setisDownloadedPurchaseOrder] =
     useState(false)
   const [isDownloadedPackingList, setisDownloadedPackingList] = useState(false)
@@ -166,7 +166,7 @@ export default function ShipProduct(props) {
                   name="File Upload"
                   required
                   onChange={(target) => setFile(target)}
-                  //   errorMsg={['disabled', 'second error']}
+                //   errorMsg={['disabled', 'second error']}
                 />
               </div>
               <div className="flex space-x-4 px-4">

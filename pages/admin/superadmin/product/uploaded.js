@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import Admin from 'layouts/Admin.js'
-import { getSession } from 'next-auth/react'
+import {getSession} from 'next-auth/react'
 import axios from 'lib/axios'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import TableExcel from '@/components/Table/Superadmin/Excel/ExcelUploadedList'
 import MiniSearchBar from '@/components/Shared/MiniSearchBar'
 
 Uploaded.layout = Admin
 
-export default function Uploaded({ session }) {
+export default function Uploaded({session}) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
@@ -24,6 +24,7 @@ export default function Uploaded({ session }) {
   })
   const fetchdata = async (page = 1) => {
     setIsLoading(true)
+
     try {
       const response = await axios.get(
         `/admin/product/excel?paginate=10&page=${page}`,
@@ -63,7 +64,7 @@ export default function Uploaded({ session }) {
     setselectedData(data)
   }
 
-  const handleSearch = () => {}
+  const handleSearch = () => { }
 
   return (
     <>
