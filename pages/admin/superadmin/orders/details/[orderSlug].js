@@ -27,10 +27,7 @@ import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
 import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses'
-import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
-import WarningNotification from '@/components/Interface/Notification/WarningNotification'
-import InfoNotification from '@/components/Interface/Notification/InfoNotification'
 import TrackerNumberForSeler from '@/components/Modal/OrderComponent/Superadmin/TrackerNumberForSeler'
 import ReleasePaymentToBuyer from '@/components/Modal/OrderComponent/Superadmin/ReleasePaymentToBuyer'
 import DangerButton from '@/components/Interface/Buttons/DangerButton'
@@ -42,6 +39,7 @@ import CloseReturned from '@/components/Modal/OrderComponent/Superadmin/CloseRet
 import AcceptSellerPayment from '@/components/Modal/OrderComponent/Superadmin/AcceptSellerPayment'
 import DocumentButton from '@/components/Shared/Order/DocumentButton'
 import UploadPaymentReceiptForSeller from '@/components/Modal/OrderComponent/Superadmin/UploadPaymentReceiptForSeller'
+import NotificationBarAdmin from '@/components/Interface/Notification/NotificationBarAdmin'
 
 export default function OrderDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -249,7 +247,8 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot upload the result.',
+          error.data.message ||
+            'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -672,80 +671,6 @@ export default function OrderDetails({ session, routeParam }) {
   //cannot terminate
 
   const cannotTerminateIds = [20, 21, 15, 26, 27, 28, 29]
-
-  //notification
-  let notification = (
-    <PrimaryNotification
-      message={data.order_status?.name}
-      detail={data.order_status?.admin_notification?.message}
-    ></PrimaryNotification>
-  )
-  switch (data.order_status?.id) {
-    case 1:
-    case 2:
-    case 4:
-    case 6:
-    case 7:
-    case 8:
-    case 10:
-    case 11:
-    case 13:
-    case 14:
-    case 16:
-      notification = (
-        <PrimaryNotification
-          message={data.order_status?.name}
-          detail={data.order_status?.admin_notification?.message}
-        ></PrimaryNotification>
-      )
-      break
-    case 3:
-    case 12:
-    case 15:
-      notification = (
-        <WarningNotification
-          message={data.order_status?.name}
-          detail={data.order_status?.admin_notification?.message}
-        ></WarningNotification>
-      )
-      break
-    case 5:
-      notification = (
-        <>
-          <WarningNotification
-            message={data.order_status?.name}
-            detail={data.order_status?.admin_notification?.message}
-          ></WarningNotification>
-          <InfoNotification
-            message="Rejection Reason"
-            detail={data.reason}
-          ></InfoNotification>
-        </>
-      )
-      break
-    case 9:
-      notification = (
-        <>
-          <WarningNotification
-            message={data.order_status?.name}
-            detail={data.order_status?.admin_notification?.message}
-          ></WarningNotification>
-          <InfoNotification
-            message="Request Update"
-            detail={data.request_update_payment_reason}
-          ></InfoNotification>
-        </>
-      )
-      break
-    case 17:
-      notification = (
-        <InfoNotification
-          message={data.order_status?.name}
-          detail={data.order_status?.admin_notification?.message}
-        ></InfoNotification>
-      )
-      break
-  }
 
   //action to take using switch
   let actionToTake = (
@@ -1337,7 +1262,7 @@ export default function OrderDetails({ session, routeParam }) {
         </div>
         {/* <OrderNotification order_status={data.order_status}/> */}
         {!!data.order_status?.name ? (
-          notification
+          <NotificationBarAdmin data={data} />
         ) : (
           <div className="animate-pulse my-4">
             <div className="h-16 bg-gray-200 dark:bg-gray-400 w-full"></div>
@@ -1996,7 +1921,13 @@ export default function OrderDetails({ session, routeParam }) {
               </div>
               {actionToTake}
             </PrimaryWrapper>
-            {data.is_good_test && (
+            <UploadPaymentReceiptForSeller
+              isLoading={isLoading}
+              closeModal={() => setUploadPaymentReceiptForSellerModal(false)}
+              acceptance={handleUploadPaymentReceiptForSeller}
+              errorInfo={errorInfo}
+            />
+            {data.is_good_test && !data.admin_receipt_path && (
               <PrimaryWrapper className="p-1">
                 <div className="flex flex-col items-center p-4 justify-center">
                   {uploadPaymentReceiptForSellerModal && (

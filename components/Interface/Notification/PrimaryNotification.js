@@ -12,7 +12,6 @@ export default function PrimaryNotification(props) {
         </span>
       </span>
       <div className="text-sm font-normal w-full">
-        <span className="mb-1 text-sm font-semibold">{props.message}</span>
         {props.detail && (
           <div className="mb-1 text-sm font-normal">{props.detail}</div>
         )}

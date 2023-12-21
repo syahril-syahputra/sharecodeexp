@@ -12,10 +12,11 @@ export default function UploadPaymentReceiptForSeller(props) {
 
   return (
     <BaseModalMedium
-      title="Upload Payment Receipt For Seller"
+      title="Release Payment to Seller"
       onClick={() => props.closeModal()}
       body={
         <div>
+          <span className="pb-2 ">Upload Payment Receipt</span>
           <div className="mb-6">
             <FileInput
               description="Input PDF (.pdf) only, max 10MB"
@@ -23,7 +24,7 @@ export default function UploadPaymentReceiptForSeller(props) {
               name="File Upload"
               required
               onChange={(target) => setGoodResult(target.files[0])}
-              errorMsg={props.errorInfo?.test_result}
+              errorMsg={props.errorInfo?.admin_receipt}
             />
           </div>
         </div>

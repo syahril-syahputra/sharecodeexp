@@ -44,7 +44,7 @@ export default function CompleteOrder(props) {
               htmlFor="paymentHasReleased"
               className="ml-2 text-sm font-medium text-gray-900 italic"
             >
-              Payment Has Been Released
+              Payment has been released to the seller
             </label>
           </div>
           <div className="w-full">
@@ -69,7 +69,7 @@ export default function CompleteOrder(props) {
               htmlFor="order"
               className="ml-2 text-sm font-medium text-gray-900 italic"
             >
-              Order is arrived
+              Order has been delivered to the buyer
             </label>
           </div>
         </div>

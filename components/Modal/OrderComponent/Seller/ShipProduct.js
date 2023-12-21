@@ -152,6 +152,10 @@ export default function ShipProduct(props) {
                   errorMsg={props.errorInfo?.trackingSeller}
                 />
               </div>
+              <div className="italic  text-gray-500 text-sm px-3">
+                NOTE: Please ensure that these details are also added to your
+                invoice as they will be required at the time of customs.
+              </div>
             </div>
             <div className="flex flex-col mb-6 space-y-4 flex-1">
               <div className="w-full px-3  border-b border-gray-300 pb-4">
@@ -178,7 +182,7 @@ export default function ShipProduct(props) {
                   {isLoadingPurchaseOrder && (
                     <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                   )}
-                  Open Purchase Invoice
+                  Open Purchase Order
                 </SecondaryButton>
                 <SecondaryButton
                   onClick={openPackingList}
