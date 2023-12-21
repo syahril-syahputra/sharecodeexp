@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react'
-import {getSession} from 'next-auth/react'
+import React, { useState, useEffect } from 'react'
+import { getSession } from 'next-auth/react'
 import axios from '@/lib/axios'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -12,8 +12,8 @@ import SendPaymentDocsModal from '@/components/Modal/OrderComponent/Buyer/SendPa
 import SendUpdatedPaymentDocsModal from '@/components/Modal/OrderComponent/Buyer/SendUpdatedPaymentDocs'
 import AcceptOrderModal from '@/components/Modal/OrderComponent/Buyer/AcceptOrder'
 import DidntReceiveAnyModal from '@/components/Modal/OrderComponent/Buyer/DidntReceiveAny'
-import {toast} from 'react-toastify'
-import {toastOptions} from '@/lib/toastOptions'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
@@ -21,16 +21,14 @@ import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
 import LightButton from '@/components/Interface/Buttons/LightButton'
-import {VendorUrl} from '@/route/route-url'
-import InfoNotification from '@/components/Interface/Notification/InfoNotification'
-import WarningNotification from '@/components/Interface/Notification/WarningNotification'
-import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
-import {checkValue} from '@/utils/general'
+import { VendorUrl } from '@/route/route-url'
+import { checkValue } from '@/utils/general'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import calculateTimeDifference from '@/lib/calculateTimeDifference'
 import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
+import NotificationBarBuyer from '@/components/Interface/Notification/NotificationBarBuyer'
 
-export default function InquiryDetails({session, routeParam}) {
+export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   //data search
   const [isLoading, setIsLoading] = useState(true)
@@ -386,80 +384,6 @@ export default function InquiryDetails({session, routeParam}) {
       })
   }
 
-  //notification
-  let notification = (
-    <PrimaryNotification
-      message={data.order_status?.name}
-      detail={data.order_status?.buyer_notification?.message}
-    ></PrimaryNotification>
-  )
-  switch (data.order_status?.id) {
-    case 1:
-    case 2:
-    case 4:
-    case 6:
-    case 7:
-    case 8:
-    case 10:
-    case 11:
-    case 13:
-    case 14:
-    case 16:
-      notification = (
-        <PrimaryNotification
-          message={data.order_status?.name}
-          detail={data.order_status?.buyer_notification?.message}
-        ></PrimaryNotification>
-      )
-      break
-    case 3:
-    case 12:
-    case 15:
-      notification = (
-        <WarningNotification
-          message={data.order_status?.name}
-          detail={data.order_status?.buyer_notification?.message}
-        ></WarningNotification>
-      )
-      break
-    case 5:
-      notification = (
-        <>
-          <WarningNotification
-            message={data.order_status?.name}
-            detail={data.order_status?.buyer_notification?.message}
-          ></WarningNotification>
-          <InfoNotification
-            message="Rejection Reason"
-            detail={data.reason}
-          ></InfoNotification>
-        </>
-      )
-      break
-    case 9:
-      notification = (
-        <>
-          <WarningNotification
-            message={data.order_status?.name}
-            detail={data.order_status?.buyer_notification?.message}
-          ></WarningNotification>
-          <InfoNotification
-            message="Request Update"
-            detail={data.request_update_payment_reason}
-          ></InfoNotification>
-        </>
-      )
-      break
-    case 17:
-      notification = (
-        <InfoNotification
-          message={data.order_status?.name}
-          detail={data.order_status?.buyer_notification?.message}
-        ></InfoNotification>
-      )
-      break
-  }
-
   //action to take using switch
   let actionToTake = (
     <div className="italic flex justify-center items-center h-28">
@@ -675,7 +599,7 @@ export default function InquiryDetails({session, routeParam}) {
           </Link>
         </div>
         {!!data.order_status?.name ? (
-          notification
+          <NotificationBarBuyer data={data} />
         ) : (
           <div className="animate-pulse my-4">
             <div className="h-16 bg-gray-200 dark:bg-gray-400 w-full"></div>
@@ -823,7 +747,9 @@ export default function InquiryDetails({session, routeParam}) {
                   </div>
                   <div className="mx-2 text-md">
                     {!!data.companies_products?.created_at ? (
-                      moment(data.created_at).local().format('dddd, D MMMM YYYY')
+                      moment(data.created_at)
+                        .local()
+                        .format('dddd, D MMMM YYYY')
                     ) : (
                       <div className="animate-pulse">
                         <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
@@ -836,7 +762,9 @@ export default function InquiryDetails({session, routeParam}) {
                   <div className="mx-2 text-md">
                     {!isLoading ? (
                       data.order_date ? (
-                        moment(data.order_date).local().format('dddd, D MMMM YYYY')
+                        moment(data.order_date)
+                          .local()
+                          .format('dddd, D MMMM YYYY')
                       ) : (
                         '-'
                       )
@@ -857,8 +785,8 @@ export default function InquiryDetails({session, routeParam}) {
                     ) : (
                       <div className="animate-pulse">
                         {data?.companies_products?.moq === 0 ||
-                          parseInt(data?.companies_products?.moq) === 0 ||
-                          data?.companies_products?.moq === null ? (
+                        parseInt(data?.companies_products?.moq) === 0 ||
+                        data?.companies_products?.moq === null ? (
                           <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
                             Out of Stock
                           </div>
@@ -879,7 +807,7 @@ export default function InquiryDetails({session, routeParam}) {
                     ) : (
                       <div className="animate-pulse">
                         {data?.companies_products?.AvailableQuantity === 0 ||
-                          data?.companies_products?.AvailableQuantity === null ? (
+                        data?.companies_products?.AvailableQuantity === null ? (
                           <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
                             Out of Stock
                           </div>

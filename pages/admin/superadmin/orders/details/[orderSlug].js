@@ -1,7 +1,7 @@
 import moment from 'moment'
-import {checkValue} from '@/utils/general'
-import React, {useState, useEffect} from 'react'
-import {getSession} from 'next-auth/react'
+import { checkValue } from '@/utils/general'
+import React, { useState, useEffect } from 'react'
+import { getSession } from 'next-auth/react'
 import Image from 'next/image'
 import axios from '@/lib/axios'
 import Link from 'next/link'
@@ -10,7 +10,7 @@ import Link from 'next/link'
 import Admin from 'layouts/Admin.js'
 
 //route
-import {AdminUrl} from '@/route/route-url'
+import { AdminUrl } from '@/route/route-url'
 
 // components
 import SendProformaInvoiceModal from '@/components/Modal/OrderComponent/Superadmin/SendProformaInvoice'
@@ -20,17 +20,14 @@ import GoodResultModal from '@/components/Modal/OrderComponent/Superadmin/GoodRe
 import BadResultModal from '@/components/Modal/OrderComponent/Superadmin/BadResult'
 import TrackerNumberForBuyerModal from '@/components/Modal/OrderComponent/Superadmin/TrackerNumberForBuyer'
 import CompleteOrderModal from '@/components/Modal/OrderComponent/Superadmin/CompleteOrder'
-import {toast} from 'react-toastify'
-import {toastOptions} from '@/lib/toastOptions'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
-import {CompanyStatusesIcon} from '@/components/Shared/Company/Statuses'
-import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
+import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
-import WarningNotification from '@/components/Interface/Notification/WarningNotification'
-import InfoNotification from '@/components/Interface/Notification/InfoNotification'
 import TrackerNumberForSeler from '@/components/Modal/OrderComponent/Superadmin/TrackerNumberForSeler'
 import ReleasePaymentToBuyer from '@/components/Modal/OrderComponent/Superadmin/ReleasePaymentToBuyer'
 import DangerButton from '@/components/Interface/Buttons/DangerButton'
@@ -41,8 +38,10 @@ import CloseNotReturned from '@/components/Modal/OrderComponent/Superadmin/Close
 import CloseReturned from '@/components/Modal/OrderComponent/Superadmin/CloseReturned'
 import AcceptSellerPayment from '@/components/Modal/OrderComponent/Superadmin/AcceptSellerPayment'
 import DocumentButton from '@/components/Shared/Order/DocumentButton'
+import UploadPaymentReceiptForSeller from '@/components/Modal/OrderComponent/Superadmin/UploadPaymentReceiptForSeller'
+import NotificationBarAdmin from '@/components/Interface/Notification/NotificationBarAdmin'
 
-export default function OrderDetails({session, routeParam}) {
+export default function OrderDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   //data search
   const [isLoading, setIsLoading] = useState(true)
@@ -220,6 +219,42 @@ export default function OrderDetails({session, routeParam}) {
         setIsLoading(false)
       })
   }
+  const [
+    uploadPaymentReceiptForSellerModal,
+    setUploadPaymentReceiptForSellerModal,
+  ] = useState(false)
+  const handleUploadPaymentReceiptForSeller = async (goodResult) => {
+    setIsLoading(true)
+    setErrorInfo({})
+    let formData = new FormData()
+    formData.append('order_slug', data.slug)
+    formData.append('admin_receipt', goodResult)
+
+    const response = await axios
+      .post(
+        `/admin/orders/verification-action/upload-payment-receipt-for-seller`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setUploadPaymentReceiptForSellerModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          error.data.message ||
+            'Something went wrong. Cannot upload the result.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
 
   const [badResultModal, setBadResultModal] = useState(false)
   const handleBadResultModal = async (badResult, terminateOrder) => {
@@ -252,7 +287,35 @@ export default function OrderDetails({session, routeParam}) {
   }
 
   const [terminateOrderModal, setterminateOrderModal] = useState(false)
-  const terminateOrderHandler = (reason, terminate) => {
+  const [tokenTerminationRequested, settokenTerminationRequested] =
+    useState(false)
+  const requestTokenHandler = async () => {
+    setIsLoading(true)
+    setErrorInfo({})
+    try {
+      await axios.post(
+        `/admin/orders/verification-action/request-token`,
+        {
+          order_slug: data.slug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      settokenTerminationRequested(true)
+    } catch (error) {
+      toast.error(
+        'Something went wrong. Cannot sent the request.',
+        toastOptions
+      )
+      setErrorInfo(error.data.data)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  const terminateOrderHandler = (reason, terminate, otp) => {
     setIsLoading(true)
     setErrorInfo({})
     axios
@@ -262,6 +325,7 @@ export default function OrderDetails({session, routeParam}) {
           order_slug: data.slug,
           terminate_order: terminate,
           order_termination_reason: reason,
+          termination_token: otp,
         },
         {
           headers: {
@@ -276,7 +340,8 @@ export default function OrderDetails({session, routeParam}) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot sent the request.',
+          error.data.message ||
+            'Something went wrong. Cannot sent the request.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -352,12 +417,15 @@ export default function OrderDetails({session, routeParam}) {
   }
 
   const [completeOrderModal, setCompleteOrderModal] = useState(false)
-  const handleCompleteOrderModal = async (adminReceipt, orderArrived) => {
+  const handleCompleteOrderModal = async (
+    payment_has_released,
+    orderArrived
+  ) => {
     setIsLoading(true)
     setErrorInfo({})
     let formData = new FormData()
     formData.append('order_slug', data.slug)
-    formData.append('admin_receipt', adminReceipt)
+    formData.append('payment_has_released', payment_has_released)
     formData.append('order_arrived', orderArrived)
 
     const response = await axios
@@ -373,7 +441,8 @@ export default function OrderDetails({session, routeParam}) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot complete the order.',
+          error.data.message ||
+            'Something went wrong. Cannot complete the order.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -602,80 +671,6 @@ export default function OrderDetails({session, routeParam}) {
   //cannot terminate
 
   const cannotTerminateIds = [20, 21, 15, 26, 27, 28, 29]
-
-  //notification
-  let notification = (
-    <PrimaryNotification
-      message={data.order_status?.name}
-      detail={data.order_status?.admin_notification?.message}
-    ></PrimaryNotification>
-  )
-  switch (data.order_status?.id) {
-    case 1:
-    case 2:
-    case 4:
-    case 6:
-    case 7:
-    case 8:
-    case 10:
-    case 11:
-    case 13:
-    case 14:
-    case 16:
-      notification = (
-        <PrimaryNotification
-          message={data.order_status?.name}
-          detail={data.order_status?.admin_notification?.message}
-        ></PrimaryNotification>
-      )
-      break
-    case 3:
-    case 12:
-    case 15:
-      notification = (
-        <WarningNotification
-          message={data.order_status?.name}
-          detail={data.order_status?.admin_notification?.message}
-        ></WarningNotification>
-      )
-      break
-    case 5:
-      notification = (
-        <>
-          <WarningNotification
-            message={data.order_status?.name}
-            detail={data.order_status?.admin_notification?.message}
-          ></WarningNotification>
-          <InfoNotification
-            message="Rejection Reason"
-            detail={data.reason}
-          ></InfoNotification>
-        </>
-      )
-      break
-    case 9:
-      notification = (
-        <>
-          <WarningNotification
-            message={data.order_status?.name}
-            detail={data.order_status?.admin_notification?.message}
-          ></WarningNotification>
-          <InfoNotification
-            message="Request Update"
-            detail={data.request_update_payment_reason}
-          ></InfoNotification>
-        </>
-      )
-      break
-    case 17:
-      notification = (
-        <InfoNotification
-          message={data.order_status?.name}
-          detail={data.order_status?.admin_notification?.message}
-        ></InfoNotification>
-      )
-      break
-  }
 
   //action to take using switch
   let actionToTake = (
@@ -1267,7 +1262,7 @@ export default function OrderDetails({session, routeParam}) {
         </div>
         {/* <OrderNotification order_status={data.order_status}/> */}
         {!!data.order_status?.name ? (
-          notification
+          <NotificationBarAdmin data={data} />
         ) : (
           <div className="animate-pulse my-4">
             <div className="h-16 bg-gray-200 dark:bg-gray-400 w-full"></div>
@@ -1512,9 +1507,11 @@ export default function OrderDetails({session, routeParam}) {
                     Inquired Date
                   </div>
                   <div className="mx-2 text-md">
-                    {/* set to local time */}  
+                    {/* set to local time */}
                     {!!data.companies_products?.created_at ? (
-                      moment(data.created_at).local().format('dddd, D MMMM YYYY')
+                      moment(data.created_at)
+                        .local()
+                        .format('dddd, D MMMM YYYY')
                     ) : (
                       <div className="animate-pulse">
                         <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
@@ -1525,10 +1522,12 @@ export default function OrderDetails({session, routeParam}) {
                     Order Date
                   </div>
                   <div className="mx-2 text-md">
-                    {/* set to local time */}  
+                    {/* set to local time */}
                     {!isLoading ? (
                       data.order_date ? (
-                        moment(data.order_date).local().format('dddd, D MMMM YYYY')
+                        moment(data.order_date)
+                          .local()
+                          .format('dddd, D MMMM YYYY')
                       ) : (
                         '-'
                       )
@@ -1922,21 +1921,48 @@ export default function OrderDetails({session, routeParam}) {
               </div>
               {actionToTake}
             </PrimaryWrapper>
+            {data.is_good_test && !data.admin_receipt_path && (
+              <PrimaryWrapper className="p-1">
+                <div className="flex flex-col items-center p-4 justify-center">
+                  {uploadPaymentReceiptForSellerModal && (
+                    <UploadPaymentReceiptForSeller
+                      isLoading={isLoading}
+                      closeModal={() =>
+                        setUploadPaymentReceiptForSellerModal(false)
+                      }
+                      acceptance={handleUploadPaymentReceiptForSeller}
+                      errorInfo={errorInfo}
+                    />
+                  )}
+                  <PrimaryButton
+                    outline
+                    className="mx-1"
+                    size="sm"
+                    disabled={isLoading}
+                    onClick={() => setUploadPaymentReceiptForSellerModal(true)}
+                  >
+                    Upload Payment Receipt For Seller
+                  </PrimaryButton>
+                </div>
+              </PrimaryWrapper>
+            )}
             {!cannotTerminateIds.includes(parseInt(data.order_status_id)) && (
               <PrimaryWrapper className="p-1">
                 <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                   Terminate Order
                 </div>
-                <div className="flex flex-col space-y-4 items-center p-4 justify-center">
+                <div className="flex flex-col items-center p-4 justify-center">
                   {terminateOrderModal && (
                     <TerminateOrder
                       isLoading={isLoading}
                       closeModal={() => setterminateOrderModal(false)}
+                      tokenRequested={tokenTerminationRequested}
+                      requestToken={requestTokenHandler}
                       acceptance={terminateOrderHandler}
                       errorInfo={errorInfo}
                     />
                   )}
-                  <div className="text-center text-sm text-red-500">
+                  <div className="text-center mb-4 text-sm text-red-500">
                     Please click the button below to cancel the order
                   </div>
                   <DangerButton
@@ -1944,7 +1970,10 @@ export default function OrderDetails({session, routeParam}) {
                     className="mx-1"
                     size="sm"
                     disabled={isLoading}
-                    onClick={() => setterminateOrderModal(true)}
+                    onClick={() => {
+                      settokenTerminationRequested(false)
+                      setterminateOrderModal(true)
+                    }}
                   >
                     Terminate Order
                   </DangerButton>
