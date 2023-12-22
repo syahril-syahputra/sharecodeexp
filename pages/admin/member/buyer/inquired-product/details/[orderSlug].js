@@ -29,6 +29,7 @@ import {checkValue} from '@/utils/general'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import calculateTimeDifference from '@/lib/calculateTimeDifference'
 import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
+import ModalPdf from '@/components/Modal/ModalPdf'
 
 export default function InquiryDetails({session, routeParam}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -43,6 +44,11 @@ export default function InquiryDetails({session, routeParam}) {
   const [sendPaymentDocsModal, setSendPaymentDocsModal] = useState(false)
   const [sendUpdatedPaymentDocsModal, setSendUpdatedPaymentDocsModal] =
     useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [isLoadingModal, setIsLoadingModal] = useState(false)
+  const [slugState, setSlugState] = useState('')
+  const [buyerReceiptPath, setBuyerReceiptPath] = useState('')
+  const [buyerReceiptData, setBuyerReceiptData] = useState([])
 
   const [acceptOrderModal, setAcceptOrderModal] = useState(false)
   const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
@@ -90,6 +96,7 @@ export default function InquiryDetails({session, routeParam}) {
           }
         }, 1000)
         setData(result)
+        setBuyerReceiptData(result?.buyer_payment_receipt)
         setIsOrderValid(true)
       })
       .catch((error) => {
@@ -1070,7 +1077,21 @@ export default function InquiryDetails({session, routeParam}) {
               <div className="mx-2 mt-1 text-sm border-b mb-2">
                 <div className="flex flex-wrap justify-between">
                   <span>Payment Receipt</span>
-                  {data.buyer_receipt_path ? (
+
+                  {
+                    buyerReceiptData?.length > 0 ?
+                      <span className="underline text-blue-500" onClick={() => {
+                        setShowModal(true)
+                        setSlugState(data?.slug)
+                        setBuyerReceiptPath(data?.buyer_receipt_path)
+                      }}>view</span>
+                      :
+                      <span className="underline text-gray-500">view</span>
+
+
+                  }
+
+                  {/* {data.buyer_receipt_path ? (
                     <Link
                       target="_blank"
                       href={publicDir + data.buyer_receipt_path}
@@ -1080,7 +1101,7 @@ export default function InquiryDetails({session, routeParam}) {
                     </Link>
                   ) : (
                     <span className="underline text-gray-500">view</span>
-                  )}
+                  )} */}
                 </div>
               </div>
               <div className="mb-5">
@@ -1203,6 +1224,19 @@ export default function InquiryDetails({session, routeParam}) {
           </div>
         </div>
       </div>
+      {
+        showModal ?
+          <ModalPdf
+            setShowModal={[showModal, setShowModal]}
+            isLoading={[isLoadingModal, setIsLoadingModal]}
+            session={session}
+            item={slugState}
+            buyerReceiptPath={buyerReceiptPath}
+            buyerSellerReceiptData={buyerReceiptData}
+          />
+          :
+          null
+      }
     </>
   )
 }

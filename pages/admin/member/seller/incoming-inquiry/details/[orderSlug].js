@@ -6,10 +6,8 @@ import Image from 'next/image'
 import moment from 'moment'
 import {VendorUrl} from '@/route/route-url'
 import {checkValue} from '@/utils/general'
-
 // layout for page
 import Admin from 'layouts/Admin.js'
-
 // components
 import {toast} from 'react-toastify'
 import {toastOptions} from '@/lib/toastOptions'
@@ -18,7 +16,6 @@ import RejectInquiryModal from '@/components/Modal/OrderComponent/Seller/RejectI
 import UpdateVerifiedInquiryModal from '@/components/Modal/OrderComponent/Seller/UpdateVerifiedInquiry'
 import ShipProductModal from '@/components/Modal/OrderComponent/Seller/ShipProduct'
 import UploadInvoiceModal from '@/components/Modal/OrderComponent/Seller/UploadInvoice'
-
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
@@ -31,19 +28,22 @@ import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/Upload
 import calculateDayDifference from '@/lib/calculateDayDifference'
 import AccpetProduct from '@/components/Modal/OrderComponent/Seller/AcceptProduct'
 import UpdateInvoice from '@/components/Modal/OrderComponent/Seller/UpdateInvoice'
+import ModalPdf from '@/components/Modal/ModalPdf'
 
 export default function InquiryDetails({session, routeParam}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
-  //data search
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({})
   const [isOrderValid, setIsOrderValid] = useState(true)
-
   const [isLoadingPackingList, setisLoadingPackingList] = useState(false)
   const [isLoadingPurchaseOrder, setisLoadingPurchaseOrder] = useState(false)
-
   const [courierModal, setcourierModal] = useState(false)
   const [rejectionReason, setRejectionReasons] = useState([])
+  const [sellerReceiptData, setSellerReceiptData] = useState([])
+  const [showModal, setShowModal] = useState(false)
+  const [isLoadingModal, setIsLoadingModal] = useState(false)
+  const [slugState, setSlugState] = useState('')
+
   const loadRejectionReason = async () => {
     setIsLoading(true)
     await axios
@@ -145,6 +145,7 @@ export default function InquiryDetails({session, routeParam}) {
       .then((response) => {
         let result = response.data.data
         setData(result)
+        setSellerReceiptData(result.seller_payment_receipt)
         setIsOrderValid(true)
       })
       .catch(() => {
@@ -1188,7 +1189,7 @@ export default function InquiryDetails({session, routeParam}) {
                       ? 'Testing Payment Receipt'
                       : 'Testing and Handling Service Payment Receipt'}
                   </span>
-                  {data.seller_lab_payment_receipt_path ? (
+                  {/* {data.seller_lab_payment_receipt_path ? (
                     <Link
                       target="_blank"
                       href={publicDir + data.seller_lab_payment_receipt_path}
@@ -1198,7 +1199,20 @@ export default function InquiryDetails({session, routeParam}) {
                     </Link>
                   ) : (
                     <span className="underline text-gray-500">view</span>
-                  )}
+                  )} */}
+                  {
+                    sellerReceiptData?.length > 0 ?
+                      <span className="underline text-blue-500"
+                        onClick={() => {
+                          setShowModal(true)
+                          setSlugState(data?.slug)
+                        }}
+                      >
+                        View
+                      </span>
+                      :
+                      <span className="underline text-gray-500">view</span>
+                  }
                 </div>
               </div>
               <div className="mb-5">
@@ -1305,7 +1319,7 @@ export default function InquiryDetails({session, routeParam}) {
                         : 'Testing and Handling Invoice'}
                     </span>
                     {data.testing_invoice_available ||
-                    data.testing_and_handling_invoice_available ? (
+                      data.testing_and_handling_invoice_available ? (
                       <Link
                         target="_blank"
                         href={`pdf/testing-and-handling-invoice/${data.slug}`}
@@ -1375,6 +1389,18 @@ export default function InquiryDetails({session, routeParam}) {
           </div>
         </div>
       </div>
+      {
+        showModal ?
+          <ModalPdf
+            setShowModal={[showModal, setShowModal]}
+            isLoading={[isLoadingModal, setIsLoadingModal]}
+            session={session}
+            item={slugState}
+            buyerSellerReceiptData={sellerReceiptData}
+          />
+          :
+          null
+      }
     </>
   )
 }
