@@ -1699,6 +1699,7 @@ export default function OrderDetails({session, routeParam}) {
       {
         showModal ?
           <ModalPdf
+            title="List of Buyer Payment Receipt Documents"
             setShowModal={[showModal, setShowModal]}
             isLoading={[isLoadingModal, setIsLoadingModal]}
             session={session}
@@ -1711,6 +1712,7 @@ export default function OrderDetails({session, routeParam}) {
       {
         showModalSellerReceipt ?
           <ModalPdf
+            title="List of Seller Payment Receipt Documents"
             setShowModal={[showModalSellerReceipt, setShowModalSellerReceipt]}
             isLoading={[isSellerLoadingModal, setIsSellerLoadingModal]}
             session={session}

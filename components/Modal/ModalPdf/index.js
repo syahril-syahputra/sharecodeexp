@@ -20,7 +20,7 @@ export default function ModalPdf({session, ...props}) {
 
   return (
     <BaseModalLarge
-      title="List of Document"
+      title={props?.title ?? "List of Document"}
       onClick={() => {
         setShowModalOutOfStockProps(false)
         setIsLoading(false)
@@ -41,9 +41,9 @@ export default function ModalPdf({session, ...props}) {
           </div>
           {props?.buyerSellerReceiptData?.map((value, index) => {
             return (
-              <div key={index + '-' + `${value.name}`} className="flex justify-between">
+              <div key={index + '-' + `${value.name}`} className="flex justify-between ">
                 <div>
-                  <p className="mb-2 text-orange-500 dark:text-orange-400">
+                  <p className="mb-2 text-black dark:text-gray-500">
                     {value.file_name}
                   </p>
                 </div>
@@ -63,7 +63,7 @@ export default function ModalPdf({session, ...props}) {
       }
       action={
         <>
-          <PrimaryButton
+          <LightButton
             className="uppercase mr-2 font-bold"
             isLoading={props.isLoading}
             disabled={isLoading}
@@ -73,7 +73,7 @@ export default function ModalPdf({session, ...props}) {
             }}
           >
             Close
-          </PrimaryButton>
+          </LightButton>
         </>
       }
     />

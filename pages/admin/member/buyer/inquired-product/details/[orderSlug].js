@@ -1155,6 +1155,7 @@ export default function InquiryDetails({session, routeParam}) {
       {
         showModal ?
           <ModalPdf
+            title="List of Buyer Payment Receipt Documents"
             setShowModal={[showModal, setShowModal]}
             isLoading={[isLoadingModal, setIsLoadingModal]}
             session={session}
