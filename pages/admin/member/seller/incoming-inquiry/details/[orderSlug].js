@@ -6,6 +6,7 @@ import Image from 'next/image'
 import moment from 'moment'
 import {VendorUrl} from '@/route/route-url'
 import {checkValue} from '@/utils/general'
+
 // layout for page
 import Admin from 'layouts/Admin.js'
 // components
@@ -20,15 +21,13 @@ import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
 import LightButton from '@/components/Interface/Buttons/LightButton'
-import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
-import WarningNotification from '@/components/Interface/Notification/WarningNotification'
-import InfoNotification from '@/components/Interface/Notification/InfoNotification'
 import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
 import calculateDayDifference from '@/lib/calculateDayDifference'
 import AccpetProduct from '@/components/Modal/OrderComponent/Seller/AcceptProduct'
 import UpdateInvoice from '@/components/Modal/OrderComponent/Seller/UpdateInvoice'
 import ModalPdf from '@/components/Modal/ModalPdf'
+import NotificationBarSeller from '@/components/Interface/Notification/NotificationBarSeller'
 
 export default function InquiryDetails({session, routeParam}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -427,76 +426,6 @@ export default function InquiryDetails({session, routeParam}) {
       })
   }
 
-  //notification
-  let notification = (
-    <PrimaryNotification
-      message={data.order_status?.name}
-      detail={data.order_status?.seller_notification?.message}
-    ></PrimaryNotification>
-  )
-  switch (data.order_status?.id) {
-    case 1:
-    case 2:
-    case 4:
-    case 6:
-    case 7:
-    case 8:
-    case 10:
-    case 11:
-    case 13:
-    case 14:
-    case 16:
-    //   notification = (
-    //     <PrimaryNotification
-    //       message={data.order_status?.name}
-    //       detail={data.order_status?.seller_notification?.message}
-    //     ></PrimaryNotification>
-    //   )
-    //   break
-    case 3:
-    case 12:
-    case 15:
-      notification = (
-        <WarningNotification
-          message={data.order_status?.name}
-          detail={data.order_status?.seller_notification?.message}
-        ></WarningNotification>
-      )
-      break
-    case 5:
-      notification = (
-        <>
-          <WarningNotification
-            message={data.order_status?.name}
-            detail={data.order_status?.seller_notification?.message}
-          ></WarningNotification>
-          <InfoNotification
-            message="Rejection Reason"
-            detail={data.reason}
-          ></InfoNotification>
-        </>
-      )
-      break
-    case 9:
-      notification = (
-        <>
-          <WarningNotification
-            message={data.order_status?.name}
-            detail={data.order_status?.seller_notification?.message}
-          ></WarningNotification>
-        </>
-      )
-      break
-    case 17:
-      notification = (
-        <InfoNotification
-          message={data.order_status?.name}
-          detail={data.order_status?.seller_notification?.message}
-        ></InfoNotification>
-      )
-      break
-  }
-
   //action to take using switch
   let actionToTake = (
     <div className="italic flex justify-center items-center h-28">
@@ -821,7 +750,7 @@ export default function InquiryDetails({session, routeParam}) {
           </Link>
         </div>
         {!!data.order_status?.name ? (
-          notification
+          <NotificationBarSeller data={data} />
         ) : (
           <div className="animate-pulse my-4">
             <div className="h-16 bg-gray-200 dark:bg-gray-400 w-full"></div>
@@ -996,7 +925,9 @@ export default function InquiryDetails({session, routeParam}) {
                   <div className="mx-2 text-md">
                     {/* set to local time */}
                     {!!data.companies_products?.created_at ? (
-                      moment(data.created_at).local().format('dddd, D MMMM YYYY')
+                      moment(data.created_at)
+                        .local()
+                        .format('dddd, D MMMM YYYY')
                     ) : (
                       <div className="animate-pulse">
                         <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
@@ -1010,7 +941,9 @@ export default function InquiryDetails({session, routeParam}) {
                     {/* set to local time */}
                     {!isLoading ? (
                       data.order_date ? (
-                        moment(data.order_date).local().format('dddd, D MMMM YYYY')
+                        moment(data.order_date)
+                          .local()
+                          .format('dddd, D MMMM YYYY')
                       ) : (
                         '-'
                       )

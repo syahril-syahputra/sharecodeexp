@@ -38,7 +38,7 @@ export const navigation = [
     icon: UsersIcon,
     current: false,
     children: [
-      {name: 'Vendors', href: routeUrl.AdminUrl.userControl.vendors},
+      // {name: 'Vendors', href: routeUrl.AdminUrl.userControl.vendors},
       {name: 'Subscribers', href: routeUrl.AdminUrl.userControl.contributors},
     ],
   },

@@ -15,7 +15,12 @@ function ComponentCardAdminDashboard({onClick, dataName, name, url, dataNameNoti
         <div className="flex justify-between">
           <h1 className="font-semibold text-7xl mb-3">{dataName}</h1>
           {!!dataNameNotification &&
-            <SuccessBadges title={dataNameNotification} className={"italic pr-3 py-1 h-7"} />
+            <>
+              <span className="relative px-2">
+                <i className="fas fa-bell text-5xl text-orange-500"></i>
+                <div className="absolute inline-flex items-center justify-center w-8 h-8 text-xs font-bold text-orange-500 bg-white border-2 border-orange-500 rounded-full -end-1">{dataNameNotification}</div>
+              </span>
+            </>
           }
         </div>
         <span className="text-md italic">{name}</span>
