@@ -50,14 +50,38 @@ export default function OrderDetails({session, routeParam}) {
   const [isOrderValid, setIsOrderValid] = useState(true)
   const [isLoadingOpenReceipt, setisLoadingOpenReceipt] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [showModalSellerReceipt, setShowModalSellerReceipt] = useState(false)
   const [isLoadingModal, setIsLoadingModal] = useState(false)
   const [slugState, setSlugState] = useState('')
   const [buyerReceiptPath, setBuyerReceiptPath] = useState('')
+  const [sellerReceiptPath, setSellerReceiptPath] = useState('')
   const [buyerReceiptData, setBuyerReceiptData] = useState([])
+  const [sellerReceiptData, setSellerReceiptData] = useState([])
+  const [isSellerLoadingModal, setIsSellerLoadingModal] = useState(false)
 
   const loadData = async () => {
     setIsLoading(true)
     setErrorInfo({})
+    const response = await axios
+      .get(`/admin/orders/${routeParam.orderSlug}/detail`, {
+        headers: {
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+      })
+      .then((response) => {
+        let result = response.data.data
+        setData(result)
+        setBuyerReceiptData(result?.buyer_payment_receipt)
+        setSellerReceiptData(result?.seller_payment_receipt)
+        setIsOrderValid(true)
+      })
+      .catch((error) => {
+        setIsOrderValid(false)
+        toast.error(error.data.message, toastOptions)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }
   useEffect(() => {
     loadData()
@@ -1398,9 +1422,6 @@ export default function OrderDetails({session, routeParam}) {
                       This order is charged for test lab separately because
                       total order is less than 1000US dollars
                     </span>
-                    {/* <span className="text-orange-500">
-                      Check Quotation for more further
-                    </span> */}
                   </div>
                 </div>
               )}
@@ -1450,7 +1471,7 @@ export default function OrderDetails({session, routeParam}) {
               <div className="mx-2 mt-1 text-sm border-b mb-2">
                 <DocumentButton
                   title="Buyer's Payment"
-                  isActive={data.buyer_receipt_path}
+                  isActive={data.buyer_payment_receipt?.length > 0}
                   isLoading={isLoadingOpenReceipt}
                   onClick={() => {
                     setShowModal(true)
@@ -1474,8 +1495,12 @@ export default function OrderDetails({session, routeParam}) {
                       ? 'Testing Payment Receipt'
                       : 'Testing and Handling Service Payment Receipt'
                   }
-                  isActive={data.seller_lab_payment_receipt_path}
-                  href={publicDir + data.seller_lab_payment_receipt_path}
+                  isActive={data.seller_payment_receipt?.length > 0}
+                  onClick={() => {
+                    setShowModalSellerReceipt(true);
+                    setSlugState(data?.slug)
+                  }}
+                // href={publicDir + data.seller_lab_payment_receipt_path}
                 />
               </div>
 
@@ -1679,6 +1704,18 @@ export default function OrderDetails({session, routeParam}) {
             session={session}
             item={slugState}
             buyerSellerReceiptData={buyerReceiptData}
+          />
+          :
+          null
+      }
+      {
+        showModalSellerReceipt ?
+          <ModalPdf
+            setShowModal={[showModalSellerReceipt, setShowModalSellerReceipt]}
+            isLoading={[isSellerLoadingModal, setIsSellerLoadingModal]}
+            session={session}
+            item={slugState}
+            buyerSellerReceiptData={sellerReceiptData}
           />
           :
           null

@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {useRouter} from 'next/router'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
-import {BaseModalMedium} from '@/components/Interface/Modal/BaseModal'
+import {BaseModalMedium, BaseModalLarge} from '@/components/Interface/Modal/BaseModal'
 import axios from 'lib/axios'
 import {toast} from 'react-toastify'
 import {toastOptions} from '@/lib/toastOptions'
@@ -19,7 +19,7 @@ export default function ModalPdf({session, ...props}) {
 
 
   return (
-    <BaseModalMedium
+    <BaseModalLarge
       title="List of Document"
       onClick={() => {
         setShowModalOutOfStockProps(false)
@@ -43,7 +43,7 @@ export default function ModalPdf({session, ...props}) {
             return (
               <div key={index + '-' + `${value.name}`} className="flex justify-between">
                 <div>
-                  <p className="mb-2 text-gray-500 dark:text-gray-400">
+                  <p className="mb-2 text-orange-500 dark:text-orange-400">
                     {value.file_name}
                   </p>
                 </div>
