@@ -309,7 +309,7 @@ export default function MyCompany({session}) {
                     companyData.RegistrationDocument
                   }
                 >
-                  <SecondaryButton size="sm" className="mr-2">
+                  <SecondaryButton size="sm" className="mr-2" disabled={!Boolean(companyData.RegistrationDocument)}>
                     View
                   </SecondaryButton>
                 </Link>
@@ -336,7 +336,7 @@ export default function MyCompany({session}) {
                     companyData.CertificationofActivity
                   }
                 >
-                  <SecondaryButton size="sm" className="mr-2">
+                  <SecondaryButton size="sm" className="mr-2" disabled={!Boolean(companyData.CertificationofActivity)}>
                     View
                   </SecondaryButton>
                 </Link>
