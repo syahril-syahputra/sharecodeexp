@@ -1,28 +1,17 @@
 import React, {useState} from 'react'
-import {useRouter} from 'next/router'
 import LightButton from '@/components/Interface/Buttons/LightButton'
-import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
-import {BaseModalMedium, BaseModalLarge} from '@/components/Interface/Modal/BaseModal'
-import axios from 'lib/axios'
-import {toast} from 'react-toastify'
-import {toastOptions} from '@/lib/toastOptions'
+import {BaseModalLarge} from '@/components/Interface/Modal/BaseModal'
 import Link from 'next/link'
 
-export default function ModalPdf({session, ...props}) {
-  const router = useRouter()
+export default function ModalPdf({...props}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   const [isLoading, setIsLoading] = props.isLoading
-  const [isError, setIsError] = useState(false)
-  const [errorInfo, setErrorInfo] = useState({})
-  const [showModalOutOfStockProps, setShowModalOutOfStockProps] = props.setShowModal
-
-
 
   return (
     <BaseModalLarge
       title={props?.title ?? "List of Document"}
       onClick={() => {
-        setShowModalOutOfStockProps(false)
+        props.setShowModal(false)
         setIsLoading(false)
       }}
       body={
@@ -39,7 +28,7 @@ export default function ModalPdf({session, ...props}) {
               </p>
             </div>
           </div>
-          {props?.buyerSellerReceiptData?.map((value, index) => {
+          {props?.receiptData?.map((value, index) => {
             return (
               <div key={index + '-' + `${value.name}`} className="flex justify-between ">
                 <div>
@@ -68,7 +57,7 @@ export default function ModalPdf({session, ...props}) {
             isLoading={props.isLoading}
             disabled={isLoading}
             onClick={() => {
-              setShowModalOutOfStockProps(false)
+              props.setShowModal(false)
               setIsLoading(false)
             }}
           >

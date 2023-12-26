@@ -1,7 +1,7 @@
 import moment from 'moment'
-import {checkValue} from '@/utils/general'
-import React, {useState, useEffect} from 'react'
-import {getSession} from 'next-auth/react'
+import { checkValue } from '@/utils/general'
+import React, { useState, useEffect } from 'react'
+import { getSession } from 'next-auth/react'
 import Image from 'next/image'
 import axios from '@/lib/axios'
 import Link from 'next/link'
@@ -10,7 +10,7 @@ import Link from 'next/link'
 import Admin from 'layouts/Admin.js'
 
 //route
-import {AdminUrl} from '@/route/route-url'
+import { AdminUrl } from '@/route/route-url'
 
 // components
 import SendProformaInvoiceModal from '@/components/Modal/OrderComponent/Superadmin/SendProformaInvoice'
@@ -20,13 +20,13 @@ import GoodResultModal from '@/components/Modal/OrderComponent/Superadmin/GoodRe
 import BadResultModal from '@/components/Modal/OrderComponent/Superadmin/BadResult'
 import TrackerNumberForBuyerModal from '@/components/Modal/OrderComponent/Superadmin/TrackerNumberForBuyer'
 import CompleteOrderModal from '@/components/Modal/OrderComponent/Superadmin/CompleteOrder'
-import {toast} from 'react-toastify'
-import {toastOptions} from '@/lib/toastOptions'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
-import {CompanyStatusesIcon} from '@/components/Shared/Company/Statuses'
+import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import TrackerNumberForSeler from '@/components/Modal/OrderComponent/Superadmin/TrackerNumberForSeler'
 import ReleasePaymentToBuyer from '@/components/Modal/OrderComponent/Superadmin/ReleasePaymentToBuyer'
@@ -38,27 +38,39 @@ import CloseNotReturned from '@/components/Modal/OrderComponent/Superadmin/Close
 import CloseReturned from '@/components/Modal/OrderComponent/Superadmin/CloseReturned'
 import AcceptSellerPayment from '@/components/Modal/OrderComponent/Superadmin/AcceptSellerPayment'
 import DocumentButton from '@/components/Shared/Order/DocumentButton'
-import ModalPdf from '@/components/Modal/ModalPdf'
 import UploadPaymentReceiptForSeller from '@/components/Modal/OrderComponent/Superadmin/UploadPaymentReceiptForSeller'
 import NotificationBarAdmin from '@/components/Interface/Notification/NotificationBarAdmin'
+import ModalPdf from '@/components/Modal/ModalPdf'
 
-export default function OrderDetails({session, routeParam}) {
+export default function OrderDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
+  //data search
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [errorInfo, setErrorInfo] = useState({})
   const [isOrderValid, setIsOrderValid] = useState(true)
   const [isLoadingOpenReceipt, setisLoadingOpenReceipt] = useState(false)
-  const [showModal, setShowModal] = useState(false)
-  const [showModalSellerReceipt, setShowModalSellerReceipt] = useState(false)
-  const [isLoadingModal, setIsLoadingModal] = useState(false)
-  const [slugState, setSlugState] = useState('')
-  const [buyerReceiptPath, setBuyerReceiptPath] = useState('')
-  const [sellerReceiptPath, setSellerReceiptPath] = useState('')
-  const [buyerReceiptData, setBuyerReceiptData] = useState([])
-  const [sellerReceiptData, setSellerReceiptData] = useState([])
-  const [isSellerLoadingModal, setIsSellerLoadingModal] = useState(false)
-
+  const openPaymentReceiptHandler = async () => {
+    try {
+      setisLoadingOpenReceipt(true)
+      await axios.post(
+        `/admin/orders/verification-action/open-buyer-payment-receipt`,
+        {
+          order_slug: data.slug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+    } catch (error) {
+      toast.error(error.data.message, toastOptions)
+    } finally {
+      window.open(publicDir + data.buyer_receipt_path)
+      setisLoadingOpenReceipt(false)
+    }
+  }
   const loadData = async () => {
     setIsLoading(true)
     setErrorInfo({})
@@ -71,9 +83,9 @@ export default function OrderDetails({session, routeParam}) {
       .then((response) => {
         let result = response.data.data
         setData(result)
+        setIsOrderValid(true)
         setBuyerReceiptData(result?.buyer_payment_receipt)
         setSellerReceiptData(result?.seller_payment_receipt)
-        setIsOrderValid(true)
       })
       .catch((error) => {
         setIsOrderValid(false)
@@ -92,12 +104,61 @@ export default function OrderDetails({session, routeParam}) {
   const sendProformaInvoiceHandler = async () => {
     setIsLoading(true)
     setErrorInfo({})
+    const request = await axios
+      .post(
+        '/admin/orders/send-proforma-invoice',
+        {
+          order_slug: data.slug,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setSendProformaInvoiceModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot send the proforma invoice.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
   }
 
   const [acceptPaymentModal, setAcceptPaymentModal] = useState(false)
   const handleAcceptPaymentModal = async (isReviewdm, isAccepted) => {
     setIsLoading(true)
     setErrorInfo({})
+    const response = await axios
+      .post(
+        `/admin/orders/accept-payment`,
+        {
+          order_slug: data.slug,
+          payment_reviewed: isReviewdm,
+          payment_accepted: isAccepted,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setAcceptPaymentModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(error.data.message, toastOptions)
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
   }
 
   const [requestUpdatePaymentModal, setRequestUpdatePaymentModal] =
@@ -105,6 +166,29 @@ export default function OrderDetails({session, routeParam}) {
   const handleRequestUpdatePaymentModal = async (requestUpdate) => {
     setIsLoading(true)
     setErrorInfo({})
+    const response = await axios
+      .post(
+        `/admin/orders/request-update-payment`,
+        {
+          order_slug: data.slug,
+          request_update_payment_reason: requestUpdate,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setRequestUpdatePaymentModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(error.data.message, toastOptions)
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
   }
 
   const [goodResultModal, setGoodResultModal] = useState(false)
@@ -115,6 +199,25 @@ export default function OrderDetails({session, routeParam}) {
     formData.append('order_slug', data.slug)
     formData.append('test_result', goodResult)
 
+    const response = await axios
+      .post(`/admin/orders/upload-good-test`, formData, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      })
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setRequestUpdatePaymentModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot upload the result.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
   }
   const [
     uploadPaymentReceiptForSellerModal,
@@ -145,7 +248,7 @@ export default function OrderDetails({session, routeParam}) {
       .catch((error) => {
         toast.error(
           error.data.message ||
-          'Something went wrong. Cannot upload the result.',
+            'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -162,6 +265,25 @@ export default function OrderDetails({session, routeParam}) {
     formData.append('test_result', badResult)
     formData.append('terminate_order', terminateOrder)
 
+    const response = await axios
+      .post(`/admin/orders/upload-bad-test`, formData, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      })
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setRequestUpdatePaymentModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot upload the result.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
   }
 
   const [terminateOrderModal, setterminateOrderModal] = useState(false)
@@ -219,7 +341,7 @@ export default function OrderDetails({session, routeParam}) {
       .catch((error) => {
         toast.error(
           error.data.message ||
-          'Something went wrong. Cannot sent the request.',
+            'Something went wrong. Cannot sent the request.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -232,12 +354,66 @@ export default function OrderDetails({session, routeParam}) {
   const handleTrackerNumberForBuyerModal = async (trackingNumber) => {
     setIsLoading(true)
     setErrorInfo({})
+    const response = await axios
+      .post(
+        `/admin/orders/shipping-product-to-buyer`,
+        {
+          order_slug: data.slug,
+          tracking_number: trackingNumber,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setTrackerNumberForBuyerModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          //   'Something went wrong. Cannot send tracking number to buyer.',
+          error.data.message,
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
   }
   const [trackerNumberForSellerModal, setTrackerNumberForSellerModal] =
     useState(false)
   const handleTrackerNumberForSellerModal = async (trackingNumber) => {
     setIsLoading(true)
     setErrorInfo({})
+    const response = await axios
+      .post(
+        `/admin/orders/shipping-product-to-seller`,
+        {
+          order_slug: data.slug,
+          tracking_number: trackingNumber,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setTrackerNumberForSellerModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          //   'Something went wrong. Cannot send tracking number to buyer.',
+          error.data.message,
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
   }
 
   const [completeOrderModal, setCompleteOrderModal] = useState(false)
@@ -266,7 +442,7 @@ export default function OrderDetails({session, routeParam}) {
       .catch((error) => {
         toast.error(
           error.data.message ||
-          'Something went wrong. Cannot complete the order.',
+            'Something went wrong. Cannot complete the order.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -282,6 +458,25 @@ export default function OrderDetails({session, routeParam}) {
     formData.append('order_slug', data.slug)
     formData.append('admin_reimbursement_receipt', recepit)
 
+    const response = await axios
+      .post(`/admin/orders/release-reimbursement`, formData, {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      })
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setRequestUpdatePaymentModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot upload the result.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
   }
   const [testingAndHandlingServices, settestingAndHandlingServices] =
     useState(false)
@@ -292,6 +487,33 @@ export default function OrderDetails({session, routeParam}) {
     setIsLoading(true)
     setErrorInfo({})
 
+    const response = await axios
+      .post(
+        `/admin/orders/test-handling-services`,
+        {
+          order_slug: data.slug,
+          testing_lab_amount: testing_lab_amount,
+          handling_charge_amount: handling_charge_amount,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        settestingAndHandlingServices(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot upload the result.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
   }
 
   const [closeOrderNotReturnedModal, setcloseOrderNotReturnedModal] =
@@ -300,6 +522,31 @@ export default function OrderDetails({session, routeParam}) {
     setIsLoading(true)
     setErrorInfo({})
 
+    const response = await axios
+      .post(
+        `/admin/orders/close-not-returned`,
+        {
+          order_slug: data.slug,
+          payment_reviewed: reviewed,
+          payment_accepted: accepted,
+          close_order: close,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setcloseOrderNotReturnedModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(error.data.message, toastOptions)
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
   }
   const [acceptSellerPaymentModal, setacceptSellerPaymentModal] =
     useState(false)
@@ -307,6 +554,30 @@ export default function OrderDetails({session, routeParam}) {
     setIsLoading(true)
     setErrorInfo({})
 
+    const response = await axios
+      .post(
+        `/admin/orders/accept-test-handling-payment`,
+        {
+          order_slug: data.slug,
+          payment_reviewed: reviewed,
+          payment_accepted: accepted,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setacceptSellerPaymentModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(error.data.message, toastOptions)
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
   }
 
   const [closeOrderReturnedModal, setcloseOrderReturnedModal] = useState(false)
@@ -314,6 +585,29 @@ export default function OrderDetails({session, routeParam}) {
     setIsLoading(true)
     setErrorInfo({})
 
+    const response = await axios
+      .post(
+        `/admin/orders/close-returned`,
+        {
+          order_slug: data.slug,
+          product_returned: close,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setcloseOrderReturnedModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(error.data.message, toastOptions)
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
   }
 
   const [requestUpdateTestingPayment, setrequestUpdateTestingPayment] =
@@ -322,6 +616,32 @@ export default function OrderDetails({session, routeParam}) {
     setIsLoading(true)
     setErrorInfo({})
 
+    const response = await axios
+      .post(
+        `/admin/orders/request-update-testing-payment`,
+        {
+          order_slug: data.slug,
+          reason,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setrequestUpdateTestingPayment(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          'Something went wrong. Cannot upload the result.',
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
   }
   if (!isOrderValid) {
     return (
@@ -926,6 +1246,16 @@ export default function OrderDetails({session, routeParam}) {
     //   break
   }
 
+  // modal receipt document list
+  const [showModalBuyerReceipt, setShowModalBuyerReceipt] = useState(false)
+  const [showModalSellerReceipt, setShowModalSellerReceipt] = useState(false)
+
+  const [buyerReceiptData, setBuyerReceiptData] = useState([])
+  const [sellerReceiptData, setSellerReceiptData] = useState([])
+
+  const [isBuyerLoadingModal, setIsBuyerLoadingModal] = useState(false)
+  const [isSellerLoadingModal, setIsSellerLoadingModal] = useState(false)
+
   return (
     <>
       <div className="">
@@ -1000,7 +1330,7 @@ export default function OrderDetails({session, routeParam}) {
                 {!!data.buyer?.name ? (
                   <>
                     <Link
-                      href={`/admin/superadmin/registry/details/${data.buyer?.id}`}
+                      href={`/admin/superadmin/registry/company/${data.buyer?.id}`}
                       className="text-blueGray-700 underline"
                     >
                       {data.buyer?.name}
@@ -1049,7 +1379,7 @@ export default function OrderDetails({session, routeParam}) {
                 {!!data.companies_products?.company?.name ? (
                   <>
                     <Link
-                      href={`/admin/superadmin/registry/details/${data.companies_products?.company?.id}`}
+                      href={`/admin/superadmin/registry/company/${data.companies_products?.company?.id}`}
                       className="text-blueGray-700 underline"
                     >
                       {data.companies_products?.company?.name}
@@ -1422,6 +1752,9 @@ export default function OrderDetails({session, routeParam}) {
                       This order is charged for test lab separately because
                       total order is less than 1000US dollars
                     </span>
+                    {/* <span className="text-orange-500">
+                      Check Quotation for more further
+                    </span> */}
                   </div>
                 </div>
               )}
@@ -1473,10 +1806,13 @@ export default function OrderDetails({session, routeParam}) {
                   title="Buyer's Payment"
                   isActive={data.buyer_payment_receipt?.length > 0}
                   isLoading={isLoadingOpenReceipt}
+                  // onClick={() => {
+                  //   setShowModal(true)
+                  //   setSlugState(data?.slug)
+                  //   setBuyerReceiptPath(data?.buyer_receipt_path)
+                  // }}
                   onClick={() => {
-                    setShowModal(true)
-                    setSlugState(data?.slug)
-                    setBuyerReceiptPath(data?.buyer_receipt_path)
+                    setShowModalBuyerReceipt(true);
                   }}
                 />
               </div>
@@ -1498,9 +1834,7 @@ export default function OrderDetails({session, routeParam}) {
                   isActive={data.seller_payment_receipt?.length > 0}
                   onClick={() => {
                     setShowModalSellerReceipt(true);
-                    setSlugState(data?.slug)
                   }}
-                // href={publicDir + data.seller_lab_payment_receipt_path}
                 />
               </div>
 
@@ -1697,14 +2031,12 @@ export default function OrderDetails({session, routeParam}) {
         </div>
       </div>
       {
-        showModal ?
+        showModalBuyerReceipt ?
           <ModalPdf
             title="List of Buyer Payment Receipt Documents"
-            setShowModal={[showModal, setShowModal]}
-            isLoading={[isLoadingModal, setIsLoadingModal]}
-            session={session}
-            item={slugState}
-            buyerSellerReceiptData={buyerReceiptData}
+            setShowModal={setShowModalBuyerReceipt}
+            isLoading={[isBuyerLoadingModal, setIsBuyerLoadingModal]}
+            receiptData={buyerReceiptData}
           />
           :
           null
@@ -1713,11 +2045,9 @@ export default function OrderDetails({session, routeParam}) {
         showModalSellerReceipt ?
           <ModalPdf
             title="List of Seller Payment Receipt Documents"
-            setShowModal={[showModalSellerReceipt, setShowModalSellerReceipt]}
+            setShowModal={setShowModalSellerReceipt}
             isLoading={[isSellerLoadingModal, setIsSellerLoadingModal]}
-            session={session}
-            item={slugState}
-            buyerSellerReceiptData={sellerReceiptData}
+            receiptData={sellerReceiptData}
           />
           :
           null
