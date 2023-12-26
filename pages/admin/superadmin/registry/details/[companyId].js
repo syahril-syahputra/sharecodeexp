@@ -499,7 +499,7 @@ export default function CompanyDetail({session, routeParam}) {
                       companyData.RegistrationDocument
                     }
                   >
-                    <SecondaryButton size="sm">
+                    <SecondaryButton size="sm" disabled={!Boolean(companyData.RegistrationDocument)}>
                       View Company Registration Document
                     </SecondaryButton>
                   </Link>
@@ -513,7 +513,7 @@ export default function CompanyDetail({session, routeParam}) {
                       companyData.CertificationofActivity
                     }
                   >
-                    <SecondaryButton size="sm">
+                    <SecondaryButton size="sm" disabled={!Boolean(companyData.CertificationofActivity)}>
                       View Certification of Activity
                     </SecondaryButton>
                   </Link>
