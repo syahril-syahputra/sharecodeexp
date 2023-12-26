@@ -49,7 +49,7 @@ export default function ComponentDetails({session, routeParam}) {
   }
 
   const updateState = () => {
-    context.loadAdminSidebarCounter(session.accessToken)
+    context.loadAdminSidebarCounter(session?.accessToken)
   }
   useEffect(() => {
     getData()
@@ -370,7 +370,7 @@ export default function ComponentDetails({session, routeParam}) {
                       :
                     </td>
                     <td className="text-sm px-2 py-4">
-                      {moment(component.created_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}  
+                      {moment(component.created_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}
                     </td>
                   </tr>
                 </tbody>

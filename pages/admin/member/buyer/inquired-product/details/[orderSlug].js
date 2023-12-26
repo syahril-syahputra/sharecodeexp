@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { getSession } from 'next-auth/react'
+import React, {useState, useEffect} from 'react'
+import {getSession} from 'next-auth/react'
 import axios from '@/lib/axios'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -12,8 +12,8 @@ import SendPaymentDocsModal from '@/components/Modal/OrderComponent/Buyer/SendPa
 import SendUpdatedPaymentDocsModal from '@/components/Modal/OrderComponent/Buyer/SendUpdatedPaymentDocs'
 import AcceptOrderModal from '@/components/Modal/OrderComponent/Buyer/AcceptOrder'
 import DidntReceiveAnyModal from '@/components/Modal/OrderComponent/Buyer/DidntReceiveAny'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
@@ -21,14 +21,15 @@ import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
 import LightButton from '@/components/Interface/Buttons/LightButton'
-import { VendorUrl } from '@/route/route-url'
-import { checkValue } from '@/utils/general'
+import {VendorUrl} from '@/route/route-url'
+import {checkValue} from '@/utils/general'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import calculateTimeDifference from '@/lib/calculateTimeDifference'
 import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
+import ModalPdf from '@/components/Modal/ModalPdf'
 import NotificationBarBuyer from '@/components/Interface/Notification/NotificationBarBuyer'
 
-export default function InquiryDetails({ session, routeParam }) {
+export default function InquiryDetails({session, routeParam}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   //data search
   const [isLoading, setIsLoading] = useState(true)
@@ -41,6 +42,11 @@ export default function InquiryDetails({ session, routeParam }) {
   const [sendPaymentDocsModal, setSendPaymentDocsModal] = useState(false)
   const [sendUpdatedPaymentDocsModal, setSendUpdatedPaymentDocsModal] =
     useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [isLoadingModal, setIsLoadingModal] = useState(false)
+  const [slugState, setSlugState] = useState('')
+  const [buyerReceiptPath, setBuyerReceiptPath] = useState('')
+  const [buyerReceiptData, setBuyerReceiptData] = useState([])
 
   const [acceptOrderModal, setAcceptOrderModal] = useState(false)
   const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
@@ -88,6 +94,7 @@ export default function InquiryDetails({ session, routeParam }) {
           }
         }, 1000)
         setData(result)
+        setBuyerReceiptData(result?.buyer_payment_receipt)
         setIsOrderValid(true)
       })
       .catch((error) => {
@@ -785,8 +792,8 @@ export default function InquiryDetails({ session, routeParam }) {
                     ) : (
                       <div className="animate-pulse">
                         {data?.companies_products?.moq === 0 ||
-                        parseInt(data?.companies_products?.moq) === 0 ||
-                        data?.companies_products?.moq === null ? (
+                          parseInt(data?.companies_products?.moq) === 0 ||
+                          data?.companies_products?.moq === null ? (
                           <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
                             Out of Stock
                           </div>
@@ -807,7 +814,7 @@ export default function InquiryDetails({ session, routeParam }) {
                     ) : (
                       <div className="animate-pulse">
                         {data?.companies_products?.AvailableQuantity === 0 ||
-                        data?.companies_products?.AvailableQuantity === null ? (
+                          data?.companies_products?.AvailableQuantity === null ? (
                           <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
                             Out of Stock
                           </div>
@@ -998,7 +1005,21 @@ export default function InquiryDetails({ session, routeParam }) {
               <div className="mx-2 mt-1 text-sm border-b mb-2">
                 <div className="flex flex-wrap justify-between">
                   <span>Payment Receipt</span>
-                  {data.buyer_receipt_path ? (
+
+                  {
+                    buyerReceiptData?.length > 0 ?
+                      <span className="underline text-blue-500" onClick={() => {
+                        setShowModal(true)
+                        setSlugState(data?.slug)
+                        setBuyerReceiptPath(data?.buyer_receipt_path)
+                      }}>view</span>
+                      :
+                      <span className="underline text-gray-500">view</span>
+
+
+                  }
+
+                  {/* {data.buyer_receipt_path ? (
                     <Link
                       target="_blank"
                       href={publicDir + data.buyer_receipt_path}
@@ -1008,7 +1029,7 @@ export default function InquiryDetails({ session, routeParam }) {
                     </Link>
                   ) : (
                     <span className="underline text-gray-500">view</span>
-                  )}
+                  )} */}
                 </div>
               </div>
               <div className="mb-5">
@@ -1131,6 +1152,20 @@ export default function InquiryDetails({ session, routeParam }) {
           </div>
         </div>
       </div>
+      {
+        showModal ?
+          <ModalPdf
+            title="List of Buyer Payment Receipt Documents"
+            setShowModal={[showModal, setShowModal]}
+            isLoading={[isLoadingModal, setIsLoadingModal]}
+            session={session}
+            item={slugState}
+            buyerReceiptPath={buyerReceiptPath}
+            buyerSellerReceiptData={buyerReceiptData}
+          />
+          :
+          null
+      }
     </>
   )
 }
