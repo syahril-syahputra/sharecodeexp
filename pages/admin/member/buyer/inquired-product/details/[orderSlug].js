@@ -52,7 +52,7 @@ export default function InquiryDetails({session, routeParam}) {
   const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
   const [isLoadingOpenQUotation, setisLoadingOpenQUotation] = useState(false)
   const [courierModal, setcourierModal] = useState(false)
-  const [isQuotateionAvailable, setisQuotateionAvailable] = useState(false)
+  const [isQuotationAvailable, setisQuotationAvailable] = useState(false)
   const openQuotationHandler = async () => {
     try {
       setisLoadingOpenQUotation(true)
@@ -88,8 +88,8 @@ export default function InquiryDetails({session, routeParam}) {
         let result = response.data.data
 
         const intervalId = setInterval(() => {
-          if (cek(result.update_verified_inquiry_expiration_date)) {
-            setisQuotateionAvailable(true)
+          if (checkAvailableQuotationTime(result.update_verified_inquiry_expiration_date)) {
+            setisQuotationAvailable(true)
             clearTimeout(intervalId)
           }
         }, 1000)
@@ -106,7 +106,7 @@ export default function InquiryDetails({session, routeParam}) {
       })
   }
 
-  const cek = (availableDate) => {
+  const checkAvailableQuotationTime = (availableDate) => {
     //update_verified_inquiry_expiration_date
     const utcMoment = moment.utc(availableDate, 'YYYY-MM-DD HH:mm:ss')
     const available = utcMoment.local()
@@ -431,7 +431,7 @@ export default function InquiryDetails({session, routeParam}) {
                 outline
                 className="mx-1"
                 size="sm"
-                disabled={isLoading}
+                disabled={isLoading || !isQuotationAvailable}
                 onClick={() => setAcceptQuotationModal(true)}
               >
                 Accept Quotation
@@ -442,7 +442,7 @@ export default function InquiryDetails({session, routeParam}) {
                 outline
                 className="mx-1"
                 size="sm"
-                disabled={isLoading}
+                disabled={isLoading || !isQuotationAvailable}
                 onClick={() => setRejectQuotationModal(true)}
               >
                 Reject Quotation
@@ -658,20 +658,23 @@ export default function InquiryDetails({session, routeParam}) {
           <div className="w-1/2 lg:w-1/3 mr-4">
             <PrimaryWrapper className="p-1">
               <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
-                Tracking Number
+                Courier
               </div>
-              <div className="mx-2 mb-5 text-xl">
-                {checkValue(data.trackingBuyer)}
+              <div className="mx-2 mb-1 text-xl">
+                {checkValue(data.buyer_courier_company_name)}
+              </div>
+              <div className="mx-2 mb-5 text-l">
+                {checkValue(data.buyer_courier_account_number)}
               </div>
             </PrimaryWrapper>
           </div>
           <div className="w-1/2 lg:w-1/3 mr-4">
             <PrimaryWrapper className="p-1">
               <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
-                Courier
+                Tracking Number
               </div>
               <div className="mx-2 mb-5 text-xl">
-                {checkValue(data.buyer_courier)}
+                {checkValue(data.trackingBuyer)}
               </div>
             </PrimaryWrapper>
           </div>
@@ -914,7 +917,7 @@ export default function InquiryDetails({session, routeParam}) {
                   <span className="text-gray-500">Unit Price (USD)</span>
                   {!isLoading ? (
                     <span>
-                      ${isQuotateionAvailable ? data.price_profite || 0 : 0}
+                      {isQuotationAvailable ? `$${data.price_profite}` : '-'}
                     </span>
                   ) : (
                     <div className="animate-pulse">
@@ -927,11 +930,10 @@ export default function InquiryDetails({session, routeParam}) {
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500">Test Lab Fee (USD)</span>
                   {!isLoading ? (
-                    <span>
-                      $
-                      {isQuotateionAvailable
-                        ? data.order_price_amount?.test_fee_amount || 0
-                        : 0}
+                    <span>                      
+                      {isQuotationAvailable
+                        ? `$${data.order_price_amount?.test_fee_amount}`
+                        : '-'}
                     </span>
                   ) : (
                     <div className="animate-pulse">
@@ -947,10 +949,9 @@ export default function InquiryDetails({session, routeParam}) {
                   </span>
                   {!isLoading ? (
                     <span>
-                      $
-                      {isQuotateionAvailable
-                        ? data.order_price_amount?.grand_total || 0
-                        : 0}
+                      {isQuotationAvailable
+                        ? `$${data.order_price_amount?.grand_total}`
+                        : '-'}
                     </span>
                   ) : (
                     <div className="animate-pulse">
@@ -1039,7 +1040,7 @@ export default function InquiryDetails({session, routeParam}) {
                 <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Quotation</span>
-                    {data.quotation_available == 1 && isQuotateionAvailable ? (
+                    {data.quotation_available == 1 && isQuotationAvailable ? (
                       <label
                         onClick={openQuotationHandler}
                         className={
