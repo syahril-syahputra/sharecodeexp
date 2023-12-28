@@ -11,7 +11,7 @@ import { Menu, Transition } from '@headlessui/react'
 import { Bars3Icon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import LogoutModal from '@/components/Modal/Logout/Logout'
-import GlobalNotification from '@/components/Navbars/GlobaNotification'
+import GlobalNotification from '@/components/Navbars/GlobalNotification'
 
 const userNavigation = [{ name: 'My Profile', href: MyAccountUrl.view }]
 
@@ -95,7 +95,10 @@ function TopNavigation({ setSidebarOpen, role }) {
               className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10"
               aria-hidden="true"
             />
-            <GlobalNotification />
+            {parseInt(session.data.user.userDetail.role_id) === 1 && (
+              <GlobalNotification />
+            )}
+
             {/* Profile dropdown */}
             <Menu as="div" className="relative">
               <Menu.Button className="-m-1.5 flex items-center p-1.5">

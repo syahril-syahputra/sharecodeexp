@@ -27,6 +27,7 @@ export default function ShipProduct(props) {
   const [isLoadingPurchaseOrder, setisLoadingPurchaseOrder] = useState(false)
   const [isLoadingPackingList, setisLoadingPackingList] = useState(false)
   const [file, setFile] = useState(null)
+  const [errorMessage, seterrorMessage] = useState()
 
   const handleSubmit = () => {
     if (!isDownloadedPackingList || !isDownloadedPurchaseOrder || !isconfirm) {
@@ -39,7 +40,8 @@ export default function ShipProduct(props) {
     }
 
     if (!file) {
-      toast.error('Please select invoice file', toastOptions)
+      seterrorMessage(['Select invoice file!'])
+      toast.error('Something went wrong. Cannot send product', toastOptions)
 
       return
     }
@@ -52,7 +54,7 @@ export default function ShipProduct(props) {
       isDownloadedPurchaseOrder,
       isDownloadedPackingList,
       isconfirm,
-      file.files[0]
+      file?.files[0]
     )
   }
 
@@ -166,7 +168,7 @@ export default function ShipProduct(props) {
                   name="File Upload"
                   required
                   onChange={(target) => setFile(target)}
-                  //   errorMsg={['disabled', 'second error']}
+                  errorMsg={errorMessage}
                 />
               </div>
               <div className="flex space-x-4 px-4">

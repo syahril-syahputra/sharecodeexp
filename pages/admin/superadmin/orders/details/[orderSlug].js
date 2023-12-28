@@ -1946,40 +1946,41 @@ export default function OrderDetails({ session, routeParam }) {
                 </div>
               </PrimaryWrapper>
             )}
-            {!cannotTerminateIds.includes(parseInt(data.order_status_id)) && (
-              <PrimaryWrapper className="p-1">
-                <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                  Terminate Order
-                </div>
-                <div className="flex flex-col items-center p-4 justify-center">
-                  {terminateOrderModal && (
-                    <TerminateOrder
-                      isLoading={isLoading}
-                      closeModal={() => setterminateOrderModal(false)}
-                      tokenRequested={tokenTerminationRequested}
-                      requestToken={requestTokenHandler}
-                      acceptance={terminateOrderHandler}
-                      errorInfo={errorInfo}
-                    />
-                  )}
-                  <div className="text-center mb-4 text-sm text-red-500">
-                    Please click the button below to cancel the order
-                  </div>
-                  <DangerButton
-                    outline
-                    className="mx-1"
-                    size="sm"
-                    disabled={isLoading}
-                    onClick={() => {
-                      settokenTerminationRequested(false)
-                      setterminateOrderModal(true)
-                    }}
-                  >
+            {!cannotTerminateIds.includes(parseInt(data.order_status_id)) &&
+              parseInt(data.is_active) !== 0 && (
+                <PrimaryWrapper className="p-1">
+                  <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                     Terminate Order
-                  </DangerButton>
-                </div>
-              </PrimaryWrapper>
-            )}
+                  </div>
+                  <div className="flex flex-col items-center p-4 justify-center">
+                    {terminateOrderModal && (
+                      <TerminateOrder
+                        isLoading={isLoading}
+                        closeModal={() => setterminateOrderModal(false)}
+                        tokenRequested={tokenTerminationRequested}
+                        requestToken={requestTokenHandler}
+                        acceptance={terminateOrderHandler}
+                        errorInfo={errorInfo}
+                      />
+                    )}
+                    <div className="text-center mb-4 text-sm text-red-500">
+                      Please click the button below to cancel the order
+                    </div>
+                    <DangerButton
+                      outline
+                      className="mx-1"
+                      size="sm"
+                      disabled={isLoading}
+                      onClick={() => {
+                        settokenTerminationRequested(false)
+                        setterminateOrderModal(true)
+                      }}
+                    >
+                      Terminate Order
+                    </DangerButton>
+                  </div>
+                </PrimaryWrapper>
+              )}
 
             <PrimaryWrapper className="p-1">
               <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">

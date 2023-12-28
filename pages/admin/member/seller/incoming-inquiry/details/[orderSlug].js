@@ -25,7 +25,6 @@ import WarningButton from '@/components/Interface/Buttons/WarningButton'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
-import calculateDayDifference from '@/lib/calculateDayDifference'
 import AccpetProduct from '@/components/Modal/OrderComponent/Seller/AcceptProduct'
 import UpdateInvoice from '@/components/Modal/OrderComponent/Seller/UpdateInvoice'
 import NotificationBarSeller from '@/components/Interface/Notification/NotificationBarSeller'
@@ -740,6 +739,7 @@ export default function InquiryDetails({ session, routeParam }) {
           <div className="">
             <h1 className="font-semibold text-2xl">Order Details</h1>
           </div>
+
           <Link href={VendorUrl.sellingProduct.incomingInquiries.index}>
             <LightButton size="sm" className="">
               <i className="mr-2 ml-1 fas fa-arrow-left"></i>
