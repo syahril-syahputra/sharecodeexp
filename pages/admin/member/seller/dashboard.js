@@ -107,27 +107,6 @@ export default function SellerDashboard({session}) {
         Excel Product Management
       </h1>
       <div className="grid grid-cols-4 gap-4 mt-5">
-        {/* <PrimaryWrapper className="border border-blue-500">
-          <div className="p-4 mb-auto">
-            <h1 className="font-semibold text-7xl mb-3">
-              {data.excel_product_file?.update_request || 0}
-            </h1>
-            <span className="text-md italic">Update Requested</span>
-          </div>
-          <Link
-            href={`/admin/member/seller/product/uploaded?status=update-request`}
-            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
-          >
-            <div className="">
-              <h1 className="text-md text-white">Check Now</h1>
-            </div>
-            <div className="">
-              <span className="text-md">
-                <i className="fas fa-chevron-right text-white"></i>
-              </span>
-            </div>
-          </Link>
-        </PrimaryWrapper> */}
         <ComponentCardAdminDashboard
           dataName={data.excel_product_file?.update_request || 0}
           name={"Update Requested"}
@@ -135,40 +114,10 @@ export default function SellerDashboard({session}) {
           onClick={() => resetCounter('update-request')}
           dataNameNotification={data.order?.newly_update?.update_request}
         />
-        {/* <ComponentCardAdminDashboard
-          dataName={data.excel_product_file?.in_progress || 0}
-          name={"Inprogress Requested"}
-          url={`/admin/member/seller/product/uploaded?status=inprogress-request`}
-          onClick={() => resetCounter('update-request')}
-          dataNameNotification={data.order?.newly_update?.in_progress}
-        /> */}
       </div>
       <hr className="border-gray-500 my-4" />
       <h1 className="font-normal text-2xl mb-3">Order</h1>
       <div className="grid grid-cols-4 gap-4 mt-5">
-        {/* <PrimaryWrapper className="border border-blue-500">
-          <div className="p-4 mb-auto">
-            <h1 className="font-semibold text-7xl mb-3">
-              {data.order?.incoming_inquiries}
-            </h1>
-            <span className="text-md italic">
-              Verified / Reject New Inquiries
-            </span>
-          </div>
-          <Link
-            href={`${VendorUrl.sellingProduct.incomingInquiries.index}/?orderStatus=inquiry-sent`}
-            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
-          >
-            <div className="">
-              <h1 className="text-md text-white">Check Now</h1>
-            </div>
-            <div className="">
-              <span className="text-md">
-                <i className="fas fa-chevron-right text-white"></i>
-              </span>
-            </div>
-          </Link>
-        </PrimaryWrapper> */}
         <ComponentCardAdminDashboard
           dataName={data.order?.incoming_inquiries || 0}
           name={"Verified / Reject New Inquiries"}
@@ -176,27 +125,6 @@ export default function SellerDashboard({session}) {
           onClick={() => resetCounter('incoming-inquiries')}
           dataNameNotification={data.order?.newly_update?.incoming_inquiries}
         />
-        {/* <PrimaryWrapper className="border border-blue-500">
-          <div className="p-4 mb-auto">
-            <h1 className="font-semibold text-7xl mb-3">
-              {data.order?.provide_tracking_number}
-            </h1>
-            <span className="text-md italic">Orders Need Tracking Number</span>
-          </div>
-          <Link
-            href={`${VendorUrl.sellingProduct.incomingInquiries.index}/?orderStatus=payment-accepted`}
-            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
-          >
-            <div className="">
-              <h1 className="text-md text-white">Check Now</h1>
-            </div>
-            <div className="">
-              <span className="text-md">
-                <i className="fas fa-chevron-right text-white"></i>
-              </span>
-            </div>
-          </Link>
-        </PrimaryWrapper> */}
         <ComponentCardAdminDashboard
           dataName={data.order?.provide_tracking_number || 0}
           name={"Orders Need Tracking Number"}
@@ -204,72 +132,6 @@ export default function SellerDashboard({session}) {
           onClick={() => resetCounter('provide-tracking-number')}
           dataNameNotification={data.order?.newly_update?.provide_tracking_number}
         />
-        {/* Kode di comment masuk kedalam sprint 7 
-        https://venatronics-dev.atlassian.net/jira/software/projects/EX/boards/2?assignee=712020%3A7e9286ec-874a-4a10-826a-81ccef33c4c3&selectedIssue=EX-430
-        */}
-        {/* <PrimaryWrapper className="border border-blue-500">
-          <div className="p-4 mb-auto">
-            <h1 className="font-semibold text-7xl mb-3">
-              {data.order?.good_test_result}
-            </h1>
-            <span className="text-md italic">Good Test Result</span>
-          </div>
-          <Link
-            href={`${VendorUrl.sellingProduct.incomingInquiries.index}/?orderStatus=good-test-result`}
-            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
-          >
-            <div className="">
-              <h1 className="text-md text-white">Check Now</h1>
-            </div>
-            <div className="">
-              <span className="text-md">
-                <i className="fas fa-chevron-right text-white"></i>
-              </span>
-            </div>
-          </Link>
-        </PrimaryWrapper> */}
-        {/* <PrimaryWrapper className="border border-blue-500">
-          <div className="p-4 mb-auto">
-            <h1 className="font-semibold text-7xl mb-3">
-              {data.order?.waiting_for_payment || 0}
-            </h1>
-            <span className="text-md italic">Waiting For Payment</span>
-          </div>
-          <Link
-            href={`${VendorUrl.sellingProduct.incomingInquiries.index}/?orderStatus=product-accepted`}
-            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
-          >
-            <div className="">
-              <h1 className="text-md text-white">Check Now</h1>
-            </div>
-            <div className="">
-              <span className="text-md">
-                <i className="fas fa-chevron-right text-white"></i>
-              </span>
-            </div>
-          </Link>
-        </PrimaryWrapper> */}
-        {/* <PrimaryWrapper className="border border-blue-500">
-          <div className="p-4 mb-auto">
-            <h1 className="font-semibold text-7xl mb-3">
-              {data.order?.bad_test_result || 0}
-            </h1>
-            <span className="text-md italic">Bad Test Result</span>
-          </div>
-          <Link
-            href={`${VendorUrl.sellingProduct.returnedProduct.active.index}`}
-            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
-          >
-            <div className="">
-              <h1 className="text-md text-white">Check Now</h1>
-            </div>
-            <div className="">
-              <span className="text-md">
-                <i className="fas fa-chevron-right text-white"></i>
-              </span>
-            </div>
-          </Link>
-        </PrimaryWrapper> */}
         <ComponentCardAdminDashboard
           dataName={data.order?.bad_test_result || 0}
           name={"Bad Test Result"}
@@ -280,37 +142,11 @@ export default function SellerDashboard({session}) {
         <ComponentCardAdminDashboard
           dataName={data.order?.handling_product || 0}
           name={"Payment for Handling Product"}
-          url={`${VendorUrl.sellingProduct.returnedProduct.completed?.index}`}
+          url={`${VendorUrl.sellingProduct.returnedProduct.active.index}`}
           onClick={() => resetCounter('handling-product')}
           dataNameNotification={data.order?.newly_update?.handling_product}
         />
       </div>
-      {/* <hr className='border-gray-500 my-4' />
-      <h1 className='font-normal text-2xl mb-3'>Product</h1>
-      <div className='grid grid-cols-4 gap-4 mt-5'>
-        <PrimaryWrapper className={'border border-blue-500'}>
-          <div className="p-4 mb-auto">
-            <h1 className="font-semibold text-7xl mb-3">
-              {data.order?.bad_test_result || 0}
-            </h1>
-            <span className="text-md italic">Payment for Handling Product</span>
-          </div>
-          <Link
-            // href={`${VendorUrl.sellingProduct.returnedProduct.active.index}`}
-            href=""
-            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
-          >
-            <div className="">
-              <h1 className="text-md text-white">Check Now</h1>
-            </div>
-            <div className="">
-              <span className="text-md">
-                <i className="fas fa-chevron-right text-white"></i>
-              </span>
-            </div>
-          </Link>
-        </PrimaryWrapper>
-      </div> */}
     </>
   )
 }
