@@ -1,14 +1,14 @@
 // server.js
-const { createServer } = require('http')
-const { parse } = require('url')
+const {createServer} = require('http')
+const {parse} = require('url')
 const next = require('next')
 
 const dev = 'production'
 // const dev = process.env.NODE_ENV !== 'production'
 const hostname = 'localhost'
-const port = 3000
+const port = 3300
 // when using middleware `hostname` and `port` must be provided below
-const app = next({ dev, hostname, port })
+const app = next({dev, hostname, port})
 const handle = app.getRequestHandler()
 
 app.prepare().then(() => {
@@ -17,7 +17,7 @@ app.prepare().then(() => {
       // Be sure to pass `true` as the second argument to `url.parse`.
       // This tells it to parse the query portion of the URL.
       const parsedUrl = parse(req.url, true)
-      const { pathname, query } = parsedUrl
+      const {pathname, query} = parsedUrl
 
       if (pathname === '/a') {
         await app.render(req, res, '/a', query)

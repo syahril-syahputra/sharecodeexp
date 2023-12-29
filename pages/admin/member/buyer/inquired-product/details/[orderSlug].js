@@ -28,6 +28,7 @@ import calculateTimeDifference from '@/lib/calculateTimeDifference'
 import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
 import ModalPdf from '@/components/Modal/ModalPdf'
 import NotificationBarBuyer from '@/components/Interface/Notification/NotificationBarBuyer'
+import DocumentButton from '@/components/Shared/Order/DocumentButton'
 
 export default function InquiryDetails({session, routeParam}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -1003,9 +1004,8 @@ export default function InquiryDetails({session, routeParam}) {
                 <span className="text-gray-500">Buyer</span>
               </div>
               <div className="mx-2 mt-1 text-sm border-b mb-2">
-                <div className="flex flex-wrap justify-between">
+                {/* <div className="flex flex-wrap justify-between">
                   <span>Payment Receipt</span>
-
                   {
                     buyerReceiptData?.length > 0 ?
                       <span className="underline text-blue-500" onClick={() => {
@@ -1015,29 +1015,24 @@ export default function InquiryDetails({session, routeParam}) {
                       }}>view</span>
                       :
                       <span className="underline text-gray-500">view</span>
-
-
                   }
-
-                  {/* {data.buyer_receipt_path ? (
-                    <Link
-                      target="_blank"
-                      href={publicDir + data.buyer_receipt_path}
-                      className="underline text-blue-500"
-                    >
-                      view
-                    </Link>
-                  ) : (
-                    <span className="underline text-gray-500">view</span>
-                  )} */}
-                </div>
+                </div> */}
+                <DocumentButton
+                  title="Payment Receipt"
+                  isActive={buyerReceiptData?.length > 0}
+                  onClick={() => {
+                    setShowModal(true)
+                    setSlugState(data?.slug)
+                    setBuyerReceiptPath(data?.buyer_receipt_path)
+                  }}
+                />
               </div>
               <div className="mb-5">
                 <div className="mx-2 mt-1 text-sm">
                   <span className="text-gray-500">Exepart</span>
                 </div>
                 <div className="mx-2 mt-1 text-sm">
-                  <div className="flex flex-wrap justify-between">
+                  {/* <div className="flex flex-wrap justify-between">
                     <span>Quotation</span>
                     {data.quotation_available == 1 && isQuotateionAvailable ? (
                       <label
@@ -1061,10 +1056,32 @@ export default function InquiryDetails({session, routeParam}) {
                       //   </Link>
                       <span className="underline text-gray-500">view</span>
                     )}
-                  </div>
+                  </div> */}
+                  <DocumentButton
+                    title="Quotation"
+                    isActive={data.quotation_available == 1 && isQuotateionAvailable}
+                    href={'pdf/quotation/${data.slug'}
+                    isLoading={isLoadingOpenQUotation}
+                    onClick={openQuotationHandler}
+                  />
+                  <DocumentButton
+                    title="Proforma Invoice"
+                    isActive={data.proforma_invoice_available == 1}
+                    href={`pdf/proforma-invoice/${data.slug}`}
+                  />
+                  <DocumentButton
+                    title="Invoice"
+                    href={`pdf/buyer-invoice/${data.slug}`}
+                    isActive={data.buyer_invoice_available == 1}
+                  />
+                  <DocumentButton
+                    title="Receipt of Reimbursement"
+                    isActive={data.admin_reimbursement_receipt_path}
+                    href={publicDir + data.admin_reimbursement_receipt_path}
+                  />
                 </div>
                 <div className="mx-2 mt-1 text-sm">
-                  <div className="flex flex-wrap justify-between">
+                  {/* <div className="flex flex-wrap justify-between">
                     <span>Proforma Invoice</span>
                     {data.proforma_invoice_available == 1 ? (
                       <Link
@@ -1077,12 +1094,16 @@ export default function InquiryDetails({session, routeParam}) {
                     ) : (
                       <span className="underline text-gray-500">view</span>
                     )}
-                  </div>
+                  </div> */}
+                  {/* <DocumentButton
+                    title="Proforma Invoice"
+                    isActive={data.proforma_invoice_available == 1}
+                    href={`pdf/proforma-invoice/${data.slug}`}
+                  /> */}
                 </div>
                 <div className="mx-2 mt-1 text-sm">
-                  <div className="flex flex-wrap justify-between">
+                  {/* <div className="flex flex-wrap justify-between">
                     <span>Invoice</span>
-                    {/* {data.admin_reimbursement_receipt_path ? ( */}
                     {data.buyer_invoice_available == 1 ? (
                       <Link
                         target="_blank"
@@ -1094,9 +1115,15 @@ export default function InquiryDetails({session, routeParam}) {
                     ) : (
                       <span className="underline text-gray-500">view</span>
                     )}
-                  </div>
+                  </div> */}
+                  {/* <DocumentButton
+                    title="Invoice"
+                    href={`pdf/buyer-invoice/${data.slug}`}
+                    isActive={data.buyer_invoice_available == 1}
+
+                  /> */}
                 </div>
-                <div className="mx-2 mt-1 text-sm">
+                {/* <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Receipt of Reimbursement</span>
                     {data.admin_reimbursement_receipt_path ? (
@@ -1111,7 +1138,7 @@ export default function InquiryDetails({session, routeParam}) {
                       <span className="underline text-gray-500">view</span>
                     )}
                   </div>
-                </div>
+                </div> */}
               </div>
             </PrimaryWrapper>
           </div>

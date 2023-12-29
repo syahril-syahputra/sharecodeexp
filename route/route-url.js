@@ -72,8 +72,9 @@ export const VendorUrl = {
         index: '/admin/member/seller/returned-product/cancelled-order',
       },
       completed: {
-        index: '/admin/member/seller/returned-product/corser-order',
+        index: '/admin/member/seller/returned-product/closed-order',
       },
+
     },
   },
   buyingProduct: {
