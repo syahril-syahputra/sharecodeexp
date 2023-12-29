@@ -28,7 +28,7 @@ export default function BuyerDashboard({session}) {
   })
   const loadData = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .get(`/buyer/dashboard/counter`, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -83,7 +83,6 @@ export default function BuyerDashboard({session}) {
   }
 
   async function resetCounter(counterKey) {
-    // /buyer/dashboard/counter
     await axios
       .post(`/buyer/dashboard/counter-checker/${counterKey}`,
         {},
