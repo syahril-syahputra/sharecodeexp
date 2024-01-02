@@ -47,7 +47,7 @@ export default function BuyerDashboard({session}) {
       })
   }
 
-  function ComponentCardAdminDashboard({onClick, dataName, name, url, dataNameNotification}) {
+  function ComponentCardBuyerDashboard({onClick, dataName, name, url, dataNameNotification}) {
     return (
       <PrimaryWrapper className="border border-blue-500">
         <div className="p-4 mb-auto">
@@ -103,28 +103,28 @@ export default function BuyerDashboard({session}) {
         Buyer's Dashboard
       </h1>
       <div className='grid grid-cols-4 gap-4 mt-5'>
-        <ComponentCardAdminDashboard
+        <ComponentCardBuyerDashboard
           dataName={data.order?.accept_quotation}
           name={'Accept / Reject Quatations'}
           url={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=inquiry-verified`}
           onClick={() => resetCounter('order-accept-quotation')}
           dataNameNotification={data.order?.newly_update?.accept_quotation}
         />
-        <ComponentCardAdminDashboard
+        <ComponentCardBuyerDashboard
           dataName={data.order?.pending_payment}
           name={'Pending Payments'}
           url={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=proforma-invoice-sent`}
           onClick={() => resetCounter('order-pending-payment')}
           dataNameNotification={data.order?.newly_update?.pending_payment}
         />
-        <ComponentCardAdminDashboard
+        <ComponentCardBuyerDashboard
           dataName={data.order?.ready_to_pick}
           name={'Orders Ready to Pick Up'}
           url={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=good-test-result`}
           onClick={() => resetCounter('order-ready-to-pick')}
           dataNameNotification={data.order?.newly_update?.ready_to_pick}
         />
-        <ComponentCardAdminDashboard
+        <ComponentCardBuyerDashboard
           dataName={data.order?.confirm_receipt_of_shipment}
           name={'Confirm Receipt of Shipment'}
           url={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=shipped-to-buyer`}

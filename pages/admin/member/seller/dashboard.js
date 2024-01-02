@@ -45,7 +45,7 @@ export default function SellerDashboard({session}) {
       })
   }
 
-  function ComponentCardAdminDashboard({onClick, dataName, name, url, dataNameNotification}) {
+  function ComponentCardSellerDashboard({onClick, dataName, name, url, dataNameNotification}) {
     return (
       <PrimaryWrapper className="border border-blue-500">
         <div className="p-4 mb-auto">
@@ -106,7 +106,7 @@ export default function SellerDashboard({session}) {
         Excel Product Management
       </h1>
       <div className="grid grid-cols-4 gap-4 mt-5">
-        <ComponentCardAdminDashboard
+        <ComponentCardSellerDashboard
           dataName={data.excel_product_file?.update_request || 0}
           name={"Update Requested"}
           url={`/admin/member/seller/product/uploaded?status=update-request`}
@@ -117,28 +117,28 @@ export default function SellerDashboard({session}) {
       <hr className="border-gray-500 my-4" />
       <h1 className="font-normal text-2xl mb-3">Order</h1>
       <div className="grid grid-cols-4 gap-4 mt-5">
-        <ComponentCardAdminDashboard
+        <ComponentCardSellerDashboard
           dataName={data.order?.incoming_inquiries || 0}
           name={"Verified / Reject New Inquiries"}
           url={`${VendorUrl.sellingProduct.incomingInquiries.index}/?orderStatus=inquiry-sent`}
           onClick={() => resetCounter('order-incoming-inquiries')}
           dataNameNotification={data.order?.newly_update?.incoming_inquiries}
         />
-        <ComponentCardAdminDashboard
+        <ComponentCardSellerDashboard
           dataName={data.order?.provide_tracking_number || 0}
           name={"Orders Need Tracking Number"}
           url={`${VendorUrl.sellingProduct.incomingInquiries.index}/?orderStatus=payment-accepted`}
           onClick={() => resetCounter('order-provide-tracking-number')}
           dataNameNotification={data.order?.newly_update?.provide_tracking_number}
         />
-        <ComponentCardAdminDashboard
+        <ComponentCardSellerDashboard
           dataName={data.order?.bad_test_result || 0}
           name={"Bad Test Result"}
           url={`${VendorUrl.sellingProduct.returnedProduct.active.index}`}
           onClick={() => resetCounter('order-bad-test-result')}
           dataNameNotification={data.order?.newly_update?.bad_test_result}
         />
-        <ComponentCardAdminDashboard
+        <ComponentCardSellerDashboard
           dataName={data.order?.handling_product || 0}
           name={"Payment for Handling Product"}
           url={`${VendorUrl.sellingProduct.returnedProduct.active.index}`}
