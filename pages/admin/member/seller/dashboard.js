@@ -110,8 +110,8 @@ export default function SellerDashboard({session}) {
           dataName={data.excel_product_file?.update_request || 0}
           name={"Update Requested"}
           url={`/admin/member/seller/product/uploaded?status=update-request`}
-          onClick={() => resetCounter('update-request')}
-          dataNameNotification={data.order?.newly_update?.update_request}
+          onClick={() => resetCounter('excel-product-file-update-request')}
+          dataNameNotification={data.excel_product_file?.newly_update?.update_request}
         />
       </div>
       <hr className="border-gray-500 my-4" />
