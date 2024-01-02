@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react'
 import axios from '@/lib/axios'
 import {getSession} from 'next-auth/react'
 import Link from 'next/link'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
@@ -266,7 +268,7 @@ export default function SuperadminDashboard({session, message}) {
               <ComponentCardAdminDashboard
                 dataName={data.order?.return_handling || 0}
                 dataNameNotification={data.order?.newly_update?.return_handling}
-                onClick={() => resetCounter('return-handling')}
+                onClick={() => resetCounter('order-return-handling')}
                 url={'/admin/superadmin/reimbursement/active'}
                 name={'Return Handling'}
               />
@@ -284,9 +286,9 @@ export default function SuperadminDashboard({session, message}) {
                 name={'Bad Test Result'}
               />
               <ComponentCardAdminDashboard
-                dataName={data.order?.reimbursement_active || 0}
+                dataName={data.order?.reimbursement || 0}
                 dataNameNotification={data.order?.newly_update?.reimbursement_active}
-                onClick={() => resetCounter('order-reimbursement-active')}
+                onClick={() => resetCounter('order-reimbursement')}
                 url={'/admin/superadmin/reimbursement/active'}
                 name={'Release Payment to Buyer'}
               />

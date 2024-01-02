@@ -107,7 +107,7 @@ export default function BuyerDashboard({session}) {
           dataName={data.order?.accept_quotation}
           name={'Accept / Reject Quatations'}
           url={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=inquiry-verified`}
-          onClick={() => resetCounter('accept-quotation')}
+          onClick={() => resetCounter('order-accept-quotation')}
           dataNameNotification={data.order?.newly_update?.accept_quotation}
         />
         <ComponentCardAdminDashboard
@@ -128,7 +128,7 @@ export default function BuyerDashboard({session}) {
           dataName={data.order?.confirm_receipt_of_shipment}
           name={'Confirm Receipt of Shipment'}
           url={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=shipped-to-buyer`}
-          onClick={() => resetCounter('confirm-receipt-of-shipment')}
+          onClick={() => resetCounter('order-confirm-receipt-of-shipment')}
           dataNameNotification={data.order?.newly_update?.confirm_receipt_of_shipment}
         />
       </div>

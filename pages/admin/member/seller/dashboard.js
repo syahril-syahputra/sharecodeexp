@@ -81,7 +81,6 @@ export default function SellerDashboard({session}) {
   }
 
   async function resetCounter(counterKey) {
-    // /buyer/dashboard/counter
     await axios
       .post(`/seller/dashboard/counter-checker/${counterKey}`,
         {},
@@ -122,28 +121,28 @@ export default function SellerDashboard({session}) {
           dataName={data.order?.incoming_inquiries || 0}
           name={"Verified / Reject New Inquiries"}
           url={`${VendorUrl.sellingProduct.incomingInquiries.index}/?orderStatus=inquiry-sent`}
-          onClick={() => resetCounter('incoming-inquiries')}
+          onClick={() => resetCounter('order-incoming-inquiries')}
           dataNameNotification={data.order?.newly_update?.incoming_inquiries}
         />
         <ComponentCardAdminDashboard
           dataName={data.order?.provide_tracking_number || 0}
           name={"Orders Need Tracking Number"}
           url={`${VendorUrl.sellingProduct.incomingInquiries.index}/?orderStatus=payment-accepted`}
-          onClick={() => resetCounter('provide-tracking-number')}
+          onClick={() => resetCounter('order-provide-tracking-number')}
           dataNameNotification={data.order?.newly_update?.provide_tracking_number}
         />
         <ComponentCardAdminDashboard
           dataName={data.order?.bad_test_result || 0}
           name={"Bad Test Result"}
           url={`${VendorUrl.sellingProduct.returnedProduct.active.index}`}
-          onClick={() => resetCounter('bad-test-result')}
+          onClick={() => resetCounter('order-bad-test-result')}
           dataNameNotification={data.order?.newly_update?.bad_test_result}
         />
         <ComponentCardAdminDashboard
           dataName={data.order?.handling_product || 0}
           name={"Payment for Handling Product"}
           url={`${VendorUrl.sellingProduct.returnedProduct.active.index}`}
-          onClick={() => resetCounter('handling-product')}
+          onClick={() => resetCounter('order-handling-product')}
           dataNameNotification={data.order?.newly_update?.handling_product}
         />
       </div>
