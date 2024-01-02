@@ -181,7 +181,7 @@ export default function SuperadminDashboard({session, message}) {
                 dataName={data?.registry?.uploaded_additional_documents || 0}
                 dataNameNotification={data.registry?.newly_update?.uploaded_additional_documents}
                 onClick={() => resetCounter('registry-uploaded-additional-documents')}
-                url={'/admin/superadmin/registry/uploadedcompanyh'}
+                url={'/admin/superadmin/registry/uploadedcompany'}
                 name={'Additional Document Need to Review'}
               />
             </div>
