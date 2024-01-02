@@ -264,14 +264,6 @@ export default function SuperadminDashboard({session, message}) {
                 }
                 name={'Release Payment to Seller'}
               />
-              {/* return_handling */}
-              <ComponentCardAdminDashboard
-                dataName={data.order?.return_handling || 0}
-                dataNameNotification={data.order?.newly_update?.return_handling}
-                onClick={() => resetCounter('order-return-handling')}
-                url={'/admin/superadmin/reimbursement/active'}
-                name={'Return Handling'}
-              />
             </div>
             <hr className="border-gray-500 my-4" />
             <h1 className="font-normal text-2xl mb-3 mt-4">Bad Test Result</h1>
@@ -292,7 +284,14 @@ export default function SuperadminDashboard({session, message}) {
                 url={'/admin/superadmin/reimbursement/active'}
                 name={'Release Payment to Buyer'}
               />
-
+              {/* return_handling */}
+              <ComponentCardAdminDashboard
+                dataName={data.order?.return_handling || 0}
+                dataNameNotification={data.order?.newly_update?.return_handling}
+                onClick={() => resetCounter('order-return-handling')}
+                url={'/admin/superadmin/reimbursement/active'}
+                name={'Return Handling'}
+              />
             </div>
           </>
         )
