@@ -6,7 +6,7 @@ import { Disclosure } from '@headlessui/react'
 import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import PrimaryBadges from '@/components/Interface/Badges/PrimaryBadges'
 
-export default function IncomingInquiries({ order }) {
+export default function Order({ order }) {
   return (
     <li>
       <Disclosure as="div">
@@ -22,7 +22,7 @@ export default function IncomingInquiries({ order }) {
                 className="h-6 w-6 shrink-0 text-gray-400"
                 aria-hidden="true"
               />
-              Inquiries
+              Order
               <ChevronRightIcon
                 className={classNames(
                   open ? 'rotate-90 text-gray-500' : 'text-gray-400',
@@ -34,7 +34,7 @@ export default function IncomingInquiries({ order }) {
             <Disclosure.Panel as="ul" className="mt-1 px-2">
               <Link
                 // as="a"
-                href="/admin/member/buyer/inquired-product"
+                href="/admin/member/buyer/inquired-product/order-active"
                 className={classNames(
                   false ? 'bg-gray-50' : 'hover:bg-gray-50',
                   'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
@@ -51,17 +51,7 @@ export default function IncomingInquiries({ order }) {
                   'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                 )}
               >
-                Inquiries Rejected
-              </Link>
-              <Link
-                // as="a"
-                href="/admin/member/buyer/inquired-product/quotation-rejected"
-                className={classNames(
-                  false ? 'bg-gray-50' : 'hover:bg-gray-50',
-                  'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
-                )}
-              >
-                Quotations Rejected
+                Completed Order
               </Link>
             </Disclosure.Panel>
           </>

@@ -187,6 +187,7 @@ export default function GlobalNotification() {
                   readed={item.is_read}
                   category={item.category}
                   notifCount={[notifCount, setnotifCount]}
+                  show={[isShow, setisShow]}
                 />
               ))
             )}

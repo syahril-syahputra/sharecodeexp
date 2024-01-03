@@ -50,7 +50,7 @@ export default function Order({ order }) {
                 )}
               >
                 Inquiries Rejected
-                <PrimaryBadges title={order.inquiries_rejected} />
+                {/* <PrimaryBadges title={order.inquiries_rejected} /> */}
               </Link>
               <Link
                 href="/admin/superadmin/orders/quotation-rejected"
@@ -60,7 +60,7 @@ export default function Order({ order }) {
                 )}
               >
                 Quotation Rejected
-                <PrimaryBadges title={order.quotation_rejected} />
+                {/* <PrimaryBadges title={order.quotation_rejected} /> */}
               </Link>
               <Link
                 href="/admin/superadmin/orders/order-completed"
@@ -70,7 +70,7 @@ export default function Order({ order }) {
                 )}
               >
                 Complete Orders
-                <PrimaryBadges title={order.complete} />
+                {/* <PrimaryBadges title={order.complete} /> */}
               </Link>
             </Disclosure.Panel>
           </>

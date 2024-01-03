@@ -140,7 +140,7 @@ export default function InquiryDetails({ session, routeParam }) {
     )
   }
 
-  const handlelCourierDetailsModal = (courier) => {
+  const handlelCourierDetailsModal = (courier, account) => {
     setIsLoading(true)
     setErrorInfo({})
     axios
@@ -148,7 +148,8 @@ export default function InquiryDetails({ session, routeParam }) {
         `/buyer/order/upload-courier`,
         {
           order_slug: data.slug,
-          courier,
+          buyer_courier_company_name: courier,
+          buyer_courier_account_number: account,
         },
         {
           headers: {
@@ -163,8 +164,8 @@ export default function InquiryDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          //   'Something went wrong. Cannot send tracking number to buyer.',
-          error.data.message,
+          error.data.message ||
+            'Something went wrong. Cannot send tracking number to buyer.',
           toastOptions
         )
         setErrorInfo(error.data.data)

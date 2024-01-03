@@ -51,6 +51,7 @@ export default function QuotationRejected({ session }) {
           `&order_number=${orderNumberParam}` +
           `&manufacturer_part_number=${manufacturerPartNumberParam}` +
           `&order_date=${orderDateParam}` +
+          `&inquiries=1` +
           `&action_required=${orderActionRequiredParam}`,
         {
           headers: {

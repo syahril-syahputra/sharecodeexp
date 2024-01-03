@@ -4,37 +4,37 @@ import TextInput from '@/components/Interface/Form/TextInput'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 
-export default function UploadCourierDetails(props) {
-  const [courier, setcourier] = useState('')
-  const [account, setaccount] = useState('')
+export default function DisposeCourierReturn(props) {
+  const [agreement, setagreement] = useState('')
 
   const handleSubmit = () => {
-    props.acceptance(courier, account)
+    props.acceptance(agreement ? 'DISPOSE' : '')
   }
 
   return (
     <BaseModalMedium
-      title="Courier Details"
+      title="Dispose Product"
       onClick={() => props.closeModal()}
       body={
         <>
           <div className="mb-4">
-            <TextInput
-              label="Courier Name"
-              name="courier"
-              value={courier}
-              onChange={(input) => setcourier(input.value)}
-              errorMsg={props.errorInfo?.buyer_courier_company_name}
-            ></TextInput>
-          </div>
-          <div className="mb-4">
-            <TextInput
-              label="Courier Account Number"
-              name="account"
-              value={account}
-              onChange={(input) => setaccount(input.value)}
-              errorMsg={props.errorInfo?.buyer_courier_account_number}
-            ></TextInput>
+            <li className="item-center flex space-x-2">
+              <input
+                type="checkbox"
+                id="agreement"
+                name="agreement"
+                checked={agreement}
+                onChange={() => setagreement(!agreement)}
+              />
+              <label
+                htmlFor="agreement"
+                className="ml-2 text-sm font-medium text-gray-900"
+              >
+                We confirm that we don’t want to take the products back and the
+                laboratory can dispose of the products. We understand that we
+                will be charged for product testing and handling.
+              </label>
+            </li>
           </div>
         </>
       }

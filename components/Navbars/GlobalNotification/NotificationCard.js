@@ -12,6 +12,8 @@ export default function NotificationCard(props) {
   const [isReaded, setisReaded] = useState(props.readed)
   const [notifCount, setnotifCount] = props.notifCount
 
+  const [isShow, setisShow] = props.show
+
   const unreadHandler = async (event) => {
     setisLoading(true)
 
@@ -35,6 +37,7 @@ export default function NotificationCard(props) {
   }
   const handleClick = async (event) => {
     if (isReaded) {
+      setisShow(false)
       return
     }
     if (isLoading) {
@@ -55,6 +58,7 @@ export default function NotificationCard(props) {
       )
       setnotifCount(notifCount - 1)
       setisReaded(true)
+      setisShow(false)
     } catch (error) {
       //   event.preventDefault()
     } finally {
@@ -66,6 +70,17 @@ export default function NotificationCard(props) {
     if (props.category === 'order') {
       return '/admin/superadmin/orders/details/' + props.slug
     }
+    if (props.category === 'registry') {
+      return '/admin/superadmin/registry/details/' + props.slug
+    }
+    if (props.category === 'product') {
+      return '/admin/superadmin/product/details/' + props.slug
+    }
+    if (props.category === 'excel') {
+      return '/admin/superadmin/product/excel/' + props.slug
+    }
+
+    return '/'
   }
   return (
     <div
@@ -73,7 +88,7 @@ export default function NotificationCard(props) {
         isReaded ? 'border-b bg-transparent' : ' bg-blue-50 border'
       }`}
     >
-      <Link href={createUrl()} className="block" passHref>
+      <Link href={createUrl()} className="block" passHref shallow>
         <div
           onClick={handleClick}
           className={isLoading ? 'cursor-progress' : 'cursor-pointer'}

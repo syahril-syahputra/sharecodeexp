@@ -28,6 +28,8 @@ import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/Upload
 import AccpetProduct from '@/components/Modal/OrderComponent/Seller/AcceptProduct'
 import UpdateInvoice from '@/components/Modal/OrderComponent/Seller/UpdateInvoice'
 import NotificationBarSeller from '@/components/Interface/Notification/NotificationBarSeller'
+import UploadCourierReturn from '@/components/Modal/OrderComponent/Seller/UploadCourierReturn'
+import DangerButton from '@/components/Interface/Buttons/DangerButton'
 
 export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -40,6 +42,7 @@ export default function InquiryDetails({ session, routeParam }) {
   const [isLoadingPurchaseOrder, setisLoadingPurchaseOrder] = useState(false)
 
   const [courierModal, setcourierModal] = useState(false)
+  const [disposeModal, setdisposeModal] = useState(false)
   const [rejectionReason, setRejectionReasons] = useState([])
   const loadRejectionReason = async () => {
     setIsLoading(true)
@@ -56,7 +59,7 @@ export default function InquiryDetails({ session, routeParam }) {
         setIsLoading(false)
       })
   }
-  const handlelCourierDetailsModal = (courier) => {
+  const handlelCourierDetailsModal = (courier, account, agreement) => {
     setIsLoading(true)
     setErrorInfo({})
     axios
@@ -64,7 +67,40 @@ export default function InquiryDetails({ session, routeParam }) {
         `/seller/order/upload-courier`,
         {
           order_slug: data.slug,
-          courier,
+          seller_return_courier_company_name: courier,
+          seller_return_courier_account_number: account,
+          return_product_agreement: agreement,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message, toastOptions)
+        setcourierModal(false)
+        loadData()
+      })
+      .catch((error) => {
+        toast.error(
+          //   'Something went wrong. Cannot send tracking number to buyer.',
+          error.data.message,
+          toastOptions
+        )
+        setErrorInfo(error.data.data)
+        setIsLoading(false)
+      })
+  }
+  const handleDisposeModal = (agreement) => {
+    setIsLoading(true)
+    setErrorInfo({})
+    axios
+      .post(
+        `/seller/order/upload-courier`,
+        {
+          order_slug: data.slug,
+          return_product_agreement: agreement,
         },
         {
           headers: {
@@ -321,6 +357,7 @@ export default function InquiryDetails({ session, routeParam }) {
     eccn,
     trackingNumber,
     courier,
+    account,
     isDownloadedPurchaseOrder,
     isDownloadedPackingList,
     isconfirm,
@@ -334,11 +371,13 @@ export default function InquiryDetails({ session, routeParam }) {
     formData.append('coo', coo)
     formData.append('eccn', eccn)
     formData.append('trackingSeller', trackingNumber)
-    formData.append('courier', courier)
+    formData.append('seller_courier_company_name', courier)
+    formData.append('seller_courier_account_number', account)
     formData.append('download_packing_list', isDownloadedPackingList)
     formData.append('download_purchase_order', isDownloadedPurchaseOrder)
     formData.append('all_input_are_correct', isconfirm)
     formData.append('seller_invoice', invoice)
+
     const response = await axios
       .post(`/seller/order/shipping-product`, formData, {
         headers: {
@@ -625,10 +664,18 @@ export default function InquiryDetails({ session, routeParam }) {
       actionToTake = (
         <div>
           {courierModal && (
-            <UploadCourierDetails
+            <UploadCourierReturn
               isLoading={isLoading}
               closeModal={() => setcourierModal(false)}
               acceptance={handlelCourierDetailsModal}
+              errorInfo={errorInfo}
+            />
+          )}
+          {disposeModal && (
+            <UploadCourierReturn
+              isLoading={isLoading}
+              closeModal={() => setdisposeModal(false)}
+              acceptance={handleDisposeModal}
               errorInfo={errorInfo}
             />
           )}
@@ -641,8 +688,19 @@ export default function InquiryDetails({ session, routeParam }) {
                 disabled={isLoading}
                 onClick={() => setcourierModal(true)}
               >
-                Insert Courier Details
+                Return Product
               </PrimaryButton>
+            </div>
+            <div className="mx-2 my-4">
+              <DangerButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading}
+                onClick={() => setdisposeModal(true)}
+              >
+                Dispose Product
+              </DangerButton>
             </div>
           </div>
         </div>

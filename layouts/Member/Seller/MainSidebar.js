@@ -4,6 +4,8 @@ import GlobalContext from '@/store/global-context'
 import ProductManagement from './ProductManagement'
 import IncomingInquiries from './IncomingInquiries'
 import Reimbursement from './Reimbursement'
+import Order from './order'
+import Terminated from './Terminated'
 
 export default function MainSidebar() {
   const session = useSession()
@@ -19,14 +21,13 @@ export default function MainSidebar() {
       <ul role="list" className="flex flex-1 flex-col gap-y-7">
         <li>
           <ul role="list" className="-mx-2 space-y-1">
-            <ProductManagement
-              product={sellerSidebarCounter.product}
-              excel={sellerSidebarCounter.excel_file}
-            />
-            <IncomingInquiries order={sellerSidebarCounter.order} />
+            <ProductManagement product={sellerSidebarCounter.product} />
+            <IncomingInquiries order={sellerSidebarCounter.inquiry} />
+            <Order order={sellerSidebarCounter.order} />
             <Reimbursement
-              reimbursement={sellerSidebarCounter?.returned_product}
+              reimbursement={sellerSidebarCounter?.return_handling}
             />
+            <Terminated />
           </ul>
         </li>
       </ul>

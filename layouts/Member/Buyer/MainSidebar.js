@@ -7,6 +7,7 @@ import GlobalContext from '@/store/global-context'
 import InquiredProduct from './InquiredProduct'
 import SearchProduct from './SearchProduct'
 import Reimbursment from './Reimbursement'
+import Order from './Order'
 
 export default function MainSidebar() {
   const session = useSession()
@@ -23,8 +24,9 @@ export default function MainSidebar() {
         <li>
           <ul role="list" className="-mx-2 space-y-1">
             <SearchProduct />
-            <InquiredProduct order={buyerSidebarCounter.order} />
-            <Reimbursment reimbursement={buyerSidebarCounter?.order} />
+            <InquiredProduct order={buyerSidebarCounter?.inquiry} />
+            <Reimbursment reimbursement={buyerSidebarCounter?.reimbursement} />
+            <Order order={buyerSidebarCounter?.order} />
           </ul>
         </li>
       </ul>
