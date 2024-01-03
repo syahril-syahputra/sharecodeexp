@@ -1,24 +1,26 @@
-import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import {useRouter} from 'next/router'
+import React, {useEffect, useState} from 'react'
 import Admin from 'layouts/Admin.js'
-import { getSession } from 'next-auth/react'
+import {getSession} from 'next-auth/react'
 import axios from 'lib/axios'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import moment from 'moment'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFileExcel } from '@fortawesome/free-solid-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faFileExcel} from '@fortawesome/free-solid-svg-icons'
 import InfoNotification from '@/components/Interface/Notification/InfoNotification'
 import WarningNotification from '@/components/Interface/Notification/WarningNotification'
-import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
-import { FileInput, Spinner } from 'flowbite-react'
+import {BaseModalMedium} from '@/components/Interface/Modal/BaseModal'
+import {FileInput, Spinner} from 'flowbite-react'
 import DangerButton from '@/components/Interface/Buttons/DangerButton'
 import SuccessButton from '@/components/Interface/Buttons/SuccessButton'
+import BaseTable from '@/components/Interface/Table/BaseTable'
+import {checkValue} from '@/utils/general'
 
 DetailUploadedExcel.layout = Admin
-export default function DetailUploadedExcel({ session, data }) {
+export default function DetailUploadedExcel({session, data}) {
   const router = useRouter()
   const [isRequestShow, setisRequestShow] = useState(false)
   const [uploadForm, setuploadForm] = useState(false)
@@ -109,7 +111,7 @@ export default function DetailUploadedExcel({ session, data }) {
                 <td scope="row" className="text-sm px-6 py-4">
                   :
                 </td>
-                <td className="text-sm px-2 py-4">{data.name}</td>
+                <td className="text-sm px-2 py-4">{checkValue(data.excel?.name)}</td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
                 <th scope="col" className="px-6 py-3">
@@ -118,7 +120,7 @@ export default function DetailUploadedExcel({ session, data }) {
                 <td scope="row" className="text-sm px-6 py-4">
                   :
                 </td>
-                <td className="text-sm px-2 py-4">{data.file_status?.name}</td>
+                <td className="text-sm px-2 py-4">{checkValue(data.excel?.file_status?.name)}</td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
                 <th scope="col" className="px-6 py-3">
@@ -128,7 +130,7 @@ export default function DetailUploadedExcel({ session, data }) {
                   :
                 </td>
                 <td className="text-sm px-2 py-4">
-                  {moment(data.created_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}  
+                  {moment(data.excel?.created_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}
                 </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
@@ -139,7 +141,7 @@ export default function DetailUploadedExcel({ session, data }) {
                   :
                 </td>
                 <td className="text-sm px-2 py-4">
-                  {moment(data.updated_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}  
+                  {moment(data.excel?.updated_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}
                 </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
@@ -149,7 +151,7 @@ export default function DetailUploadedExcel({ session, data }) {
                 <td scope="row" className="text-sm px-6 py-4">
                   :
                 </td>
-                <td className="text-sm px-2 py-4">{data.log || '-'}</td>
+                <td className="text-sm px-2 py-4">{checkValue(data.excel?.log)}</td>
               </tr>
             </tbody>
           </table>
@@ -196,15 +198,15 @@ export default function DetailUploadedExcel({ session, data }) {
           Event History
         </div>
         <ul className="space-y-2 p-2 text-sm">
-          {data.event_history?.length === 0 && (
+          {data?.excel?.event_history?.length === 0 && (
             <div className="text-base italic text-center p-4">
               No Event History
             </div>
           )}
-          {data.event_history?.map((item) => (
+          {data.excel?.event_history?.map((item) => (
             <li key={item.id} className="flex">
               <span className="text-cyan-700 mr-2 w-1/5 ">
-                {moment(item.updated_at).local().format('DD MMM YYYY hh:mm')} {/* set to local time */}  
+                {moment(item.updated_at).local().format('DD MMM YYYY hh:mm')} {/* set to local time */}
               </span>
               <div>
                 <span className="font-bold">{item.description}</span>
@@ -213,6 +215,67 @@ export default function DetailUploadedExcel({ session, data }) {
             </li>
           ))}
         </ul>
+      </PrimaryWrapper>
+      <PrimaryWrapper className="p-1">
+        <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+          On Going Order
+        </div>
+        <div className="mx-2 my-1 text-sm font-bold text-gray-500">
+          Note:
+        </div>
+        <div className="mx-2 text-sm text-gray-500 mb-5">
+          Avoid excel row to contain this Product Number.
+        </div>
+        <div className="">
+          <BaseTable
+            header={
+              <>
+                <th scope="col" className="px-6 py-3">
+                  Product Number
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Manufacturer
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Stock Location
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Date Code
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Order Status
+                </th>
+              </>
+            }
+            tableData={
+              <>
+                {
+                  data?.products?.map((item, index) => {
+                    return (
+                      <tr key={index} className="border-b odd:bg-gray-50 even:bg-gray-100">
+                        <td scope="row" className="text-sm px-6 py-2">
+                          {checkValue(item?.companies_products?.manufacturer_number)}
+                        </td>
+                        <td scope="row" className="text-sm px-6 py-2">
+                          {checkValue(item.companies_products?.manufacture)}
+                        </td>
+                        <td scope="row" className="text-sm px-6 py-2">
+                          {checkValue(item.companies_products?.stock_country)}
+                        </td>
+                        <td scope="row" className="text-sm px-6 py-2">
+                          {checkValue(item.companies_products?.date_code)}
+                        </td>
+                        <td scope="row" className="text-sm px-6 py-2">
+                          {checkValue(item.order_status?.name)}
+                        </td>
+                      </tr>
+                    )
+                  })
+                }
+              </>
+            }
+          />
+        </div>
       </PrimaryWrapper>
     </>
   )
