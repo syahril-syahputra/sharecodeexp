@@ -19,40 +19,44 @@ export default function ShipProduct(props) {
   const [eccn, seteccn] = useState('')
   const [trackingNumber, setTrackingNumber] = useState('')
   const [courier, setcourier] = useState('')
-  const {data: session} = useSession()
+  const [account, setaccount] = useState('')
+  const { data: session } = useSession()
   const [isDownloadedPurchaseOrder, setisDownloadedPurchaseOrder] =
     useState(false)
   const [isDownloadedPackingList, setisDownloadedPackingList] = useState(false)
   const [isconfirm, setisconfirm] = useState(false)
   const [isLoadingPurchaseOrder, setisLoadingPurchaseOrder] = useState(false)
   const [isLoadingPackingList, setisLoadingPackingList] = useState(false)
-  const [file, setFile] = useState(null)
+  const [file, setFile] = useState()
+  const [errorMessage, seterrorMessage] = useState()
 
   const handleSubmit = () => {
-    if (!isDownloadedPackingList || !isDownloadedPurchaseOrder || !isconfirm) {
-      toast.error(
-        'Please check if you have downloaded Purchase Order and Packing List and all input are correct',
-        toastOptions
-      )
+    // if (!isDownloadedPackingList || !isDownloadedPurchaseOrder || !isconfirm) {
+    //   toast.error(
+    //     'Please check if you have downloaded Purchase Order and Packing List and all input are correct',
+    //     toastOptions
+    //   )
 
-      return
-    }
+    //   return
+    // }
 
-    if (!file) {
-      toast.error('Please select invoice file', toastOptions)
+    // if (!file) {
+    //   seterrorMessage(['Select invoice file!'])
+    //   toast.error('Something went wrong. Cannot send product', toastOptions)
 
-      return
-    }
+    //   return
+    // }
     props.acceptance(
       hts,
       coo,
       eccn,
       trackingNumber,
       courier,
+      account,
       isDownloadedPurchaseOrder,
       isDownloadedPackingList,
       isconfirm,
-      file.files[0]
+      file
     )
   }
 
@@ -140,7 +144,16 @@ export default function ShipProduct(props) {
                   name="courier"
                   value={courier}
                   onChange={(input) => setcourier(input.value)}
-                  errorMsg={props.errorInfo?.trackingSeller}
+                  errorMsg={props.errorInfo?.seller_courier_company_name}
+                />
+              </div>
+              <div className="w-full px-3">
+                <TextInput
+                  label="Courier Account Number"
+                  name="account"
+                  value={account}
+                  onChange={(input) => setaccount(input.value)}
+                  errorMsg={props.errorInfo?.seller_courier_account_number}
                 />
               </div>
               <div className="w-full px-3">
@@ -165,8 +178,8 @@ export default function ShipProduct(props) {
                   accept=".pdf"
                   name="File Upload"
                   required
-                  onChange={(target) => setFile(target)}
-                //   errorMsg={['disabled', 'second error']}
+                  onChange={(target) => setFile(target.files[0])}
+                  errorMsg={props.errorInfo?.seller_invoice}
                 />
               </div>
               <div className="flex space-x-4 px-4">

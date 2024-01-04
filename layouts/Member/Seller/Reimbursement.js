@@ -22,7 +22,7 @@ export default function Reimbursement({ reimbursement }) {
                 className="h-6 w-6 shrink-0 text-gray-400"
                 aria-hidden="true"
               />
-              Returned Product
+              Return Handling
               <ChevronRightIcon
                 className={classNames(
                   open ? 'rotate-90 text-gray-500' : 'text-gray-400',
@@ -39,8 +39,8 @@ export default function Reimbursement({ reimbursement }) {
                   'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                 )}
               >
-                Cancelled Order
-                <PrimaryBadges title={reimbursement?.cancelled_order || 0} />
+                Active
+                <PrimaryBadges title={reimbursement?.active || 0} />
               </Link>
               <Link
                 href="/admin/member/seller/returned-product/closed-order"
@@ -49,8 +49,8 @@ export default function Reimbursement({ reimbursement }) {
                   'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                 )}
               >
-                Returned
-                <PrimaryBadges title={reimbursement?.returned || 0} />
+                Closed
+                {/* <PrimaryBadges title={reimbursement?.returned || 0} /> */}
               </Link>
             </Disclosure.Panel>
           </>

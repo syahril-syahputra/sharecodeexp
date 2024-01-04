@@ -61,7 +61,7 @@ export default function Registry({ registry }) {
                 )}
               >
                 Approved
-                <PrimaryBadges title={registry.approved} />
+                {/* <PrimaryBadges title={registry.approved} /> */}
               </Link>
               <Link
                 href="/admin/superadmin/registry/rejectedcompany"
@@ -71,7 +71,7 @@ export default function Registry({ registry }) {
                 )}
               >
                 Rejected
-                <PrimaryBadges title={registry.rejected} />
+                {/* <PrimaryBadges title={registry.rejected} /> */}
               </Link>
               <Link
                 href="/admin/superadmin/registry/restrictedcompany"
@@ -81,7 +81,7 @@ export default function Registry({ registry }) {
                 )}
               >
                 Restricted
-                <PrimaryBadges title={registry.restricted} />
+                {/* <PrimaryBadges title={registry.restricted} /> */}
               </Link>
             </Disclosure.Panel>
           </>

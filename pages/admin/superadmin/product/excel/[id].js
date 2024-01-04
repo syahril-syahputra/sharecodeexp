@@ -275,7 +275,8 @@ export default function DetailUploadedExcel({session, data}) {
                   :
                 </td>
                 <td className="text-sm px-2 py-4">
-                  {moment(data.excel.created_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}
+                  {moment(data.created_at).local().format('dddd, D MMMM YYYY')}{' '}
+                  {/* set to local time */}
                 </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
@@ -286,7 +287,8 @@ export default function DetailUploadedExcel({session, data}) {
                   :
                 </td>
                 <td className="text-sm px-2 py-4">
-                  {moment(data.excel.updated_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}
+                  {moment(data.updated_at).local().format('dddd, D MMMM YYYY')}{' '}
+                  {/* set to local time */}
                 </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">

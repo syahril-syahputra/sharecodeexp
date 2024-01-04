@@ -42,7 +42,7 @@ export default function IncomingInquiries({ order }) {
                 )}
               >
                 Active
-                <PrimaryBadges title={order.active} />
+                <PrimaryBadges title={order?.active || 0} />
               </Link>
               <Link
                 // as="a"
@@ -53,7 +53,7 @@ export default function IncomingInquiries({ order }) {
                 )}
               >
                 Inquiries Rejected
-                <PrimaryBadges title={order.inquiries_rejected} />
+                {/* <PrimaryBadges title={order.inquiries_rejected} /> */}
               </Link>
               <Link
                 // as="a"
@@ -64,7 +64,7 @@ export default function IncomingInquiries({ order }) {
                 )}
               >
                 Quotations Rejected
-                <PrimaryBadges title={order.quotation_rejected} />
+                {/* <PrimaryBadges title={order.quotation_rejected} /> */}
               </Link>
               {/* <Link
                 // as="a"
@@ -77,7 +77,7 @@ export default function IncomingInquiries({ order }) {
                 Bad Test Result
                 <PrimaryBadges title={order.bad_result} />
               </Link> */}
-              <Link
+              {/* <Link
                 // as="a"
                 href="/admin/member/seller/incoming-inquiry/order-completed"
                 className={classNames(
@@ -87,7 +87,7 @@ export default function IncomingInquiries({ order }) {
               >
                 Complete Orders
                 <PrimaryBadges title={order.complete} />
-              </Link>
+              </Link> */}
             </Disclosure.Panel>
           </>
         )}

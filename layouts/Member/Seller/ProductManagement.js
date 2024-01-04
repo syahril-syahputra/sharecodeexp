@@ -6,7 +6,7 @@ import { Disclosure } from '@headlessui/react'
 import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import PrimaryBadges from '@/components/Interface/Badges/PrimaryBadges'
 
-export default function ProductManagement({ product, excel }) {
+export default function ProductManagement({ product }) {
   return (
     <li>
       <Disclosure as="div">
@@ -40,7 +40,7 @@ export default function ProductManagement({ product, excel }) {
                 )}
               >
                 My Products
-                <PrimaryBadges title={product.approved} />
+                {/* <PrimaryBadges title={product.approved} /> */}
               </Link>
               <Link
                 href="/admin/member/seller/product/out-of-stock"
@@ -60,7 +60,7 @@ export default function ProductManagement({ product, excel }) {
                 )}
               >
                 Pending
-                <PrimaryBadges title={product.pending} />
+                {/* <PrimaryBadges title={product.pending} /> */}
               </Link>
 
               <Link
@@ -82,9 +82,9 @@ export default function ProductManagement({ product, excel }) {
                 )}
               >
                 Uploaded Excel File
-                <PrimaryBadges title={excel?.uploaded} />
+                <PrimaryBadges title={product?.uploaded_excel_file} />
               </Link>
-              <Link
+              {/* <Link
                 href="/admin/member/seller/product/add"
                 className={classNames(
                   false ? 'bg-gray-50' : 'hover:bg-gray-50',
@@ -92,7 +92,7 @@ export default function ProductManagement({ product, excel }) {
                 )}
               >
                 Add Product
-              </Link>
+              </Link> */}
             </Disclosure.Panel>
           </>
         )}

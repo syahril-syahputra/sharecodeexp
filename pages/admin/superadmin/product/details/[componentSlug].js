@@ -1,14 +1,14 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import moment from 'moment'
 import Link from 'next/link'
 import axios from 'lib/axios'
-import {getSession} from 'next-auth/react'
+import { getSession } from 'next-auth/react'
 import ComponentStatus from '@/components/Shared/Component/Statuses'
 import AcceptComponent from '@/components/Modal/Component/AcceptComponent'
 import RejectComponent from '@/components/Modal/Component/RejectComponent'
 import PendingComponent from '@/components/Modal/Component/PendingComponent'
-import {toast} from 'react-toastify'
-import {toastOptions} from '@/lib/toastOptions'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
 import DangerNotification from '@/components/Interface/Notification/DangerNotification'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
@@ -17,11 +17,11 @@ import Admin from 'layouts/Admin.js'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import LoadingState from '@/components/Interface/Loader/LoadingState'
-import {CompanyStatusesIcon} from '@/components/Shared/Company/Statuses'
+import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses'
 import GlobalContext from '@/store/global-context'
-import {useRouter} from 'next/router'
+import { useRouter } from 'next/router'
 
-export default function ComponentDetails({session, routeParam}) {
+export default function ComponentDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   const context = useContext(GlobalContext)
   const router = useRouter()
@@ -172,37 +172,37 @@ export default function ComponentDetails({session, routeParam}) {
             <>
               {(component.status == 'pending' ||
                 component.status == 'rejected') && (
-                  <PrimaryButton
-                    size="sm"
-                    className="mr-2"
-                    onClick={() => setShowAcceptModal(true)}
-                  >
-                    <i className="mr-2 ml-1 fas fa-check text-white"></i>
-                    Accept
-                  </PrimaryButton>
-                )}
+                <PrimaryButton
+                  size="sm"
+                  className="mr-2"
+                  onClick={() => setShowAcceptModal(true)}
+                >
+                  <i className="mr-2 ml-1 fas fa-check text-white"></i>
+                  Accept
+                </PrimaryButton>
+              )}
               {(component.status == 'approved' ||
                 component.status == 'rejected') && (
-                  <WarningButton
-                    size="sm"
-                    className="mr-2"
-                    onClick={() => setShowPendingModal(true)}
-                  >
-                    <i className="mr-2 ml-1 fas fa-clock text-white"></i>
-                    Pending
-                  </WarningButton>
-                )}
+                <WarningButton
+                  size="sm"
+                  className="mr-2"
+                  onClick={() => setShowPendingModal(true)}
+                >
+                  <i className="mr-2 ml-1 fas fa-clock text-white"></i>
+                  Pending
+                </WarningButton>
+              )}
               {(component.status == 'approved' ||
                 component.status == 'pending') && (
-                  <DangerButton
-                    size="sm"
-                    className="mr-2"
-                    onClick={() => setShowRejectModal(true)}
-                  >
-                    <i className="mr-2 ml-1 fas fa-times text-white"></i>
-                    Reject
-                  </DangerButton>
-                )}
+                <DangerButton
+                  size="sm"
+                  className="mr-2"
+                  onClick={() => setShowRejectModal(true)}
+                >
+                  <i className="mr-2 ml-1 fas fa-times text-white"></i>
+                  Reject
+                </DangerButton>
+              )}
             </>
           }
         ></PageHeader>
@@ -288,8 +288,8 @@ export default function ComponentDetails({session, routeParam}) {
                     </td>
                     <td className="text-sm px-2 py-4">
                       {component.AvailableQuantity === null ||
-                        parseInt(component?.AvailableQuantity) === 0 ||
-                        component.AvailableQuantity === undefined
+                      parseInt(component?.AvailableQuantity) === 0 ||
+                      component.AvailableQuantity === undefined
                         ? 'Out of Stock'
                         : component?.AvailableQuantity}
                     </td>
@@ -303,8 +303,8 @@ export default function ComponentDetails({session, routeParam}) {
                     </td>
                     <td className="text-sm px-2 py-4">
                       {component.moq === null ||
-                        parseInt(component?.moq) === 0 ||
-                        component.moq === undefined
+                      parseInt(component?.moq) === 0 ||
+                      component.moq === undefined
                         ? 'Out of Stock'
                         : component?.moq}
                     </td>
@@ -370,7 +370,10 @@ export default function ComponentDetails({session, routeParam}) {
                       :
                     </td>
                     <td className="text-sm px-2 py-4">
-                      {moment(component.created_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}
+                      {moment(component.created_at)
+                        .local()
+                        .format('dddd, D MMMM YYYY')}{' '}
+                      {/* set to local time */}
                     </td>
                   </tr>
                 </tbody>

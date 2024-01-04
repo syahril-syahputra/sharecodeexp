@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'lib/axios'
 import { getSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-
-// layout for page
+import { VendorUrl } from '@/route/route-url'
 import Admin from 'layouts/Admin.js'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
@@ -14,8 +13,7 @@ import IncomingInquiryTable from '@/components/Table/Member/Seller/Order/Incomin
 import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
 
-export default function OrderComplete({ session }) {
-  //data search
+export default function IncomingInquiry({ session, routeParam }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
@@ -25,18 +23,40 @@ export default function OrderComplete({ session }) {
     lastPage: 0,
   })
 
-  const [pageNumber, setPageNumber] = useState('')
-  const orderStatus = {
-    label: 'Order Complete',
-    value: '',
+  let orderStatusFromRoute = routeParam
+  const [orderStatusOptions, setOrderStatusOption] = useState([])
+  const loadOrderStatusOption = async () => {
+    await axios
+      .get(`/allstatus?is_closed=0&reimbursement=0`)
+      .then((response) => {
+        let res = response.data.data
+        setOrderStatusOption(res)
+        res.filter((option) => {
+          if (option.value === orderStatusFromRoute) {
+            setOrderStatus({
+              label: option.label,
+              value: option.value,
+            })
+          }
+        })
+      })
+      .catch(() => {
+        toast.error('Cannot load order status.', toastOptions)
+      })
   }
+
+  const [pageNumber, setPageNumber] = useState('')
+  const [orderStatus, setOrderStatus] = useState({
+    label: 'Select Order Status',
+    value: '',
+  })
   const [orderNumber, setOrderNumber] = useState('')
   const [manufacturerPartNumber, setManufacturerPartNumber] = useState('')
-  const [orderDate, setOrderDate] = useState('')
   const [stateActionRequired, setStateActionRequired] = useState(false)
-
+  const [orderDate, setOrderDate] = useState('')
   const loadData = async (
     page = 1,
+    orderStatusParam = orderStatusFromRoute ? orderStatusFromRoute : '',
     orderNumberParam = '',
     manufacturerPartNumberParam = '',
     orderDateParam = '',
@@ -48,10 +68,11 @@ export default function OrderComplete({ session }) {
       .get(
         '/seller/order/list' +
           `?page=${page}` +
-          `&status=order-completed` +
+          `&status=${orderStatusParam}` +
           `&order_number=${orderNumberParam}` +
           `&manufacturer_part_number=${manufacturerPartNumberParam}` +
           `&order_date=${orderDateParam}` +
+          `&active=1` +
           `&inquiries=0` +
           `&action_required=${orderActionRequiredParam}`,
         {
@@ -83,6 +104,7 @@ export default function OrderComplete({ session }) {
   const handleSearchData = () => {
     loadData(
       1,
+      orderStatus?.value,
       orderNumber,
       manufacturerPartNumber,
       orderDate,
@@ -91,6 +113,14 @@ export default function OrderComplete({ session }) {
   }
   const router = useRouter()
   const handleResetSearchFilter = () => {
+    if (orderStatusFromRoute) {
+      orderStatusFromRoute = ''
+      router.push(`${VendorUrl.sellingProduct.incomingInquiries.index}`)
+    }
+    setOrderStatus({
+      label: 'Select Order Status',
+      value: '',
+    })
     setManufacturerPartNumber('')
     setOrderNumber('')
     setOrderDate('')
@@ -103,6 +133,7 @@ export default function OrderComplete({ session }) {
 
   useEffect(() => {
     loadData()
+    loadOrderStatusOption()
   }, [])
 
   useEffect(() => {
@@ -112,9 +143,9 @@ export default function OrderComplete({ session }) {
   return (
     <>
       <div className="mb-10">
-        <h1 className="font-semibold text-2xl">Orders</h1>
+        <h1 className="font-semibold text-2xl">Order</h1>
         <PrimaryWrapper className={`mt-5 p-5`}>
-          <h2 className="text-xl text-center">Search Order Complete</h2>
+          <h2 className="text-xl text-center">Search Active Order</h2>
           <div className="grid grid-cols-2 gap-3 mt-2">
             <div className="text-center">
               <TextInput
@@ -133,7 +164,11 @@ export default function OrderComplete({ session }) {
           </div>
           <div className="grid grid-cols-2 gap-3 mt-4">
             <div className="text-center">
-              <SelectInput disabled value={orderStatus} options={[]} />
+              <SelectInput
+                value={orderStatus}
+                options={orderStatusOptions}
+                onChange={(input) => setOrderStatus(input)}
+              />
             </div>
             <div className="text-center">
               <TextInput
@@ -180,13 +215,13 @@ export default function OrderComplete({ session }) {
           data={data}
           links={links}
           metaData={metaData}
-        ></IncomingInquiryTable>
+        />
       </div>
     </>
   )
 }
 
-OrderComplete.layout = Admin
+IncomingInquiry.layout = Admin
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)

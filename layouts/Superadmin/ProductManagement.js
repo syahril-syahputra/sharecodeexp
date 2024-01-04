@@ -53,7 +53,7 @@ export default function ComponentManagement({ product, excel }) {
                 )}
               >
                 Approved
-                <PrimaryBadges title={product.approved} />
+                {/* <PrimaryBadges title={product.approved} /> */}
               </Link>
               <Link
                 href="/admin/superadmin/product/rejected"
@@ -63,7 +63,7 @@ export default function ComponentManagement({ product, excel }) {
                 )}
               >
                 Rejected
-                <PrimaryBadges title={product.rejected} />
+                {/* <PrimaryBadges title={product.rejected} /> */}
               </Link>
 
               <Link
@@ -73,7 +73,8 @@ export default function ComponentManagement({ product, excel }) {
                   'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                 )}
               >
-                Uploaded Excel File <PrimaryBadges title={excel?.uploaded} />
+                Uploaded Excel File{' '}
+                <PrimaryBadges title={product.uploaded_excel_file} />
               </Link>
               <Link
                 href={publicDir + '/template/exepart_template.xlsx'}

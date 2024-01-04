@@ -4,17 +4,18 @@ import TextInput from '@/components/Interface/Form/TextInput'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 
-export default function UploadCourierDetails(props) {
+export default function UploadCourierReturn(props) {
   const [courier, setcourier] = useState('')
   const [account, setaccount] = useState('')
+  const [agreement, setagreement] = useState('')
 
   const handleSubmit = () => {
-    props.acceptance(courier, account)
+    props.acceptance(courier, account, agreement ? 'RETURN' : '')
   }
 
   return (
     <BaseModalMedium
-      title="Courier Details"
+      title="Return Product"
       onClick={() => props.closeModal()}
       body={
         <>
@@ -24,7 +25,7 @@ export default function UploadCourierDetails(props) {
               name="courier"
               value={courier}
               onChange={(input) => setcourier(input.value)}
-              errorMsg={props.errorInfo?.buyer_courier_company_name}
+              errorMsg={props.errorInfo?.seller_return_courier_company_name}
             ></TextInput>
           </div>
           <div className="mb-4">
@@ -33,8 +34,31 @@ export default function UploadCourierDetails(props) {
               name="account"
               value={account}
               onChange={(input) => setaccount(input.value)}
-              errorMsg={props.errorInfo?.buyer_courier_account_number}
+              errorMsg={props.errorInfo?.seller_return_courier_account_number}
             ></TextInput>
+          </div>
+          <div className="mb-4">
+            <li className="item-center flex space-x-2">
+              <input
+                type="checkbox"
+                id="agreement"
+                name="agreement"
+                checked={agreement}
+                onChange={() => setagreement(!agreement)}
+              />
+              <label
+                htmlFor="agreement"
+                className="ml-2 text-sm font-medium text-gray-900"
+              >
+                We confirm that we want to receive our products back and we
+                understand that we will be charged for product testing.
+                {props.errorInfo?.return_product_agreement && (
+                  <label className="text-red-500 block py-2">
+                    {props.errorInfo?.return_product_agreement}
+                  </label>
+                )}
+              </label>
+            </li>
           </div>
         </>
       }

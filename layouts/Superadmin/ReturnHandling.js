@@ -1,12 +1,12 @@
 import React from 'react'
 import Link from 'next/link'
 import classNames from '@/utils/classNames'
-import { ShoppingCartIcon } from '@heroicons/react/24/outline'
+import { BanknotesIcon } from '@heroicons/react/24/outline'
 import { Disclosure } from '@headlessui/react'
 import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import PrimaryBadges from '@/components/Interface/Badges/PrimaryBadges'
 
-export default function IncomingInquiries({ order }) {
+export default function ReturnHandling({ returnHandling }) {
   return (
     <li>
       <Disclosure as="div">
@@ -18,11 +18,11 @@ export default function IncomingInquiries({ order }) {
                 'flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold text-gray-700'
               )}
             >
-              <ShoppingCartIcon
+              <BanknotesIcon
                 className="h-6 w-6 shrink-0 text-gray-400"
                 aria-hidden="true"
               />
-              Inquiries
+              Return Handling
               <ChevronRightIcon
                 className={classNames(
                   open ? 'rotate-90 text-gray-500' : 'text-gray-400',
@@ -33,35 +33,24 @@ export default function IncomingInquiries({ order }) {
             </Disclosure.Button>
             <Disclosure.Panel as="ul" className="mt-1 px-2">
               <Link
-                // as="a"
-                href="/admin/member/buyer/inquired-product"
+                href="/admin/superadmin/return-handling/active"
                 className={classNames(
                   false ? 'bg-gray-50' : 'hover:bg-gray-50',
                   'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                 )}
               >
-                Active
-                <PrimaryBadges title={order?.active || 0} />
+                Active Returns
+                <PrimaryBadges title={returnHandling?.active || 0} />
               </Link>
               <Link
-                // as="a"
-                href="/admin/member/buyer/inquired-product/inquiry-rejected"
+                href="/admin/superadmin/return-handling/closed"
                 className={classNames(
                   false ? 'bg-gray-50' : 'hover:bg-gray-50',
                   'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
                 )}
               >
-                Inquiries Rejected
-              </Link>
-              <Link
-                // as="a"
-                href="/admin/member/buyer/inquired-product/quotation-rejected"
-                className={classNames(
-                  false ? 'bg-gray-50' : 'hover:bg-gray-50',
-                  'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
-                )}
-              >
-                Quotations Rejected
+                Closed Returns
+                {/* <PrimaryBadges title={reimbursement?.reimbursement_complete} /> */}
               </Link>
             </Disclosure.Panel>
           </>
