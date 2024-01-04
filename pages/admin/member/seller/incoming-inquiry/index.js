@@ -145,7 +145,7 @@ export default function IncomingInquiry({ session, routeParam }) {
       <div className="mb-10">
         <h1 className="font-semibold text-2xl">Inquiry</h1>
         <PrimaryWrapper className={`mt-5 p-5`}>
-          <h2 className="text-xl text-center">Search Active Inquery</h2>
+          <h2 className="text-xl text-center">Search Active Inquiry</h2>
           <div className="grid grid-cols-2 gap-3 mt-2">
             <div className="text-center">
               <TextInput
