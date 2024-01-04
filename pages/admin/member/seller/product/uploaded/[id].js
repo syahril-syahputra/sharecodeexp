@@ -18,6 +18,7 @@ import DangerButton from '@/components/Interface/Buttons/DangerButton'
 import SuccessButton from '@/components/Interface/Buttons/SuccessButton'
 import BaseTable from '@/components/Interface/Table/BaseTable'
 import {checkValue} from '@/utils/general'
+import NoData from '@/components/Interface/Table/NoData'
 
 DetailUploadedExcel.layout = Admin
 export default function DetailUploadedExcel({session, data}) {
@@ -35,7 +36,7 @@ export default function DetailUploadedExcel({session, data}) {
     formData.append('excel_file', file)
     try {
       const response = await axios.post(
-        '/seller/product/excel/update/' + data.id,
+        '/seller/product/excel/update/' + data?.excel.id,
         formData,
         {
           headers: {
@@ -68,7 +69,7 @@ export default function DetailUploadedExcel({session, data}) {
   return (
     <>
       <PrimaryWrapper>
-        {data.requested_for_update && (
+        {data.excel?.requested && (
           <WarningNotification
             message="New Request From Admin"
             detail={
@@ -81,17 +82,17 @@ export default function DetailUploadedExcel({session, data}) {
             }
           ></WarningNotification>
         )}
-        {data.requested_for_update && isRequestShow && (
+        {data.excel?.requested && isRequestShow && (
           <BaseModalMedium
             title="Request Update From Admin"
             onClick={() => setisRequestShow(false)}
-            body={<div>{data.requested_for_update}</div>}
+            body={<div>{data.excel?.requested}</div>}
           ></BaseModalMedium>
         )}
         <PageHeader
           leftTop={
             <h3 className={'font-semibold text-lg text-blueGray-700'}>
-              Detail File Excel {data.requested_for_update}
+              Detail File Excel {data.excel?.requested}
             </h3>
           }
         ></PageHeader>
@@ -183,7 +184,7 @@ export default function DetailUploadedExcel({session, data}) {
             </div>
           ) : (
             //   data.excel_product_file_status_id && (
-            parseInt(data.excel_product_file_status_id) === 7 && (
+            parseInt(data.excel?.excel_product_file_status_id) === 7 && (
               <div className="p-5">
                 <SuccessButton onClick={() => setuploadForm(true)}>
                   Upload
@@ -271,6 +272,10 @@ export default function DetailUploadedExcel({session, data}) {
                       </tr>
                     )
                   })
+                }
+                {
+                  data?.products?.length === 0 &&
+                  <NoData colspan={5} />
                 }
               </>
             }

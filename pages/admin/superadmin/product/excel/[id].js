@@ -20,6 +20,7 @@ import Link from 'next/link'
 import ExcelRequestUpdate from '@/components/Modal/Component/ExcelRequestUpdate'
 import {checkValue} from '@/utils/general'
 import BaseTable from '@/components/Interface/Table/BaseTable'
+import NoData from '@/components/Interface/Table/NoData'
 
 DetailUploadedExcel.layout = Admin
 export default function DetailUploadedExcel({session, data}) {
@@ -39,8 +40,8 @@ export default function DetailUploadedExcel({session, data}) {
   const uploadHandler = async (file) => {
     setisOnUploading(true)
     const formData = new FormData()
-    formData.append('id', data.id)
-    formData.append('company_id', data.company.id)
+    formData.append('id', data?.excel.id)
+    formData.append('company_id', data?.excel?.company.id)
     formData.append('excel_file', file)
     try {
       const response = await axios.post(
@@ -78,12 +79,12 @@ export default function DetailUploadedExcel({session, data}) {
   const downloadHandler = async () => {
     setisDetailLoading(true)
     try {
-      if (data.status_id === '1') {
+      if (data?.excel.status_id === '1') {
         await axios.post(
           `/admin/product/excel/download`,
           {
-            id: data.id,
-            company_id: data.company.id,
+            id: data.excel?.id,
+            company_id: data.excel?.company.id,
           },
           {
             headers: {
@@ -94,7 +95,7 @@ export default function DetailUploadedExcel({session, data}) {
         toast.success('Status Update', toastOptions)
         router.replace(router.asPath)
       }
-      window.location.href = process.env.NEXT_PUBLIC_DIR + data.path_dirty_file
+      window.location.href = process.env.NEXT_PUBLIC_DIR + data.excel.path_dirty_file
     } catch (error) {
       //   console.log(error)
       toast.error(error, toastOptions)
@@ -110,8 +111,8 @@ export default function DetailUploadedExcel({session, data}) {
 
         {
           data: {
-            id: data.id,
-            company_id: data.company.id,
+            id: data.excel?.id,
+            company_id: data.excel?.company.id,
           },
           headers: {
             Authorization: `Bearer ${session.accessToken}`,
@@ -134,8 +135,8 @@ export default function DetailUploadedExcel({session, data}) {
       const response = await axios.post(
         `admin/product/excel/reject`,
         {
-          id: data.id,
-          company_id: data.company.id,
+          id: data.excel?.id,
+          company_id: data.excel?.company.id,
         },
         {
           headers: {
@@ -157,8 +158,8 @@ export default function DetailUploadedExcel({session, data}) {
       await axios.post(
         `/admin/product/excel/update-request`,
         {
-          id: data.id,
-          company_id: data.company.id,
+          id: data.excel?.id,
+          company_id: data.excel?.company.id,
           update_request: value,
         },
         {
@@ -183,7 +184,7 @@ export default function DetailUploadedExcel({session, data}) {
       <ExcelComponent
         show={[isOpenConfirmDelete, setisOpenConfirmDelete]}
         delete={[isDeleting, setisDeleting]}
-        fileName={data.name}
+        fileName={data.excel?.name}
         deleteHandler={deleteHandler}
       />
       {RequestModal && (
@@ -412,6 +413,10 @@ export default function DetailUploadedExcel({session, data}) {
                       </tr>
                     )
                   })
+                }
+                {
+                  data?.products?.length === 0 &&
+                  <NoData colspan={5} />
                 }
               </>
             }
