@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react'
 import axios from '@/lib/axios'
 import {getSession} from 'next-auth/react'
 import Link from 'next/link'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
@@ -15,7 +17,12 @@ function ComponentCardAdminDashboard({onClick, dataName, name, url, dataNameNoti
         <div className="flex justify-between">
           <h1 className="font-semibold text-7xl mb-3">{dataName}</h1>
           {!!dataNameNotification &&
-            <SuccessBadges title={dataNameNotification} className={"italic pr-3 py-1 h-7"} />
+            <>
+              <span className="relative px-2">
+                <i className="fas fa-bell text-5xl text-orange-500"></i>
+                <div className="absolute inline-flex items-center justify-center w-8 h-8 text-xs font-bold text-orange-500 bg-white border-2 border-orange-500 rounded-full -end-1">{dataNameNotification}</div>
+              </span>
+            </>
           }
         </div>
         <span className="text-md italic">{name}</span>
@@ -174,7 +181,7 @@ export default function SuperadminDashboard({session, message}) {
                 dataName={data?.registry?.uploaded_additional_documents || 0}
                 dataNameNotification={data.registry?.newly_update?.uploaded_additional_documents}
                 onClick={() => resetCounter('registry-uploaded-additional-documents')}
-                url={'/admin/superadmin/product/pending'}
+                url={'/admin/superadmin/registry/uploadedcompany'}
                 name={'Additional Document Need to Review'}
               />
             </div>
@@ -271,11 +278,19 @@ export default function SuperadminDashboard({session, message}) {
                 name={'Bad Test Result'}
               />
               <ComponentCardAdminDashboard
-                dataName={data.order?.reimbursement_active || 0}
+                dataName={data.order?.reimbursement || 0}
                 dataNameNotification={data.order?.newly_update?.reimbursement_active}
-                onClick={() => resetCounter('order-reimbursement-active')}
+                onClick={() => resetCounter('order-reimbursement')}
                 url={'/admin/superadmin/reimbursement/active'}
                 name={'Release Payment to Buyer'}
+              />
+              {/* return_handling */}
+              <ComponentCardAdminDashboard
+                dataName={data.order?.return_handling || 0}
+                dataNameNotification={data.order?.newly_update?.return_handling}
+                onClick={() => resetCounter('order-return-handling')}
+                url={'/admin/superadmin/reimbursement/active'}
+                name={'Return Handling'}
               />
             </div>
           </>

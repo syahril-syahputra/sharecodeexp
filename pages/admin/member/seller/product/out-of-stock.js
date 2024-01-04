@@ -1,16 +1,16 @@
-import { getSession } from 'next-auth/react'
-import React, { useState, useEffect } from 'react'
+import {getSession} from 'next-auth/react'
+import React, {useState, useEffect} from 'react'
 import Admin from 'layouts/Admin.js'
 import ComponentList from '@/components/Table/Member/Components/ComponentsList'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import axios from 'lib/axios'
 import InfoButton from '@/components/Interface/Buttons/InfoButton'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import TextInput from '@/components/Interface/Form/TextInput'
 
-export default function OutofStock({ session }) {
+export default function OutofStock({session}) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])

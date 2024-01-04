@@ -40,6 +40,7 @@ import AcceptSellerPayment from '@/components/Modal/OrderComponent/Superadmin/Ac
 import DocumentButton from '@/components/Shared/Order/DocumentButton'
 import UploadPaymentReceiptForSeller from '@/components/Modal/OrderComponent/Superadmin/UploadPaymentReceiptForSeller'
 import NotificationBarAdmin from '@/components/Interface/Notification/NotificationBarAdmin'
+import ModalPdf from '@/components/Modal/ModalPdf'
 
 export default function OrderDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -83,6 +84,8 @@ export default function OrderDetails({ session, routeParam }) {
         let result = response.data.data
         setData(result)
         setIsOrderValid(true)
+        setBuyerReceiptData(result?.buyer_payment_receipt)
+        setSellerReceiptData(result?.seller_payment_receipt)
       })
       .catch((error) => {
         setIsOrderValid(false)
@@ -182,10 +185,7 @@ export default function OrderDetails({ session, routeParam }) {
         loadData()
       })
       .catch((error) => {
-        toast.error(
-          'Something went wrong. Cannot sent the request.',
-          toastOptions
-        )
+        toast.error(error.data.message, toastOptions)
         setErrorInfo(error.data.data)
         setIsLoading(false)
       })
@@ -1246,6 +1246,16 @@ export default function OrderDetails({ session, routeParam }) {
     //   break
   }
 
+  // modal receipt document list
+  const [showModalBuyerReceipt, setShowModalBuyerReceipt] = useState(false)
+  const [showModalSellerReceipt, setShowModalSellerReceipt] = useState(false)
+
+  const [buyerReceiptData, setBuyerReceiptData] = useState([])
+  const [sellerReceiptData, setSellerReceiptData] = useState([])
+
+  const [isBuyerLoadingModal, setIsBuyerLoadingModal] = useState(false)
+  const [isSellerLoadingModal, setIsSellerLoadingModal] = useState(false)
+
   return (
     <>
       <div className="">
@@ -1794,9 +1804,16 @@ export default function OrderDetails({ session, routeParam }) {
               <div className="mx-2 mt-1 text-sm border-b mb-2">
                 <DocumentButton
                   title="Buyer's Payment"
-                  isActive={data.buyer_receipt_path}
+                  isActive={data.buyer_payment_receipt?.length > 0}
                   isLoading={isLoadingOpenReceipt}
-                  onClick={openPaymentReceiptHandler}
+                  // onClick={() => {
+                  //   setShowModal(true)
+                  //   setSlugState(data?.slug)
+                  //   setBuyerReceiptPath(data?.buyer_receipt_path)
+                  // }}
+                  onClick={() => {
+                    setShowModalBuyerReceipt(true);
+                  }}
                 />
               </div>
               <div className="mx-2 mt-4 text-sm">
@@ -1814,8 +1831,10 @@ export default function OrderDetails({ session, routeParam }) {
                       ? 'Testing Payment Receipt'
                       : 'Testing and Handling Service Payment Receipt'
                   }
-                  isActive={data.seller_lab_payment_receipt_path}
-                  href={publicDir + data.seller_lab_payment_receipt_path}
+                  isActive={data.seller_payment_receipt?.length > 0}
+                  onClick={() => {
+                    setShowModalSellerReceipt(true);
+                  }}
                 />
               </div>
 
@@ -2012,6 +2031,28 @@ export default function OrderDetails({ session, routeParam }) {
           </div>
         </div>
       </div>
+      {
+        showModalBuyerReceipt ?
+          <ModalPdf
+            title="List of Buyer Payment Receipt Documents"
+            setShowModal={setShowModalBuyerReceipt}
+            isLoading={[isBuyerLoadingModal, setIsBuyerLoadingModal]}
+            receiptData={buyerReceiptData}
+          />
+          :
+          null
+      }
+      {
+        showModalSellerReceipt ?
+          <ModalPdf
+            title="List of Seller Payment Receipt Documents"
+            setShowModal={setShowModalSellerReceipt}
+            isLoading={[isSellerLoadingModal, setIsSellerLoadingModal]}
+            receiptData={sellerReceiptData}
+          />
+          :
+          null
+      }
     </>
   )
 }

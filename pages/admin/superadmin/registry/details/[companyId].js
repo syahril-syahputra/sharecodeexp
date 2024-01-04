@@ -67,11 +67,11 @@ export default function CompanyDetail({session, routeParam}) {
       setisLoadingSelling(false)
     }
   }
-  const [isLoadingBuyingg, setisLoadingBuyingg] = useState(false)
+  const [isLoadingBuying, setisLoadingBuying] = useState(false)
 
   const updateBuyinggHandler = async (value) => {
     try {
-      setisLoadingBuyingg(true)
+      setisLoadingBuying(true)
       const result = await axios.post(
         'admin/company/update-single-restriction-company',
         {
@@ -90,13 +90,13 @@ export default function CompanyDetail({session, routeParam}) {
       toast.error('Something went wrong.', toastOptions)
     } finally {
       getData()
-      setisLoadingBuyingg(false)
+      setisLoadingBuying(false)
     }
   }
   const getData = async () => {
     setIsLoading(true)
     const response = await axios
-      .get(`admin/companies?id=${routeParam.companyId}`, {
+      .get(`admin/company/${routeParam.companyId}/details`, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
         },
@@ -452,10 +452,17 @@ export default function CompanyDetail({session, routeParam}) {
               <i className="fas fa-user mr-2 text-lg text-blueGray-400"></i>
               Main Account - {companyData.master_user?.name}
             </div>
-            <div className="mb-2 text-blueGray-600">
+            <div className="mb-5 text-blueGray-600">
               <i className="fas fa-envelope mr-2 text-lg text-blueGray-400"></i>
               Main Email - {companyData.master_user?.email}
             </div>
+
+            <Link href={`/admin/superadmin/registry/details/main-account/${routeParam.companyId}`}>
+              <DangerButton size="sm">
+                <i className="mr-2 ml-1 fas fa-pen text-white"></i>
+                Edit Email and Reset Password
+              </DangerButton>
+            </Link>
 
             <div className=" capitalize mt-10 font-bold space-y-4 py-5 border-t border-blueGray-200 text-center">
               <div
@@ -478,7 +485,7 @@ export default function CompanyDetail({session, routeParam}) {
               >
                 {companyData.selling_restriction
                   ? 'Company cannot sell'
-                  : 'Companies can sell'}
+                  : 'Company can sell'}
               </div>
             </div>
             <div className=" py-5 border-t border-blueGray-200 text-center">
@@ -492,7 +499,7 @@ export default function CompanyDetail({session, routeParam}) {
                       companyData.RegistrationDocument
                     }
                   >
-                    <SecondaryButton size="sm">
+                    <SecondaryButton size="sm" disabled={!Boolean(companyData.RegistrationDocument)}>
                       View Company Registration Document
                     </SecondaryButton>
                   </Link>
@@ -506,7 +513,7 @@ export default function CompanyDetail({session, routeParam}) {
                       companyData.CertificationofActivity
                     }
                   >
-                    <SecondaryButton size="sm">
+                    <SecondaryButton size="sm" disabled={!Boolean(companyData.CertificationofActivity)}>
                       View Certification of Activity
                     </SecondaryButton>
                   </Link>
@@ -530,10 +537,10 @@ export default function CompanyDetail({session, routeParam}) {
                     <DangerButton
                       size="sm"
                       className="font-bold"
-                      disabled={isLoadingBuyingg}
+                      disabled={isLoadingBuying}
                       onClick={() => updateBuyinggHandler(true)}
                     >
-                      {isLoadingBuyingg ? (
+                      {isLoadingBuying ? (
                         <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                       ) : (
                         <i className="mr-2 fas fa-times text-white"></i>
@@ -544,10 +551,10 @@ export default function CompanyDetail({session, routeParam}) {
                     <SuccessButton
                       size="sm"
                       className="font-bold"
-                      disabled={isLoadingBuyingg}
+                      disabled={isLoadingBuying}
                       onClick={() => updateBuyinggHandler(false)}
                     >
-                      {isLoadingBuyingg ? (
+                      {isLoadingBuying ? (
                         <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
                       ) : (
                         <i className="mr-2 fas fa-check text-white"></i>

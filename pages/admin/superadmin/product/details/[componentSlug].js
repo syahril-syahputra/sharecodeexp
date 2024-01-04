@@ -49,7 +49,7 @@ export default function ComponentDetails({ session, routeParam }) {
   }
 
   const updateState = () => {
-    context.loadAdminSidebarCounter(session.accessToken)
+    context.loadAdminSidebarCounter(session?.accessToken)
   }
   useEffect(() => {
     getData()

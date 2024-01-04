@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import {
   BaseModalLarge,
   BaseModalMedium,
@@ -7,9 +7,9 @@ import TextInput from '@/components/Interface/Form/TextInput'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
-import { useSession } from 'next-auth/react'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
+import {useSession} from 'next-auth/react'
 import axios from '@/lib/axios'
 import FileInput from '@/components/Interface/Form/FileInput'
 

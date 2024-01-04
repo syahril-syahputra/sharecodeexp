@@ -1,24 +1,22 @@
-import React, { useState, useEffect } from 'react'
-import { getSession } from 'next-auth/react'
+import React, {useState, useEffect} from 'react'
+import {getSession} from 'next-auth/react'
 import axios from '@/lib/axios'
 import Link from 'next/link'
 import Image from 'next/image'
 import moment from 'moment'
-import { VendorUrl } from '@/route/route-url'
-import { checkValue } from '@/utils/general'
+import {VendorUrl} from '@/route/route-url'
+import {checkValue} from '@/utils/general'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
-
 // components
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import VerifyInquiryModal from '@/components/Modal/OrderComponent/Seller/VerifyInquiry'
 import RejectInquiryModal from '@/components/Modal/OrderComponent/Seller/RejectInquiry'
 import UpdateVerifiedInquiryModal from '@/components/Modal/OrderComponent/Seller/UpdateVerifiedInquiry'
 import ShipProductModal from '@/components/Modal/OrderComponent/Seller/ShipProduct'
 import UploadInvoiceModal from '@/components/Modal/OrderComponent/Seller/UploadInvoice'
-
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
@@ -27,24 +25,28 @@ import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
 import AccpetProduct from '@/components/Modal/OrderComponent/Seller/AcceptProduct'
 import UpdateInvoice from '@/components/Modal/OrderComponent/Seller/UpdateInvoice'
+import ModalPdf from '@/components/Modal/ModalPdf'
 import NotificationBarSeller from '@/components/Interface/Notification/NotificationBarSeller'
 import UploadCourierReturn from '@/components/Modal/OrderComponent/Seller/UploadCourierReturn'
 import DangerButton from '@/components/Interface/Buttons/DangerButton'
 import DisposeCourierReturn from '@/components/Modal/OrderComponent/Seller/DisposeCourierReturn'
+import DocumentButton from '@/components/Shared/Order/DocumentButton'
 
-export default function InquiryDetails({ session, routeParam }) {
+export default function InquiryDetails({session, routeParam}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
-  //data search
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({})
   const [isOrderValid, setIsOrderValid] = useState(true)
-
   const [isLoadingPackingList, setisLoadingPackingList] = useState(false)
   const [isLoadingPurchaseOrder, setisLoadingPurchaseOrder] = useState(false)
-
   const [courierModal, setcourierModal] = useState(false)
   const [disposeModal, setdisposeModal] = useState(false)
   const [rejectionReason, setRejectionReasons] = useState([])
+  const [sellerReceiptData, setSellerReceiptData] = useState([])
+  const [showModal, setShowModal] = useState(false)
+  const [isLoadingModal, setIsLoadingModal] = useState(false)
+  const [slugState, setSlugState] = useState('')
+
   const loadRejectionReason = async () => {
     setIsLoading(true)
     await axios
@@ -179,6 +181,7 @@ export default function InquiryDetails({ session, routeParam }) {
       .then((response) => {
         let result = response.data.data
         setData(result)
+        setSellerReceiptData(result.seller_payment_receipt)
         setIsOrderValid(true)
       })
       .catch(() => {
@@ -393,7 +396,7 @@ export default function InquiryDetails({ session, routeParam }) {
       .catch((error) => {
         toast.error(
           'Something went wrong. Cannot ship the product. ' +
-            error.data.message,
+          error.data.message,
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -1157,7 +1160,7 @@ export default function InquiryDetails({ session, routeParam }) {
                 <span className="text-gray-500">Seller</span>
               </div>
               <div className="mx-2 mt-1 text-sm">
-                <div className="flex flex-wrap justify-between">
+                {/* <div className="flex flex-wrap justify-between">
                   <span>Seller's Invoice</span>
                   {data.seller_invoice_path ? (
                     <Link
@@ -1170,34 +1173,51 @@ export default function InquiryDetails({ session, routeParam }) {
                   ) : (
                     <span className="underline text-gray-500">view</span>
                   )}
-                </div>
+                </div> */}
+                <DocumentButton
+                  title="Seller's Invoice"
+                  isActive={Boolean(data?.seller_invoice_path)}
+                  href={publicDir + data.seller_invoice_path}
+                />
+                <DocumentButton
+                  title={data?.seller_return_courier
+                    ? 'Testing Payment Receipt'
+                    : 'Testing and Handling Service Payment Receipt'}
+                  onClick={() => {
+                    setShowModal(true)
+                    setSlugState(data?.slug)
+                  }}
+                  isActive={Boolean(sellerReceiptData?.length > 0)}
+                />
               </div>
-              <div className="mx-2 mt-1 text-sm  border-b mb-2">
+              {/* <div className="mx-2 mt-1 text-sm  border-b mb-2">
                 <div className="flex flex-wrap justify-between">
                   <span>
                     {data.seller_return_courier
                       ? 'Testing Payment Receipt'
                       : 'Testing and Handling Service Payment Receipt'}
                   </span>
-                  {data.seller_lab_payment_receipt_path ? (
-                    <Link
-                      target="_blank"
-                      href={publicDir + data.seller_lab_payment_receipt_path}
-                      className="underline text-blue-500"
-                    >
-                      view
-                    </Link>
-                  ) : (
-                    <span className="underline text-gray-500">view</span>
-                  )}
+                  {
+                    sellerReceiptData?.length > 0 ?
+                      <span className="underline text-blue-500"
+                        onClick={() => {
+                          setShowModal(true)
+                          setSlugState(data?.slug)
+                        }}
+                      >
+                        View
+                      </span>
+                      :
+                      <span className="underline text-gray-500">view</span>
+                  }
                 </div>
-              </div>
+              </div> */}
               <div className="mb-5">
                 <div className="mx-2 mt-1 text-sm">
                   <span className="text-gray-500">Exepart</span>
                 </div>
                 <div className="mx-2 mt-1 text-sm">
-                  <div className="flex flex-wrap justify-between">
+                  {/* <div className="flex flex-wrap justify-between">
                     <span>Purchase Order</span>
                     {data.purchase_order_available == 1 ? (
                       <label
@@ -1214,9 +1234,44 @@ export default function InquiryDetails({ session, routeParam }) {
                     ) : (
                       <span className="underline text-gray-500">view</span>
                     )}
-                  </div>
+                  </div> */}
+                  <DocumentButton
+                    title={"Purchase Order"}
+                    onClick={openPurchaseOrder}
+                    isLoading={isLoadingPurchaseOrder}
+                    isActive={Boolean(data.purchase_order_available == 1)}
+                  />
+                  <DocumentButton
+                    title={"Packaging Lists"}
+                    isActive={Boolean(data?.seller_packing_list_available == 1)}
+                    onClick={openPackingList}
+                    isLoading={isLoadingPackingList}
+                  />
+                  <DocumentButton
+                    title="Test Result"
+                    isActive={Boolean(data.test_result_path)}
+                    href={publicDir + data.test_result_path}
+                  />
+                  <DocumentButton
+                    title="Admin's Payment Receipt"
+                    isActive={Boolean(data.admin_receipt_path)}
+                    href={publicDir + data.admin_receipt_path}
+                  />
+                  <DocumentButton
+                    title={data.seller_return_courier
+                      ? 'Testing Innvoice'
+                      : 'Testing and Handling Invoice'}
+                    isActive={Boolean(data.testing_invoice_available ||
+                      data.testing_and_handling_invoice_available)}
+                    href={`pdf/testing-and-handling-invoice/${data.slug}`}
+                  />
+                  <DocumentButton
+                    title="Return Invoice"
+                    isActive={Boolean(data.return_invoice_available)}
+                    href={`pdf/return-invoice/${data.slug}`}
+                  />
                 </div>
-                <div className="mx-2 mt-1 text-sm">
+                {/* <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Packaging Lists</span>
                     {data.seller_packing_list_available == 1 ? (
@@ -1235,7 +1290,7 @@ export default function InquiryDetails({ session, routeParam }) {
                       <span className="underline text-gray-500">view</span>
                     )}
                   </div>
-                </div>
+                </div> */}
                 {/* <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Proforma Invoice</span>
@@ -1256,7 +1311,7 @@ export default function InquiryDetails({ session, routeParam }) {
                     )}
                   </div>
                 </div> */}
-                <div className="mx-2 mt-1 text-sm">
+                {/* <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Test Result</span>
                     {data.test_result_path ? (
@@ -1271,8 +1326,8 @@ export default function InquiryDetails({ session, routeParam }) {
                       <span className="underline text-gray-500">view</span>
                     )}
                   </div>
-                </div>
-                <div className="mx-2 mt-1 text-sm">
+                </div> */}
+                {/* <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Admin's Payment Receipt</span>
                     {data.admin_receipt_path ? (
@@ -1287,8 +1342,8 @@ export default function InquiryDetails({ session, routeParam }) {
                       <span className="underline text-gray-500">view</span>
                     )}
                   </div>
-                </div>
-                <div className="mx-2 mt-1 text-sm">
+                </div> */}
+                {/* <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>
                       {data.seller_return_courier
@@ -1296,7 +1351,7 @@ export default function InquiryDetails({ session, routeParam }) {
                         : 'Testing and Handling Invoice'}
                     </span>
                     {data.testing_invoice_available ||
-                    data.testing_and_handling_invoice_available ? (
+                      data.testing_and_handling_invoice_available ? (
                       <Link
                         target="_blank"
                         href={`pdf/testing-and-handling-invoice/${data.slug}`}
@@ -1308,9 +1363,9 @@ export default function InquiryDetails({ session, routeParam }) {
                       <span className="underline text-gray-500">view</span>
                     )}
                   </div>
-                </div>
+                </div> */}
 
-                <div className="mx-2 mt-1 text-sm">
+                {/* <div className="mx-2 mt-1 text-sm">
                   <div className="flex flex-wrap justify-between">
                     <span>Return Invoice</span>
                     {data.return_invoice_available ? (
@@ -1325,7 +1380,7 @@ export default function InquiryDetails({ session, routeParam }) {
                       <span className="underline text-gray-500">view</span>
                     )}
                   </div>
-                </div>
+                </div> */}
               </div>
             </PrimaryWrapper>
           </div>
@@ -1366,6 +1421,17 @@ export default function InquiryDetails({ session, routeParam }) {
           </div>
         </div>
       </div>
+      {
+        showModal ?
+          <ModalPdf
+            title="List of Seller Payment Receipt Documents"
+            setShowModal={setShowModal}
+            isLoading={[isLoadingModal, setIsLoadingModal]}
+            receiptData={sellerReceiptData}
+          />
+          :
+          null
+      }
     </>
   )
 }
