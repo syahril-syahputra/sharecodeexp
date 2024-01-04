@@ -73,6 +73,7 @@ export default function ReturnHandlingActive({ session, routerParam }) {
           `&order_date=${orderDateParam}` +
           `&active=0` +
           `&return_product=1` +
+          `&reimbursement=1` +
           `&action_required=${orderActionRequiredParam}`,
         {
           headers: {

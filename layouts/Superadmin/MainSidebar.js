@@ -7,6 +7,7 @@ import ProductManagement from '@/layouts/Superadmin/ProductManagement'
 import Order from '@/layouts/Superadmin/Order'
 import Reimbursement from './Reimbursement'
 import ReturnHandling from './ReturnHandling'
+import Terminated from './Terminated'
 
 export default function MainSidebar() {
   const session = useSession()
@@ -30,6 +31,7 @@ export default function MainSidebar() {
             <ReturnHandling
               returnHandling={adminSidebarCounter.return_handling}
             />
+            <Terminated />
           </>
         )
       case '2':

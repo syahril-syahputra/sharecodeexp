@@ -52,6 +52,11 @@ export default function UploadCourierReturn(props) {
               >
                 We confirm that we want to receive our products back and we
                 understand that we will be charged for product testing.
+                {props.errorInfo?.return_product_agreement && (
+                  <label className="text-red-500 block py-2">
+                    {props.errorInfo?.return_product_agreement}
+                  </label>
+                )}
               </label>
             </li>
           </div>

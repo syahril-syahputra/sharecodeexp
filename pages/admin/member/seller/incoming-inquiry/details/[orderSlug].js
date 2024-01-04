@@ -30,6 +30,7 @@ import UpdateInvoice from '@/components/Modal/OrderComponent/Seller/UpdateInvoic
 import NotificationBarSeller from '@/components/Interface/Notification/NotificationBarSeller'
 import UploadCourierReturn from '@/components/Modal/OrderComponent/Seller/UploadCourierReturn'
 import DangerButton from '@/components/Interface/Buttons/DangerButton'
+import DisposeCourierReturn from '@/components/Modal/OrderComponent/Seller/DisposeCourierReturn'
 
 export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -672,7 +673,7 @@ export default function InquiryDetails({ session, routeParam }) {
             />
           )}
           {disposeModal && (
-            <UploadCourierReturn
+            <DisposeCourierReturn
               isLoading={isLoading}
               closeModal={() => setdisposeModal(false)}
               acceptance={handleDisposeModal}

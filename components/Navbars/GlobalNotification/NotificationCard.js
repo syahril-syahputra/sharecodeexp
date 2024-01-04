@@ -18,7 +18,7 @@ export default function NotificationCard(props) {
     setisLoading(true)
 
     try {
-      await axios.patch(
+      const response = await axios.patch(
         `/admin/global-notifications/${props.id}/mark-as-unread`,
         {},
         {
@@ -27,7 +27,7 @@ export default function NotificationCard(props) {
           },
         }
       )
-      setnotifCount(notifCount + 1)
+      setnotifCount(response.data.data.counter)
       setisReaded(false)
     } catch (error) {
       //   event.preventDefault()
@@ -47,7 +47,7 @@ export default function NotificationCard(props) {
     setisLoading(true)
 
     try {
-      await axios.patch(
+      const response = await axios.patch(
         `/admin/global-notifications/${props.id}/mark-as-read`,
         {},
         {
@@ -56,7 +56,7 @@ export default function NotificationCard(props) {
           },
         }
       )
-      setnotifCount(notifCount - 1)
+      setnotifCount(response.data.data.counter)
       setisReaded(true)
       setisShow(false)
     } catch (error) {

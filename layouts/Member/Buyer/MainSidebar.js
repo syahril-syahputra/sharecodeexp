@@ -8,6 +8,7 @@ import InquiredProduct from './InquiredProduct'
 import SearchProduct from './SearchProduct'
 import Reimbursment from './Reimbursement'
 import Order from './Order'
+import Terminated from './Terminated'
 
 export default function MainSidebar() {
   const session = useSession()
@@ -25,8 +26,9 @@ export default function MainSidebar() {
           <ul role="list" className="-mx-2 space-y-1">
             <SearchProduct />
             <InquiredProduct order={buyerSidebarCounter?.inquiry} />
-            <Reimbursment reimbursement={buyerSidebarCounter?.reimbursement} />
             <Order order={buyerSidebarCounter?.order} />
+            <Reimbursment reimbursement={buyerSidebarCounter?.reimbursement} />
+            <Terminated />
           </ul>
         </li>
       </ul>

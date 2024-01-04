@@ -33,6 +33,11 @@ export default function DisposeCourierReturn(props) {
                 We confirm that we don’t want to take the products back and the
                 laboratory can dispose of the products. We understand that we
                 will be charged for product testing and handling.
+                {props.errorInfo?.return_product_agreement && (
+                  <label className="text-red-500 block py-2">
+                    {props.errorInfo?.return_product_agreement}
+                  </label>
+                )}
               </label>
             </li>
           </div>
