@@ -169,6 +169,7 @@ export default function InquiryDetails({session, routeParam}) {
     }
   }
 
+  const [updateVerifiedInquiryAviability, setUpdateVerifiedInquiryAviability] = useState(true)
   const loadData = () => {
     setIsLoading(true)
     setErrorInfo({})
@@ -182,6 +183,7 @@ export default function InquiryDetails({session, routeParam}) {
         let result = response.data.data
         setData(result)
         setSellerReceiptData(result.seller_payment_receipt)
+        setUpdateVerifiedInquiryAviability(result.is_verified_inquiry_edited)
         setIsOrderValid(true)
       })
       .catch(() => {
@@ -553,7 +555,7 @@ export default function InquiryDetails({session, routeParam}) {
                 outline
                 className="mx-1"
                 size="sm"
-                disabled={isLoading}
+                disabled={isLoading || updateVerifiedInquiryAviability}
                 onClick={() => setUpdateVerifiedInquiryModal(true)}
               >
                 Update Verified Inquiry
@@ -863,20 +865,23 @@ export default function InquiryDetails({session, routeParam}) {
           <div className="w-1/2 lg:w-1/3 mr-4">
             <PrimaryWrapper className="p-1">
               <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
+                Courier
+              </div>
+              <div className="mx-2 mb-1 text-xl">
+                {checkValue(data.seller_courier_company_name)}
+              </div>
+              <div className="mx-2 mb-5 text-l">
+                {checkValue(data.seller_courier_account_number)}
+              </div>
+            </PrimaryWrapper>
+          </div>
+          <div className="w-1/2 lg:w-1/3 mr-4">            
+            <PrimaryWrapper className="p-1">
+              <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
                 Tracking Number
               </div>
               <div className="mx-2 mb-5 text-xl">
                 {checkValue(data.trackingSeller)}
-              </div>
-            </PrimaryWrapper>
-          </div>
-          <div className="w-1/2 lg:w-1/3 mr-4">
-            <PrimaryWrapper className="p-1">
-              <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
-                Courier
-              </div>
-              <div className="mx-2 mb-5 text-xl">
-                {checkValue(data.seller_courier)}
               </div>
             </PrimaryWrapper>
           </div>
@@ -887,20 +892,23 @@ export default function InquiryDetails({session, routeParam}) {
             <div className="w-1/2 lg:w-1/3 mr-4">
               <PrimaryWrapper className="p-1">
                 <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
-                  Tracking Number Return Shipment
+                  Courier Return Shipment
                 </div>
-                <div className="mx-2 mb-5 text-xl">
-                  {checkValue(data?.seller_return_tracking_number)}
+                <div className="mx-2 mb-1 text-xl">
+                  {checkValue(data.seller_return_courier_company_name)}
+                </div>
+                <div className="mx-2 mb-5 text-l">
+                  {checkValue(data.seller_return_courier_account_number)}
                 </div>
               </PrimaryWrapper>
             </div>
             <div className="w-1/2 lg:w-1/3 mr-4">
               <PrimaryWrapper className="p-1">
                 <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
-                  Courier Return Shipment
+                  Tracking Number Return Shipment
                 </div>
                 <div className="mx-2 mb-5 text-xl">
-                  {checkValue(data.seller_return_courier)}
+                  {checkValue(data?.seller_return_tracking_number)}
                 </div>
               </PrimaryWrapper>
             </div>

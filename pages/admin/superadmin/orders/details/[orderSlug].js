@@ -1195,21 +1195,25 @@ export default function OrderDetails({ session, routeParam }) {
             />
           )}
 
-          <div className="flex justify-center">
-            <div className="mx-2 my-4">
-              {parseInt(data.reimbursement) === 1 && (
-                <PrimaryButton
-                  outline
-                  className="mx-1"
-                  size="sm"
-                  disabled={isLoading}
-                  onClick={() => setcloseReimbusmentModal(true)}
-                >
-                  Release Reimbursement
-                </PrimaryButton>
-              )}
+          {parseInt(data.reimbursement) === 1 ? (
+            <div className="flex justify-center">
+              <div className="mx-2 my-4">
+                  <PrimaryButton
+                    outline
+                    className="mx-1"
+                    size="sm"
+                    disabled={isLoading}
+                    onClick={() => setcloseReimbusmentModal(true)}
+                  >
+                    Release Reimbursement
+                  </PrimaryButton>
+              </div>
             </div>
+          ) : 
+          <div className="italic flex justify-center items-center h-28">
+            No action to take
           </div>
+          }
         </div>
       )
       break
@@ -1360,7 +1364,10 @@ export default function OrderDetails({ session, routeParam }) {
                 Buyer Courier
               </div>
               <div className="mx-2 mb-1 text-xl">
-                {checkValue(data.buyer_courier)}
+                {checkValue(data.buyer_courier_company_name)}
+              </div>
+              <div className="mx-2 mb-3 text-l">
+                {checkValue(data.buyer_courier_account_number)}
               </div>
               <div className="mx-2 my-1 text-sm uppercase text-gray-500">
                 Tracking Number
@@ -1410,7 +1417,10 @@ export default function OrderDetails({ session, routeParam }) {
                 Seller Courier
               </div>
               <div className="mx-2 mb-1 text-xl">
-                {checkValue(data.seller_courier)}
+                {checkValue(data.seller_courier_company_name)}
+              </div>
+              <div className="mx-2 mb-3 text-l">
+                {checkValue(data.seller_courier_account_number)}
               </div>
               <div className="mx-2 my-1 text-sm uppercase text-gray-500">
                 Tracking Number
@@ -1427,7 +1437,10 @@ export default function OrderDetails({ session, routeParam }) {
                     Seller Courier
                   </div>
                   <div className="mx-2 mb-1 text-xl">
-                    {checkValue(data.seller_return_courier)}
+                    {checkValue(data.seller_return_courier_company_name)}
+                  </div>
+                  <div className="mx-2 mb-3 text-l">
+                    {checkValue(data.seller_return_courier_account_number)}
                   </div>
                   <div className="mx-2 my-1 text-sm uppercase text-gray-500">
                     Tracking Number
