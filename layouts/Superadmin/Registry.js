@@ -10,7 +10,7 @@ import PrimaryBadges from '@/components/Interface/Badges/PrimaryBadges'
 export default function Registry({ registry }) {
   return (
     <li>
-      <Disclosure as="div">
+      <Disclosure as="div" defaultOpen={true}>
         {({ open }) => (
           <>
             <Disclosure.Button

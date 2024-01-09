@@ -8,7 +8,7 @@ import { ChevronRightIcon } from '@heroicons/react/20/solid'
 export default function Terminated() {
   return (
     <li>
-      <Disclosure as="div">
+      <Disclosure as="div" defaultOpen={true}>
         {({ open }) => (
           <>
             <Disclosure.Button

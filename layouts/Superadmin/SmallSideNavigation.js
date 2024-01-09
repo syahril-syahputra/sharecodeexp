@@ -126,7 +126,7 @@ function SmallSideNavigation({ sidebarOpen, setSidebarOpen }) {
                                   {item.name}
                                 </Link>
                               ) : (
-                                <Disclosure as="div">
+                                <Disclosure as="div" defaultOpen={true}>
                                   {({ open }) => (
                                     <>
                                       <Disclosure.Button

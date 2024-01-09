@@ -2,8 +2,8 @@ import React from 'react'
 import navigation from './navigation'
 import Link from 'next/link'
 import classNames from '@/utils/classNames'
-import {Disclosure} from '@headlessui/react'
-import {ChevronRightIcon} from '@heroicons/react/20/solid'
+import { Disclosure } from '@headlessui/react'
+import { ChevronRightIcon } from '@heroicons/react/20/solid'
 
 function MyAccount() {
   return (
@@ -27,8 +27,8 @@ function MyAccount() {
                   {item.name}
                 </Link>
               ) : (
-                <Disclosure as="div">
-                  {({open}) => (
+                <Disclosure as="div" defaultOpen={true}>
+                  {({ open }) => (
                     <>
                       <Disclosure.Button
                         className={classNames(

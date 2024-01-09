@@ -27,6 +27,7 @@ function NotificationBarBuyer({ data }) {
         detail={data.order_status?.buyer_notification?.message}
       />
       <NotificationSecondBar data={data} notification={secondNotification} />
+      <NotificationThirdBard data={data} />
     </>
   )
 }
