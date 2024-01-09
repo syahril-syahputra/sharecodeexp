@@ -38,13 +38,13 @@ export default function BulkInsert({session}) {
           Authorization: `Bearer ${session.accessToken}`,
         },
       })
-      .then((response) => {
-        let result = response.data.data
-        router.replace('/admin/member/seller/product/uploaded')
-        toast.success('Components has been added.', toastOptions)
+      .then((res) => {
+        let result = res.data
+      router.replace('/admin/member/seller/product/uploaded')
+        toast.success(result.message, toastOptions)
       })
       .catch((error) => {
-        toast.success('Something went wrong.', toastOptions)
+        toast.error('Something went wrong.', toastOptions)
         setErrorMessage('Excel can not be processed')
       })
       .finally(() => {

@@ -499,6 +499,7 @@ export default function Index() {
                           </div>
                           <div className="flex flex-wrap mb-6">
                             <TextInputImage
+                              label="Company Image"
                               id="company_img"
                               name="company_img"
                               className=""
