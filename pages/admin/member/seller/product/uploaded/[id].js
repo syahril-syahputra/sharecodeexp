@@ -80,14 +80,14 @@ export default function DetailUploadedExcel({session, data}) {
                 Show Request
               </a>
             }
-          ></WarningNotification>
+          />
         )}
         {data.excel?.requested && isRequestShow && (
           <BaseModalMedium
             title="Request Update From Admin"
             onClick={() => setisRequestShow(false)}
             body={<div>{data.excel?.requested}</div>}
-          ></BaseModalMedium>
+          />
         )}
         <PageHeader
           leftTop={
@@ -275,7 +275,7 @@ export default function DetailUploadedExcel({session, data}) {
                 }
                 {
                   data?.products?.length === 0 &&
-                  <NoData colspan={5} />
+                  <NoData colSpan={5} />
                 }
               </>
             }

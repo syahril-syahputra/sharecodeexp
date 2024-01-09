@@ -14,9 +14,7 @@ export default function Uploaded({session}) {
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
   const [isOpenDetail, setisOpenDetail] = useState(false)
-  const [isOpenConfirmDelete, setisOpenConfirmDelete] = useState(false)
   const [selectedData, setselectedData] = useState({})
-  const [isDetailLoading, setisDetailLoading] = useState(false)
   const [metaData, setMetaData] = useState({
     total: 0,
     perPage: 0,

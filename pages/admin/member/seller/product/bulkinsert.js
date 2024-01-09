@@ -92,7 +92,7 @@ export default function BulkInsert({session}) {
                 <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
               </div>
               <div className="text-xs ">
-                <p>.xlsx, .xlsm, .xls file size no more than 10MB</p>
+                <p>.xlsx, .xlsm, .xls file size no more than 3MB</p>
                 <input
                   className="mt-3"
                   type="file"

@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react'
+import React, {useState, Fragment} from 'react'
 import Link from 'next/link'
 import moment from 'moment'
 
@@ -14,8 +14,8 @@ import NoData from '@/components/Interface/Table/NoData'
 import MetaData from '@/components/Interface/Table/MetaData'
 import Pagination from '@/components/Shared/Component/Pagination'
 import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
-import { Dialog, Transition } from '@headlessui/react'
-import { Button, Modal, Spinner } from 'flowbite-react'
+import {Dialog, Transition} from '@headlessui/react'
+import {Button, Modal, Spinner} from 'flowbite-react'
 import axios from 'lib/axios'
 
 export default function TableExcel(props) {
@@ -39,12 +39,14 @@ export default function TableExcel(props) {
           header={
             <>
               <th scope="col" className="px-6 py-3">
+                Action Required
+              </th>
+              <th scope="col" className="px-6 py-3">
                 File Name
               </th>
               <th scope="col" className="px-6 py-3">
                 status
               </th>
-
               <th scope="col" className="px-6 py-3">
                 Uploaded at
               </th>
@@ -64,6 +66,18 @@ export default function TableExcel(props) {
                     key={index}
                     className="bg-white border-b hover:bg-gray-50"
                   >
+                    <td scope="row" className="text-sm px-6 py-4">
+                      {item?.file_status?.seller_to_act ? (
+                        <span className="relative flex text-xl">
+                          <span className="animate-ping absolute inline-flex opacity-75">
+                            <i className="fas fa-circle fa-2xs text-orange-500" />
+                          </span>
+                          <span className="relative inline-flex">
+                            <i className="fas fa-circle fa-2xs text-orange-500" />
+                          </span>
+                        </span>
+                      ) : undefined}
+                    </td>
                     <td scope="row" className="text-sm px-6 py-4">
                       {item.name}
                     </td>
