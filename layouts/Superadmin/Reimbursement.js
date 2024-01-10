@@ -9,7 +9,7 @@ import PrimaryBadges from '@/components/Interface/Badges/PrimaryBadges'
 export default function Reimbursement({ reimbursement }) {
   return (
     <li>
-      <Disclosure as="div" defaultOpen={true}>
+      <Disclosure as="div">
         {({ open }) => (
           <>
             <Disclosure.Button

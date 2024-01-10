@@ -62,7 +62,7 @@ function SideNavigation({ ...props }) {
                     {item.name}
                   </Link>
                 ) : (
-                  <Disclosure as="div" defaultOpen={true}>
+                  <Disclosure as="div">
                     {({ open }) => (
                       <>
                         <Disclosure.Button

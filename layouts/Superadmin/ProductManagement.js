@@ -12,7 +12,7 @@ export default function ComponentManagement({ product, excel }) {
 
   return (
     <li>
-      <Disclosure as="div" defaultOpen={true}>
+      <Disclosure as="div">
         {({ open }) => (
           <>
             <Disclosure.Button
