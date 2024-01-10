@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react'
-
 import Admin from 'layouts/Admin.js'
 import {getSession} from 'next-auth/react'
 import axios from 'lib/axios'
@@ -123,9 +122,9 @@ export default function Uploaded({session}) {
       {/* <div className="mb-5 w-full lg:w-1/2">
         <MiniSearchBar searchItem={handleSearch} />
       </div> */}
-      <h1 className="font-semibold text-2xl">Order</h1>
+      <h1 className="font-semibold text-2xl">Upload Excel</h1>
       <PrimaryWrapper className={`mt-5 p-5`}>
-        <h2 className="text-xl text-center">Search Active Order</h2>
+        <h2 className="text-xl text-center">Search Upload Excel</h2>
         <div className="grid grid-cols-2 gap-3 mt-2">
           <div className="text-center">
             <TextInput
