@@ -133,7 +133,10 @@ export default function GlobalNotification() {
 
   return (
     <Menu as="div" className="md:relative">
-      <Menu.Button className="-m-1.5 flex items-center p-1.5">
+      <Menu.Button
+        className="-m-1.5 flex items-center p-1.5"
+        onClick={() => setisShow(!isShow)}
+      >
         <div className="relative">
           {notifCount > 0 && (
             <div className=" absolute left-5  top-0 bg-red-500 rounded-md text-sm px-1 z-10 text-white -mr-10">
@@ -145,7 +148,6 @@ export default function GlobalNotification() {
             className={classNames(
               ' w-8 h-8 cursor-pointer  rounded-full rotate-45  active:text-gray-700 bg-white text-gray-500  p-1'
             )}
-            onClick={() => setisShow(!isShow)}
           />
         </div>
       </Menu.Button>
