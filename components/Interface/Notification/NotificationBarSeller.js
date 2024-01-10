@@ -1,6 +1,7 @@
 import React from 'react'
 import NotificationFirstBar from './NotificationFirstBar'
 import NotificationSecondBar from './NotificationSecondBar'
+import NotificationThirdBard from './NotificationThirdBard'
 
 function NotificationBarSeller({ data }) {
   const primary = [
