@@ -19,9 +19,8 @@ const TopNavBar = () => {
                 <span className="bg-gradient-to-r from-amber-300 to-amber-400 bg-[length:0px_2px] group-hover:bg-[length:100%_2px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 ">
                   {
                     <a
-                      href="mailto:sales@exepart.com?subject=%5BYour%20Purpose!%5D&body=Hi!"
+                      href="mailto:sales@exepart.com"
                       target="_blank"
-                      rel="noopener noreferrer"
                     >
                       sales@exepart.com
                     </a>
@@ -36,7 +35,7 @@ const TopNavBar = () => {
               />
               <label>
                 <span className="bg-gradient-to-r from-amber-300 to-amber-400 bg-[length:0px_2px] group-hover:bg-[length:100%_2px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 ">
-                  {<a href="tel:+128893341234">+12 889 334 1234</a>}
+                  {<a href="tel:+12369940029">+1 236 994 0029</a>}
                 </span>
               </label>
             </li>

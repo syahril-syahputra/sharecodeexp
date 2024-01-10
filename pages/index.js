@@ -29,17 +29,22 @@ export default function Index() {
   const [search, setSearch] = useState('')
   const [loadingSearch, setLoadingSearch] = useState(false)
   function searchComponent(event) {
+    setLoadingSearch(true)
     if (event.key === 'Enter' && !!search) {
       event.preventDefault()
       router.replace(`/product/search?q=${search}`)
     }
   }
 
+  function searchComponentOnClick(){
+    router.replace(`/product/search?q=${search}`)
+  }
+
   //search suggestion
   const [suggestion, setSuggestion] = useState([])
   const [isSuggestionLoading, setSuggestionLoading] = useState(false)
   useEffect(() => {
-    if (search) {
+    if (!!search) {
       setSuggestionLoading(true)
       const getData = setTimeout(() => {
         axios
@@ -52,6 +57,7 @@ export default function Index() {
 
       return () => clearTimeout(getData)
     }
+    setSuggestionLoading(false)
   }, [search])
 
   const [statisticCounter, setStatisticCounter] = useState({
@@ -86,19 +92,17 @@ export default function Index() {
     setIsLoading(true)
     await axios
       .post('/contact-us', dataContact)
-      .then(() => {
-        toast.success('Your message has been send successfully.', toastOptions)
+      .then((result) => {
+        toast.success(result.data.message, toastOptions)
         setDataContact({ subject: '', email: '', message: '' })
       })
       .catch((error) => {
-        toast.error('Something went wrong.', error.message)
+        toast.error(error.data.message, error.message)
         setErrorMessage('Please fill your form correctly')
         setErrorInfo(error.data.data)
-        setDataContact({ subject: '', email: '', message: '' })
       })
       .finally(() => {
         setIsLoading(false)
-        setDataContact({ subject: '', email: '', message: '' })
       })
   }
 
@@ -113,25 +117,25 @@ export default function Index() {
         description={siteMetadata.description}
       />
       <Navbar />
-      <div className="flex flex-col items-center justify-center">
-        <div className="w-full inline-block">
-          <section className="flex flex-col items-center justify-end relative h-[90vh] sm:h-[85.79vh] bg-gradient-to-b from-transparent from-69% to-purple ">
+      <div className="flex flex-col">
+        <div className="w-full">
+          <section className="flex flex-col items-center justify-end relative h-[90vh] sm:h-[72vh] bg-gradient-to-b from-transparent to-purple ">
             <Image
               src="/img/landing-pages/hero.png"
               alt="exepart.png"
               fill
               className="w-full h-full object-center object-cover -z-10"
-              sizes="100vw"
+              sizes="90vw"
               priority
             />
-            <Container className="flex flex-wrap absolute lg:top-1/4 2xl:top-1/3 md:top-1/3 sm:top-1/3 top-1/4 bottom-0">
+            <Container className="my-auto flex items-center justify-center">
               <motion.div
                 variants={staggerContainer}
                 initial="hidden"
                 whileInView={'show'}
                 viewport={{ once: true, amount: 0.05 }}
               >
-                <div className=" w-full md:w-3/4 sm:w-3/4 lg:w-full 2xl:w-3/4 xl:w-3/4 px-2 lg:px-0 md:px-0   text-light">
+                <div className="flex flex-col items-center justify-center w-[70rem] text-center text-light">
                   <motion.h1
                     variants={textVariant(0.5)}
                     className="font-bold uppercase lg:px-[6px] md:px-0 text-[44px] sm:text-[40px] md:text-[40px] 2xl:text-[110px] lg:text-[110px]"
@@ -159,63 +163,48 @@ export default function Index() {
                   >
                     <div className="pt-2 sm:pt-0 pb-4 md:pb-1 lg:px-3 md:px-[3px]">
                       <form className="flex items-center">
-                        <label htmlFor="voice-search" className="sr-only">
-                          Search
-                        </label>
-                        <div className="relative w-full">
-                          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <svg
-                              className="w-4 h-4 text-footer-resources"
-                              aria-hidden="true"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 20 20"
-                            >
-                              <path
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                              />
-                            </svg>
-                          </div>
-                          <TextInputSearchComponent
-                            value={search}
-                            onChange={(target) => setSearch(target.value)}
-                            onKeyDown={searchComponent}
-                            type="text"
-                            placeholder="Search for the components"
-                          />
+                        <div className="relative w-full h-full">
+                            <input
+                              value={search}
+                              onChange={({target}) => setSearch(target.value)}
+                              onKeyDown={searchComponent}
+                              type="text"
+                              className="bg-gray-50 border border-gray-300 text-gray-900 placeholder:text-2xl sm:text-[12px] md:text-[14px] lg:text-[20px] text-sm focus:ring-blue-500 focus:border-blue-500 block w-full h-16 ps-10 p-5" 
+                              placeholder="Write part number / key word" required/>
+                                <button 
+                                  type="button" 
+                                  className="absolute inset-y-0 end-0 flex items-center pe-3 pr-6"
+                                  onClick={searchComponentOnClick}
+                                  >
+                                  <svg
+                                    className="w-6 h-6 text-footer-resources"
+                                    aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 20 20"
+                                  >
+                                  <path
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                                  />
+                                </svg>
+                              </button>
                         </div>
-                        <Link
-                          href={!!search ? `/product/search?q=${search}` : ''}
-                        >
-                          <button
-                            type="submit"
-                            disabled={!search}
-                            className="inline-flex items-center py-2.5 px-4 lg:px-40 sm:px-16 text-sm font-medium text-white bg-sub-header border-sub-header hover:bg-top-navbar focus:ring-4 focus:outline-none focus:ring-blue-300"
-                            onClick={() => setLoadingSearch(true)}
-                          >
-                            {loadingSearch ? (
-                              <i className="px-3 fas fa-hourglass fa-spin"></i>
-                            ) : (
-                              'SEARCH'
-                            )}
-                          </button>
-                        </Link>
-                      </form>
+                    </form>           
                       <div className="text-left py-2">
                         {suggestion && suggestion.length > 0 && (
                           <div>
                             {isSuggestionLoading && (
-                              <div className="text-blueGray-500">
+                              <div className="text-blueGray-500 text-lg">
                                 Suggestion :
                                 <i className="ml-2 fas fa-circle-notch fa-spin"></i>
                               </div>
                             )}
                             {!isSuggestionLoading && (
-                              <div className="flex justify-start">
+                              <div className="flex justify-start text-lg">
                                 <span className="text-blueGray-500">
                                   Suggestion :
                                 </span>
@@ -235,7 +224,7 @@ export default function Index() {
                         {isSuggestionLoading && suggestion.length === 0 && (
                           <i className="ml-2 fas fa-circle-notch fa-spin"></i>
                         )}
-                      </div>
+                      </div>                      
                     </div>
                   </motion.div>
                 </div>
@@ -250,7 +239,7 @@ export default function Index() {
           >
             <motion.div
               variants={staggerContainer}
-              initial="hidden"
+              initial="show"
               whileInView={'show'}
               className="container mx-auto lg:px-4 px-6 md:px-6"
               viewport={{ once: true, amount: 0.05 }}
@@ -308,7 +297,7 @@ export default function Index() {
                       stocks listed in Exepart by directly contacting us from{' '}
                       <span className="bg-gradient-to-r from-amber-300 to-amber-400 bg-[length:0px_2px] hover:bg-[length:100%_2px] bg-left-bottom bg-no-repeat transition-[background-size] hover:text-footer-resources duration-500 ">
                         <a
-                          href="mailto:purchasing@exepart.com?subject=%5BYour%20Purpose!%5D&body=Hi!"
+                          href="mailto:purchasing@exepart.com?"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -500,7 +489,7 @@ export default function Index() {
                           value={dataContact.subject}
                           onChange={handleChange}
                           className="text-base leading-none text-gray-900 p-3 focus:oultine-none focus:border-top-navbar mt-4 bg-gray-100 border   border-indigo-700 placeholder-gray-500"
-                          placeholder="Please input  name"
+                          placeholder="Please input subject"
                         />
                       </div>
                       <div className="md:w-72 flex flex-col md:ml-6 md:mt-0 mt-4">
