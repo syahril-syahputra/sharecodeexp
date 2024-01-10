@@ -25,7 +25,7 @@ export default function ComponentManagement({ product, excel }) {
                 className="h-6 w-6 shrink-0 text-gray-400"
                 aria-hidden="true"
               />
-              Product Managementss
+              Product Management
               <ChevronRightIcon
                 className={classNames(
                   open ? 'rotate-90 text-gray-500' : 'text-gray-400',
