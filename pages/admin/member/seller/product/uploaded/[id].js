@@ -1,5 +1,5 @@
 import {useRouter} from 'next/router'
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import Admin from 'layouts/Admin.js'
 import {getSession} from 'next-auth/react'
 import axios from 'lib/axios'
@@ -19,6 +19,7 @@ import SuccessButton from '@/components/Interface/Buttons/SuccessButton'
 import BaseTable from '@/components/Interface/Table/BaseTable'
 import {checkValue} from '@/utils/general'
 import NoData from '@/components/Interface/Table/NoData'
+import PrimaryNotification from '@/components/Interface/Notification/PrimaryNotification'
 
 DetailUploadedExcel.layout = Admin
 export default function DetailUploadedExcel({session, data}) {
@@ -66,29 +67,41 @@ export default function DetailUploadedExcel({session, data}) {
     uploadHandler(file.target.files[0])
   }
 
+
+  const arrEvent = data?.excel?.event_history || []
+  const lastElement = arrEvent.findLast((item) => true)
+
   return (
     <>
+      {
+        data?.excel?.event_history?.length > 0 && (
+          <PrimaryNotification
+            detail={lastElement?.description ?? null}
+          />
+        )
+      }
+      {data.excel?.requested && (
+        <WarningNotification
+          message="New Request From Admin"
+          detail={
+            <a
+              onClick={() => setisRequestShow(true)}
+              className="text-white text-xs block mt-1 italic underline hover:text-gray-600 cursor-pointer"
+            >
+              Show Request
+            </a>
+          }
+        ></WarningNotification>
+      )}
+
+      {data.excel?.requested && isRequestShow && (
+        <BaseModalMedium
+          title="Request Update From Admin"
+          onClick={() => setisRequestShow(false)}
+          body={<div>{data.excel?.requested}</div>}
+        ></BaseModalMedium>
+      )}
       <PrimaryWrapper>
-        {data.excel?.requested && (
-          <WarningNotification
-            message="New Request From Admin"
-            detail={
-              <a
-                onClick={() => setisRequestShow(true)}
-                className="text-white text-xs block mt-1 italic underline hover:text-gray-600 cursor-pointer"
-              >
-                Show Request
-              </a>
-            }
-          />
-        )}
-        {data.excel?.requested && isRequestShow && (
-          <BaseModalMedium
-            title="Request Update From Admin"
-            onClick={() => setisRequestShow(false)}
-            body={<div>{data.excel?.requested}</div>}
-          />
-        )}
         <PageHeader
           leftTop={
             <h3 className={'font-semibold text-lg text-blueGray-700'}>
@@ -275,7 +288,7 @@ export default function DetailUploadedExcel({session, data}) {
                 }
                 {
                   data?.products?.length === 0 &&
-                  <NoData colSpan={5} />
+                  <NoData colspan={5} />
                 }
               </>
             }
