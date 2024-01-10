@@ -37,6 +37,9 @@ export default function ReimbursementActiveCompletedTable(props) {
               <th scope="col" className="px-6 py-3">
                 Order QTY
               </th>
+              <th scope="col" className="px-6 py-3">
+                Status
+              </th>
               <th scope="col" className="px-6 py-3 text-right">
                 Action
               </th>
@@ -80,7 +83,19 @@ export default function ReimbursementActiveCompletedTable(props) {
                     <td className="text-sm px-6 py-4">
                       {item.companies_products.country}
                     </td>
+                    {/* <td className="text-sm px-6 py-4">
+                                        {item.companies_products.packaging}
+                                    </td> */}
+                    {/* <td className="text-sm px-6 py-4">
+                                        {item.companies_products.AvailableQuantity}
+                                    </td> */}
+                    {/* <td className="text-sm px-6 py-4">
+                                        {item.companies_products.moq}
+                                    </td> */}
                     <td className="text-sm px-6 py-4">{item.qty}</td>
+                    <td className="text-sm px-6 py-4">
+                      {item.order_status?.name}
+                    </td>
                     <td className="text-sm px-6 py-4 text-right">
                       <div className="inline-flex">
                         <NavigationViewButton navigationId={item.slug} />

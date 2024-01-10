@@ -38,7 +38,7 @@ export default function AdditionalDocument(props){
                             Name
                         </th>
                         <th scope="col" className="px-6 py-3 text-right">
-                            Act
+                            Action
                         </th>
                     </>
                 }
