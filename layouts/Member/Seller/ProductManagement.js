@@ -9,7 +9,7 @@ import PrimaryBadges from '@/components/Interface/Badges/PrimaryBadges'
 export default function ProductManagement({ product }) {
   return (
     <li>
-      <Disclosure as="div">
+      <Disclosure as="div" defaultOpen={true} open>
         {({ open }) => (
           <>
             <Disclosure.Button

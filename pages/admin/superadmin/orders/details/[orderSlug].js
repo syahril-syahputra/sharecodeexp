@@ -1334,7 +1334,7 @@ export default function OrderDetails({ session, routeParam }) {
                 {!!data.buyer?.name ? (
                   <>
                     <Link
-                      href={`/admin/superadmin/registry/company/${data.buyer?.id}`}
+                      href={`/admin/superadmin/registry/details/${data.buyer?.id}`}
                       className="text-blueGray-700 underline"
                     >
                       {data.buyer?.name}
@@ -1386,7 +1386,7 @@ export default function OrderDetails({ session, routeParam }) {
                 {!!data.companies_products?.company?.name ? (
                   <>
                     <Link
-                      href={`/admin/superadmin/registry/company/${data.companies_products?.company?.id}`}
+                      href={`/admin/superadmin/registry/details/${data.companies_products?.company?.id}`}
                       className="text-blueGray-700 underline"
                     >
                       {data.companies_products?.company?.name}

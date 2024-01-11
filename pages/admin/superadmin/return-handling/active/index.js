@@ -10,7 +10,7 @@ import TextInput from '@/components/Interface/Form/TextInput'
 import { toast } from 'react-toastify'
 import { toastOptions } from '@/lib/toastOptions'
 import { useRouter } from 'next/router'
-import ReimbursementActiveCompletedTable from '@/components/Table/Superadmin/Reimbursement/active'
+import ReimbursementActiveCompletedTable from '@/components/Table/Superadmin/ReturnHandling/active'
 
 export default function ReturnHandlingActive({ session, routerParam }) {
   const [isLoading, setIsLoading] = useState(true)

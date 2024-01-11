@@ -6,16 +6,16 @@ function useDataCity(provinceId) {
 
   useEffect(() => {
     async function fetchData() {
-      if (provinceId?.toLowerCase() === 'other' || !provinceId) {
-        setData([{ id: 'other', name: 'Other', state_id: provinceId }])
-      } else {
+      // if (provinceId?.toLowerCase() === 'other' || !provinceId) {
+      //   setData([{ id: 'other', name: 'Other', state_id: provinceId }])
+      // } else {
         const loadSectors = await axios.get(`/region/${provinceId}/city`)
         const sectors = loadSectors?.data?.data || []
         setData([
           ...sectors,
           { id: 'other', name: 'Other', state_id: provinceId },
         ])
-      }
+      // }
     }
     fetchData()
   }, [provinceId])

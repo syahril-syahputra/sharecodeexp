@@ -11,11 +11,11 @@ export default function DocumentButton(props) {
       {href ? (
         isActive ? (
           <Link href={href} target="_blank">
-            <PrimaryButton size="sm">VIew</PrimaryButton>
+            <PrimaryButton size="sm">View</PrimaryButton>
           </Link>
         ) : (
           <PrimaryButton size="sm" disabled={true}>
-            VIew
+            View
           </PrimaryButton>
         )
       ) : (
@@ -24,7 +24,7 @@ export default function DocumentButton(props) {
           onClick={onClick}
           disabled={isLoading || !isActive}
         >
-          {isLoading ? 'Loading' : 'VIew'}
+          {isLoading ? 'Loading' : 'View'}
         </PrimaryButton>
       )}
     </div>

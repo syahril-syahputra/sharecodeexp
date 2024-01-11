@@ -1006,19 +1006,6 @@ export default function InquiryDetails({session, routeParam}) {
                 <span className="text-gray-500">Buyer</span>
               </div>
               <div className="mx-2 mt-1 text-sm border-b mb-2">
-                {/* <div className="flex flex-wrap justify-between">
-                  <span>Payment Receipt</span>
-                  {
-                    buyerReceiptData?.length > 0 ?
-                      <span className="underline text-blue-500" onClick={() => {
-                        setShowModal(true)
-                        setSlugState(data?.slug)
-                        setBuyerReceiptPath(data?.buyer_receipt_path)
-                      }}>view</span>
-                      :
-                      <span className="underline text-gray-500">view</span>
-                  }
-                </div> */}
                 <DocumentButton
                   title="Payment Receipt"
                   isActive={buyerReceiptData?.length > 0}
@@ -1034,35 +1021,10 @@ export default function InquiryDetails({session, routeParam}) {
                   <span className="text-gray-500">Exepart</span>
                 </div>
                 <div className="mx-2 mt-1 text-sm">
-                  {/* <div className="flex flex-wrap justify-between">
-                    <span>Quotation</span>
-                    {data.quotation_available == 1 && isQuotationAvailable ? (
-                      <label
-                        onClick={openQuotationHandler}
-                        className={
-                          'underline ' +
-                          (isLoadingOpenQUotation
-                            ? 'text-blue-300 cursor-wait'
-                            : 'text-blue-500 cursor-pointer')
-                        }
-                      >
-                        {isLoadingOpenQUotation ? 'loading' : 'view'}
-                      </label>
-                    ) : (
-                      //   <Link
-                      //     target="_blank"
-                      //     href={`pdf/quotation/${data.slug}`}
-                      //     className="underline text-blue-500"
-                      //   >
-                      //     view
-                      //   </Link>
-                      <span className="underline text-gray-500">view</span>
-                    )}
-                  </div> */}
                   <DocumentButton
                     title="Quotation"
-                    isActive={data.quotation_available == 1 && isQuotateionAvailable}
-                    href={'pdf/quotation/${data.slug'}
+                    isActive={data.quotation_available == 1}
+                    href={`pdf/quotation/${data.slug}`}
                     isLoading={isLoadingOpenQUotation}
                     onClick={openQuotationHandler}
                   />
@@ -1083,64 +1045,9 @@ export default function InquiryDetails({session, routeParam}) {
                   />
                 </div>
                 <div className="mx-2 mt-1 text-sm">
-                  {/* <div className="flex flex-wrap justify-between">
-                    <span>Proforma Invoice</span>
-                    {data.proforma_invoice_available == 1 ? (
-                      <Link
-                        target="_blank"
-                        href={`pdf/proforma-invoice/${data.slug}`}
-                        className="underline text-blue-500"
-                      >
-                        view
-                      </Link>
-                    ) : (
-                      <span className="underline text-gray-500">view</span>
-                    )}
-                  </div> */}
-                  {/* <DocumentButton
-                    title="Proforma Invoice"
-                    isActive={data.proforma_invoice_available == 1}
-                    href={`pdf/proforma-invoice/${data.slug}`}
-                  /> */}
                 </div>
                 <div className="mx-2 mt-1 text-sm">
-                  {/* <div className="flex flex-wrap justify-between">
-                    <span>Invoice</span>
-                    {data.buyer_invoice_available == 1 ? (
-                      <Link
-                        target="_blank"
-                        href={`pdf/buyer-invoice/${data.slug}`}
-                        className="underline text-blue-500"
-                      >
-                        view
-                      </Link>
-                    ) : (
-                      <span className="underline text-gray-500">view</span>
-                    )}
-                  </div> */}
-                  {/* <DocumentButton
-                    title="Invoice"
-                    href={`pdf/buyer-invoice/${data.slug}`}
-                    isActive={data.buyer_invoice_available == 1}
-
-                  /> */}
                 </div>
-                {/* <div className="mx-2 mt-1 text-sm">
-                  <div className="flex flex-wrap justify-between">
-                    <span>Receipt of Reimbursement</span>
-                    {data.admin_reimbursement_receipt_path ? (
-                      <Link
-                        target="_blank"
-                        href={publicDir + data.admin_reimbursement_receipt_path}
-                        className="underline text-blue-500"
-                      >
-                        view
-                      </Link>
-                    ) : (
-                      <span className="underline text-gray-500">view</span>
-                    )}
-                  </div>
-                </div> */}
               </div>
             </PrimaryWrapper>
           </div>
