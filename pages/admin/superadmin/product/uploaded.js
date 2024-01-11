@@ -94,7 +94,7 @@ export default function Uploaded({session}) {
             <TextInput
               value={stateStatus}
               onChange={(target) => setStateStatus(target.value)}
-              placeholder="Status"
+              placeholder="Input Excel File Status"
             />
           </div>
         </div>

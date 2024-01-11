@@ -11,7 +11,6 @@ import moment from 'moment'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faFileExcel} from '@fortawesome/free-solid-svg-icons'
 import InfoNotification from '@/components/Interface/Notification/InfoNotification'
-import WarningNotification from '@/components/Interface/Notification/WarningNotification'
 import {BaseModalMedium} from '@/components/Interface/Modal/BaseModal'
 import {FileInput, Spinner} from 'flowbite-react'
 import DangerButton from '@/components/Interface/Buttons/DangerButton'
@@ -81,7 +80,7 @@ export default function DetailUploadedExcel({session, data}) {
         )
       }
       {data.excel?.requested && (
-        <WarningNotification
+        <InfoNotification
           message="New Request From Admin"
           detail={
             <a
@@ -91,7 +90,7 @@ export default function DetailUploadedExcel({session, data}) {
               Show Request
             </a>
           }
-        ></WarningNotification>
+        />
       )}
 
       {data.excel?.requested && isRequestShow && (
@@ -105,7 +104,7 @@ export default function DetailUploadedExcel({session, data}) {
         <PageHeader
           leftTop={
             <h3 className={'font-semibold text-lg text-blueGray-700'}>
-              Detail File Excel {data.excel?.requested}
+              Detail File Excel
             </h3>
           }
         ></PageHeader>
