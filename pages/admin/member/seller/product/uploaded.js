@@ -12,6 +12,7 @@ import {useRouter} from 'next/router'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import InfoButton from '@/components/Interface/Buttons/InfoButton'
+import SelectInput from '@/components/Interface/Form/SelectInput'
 
 Uploaded.layout = Admin
 
@@ -30,6 +31,30 @@ export default function Uploaded({session}) {
     lastPage: 0,
   })
   const [stateActionRequired, setStateActionRequired] = useState(false)
+  const [orderStatus, setOrderStatus] = useState({
+    label: 'Select Order Status',
+    value: '',
+  })
+  const [orderStatusOptions, setOrderStatusOption] = useState([])
+  const loadOrderStatusOption = async () => {
+    await axios
+      .get(`/excel-product-file-statuses`)
+      .then((response) => {
+        let res = response.data.data
+        setOrderStatusOption(res)
+        // res.filter((option) => {
+        //   if (option.value === orderStatusFromRoute) {
+        //     setOrderStatus({
+        //       label: option.label,
+        //       value: option.value,
+        //     })
+        //   }
+        // })
+      })
+      .catch(() => {
+        toast.error('Cannot load order status.', toastOptions)
+      })
+  }
 
   const fetchdata = async (page = 1, statusParam = '',
     orderActionRequiredParam = false
@@ -68,6 +93,8 @@ export default function Uploaded({session}) {
   }
   useEffect(() => {
     fetchdata()
+    loadOrderStatusOption()
+
   }, [])
   useEffect(() => {
     fetchdata()
@@ -105,6 +132,10 @@ export default function Uploaded({session}) {
     setStateStatus('')
     setStateActionRequired(false)
     fetchdata()
+    setOrderStatus({
+      label: 'Select Order Status',
+      value: '',
+    })
   }
 
   useEffect(() => {
@@ -127,10 +158,10 @@ export default function Uploaded({session}) {
         <h2 className="text-xl text-center">Search Upload Excel</h2>
         <div className="grid grid-cols-2 gap-3 mt-2">
           <div className="text-center">
-            <TextInput
-              value={stateStatus}
-              onChange={(target) => setStateStatus(target.value)}
-              placeholder="Input Excel File Status"
+            <SelectInput
+              value={'Data'}
+              options={orderStatusOptions}
+              onChange={(input) => console.log(input, '<<<<input')}
             />
           </div>
         </div>
