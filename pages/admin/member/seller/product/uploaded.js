@@ -40,16 +40,14 @@ export default function Uploaded({session}) {
     await axios
       .get(`/excel-product-file-statuses`)
       .then((response) => {
-        let res = response.data.data
-        setOrderStatusOption(res)
-        // res.filter((option) => {
-        //   if (option.value === orderStatusFromRoute) {
-        //     setOrderStatus({
-        //       label: option.label,
-        //       value: option.value,
-        //     })
-        //   }
-        // })
+        let res = response.data.data || []
+        const dataRes = res?.map((e) => {
+          return ({
+            value: e?.slug,
+            label: e?.name
+          })
+        })
+        setOrderStatusOption(dataRes)
       })
       .catch(() => {
         toast.error('Cannot load order status.', toastOptions)
@@ -88,8 +86,8 @@ export default function Uploaded({session}) {
       setIsLoading(false)
     }
   }
-  const setPage = (pageNumber, stateActionRequired) => {
-    fetchdata(pageNumber, stateActionRequired)
+  const setPage = (pageNumber, orderStatus, stateActionRequired) => {
+    fetchdata(pageNumber, orderStatus?.value, stateActionRequired)
   }
   useEffect(() => {
     fetchdata()
@@ -125,7 +123,7 @@ export default function Uploaded({session}) {
     })
   }
   const handleSearchData = () => {
-    fetchdata(1, stateStatus, stateActionRequired)
+    fetchdata(1, orderStatus?.value, stateActionRequired)
   }
 
   const handleResetSearchFilter = () => {
@@ -159,9 +157,10 @@ export default function Uploaded({session}) {
         <div className="grid grid-cols-2 gap-3 mt-2">
           <div className="text-center">
             <SelectInput
-              value={'Data'}
+              value={orderStatus}
               options={orderStatusOptions}
-              onChange={(input) => console.log(input, '<<<<input')}
+              onChange={(input) => setOrderStatus(input)}
+              placeholder="Input Excel File Status"
             />
           </div>
         </div>

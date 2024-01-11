@@ -10,6 +10,7 @@ import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import TextInput from '@/components/Interface/Form/TextInput'
 import InfoButton from '@/components/Interface/Buttons/InfoButton'
+import SelectInput from '@/components/Interface/Form/SelectInput'
 
 Uploaded.layout = Admin
 
@@ -26,7 +27,28 @@ export default function Uploaded({session}) {
     lastPage: 0,
   })
   const [stateActionRequired, setStateActionRequired] = useState(false)
-
+  const [orderStatus, setOrderStatus] = useState({
+    label: 'Select Order Status',
+    value: '',
+  })
+  const [orderStatusOptions, setOrderStatusOption] = useState([])
+  const loadOrderStatusOption = async () => {
+    await axios
+      .get(`/excel-product-file-statuses`)
+      .then((response) => {
+        let res = response.data.data || []
+        const dataRes = res?.map((e) => {
+          return ({
+            value: e?.slug,
+            label: e?.name
+          })
+        })
+        setOrderStatusOption(dataRes)
+      })
+      .catch(() => {
+        toast.error('Cannot load order status.', toastOptions)
+      })
+  }
   const fetchdata = async (page = 1, statusParam = '',
     orderActionRequiredParam = false) => {
     setIsLoading(true)
@@ -59,11 +81,12 @@ export default function Uploaded({session}) {
       setIsLoading(false)
     }
   }
-  const setPage = (pageNumber, stateActionRequired) => {
-    fetchdata(pageNumber, stateActionRequired)
+  const setPage = (pageNumber, orderStatus, stateActionRequired) => {
+    fetchdata(pageNumber, orderStatus?.value, stateActionRequired)
   }
   useEffect(() => {
     fetchdata()
+    loadOrderStatusOption()
   }, [])
 
   const showDetailHandler = (data) => {
@@ -72,13 +95,17 @@ export default function Uploaded({session}) {
   }
 
   const handleSearchData = () => {
-    fetchdata(1, stateStatus, stateActionRequired)
+    fetchdata(1, orderStatus?.value, stateActionRequired)
   }
 
   const handleResetSearchFilter = () => {
     setStateStatus('')
     setStateActionRequired(false)
     fetchdata()
+    setOrderStatus({
+      label: 'Select Order Status',
+      value: '',
+    })
   }
 
   useEffect(() => {
@@ -91,9 +118,10 @@ export default function Uploaded({session}) {
         <h2 className="text-xl text-center">Search Upload Excel</h2>
         <div className="grid grid-cols-2 gap-3 mt-2">
           <div className="text-center">
-            <TextInput
-              value={stateStatus}
-              onChange={(target) => setStateStatus(target.value)}
+            <SelectInput
+              value={orderStatus}
+              options={orderStatusOptions}
+              onChange={(input) => setOrderStatus(input)}
               placeholder="Input Excel File Status"
             />
           </div>
@@ -108,7 +136,6 @@ export default function Uploaded({session}) {
                 id="stateActionRequired"
                 onChange={(e) => {
                   setStateActionRequired(!stateActionRequired)
-                  // handleSearchData()
                 }}
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
