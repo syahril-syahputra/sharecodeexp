@@ -1,7 +1,7 @@
 import moment from 'moment'
-import { checkValue } from '@/utils/general'
-import React, { useState, useEffect } from 'react'
-import { getSession } from 'next-auth/react'
+import {checkValue} from '@/utils/general'
+import React, {useState, useEffect} from 'react'
+import {getSession} from 'next-auth/react'
 import Image from 'next/image'
 import axios from '@/lib/axios'
 import Link from 'next/link'
@@ -10,7 +10,7 @@ import Link from 'next/link'
 import Admin from 'layouts/Admin.js'
 
 //route
-import { AdminUrl } from '@/route/route-url'
+import {AdminUrl} from '@/route/route-url'
 
 // components
 import SendProformaInvoiceModal from '@/components/Modal/OrderComponent/Superadmin/SendProformaInvoice'
@@ -20,13 +20,13 @@ import GoodResultModal from '@/components/Modal/OrderComponent/Superadmin/GoodRe
 import BadResultModal from '@/components/Modal/OrderComponent/Superadmin/BadResult'
 import TrackerNumberForBuyerModal from '@/components/Modal/OrderComponent/Superadmin/TrackerNumberForBuyer'
 import CompleteOrderModal from '@/components/Modal/OrderComponent/Superadmin/CompleteOrder'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
-import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses'
+import {CompanyStatusesIcon} from '@/components/Shared/Company/Statuses'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import TrackerNumberForSeler from '@/components/Modal/OrderComponent/Superadmin/TrackerNumberForSeler'
 import ReleasePaymentToBuyer from '@/components/Modal/OrderComponent/Superadmin/ReleasePaymentToBuyer'
@@ -41,14 +41,19 @@ import DocumentButton from '@/components/Shared/Order/DocumentButton'
 import UploadPaymentReceiptForSeller from '@/components/Modal/OrderComponent/Superadmin/UploadPaymentReceiptForSeller'
 import NotificationBarAdmin from '@/components/Interface/Notification/NotificationBarAdmin'
 import ModalPdf from '@/components/Modal/ModalPdf'
+import {Accordion, Button} from 'flowbite-react';
 
-export default function OrderDetails({ session, routeParam }) {
+export default function OrderDetails({session, routeParam}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   //data search
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
   const [errorInfo, setErrorInfo] = useState({})
   const [isOrderValid, setIsOrderValid] = useState(true)
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleAccordion = () => {
+    setIsOpen(!isOpen);
+  };
   const [isLoadingOpenReceipt, setisLoadingOpenReceipt] = useState(false)
   const openPaymentReceiptHandler = async () => {
     try {
@@ -248,7 +253,7 @@ export default function OrderDetails({ session, routeParam }) {
       .catch((error) => {
         toast.error(
           error.data.message ||
-            'Something went wrong. Cannot upload the result.',
+          'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -341,7 +346,7 @@ export default function OrderDetails({ session, routeParam }) {
       .catch((error) => {
         toast.error(
           error.data.message ||
-            'Something went wrong. Cannot sent the request.',
+          'Something went wrong. Cannot sent the request.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -442,7 +447,7 @@ export default function OrderDetails({ session, routeParam }) {
       .catch((error) => {
         toast.error(
           error.data.message ||
-            'Something went wrong. Cannot complete the order.',
+          'Something went wrong. Cannot complete the order.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -1198,21 +1203,21 @@ export default function OrderDetails({ session, routeParam }) {
           {parseInt(data.reimbursement) === 1 ? (
             <div className="flex justify-center">
               <div className="mx-2 my-4">
-                  <PrimaryButton
-                    outline
-                    className="mx-1"
-                    size="sm"
-                    disabled={isLoading}
-                    onClick={() => setcloseReimbusmentModal(true)}
-                  >
-                    Release Reimbursement
-                  </PrimaryButton>
+                <PrimaryButton
+                  outline
+                  className="mx-1"
+                  size="sm"
+                  disabled={isLoading}
+                  onClick={() => setcloseReimbusmentModal(true)}
+                >
+                  Release Reimbursement
+                </PrimaryButton>
               </div>
             </div>
-          ) : 
-          <div className="italic flex justify-center items-center h-28">
-            No action to take
-          </div>
+          ) :
+            <div className="italic flex justify-center items-center h-28">
+              No action to take
+            </div>
           }
         </div>
       )
@@ -1260,6 +1265,11 @@ export default function OrderDetails({ session, routeParam }) {
   const [isBuyerLoadingModal, setIsBuyerLoadingModal] = useState(false)
   const [isSellerLoadingModal, setIsSellerLoadingModal] = useState(false)
 
+  const orderStatus = typeof data?.order_status?.phase == 'string' ? Number(data?.order_status?.phase) : data?.order_status?.phase
+  const slugStatus = typeof data?.order_status?.slug == 'string' ? Number(data?.order_status?.slug) : data?.order_status?.slug
+
+  const isActive = typeof data?.is_active == 'string' ? Number(data?.is_active) : data?.is_active
+
   return (
     <>
       <div className="">
@@ -1299,14 +1309,15 @@ export default function OrderDetails({ session, routeParam }) {
               <h3 className="text-md text-blueGray-700">{data.order_number}</h3>
             }
           ></PageHeader>
-          {!!data.order_status?.slug ? (
+          {orderStatus ? (
             <Image
-              src={`/img/order-status/${data.order_status?.slug}.png`}
-              width="2000"
-              height="200"
-              alt="exepart-order-status"
-              className="mx-auto"
-            ></Image>
+              src={`/img/primary/${orderStatus}.png`}
+              width={0}
+              height={10}
+              sizes="100vw"
+              alt="phase-status"
+              style={{width: '100%'}} // optional
+            />
           ) : (
             <div className="animate-pulse">
               <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
@@ -1322,7 +1333,53 @@ export default function OrderDetails({ session, routeParam }) {
             </div>
           )}
         </PrimaryWrapper>
-
+        <Accordion className="my-6" alwaysOpen={false}>
+          <Accordion.Panel isOpen={isOpen}>
+            <Accordion.Title >
+              <span className="font-semibold text-lg text-blueGray-700">
+                {!!data.order_status?.name ? (
+                  "Step Status"
+                ) : (
+                  <div className="animate-pulse">
+                    <div className="h-5 bg-gray-200 dark:bg-gray-400 w-40"></div>
+                  </div>
+                )}
+              </span>
+            </Accordion.Title>
+            <Accordion.Content>
+              <PrimaryWrapper>
+                {!!data?.order_status?.slug ?
+                  (
+                    (orderStatus == 0 || isActive == 0) ?
+                      null
+                      :
+                      <Image
+                        src={`/img/secondary/${data?.order_status?.slug}.png`}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        alt="phase-status"
+                        style={{width: '100%', height: 'auto'}} // optional
+                      />
+                  )
+                  : (
+                    <div className="animate-pulse">
+                      <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
+                        <svg
+                          className="w-10 h-10 text-gray-200 dark:text-gray-600"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="currentColor"
+                          viewBox="0 0 20 18"
+                        >
+                          <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+              </PrimaryWrapper>
+            </Accordion.Content>
+          </Accordion.Panel>
+        </Accordion>
         {/* seller buyer */}
         <div className="lg:flex lg:justify-around">
           <div className="w-full lg:w-1/2 mr-4">
