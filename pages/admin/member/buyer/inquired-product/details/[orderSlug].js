@@ -580,29 +580,18 @@ export default function InquiryDetails({session, routeParam}) {
                 sales@exepart.com
               </a>
             </div>
-            {/* <div className="mx-2 my-4">
-              <WarningButton
-                outline
-                className="mx-1"
-                size="sm"
-                disabled={isLoading}
-                onClick={() => setDidntReceiveAnyModal(true)}
-              >
-                Didn&lsquo;t receive any
-              </WarningButton>
-            </div> */}
           </div>
         </div>
       )
       break
   }
 
-
-  const orderStatus = typeof data?.order_status?.phase == 'string' ? Number(data?.order_status?.phase) : data?.order_status?.phase
-  const slugStatus = typeof data?.order_status?.slug == 'string' ? Number(data?.order_status?.slug) : data?.order_status?.slug
-
-  const isActive = typeof data?.is_active == 'string' ? Number(data?.is_active) : data?.is_active
-
+  let orderPhase = parseInt(data?.order_status?.phase) || '0';
+  if(orderPhase == 4 && data?.order_status?.reimbursement == 1){
+    orderPhase = '4-cancellation';
+  }
+  const isOrderActive = parseInt(data?.is_active);
+  orderPhase = isOrderActive == 0 ? '0' : orderPhase;
 
   return (
     <>
@@ -642,77 +631,170 @@ export default function InquiryDetails({session, routeParam}) {
               <h3 className="text-md text-blueGray-700">{data.order_number}</h3>
             }
           ></PageHeader>
-          {orderStatus ? (
-            <Image
-              src={`/img/primary/${orderStatus}.png`}
-              width={0}
-              height={10}
-              sizes="100vw"
-              alt="phase-status"
-              style={{width: '100%'}} // optional
-            />
-          ) : (
-            <div className="animate-pulse">
-              <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
-                <svg
-                  className="w-10 h-10 text-gray-200 dark:text-gray-600"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 18"
-                >
-                  <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                </svg>
-              </div>
-            </div>
-          )}
         </PrimaryWrapper>
-        <Accordion className="my-6" alwaysOpen={false}>
-          <Accordion.Panel isOpen={isOpen}>
-            <Accordion.Title >
-              <span className="font-semibold text-lg text-blueGray-700">
-                {!!data.order_status?.name ? (
-                  "Step Status"
-                ) : (
-                  <div className="animate-pulse">
-                    <div className="h-5 bg-gray-200 dark:bg-gray-400 w-40"></div>
-                  </div>
-                )}
-              </span>
-            </Accordion.Title>
-            <Accordion.Content>
-              <PrimaryWrapper>
-                {!!data?.order_status?.slug ?
-                  (
-                    (orderStatus == 0 || isActive == 0) ?
-                      null
-                      :
-                      <Image
-                        src={`/img/secondary/${data?.order_status?.slug}.png`}
-                        width={0}
-                        height={0}
-                        sizes="100vw"
-                        alt="phase-status"
-                        style={{width: '100%', height: 'auto'}} // optional
-                      />
+
+        {/* image and quotation details */}
+        <div className="lg:flex lg:justify-around">
+          <div className="w-full lg:w-1/2 mr-4">
+            <PrimaryWrapper>
+            {orderPhase ? (
+              <Image
+                src={`/img/order-status/primary/${orderPhase}.png`}
+                width={0}
+                height={10}
+                sizes="100vw"
+                alt="phase-status"
+                style={{width: '100%'}} // optional
+              />
+            ) : (
+              <div className="animate-pulse">
+                <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
+                  <svg
+                    className="w-10 h-10 text-gray-200 dark:text-gray-600"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 18"
+                  >
+                    <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                  </svg>
+                </div>
+              </div>
+            )}
+            <div className='px-2 mt-4'>
+              <div className='border-t'></div>
+            </div>
+            <div className='mt-4'>
+              {!!data?.order_status?.slug ?
+              (
+                (orderPhase == 0 || isOrderActive == 0) ?
+                  null
+                  :
+                  ( !data?.admin_reimbursement_receipt_path &&
+                    <Image
+                      src={`/img/order-status/secondary/${data?.order_status?.slug}.png`}
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      alt="phase-status"
+                      style={{width: '100%', height: 'auto'}} // optional
+                    />
                   )
-                  : (
+              )
+              : (
+                <div className="animate-pulse">
+                  <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
+                    <svg
+                      className="w-10 h-10 text-gray-200 dark:text-gray-600"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 20 18"
+                    >
+                      <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                    </svg>
+                  </div>
+                </div>
+              )}  
+            </div>            
+            </PrimaryWrapper>
+          </div>
+          <div className="w-full lg:w-2/4">
+            <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-md">Inquiry Details</div>
+              <div className="mx-2 my-1 text-sm border-b">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Date Code</span>
+                  {!!data.companies_products?.dateCode ? (
+                    <span>{data.companies_products?.dateCode}</span>
+                  ) : (
                     <div className="animate-pulse">
-                      <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
-                        <svg
-                          className="w-10 h-10 text-gray-200 dark:text-gray-600"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="currentColor"
-                          viewBox="0 0 20 18"
-                        >
-                          <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                        </svg>
-                      </div>
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
                     </div>
                   )}
-              </PrimaryWrapper>
-            </Accordion.Content>
-          </Accordion.Panel>
-        </Accordion>
+                </div>
+              </div>
+              <div className="mx-2 my-1 text-sm">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Order Quantity</span>
+                  {!!data.qty ? (
+                    <span>{data.qty}</span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="mx-2 my-1 text-sm ">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Unit Price (USD)</span>
+                  {!isLoading ? (
+                    <span>
+                      {isQuotationAvailable && data?.order_price_amount ? `$${data.price_profite}` : '-'}
+                    </span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="mx-2 my-1 text-sm border-b">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Test Lab Fee (USD)</span>
+                  {!isLoading ? (
+                    <span>
+                      {isQuotationAvailable && data?.order_price_amount
+                        ? `$${data.order_price_amount?.test_fee_amount}`
+                        : '-'}
+                    </span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="mx-2 my-1 text-sm mb-5">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500 font-bold">
+                    Total Price (USD)
+                  </span>
+                  {!isLoading ? (
+                    <span>
+                      {isQuotationAvailable && data?.order_price_amount
+                        ? `$${data?.order_price_amount?.grand_total}`
+                        : '-'}
+                    </span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              {parseFloat(data.price_profite) * parseInt(data.qty) < 1000 && (
+                <div className="mx-2 my-1 text-sm mb-5">
+                  <div className="flex flex-wrap justify-between">
+                    <span className="text-orange-500 font-bold">
+                      This order is charged for test lab separately because
+                      total order is less than 1000US dollars
+                    </span>
+                  </div>
+                </div>
+              )}
+              <div className="mx-2 my-1 text-sm font-bold text-gray-500">
+                Note:
+              </div>
+              <div className="mx-2 text-sm text-gray-500 mb-5">
+                Price is only for the product. The order type is Ex-works. The
+                price you see on screen does not include logistic costs,
+                customs, tax, insurance or any additional expenses that may
+                occur.
+              </div>
+            </PrimaryWrapper>
+          </div>
+        </div> 
+
         {/* buyer tracking number */}
         <div className="flex">
           <div className="w-1/2 lg:w-1/3 mr-4">
@@ -742,44 +824,9 @@ export default function InquiryDetails({session, routeParam}) {
 
         {/* product info and quotation */}
         <div className="lg:flex lg:justify-around">
-          <div className="w-full lg:w-2/3 mr-4">
+          <div className="w-full lg:w-1/2 mr-4">
             <PrimaryWrapper className="p-3">
               <div className="lg:flex">
-                {/* <div className="w-full lg:w-1/2 mr-4 border">
-                  {isLoading && (
-                    <div className="animate-pulse">
-                      <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
-                        <svg
-                          className="h-14 w-14 text-gray-200 dark:text-gray-600"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="currentColor"
-                          viewBox="0 0 20 18"
-                        >
-                          <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                        </svg>
-                      </div>
-                    </div>
-                  )}
-                  {data.companies_products?.img && !isLoading && (
-                    <div className="flex justify-center items-center">
-                      <Image
-                        src={
-                          publicDir +
-                          '/product_images/' +
-                          data.companies_products.img
-                        }
-                        width="400"
-                        height="400"
-                        alt="exepart-product"
-                      ></Image>
-                    </div>
-                  )}
-                  {!data.companies_products?.img && !isLoading && (
-                    <div className="flex justify-center items-center h-40">
-                      no image
-                    </div>
-                  )}
-                </div> */}
                 <div className="w-full">
                   <div className="mx-2 my-1 text-xl">
                     {!!data.companies_products?.ManufacturerNumber ? (
@@ -945,101 +992,7 @@ export default function InquiryDetails({session, routeParam}) {
               </div>
             </PrimaryWrapper>
           </div>
-          <div className="w-full lg:w-1/3">
-            <PrimaryWrapper className="p-1">
-              <div className="mx-2 my-1 text-md">Inquiry Details</div>
-              <div className="mx-2 my-1 text-sm border-b">
-                <div className="flex flex-wrap justify-between">
-                  <span className="text-gray-500">Date Code</span>
-                  {!!data.companies_products?.dateCode ? (
-                    <span>{data.companies_products?.dateCode}</span>
-                  ) : (
-                    <div className="animate-pulse">
-                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mx-2 my-1 text-sm">
-                <div className="flex flex-wrap justify-between">
-                  <span className="text-gray-500">Order Quantity</span>
-                  {!!data.qty ? (
-                    <span>{data.qty}</span>
-                  ) : (
-                    <div className="animate-pulse">
-                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mx-2 my-1 text-sm ">
-                <div className="flex flex-wrap justify-between">
-                  <span className="text-gray-500">Unit Price (USD)</span>
-                  {!isLoading ? (
-                    <span>
-                      {isQuotationAvailable ? `$${data.price_profite}` : '-'}
-                    </span>
-                  ) : (
-                    <div className="animate-pulse">
-                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mx-2 my-1 text-sm border-b">
-                <div className="flex flex-wrap justify-between">
-                  <span className="text-gray-500">Test Lab Fee (USD)</span>
-                  {!isLoading ? (
-                    <span>
-                      {isQuotationAvailable
-                        ? `$${data.order_price_amount?.test_fee_amount}`
-                        : '-'}
-                    </span>
-                  ) : (
-                    <div className="animate-pulse">
-                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mx-2 my-1 text-sm mb-5">
-                <div className="flex flex-wrap justify-between">
-                  <span className="text-gray-500 font-bold">
-                    Total Price (USD)
-                  </span>
-                  {!isLoading ? (
-                    <span>
-                      {isQuotationAvailable
-                        ? `$${data.order_price_amount?.grand_total}`
-                        : '-'}
-                    </span>
-                  ) : (
-                    <div className="animate-pulse">
-                      <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              {parseFloat(data.price_profite) * parseInt(data.qty) < 1000 && (
-                <div className="mx-2 my-1 text-sm mb-5">
-                  <div className="flex flex-wrap justify-between">
-                    <span className="text-orange-500 font-bold">
-                      This order is charged for test lab separately because
-                      total order is less than 1000US dollars
-                    </span>
-                  </div>
-                </div>
-              )}
-              <div className="mx-2 my-1 text-sm font-bold text-gray-500">
-                Note:
-              </div>
-              <div className="mx-2 text-sm text-gray-500 mb-5">
-                Price is only for the product. The order type is Ex-works. The
-                price you see on screen does not include logistic costs,
-                customs, tax, insurance or any additional expenses that may
-                occur.
-              </div>
-            </PrimaryWrapper>
+          <div className="w-full lg:w-1/2">
             {data.quotation_rejection_reason === 'Other' && (
               <PrimaryWrapper className="p-1">
                 <div className="mx-2 my-1 text-md">
