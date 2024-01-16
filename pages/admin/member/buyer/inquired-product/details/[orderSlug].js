@@ -863,7 +863,7 @@ export default function InquiryDetails({session, routeParam}) {
                     Inquired Date
                   </div>
                   <div className="mx-2 text-md">
-                    {!!data.companies_products?.created_at ? (
+                    {!!data?.created_at ? (
                       moment(data.created_at)
                         .local()
                         .format('dddd, D MMMM YYYY')

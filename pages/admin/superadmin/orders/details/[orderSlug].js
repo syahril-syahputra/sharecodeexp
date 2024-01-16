@@ -1656,7 +1656,7 @@ export default function OrderDetails({session, routeParam}) {
                   </div>
                   <div className="mx-2 text-md">
                     {/* set to local time */}
-                    {!!data.companies_products?.created_at ? (
+                    {!!data?.created_at ? (
                       moment(data.created_at)
                         .local()
                         .format('dddd, D MMMM YYYY')
