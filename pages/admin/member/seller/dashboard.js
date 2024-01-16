@@ -141,7 +141,7 @@ export default function SellerDashboard({session}) {
         <ComponentCardSellerDashboard
           dataName={data.order?.handling_product || 0}
           name={"Payment for Handling Product"}
-          url={`${VendorUrl.sellingProduct.returnedProduct.active.index}`}
+          url={`${VendorUrl.sellingProduct.returnedProduct.active.index}?orderStatus=testing-invoice-sent`}
           onClick={() => resetCounter('order-handling-product')}
           dataNameNotification={data.order?.newly_update?.handling_product}
         />
