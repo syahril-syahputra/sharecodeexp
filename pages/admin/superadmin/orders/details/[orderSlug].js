@@ -41,6 +41,7 @@ import DocumentButton from '@/components/Shared/Order/DocumentButton'
 import UploadPaymentReceiptForSeller from '@/components/Modal/OrderComponent/Superadmin/UploadPaymentReceiptForSeller'
 import NotificationBarAdmin from '@/components/Interface/Notification/NotificationBarAdmin'
 import ModalPdf from '@/components/Modal/ModalPdf'
+import { BaseModalXLarge } from '@/components/Interface/Modal/BaseModal'
 
 export default function OrderDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -50,6 +51,7 @@ export default function OrderDetails({ session, routeParam }) {
   const [errorInfo, setErrorInfo] = useState({})
   const [isOrderValid, setIsOrderValid] = useState(true)
   const [isLoadingOpenReceipt, setisLoadingOpenReceipt] = useState(false)
+  const [initialModal, setinitialModal] = useState(true)
   const openPaymentReceiptHandler = async () => {
     try {
       setisLoadingOpenReceipt(true)
@@ -1198,22 +1200,22 @@ export default function OrderDetails({ session, routeParam }) {
           {parseInt(data.reimbursement) === 1 ? (
             <div className="flex justify-center">
               <div className="mx-2 my-4">
-                  <PrimaryButton
-                    outline
-                    className="mx-1"
-                    size="sm"
-                    disabled={isLoading}
-                    onClick={() => setcloseReimbusmentModal(true)}
-                  >
-                    Release Reimbursement
-                  </PrimaryButton>
+                <PrimaryButton
+                  outline
+                  className="mx-1"
+                  size="sm"
+                  disabled={isLoading}
+                  onClick={() => setcloseReimbusmentModal(true)}
+                >
+                  Release Reimbursement
+                </PrimaryButton>
               </div>
             </div>
-          ) : 
-          <div className="italic flex justify-center items-center h-28">
-            No action to take
-          </div>
-          }
+          ) : (
+            <div className="italic flex justify-center items-center h-28">
+              No action to take
+            </div>
+          )}
         </div>
       )
       break
@@ -1282,6 +1284,39 @@ export default function OrderDetails({ session, routeParam }) {
             <div className="h-16 bg-gray-200 dark:bg-gray-400 w-full"></div>
           </div>
         )}
+        {initialModal && !isLoading && (
+          <BaseModalXLarge
+            onClick={() => setinitialModal(false)}
+            body={
+              <>
+                <NotificationBarAdmin data={data} />
+                {!!data.order_status?.slug ? (
+                  <Image
+                    src={`/img/order-status/${data.order_status?.slug}.png`}
+                    width="2000"
+                    height="200"
+                    alt="exepart-order-status"
+                    className="mx-auto"
+                  ></Image>
+                ) : (
+                  <div className="animate-pulse">
+                    <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
+                      <svg
+                        className="w-10 h-10 text-gray-200 dark:text-gray-600"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 20 18"
+                      >
+                        <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                      </svg>
+                    </div>
+                  </div>
+                )}
+              </>
+            }
+          />
+        )}
+
         <PrimaryWrapper>
           <PageHeader
             leftTop={
@@ -1293,34 +1328,18 @@ export default function OrderDetails({ session, routeParam }) {
                     <div className="h-5 bg-gray-200 dark:bg-gray-400 w-40"></div>
                   </div>
                 )}
+                <span
+                  className="ml-4 text-sm cursor-pointer text-blue-700 hover:text-blue-500"
+                  onClick={() => setinitialModal(true)}
+                >
+                  Show Detail
+                </span>
               </h3>
             }
             rightTop={
               <h3 className="text-md text-blueGray-700">{data.order_number}</h3>
             }
           ></PageHeader>
-          {!!data.order_status?.slug ? (
-            <Image
-              src={`/img/order-status/${data.order_status?.slug}.png`}
-              width="2000"
-              height="200"
-              alt="exepart-order-status"
-              className="mx-auto"
-            ></Image>
-          ) : (
-            <div className="animate-pulse">
-              <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
-                <svg
-                  className="w-10 h-10 text-gray-200 dark:text-gray-600"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 18"
-                >
-                  <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                </svg>
-              </div>
-            </div>
-          )}
         </PrimaryWrapper>
 
         {/* seller buyer */}
@@ -1825,7 +1844,7 @@ export default function OrderDetails({ session, routeParam }) {
                   //   setBuyerReceiptPath(data?.buyer_receipt_path)
                   // }}
                   onClick={() => {
-                    setShowModalBuyerReceipt(true);
+                    setShowModalBuyerReceipt(true)
                   }}
                 />
               </div>
@@ -1846,7 +1865,7 @@ export default function OrderDetails({ session, routeParam }) {
                   }
                   isActive={data.seller_payment_receipt?.length > 0}
                   onClick={() => {
-                    setShowModalSellerReceipt(true);
+                    setShowModalSellerReceipt(true)
                   }}
                 />
               </div>
@@ -2044,28 +2063,22 @@ export default function OrderDetails({ session, routeParam }) {
           </div>
         </div>
       </div>
-      {
-        showModalBuyerReceipt ?
-          <ModalPdf
-            title="List of Buyer Payment Receipt Documents"
-            setShowModal={setShowModalBuyerReceipt}
-            isLoading={[isBuyerLoadingModal, setIsBuyerLoadingModal]}
-            receiptData={buyerReceiptData}
-          />
-          :
-          null
-      }
-      {
-        showModalSellerReceipt ?
-          <ModalPdf
-            title="List of Seller Payment Receipt Documents"
-            setShowModal={setShowModalSellerReceipt}
-            isLoading={[isSellerLoadingModal, setIsSellerLoadingModal]}
-            receiptData={sellerReceiptData}
-          />
-          :
-          null
-      }
+      {showModalBuyerReceipt ? (
+        <ModalPdf
+          title="List of Buyer Payment Receipt Documents"
+          setShowModal={setShowModalBuyerReceipt}
+          isLoading={[isBuyerLoadingModal, setIsBuyerLoadingModal]}
+          receiptData={buyerReceiptData}
+        />
+      ) : null}
+      {showModalSellerReceipt ? (
+        <ModalPdf
+          title="List of Seller Payment Receipt Documents"
+          setShowModal={setShowModalSellerReceipt}
+          isLoading={[isSellerLoadingModal, setIsSellerLoadingModal]}
+          receiptData={sellerReceiptData}
+        />
+      ) : null}
     </>
   )
 }

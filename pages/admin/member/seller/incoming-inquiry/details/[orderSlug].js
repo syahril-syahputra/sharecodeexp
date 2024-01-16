@@ -1,17 +1,17 @@
-import React, {useState, useEffect} from 'react'
-import {getSession} from 'next-auth/react'
+import React, { useState, useEffect } from 'react'
+import { getSession } from 'next-auth/react'
 import axios from '@/lib/axios'
 import Link from 'next/link'
 import Image from 'next/image'
 import moment from 'moment'
-import {VendorUrl} from '@/route/route-url'
-import {checkValue} from '@/utils/general'
+import { VendorUrl } from '@/route/route-url'
+import { checkValue } from '@/utils/general'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
 // components
-import {toast} from 'react-toastify'
-import {toastOptions} from '@/lib/toastOptions'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
 import VerifyInquiryModal from '@/components/Modal/OrderComponent/Seller/VerifyInquiry'
 import RejectInquiryModal from '@/components/Modal/OrderComponent/Seller/RejectInquiry'
 import UpdateVerifiedInquiryModal from '@/components/Modal/OrderComponent/Seller/UpdateVerifiedInquiry'
@@ -31,8 +31,9 @@ import UploadCourierReturn from '@/components/Modal/OrderComponent/Seller/Upload
 import DangerButton from '@/components/Interface/Buttons/DangerButton'
 import DisposeCourierReturn from '@/components/Modal/OrderComponent/Seller/DisposeCourierReturn'
 import DocumentButton from '@/components/Shared/Order/DocumentButton'
+import { BaseModalXLarge } from '@/components/Interface/Modal/BaseModal'
 
-export default function InquiryDetails({session, routeParam}) {
+export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({})
@@ -46,6 +47,7 @@ export default function InquiryDetails({session, routeParam}) {
   const [showModal, setShowModal] = useState(false)
   const [isLoadingModal, setIsLoadingModal] = useState(false)
   const [slugState, setSlugState] = useState('')
+  const [initialModal, setinitialModal] = useState(true)
 
   const loadRejectionReason = async () => {
     setIsLoading(true)
@@ -169,7 +171,8 @@ export default function InquiryDetails({session, routeParam}) {
     }
   }
 
-  const [updateVerifiedInquiryAviability, setUpdateVerifiedInquiryAviability] = useState(true)
+  const [updateVerifiedInquiryAviability, setUpdateVerifiedInquiryAviability] =
+    useState(true)
   const loadData = () => {
     setIsLoading(true)
     setErrorInfo({})
@@ -398,7 +401,7 @@ export default function InquiryDetails({session, routeParam}) {
       .catch((error) => {
         toast.error(
           'Something went wrong. Cannot ship the product. ' +
-          error.data.message,
+            error.data.message,
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -818,7 +821,38 @@ export default function InquiryDetails({session, routeParam}) {
             <div className="h-16 bg-gray-200 dark:bg-gray-400 w-full"></div>
           </div>
         )}
-
+        {initialModal && !isLoading && (
+          <BaseModalXLarge
+            onClick={() => setinitialModal(false)}
+            body={
+              <>
+                <NotificationBarSeller data={data} />
+                {!!data.order_status?.slug ? (
+                  <Image
+                    src={`/img/order-status/${data.order_status?.slug}.png`}
+                    width="2000"
+                    height="200"
+                    alt="exepart-order-status"
+                    className="mx-auto"
+                  ></Image>
+                ) : (
+                  <div className="animate-pulse">
+                    <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
+                      <svg
+                        className="w-10 h-10 text-gray-200 dark:text-gray-600"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 20 18"
+                      >
+                        <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                      </svg>
+                    </div>
+                  </div>
+                )}
+              </>
+            }
+          />
+        )}
         <PrimaryWrapper>
           <PageHeader
             leftTop={
@@ -830,36 +864,19 @@ export default function InquiryDetails({session, routeParam}) {
                     <div className="h-5 bg-gray-200 dark:bg-gray-400 w-40"></div>
                   </div>
                 )}
+                <span
+                  className="ml-4 text-sm cursor-pointer text-blue-700 hover:text-blue-500"
+                  onClick={() => setinitialModal(true)}
+                >
+                  Show Detail
+                </span>
               </h3>
             }
             rightTop={
               <h3 className="text-md text-blueGray-700">{data.order_number}</h3>
             }
           ></PageHeader>
-          {!!data.order_status?.slug ? (
-            <Image
-              src={`/img/order-status/${data.order_status?.slug}.png`}
-              width="2000"
-              height="200"
-              alt="exepart-order-status"
-              className="mx-auto"
-            ></Image>
-          ) : (
-            <div className="animate-pulse">
-              <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
-                <svg
-                  className="w-10 h-10 text-gray-200 dark:text-gray-600"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 18"
-                >
-                  <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                </svg>
-              </div>
-            </div>
-          )}
         </PrimaryWrapper>
-
         {/* seller tracking number */}
         <div className="flex">
           <div className="w-1/2 lg:w-1/3 mr-4">
@@ -875,7 +892,7 @@ export default function InquiryDetails({session, routeParam}) {
               </div>
             </PrimaryWrapper>
           </div>
-          <div className="w-1/2 lg:w-1/3 mr-4">            
+          <div className="w-1/2 lg:w-1/3 mr-4">
             <PrimaryWrapper className="p-1">
               <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
                 Tracking Number
@@ -886,7 +903,6 @@ export default function InquiryDetails({session, routeParam}) {
             </PrimaryWrapper>
           </div>
         </div>
-
         {parseInt(data?.return_product) === 1 ? (
           <div className="flex">
             <div className="w-1/2 lg:w-1/3 mr-4">
@@ -914,7 +930,6 @@ export default function InquiryDetails({session, routeParam}) {
             </div>
           </div>
         ) : undefined}
-
         {/* product info and quotation */}
         <div className="lg:flex lg:justify-around">
           <div className="w-full lg:w-2/3 mr-4">
@@ -1156,7 +1171,6 @@ export default function InquiryDetails({session, routeParam}) {
             )}
           </div>
         </div>
-
         {/* document and action to take */}
         <div className="lg:flex lg:justify-around">
           <div className="w-full lg:w-1/2 mr-4">
@@ -1188,9 +1202,11 @@ export default function InquiryDetails({session, routeParam}) {
                   href={publicDir + data.seller_invoice_path}
                 />
                 <DocumentButton
-                  title={data?.seller_return_courier
-                    ? 'Testing Payment Receipt'
-                    : 'Testing and Handling Service Payment Receipt'}
+                  title={
+                    data?.seller_return_courier
+                      ? 'Testing Payment Receipt'
+                      : 'Testing and Handling Service Payment Receipt'
+                  }
                   onClick={() => {
                     setShowModal(true)
                     setSlugState(data?.slug)
@@ -1244,13 +1260,13 @@ export default function InquiryDetails({session, routeParam}) {
                     )}
                   </div> */}
                   <DocumentButton
-                    title={"Purchase Order"}
+                    title={'Purchase Order'}
                     onClick={openPurchaseOrder}
                     isLoading={isLoadingPurchaseOrder}
                     isActive={Boolean(data.purchase_order_available == 1)}
                   />
                   <DocumentButton
-                    title={"Packaging Lists"}
+                    title={'Packaging Lists'}
                     isActive={Boolean(data?.seller_packing_list_available == 1)}
                     onClick={openPackingList}
                     isLoading={isLoadingPackingList}
@@ -1266,11 +1282,15 @@ export default function InquiryDetails({session, routeParam}) {
                     href={publicDir + data.admin_receipt_path}
                   />
                   <DocumentButton
-                    title={data.seller_return_courier
-                      ? 'Testing Innvoice'
-                      : 'Testing and Handling Invoice'}
-                    isActive={Boolean(data.testing_invoice_available ||
-                      data.testing_and_handling_invoice_available)}
+                    title={
+                      data.seller_return_courier
+                        ? 'Testing Innvoice'
+                        : 'Testing and Handling Invoice'
+                    }
+                    isActive={Boolean(
+                      data.testing_invoice_available ||
+                        data.testing_and_handling_invoice_available
+                    )}
                     href={`pdf/testing-and-handling-invoice/${data.slug}`}
                   />
                   <DocumentButton
@@ -1429,17 +1449,14 @@ export default function InquiryDetails({session, routeParam}) {
           </div>
         </div>
       </div>
-      {
-        showModal ?
-          <ModalPdf
-            title="List of Seller Payment Receipt Documents"
-            setShowModal={setShowModal}
-            isLoading={[isLoadingModal, setIsLoadingModal]}
-            receiptData={sellerReceiptData}
-          />
-          :
-          null
-      }
+      {showModal ? (
+        <ModalPdf
+          title="List of Seller Payment Receipt Documents"
+          setShowModal={setShowModal}
+          isLoading={[isLoadingModal, setIsLoadingModal]}
+          receiptData={sellerReceiptData}
+        />
+      ) : null}
     </>
   )
 }

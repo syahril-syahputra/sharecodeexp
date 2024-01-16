@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react'
-import {getSession} from 'next-auth/react'
+import React, { useState, useEffect } from 'react'
+import { getSession } from 'next-auth/react'
 import axios from '@/lib/axios'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -12,8 +12,8 @@ import SendPaymentDocsModal from '@/components/Modal/OrderComponent/Buyer/SendPa
 import SendUpdatedPaymentDocsModal from '@/components/Modal/OrderComponent/Buyer/SendUpdatedPaymentDocs'
 import AcceptOrderModal from '@/components/Modal/OrderComponent/Buyer/AcceptOrder'
 import DidntReceiveAnyModal from '@/components/Modal/OrderComponent/Buyer/DidntReceiveAny'
-import {toast} from 'react-toastify'
-import {toastOptions} from '@/lib/toastOptions'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
@@ -21,16 +21,17 @@ import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
 import LightButton from '@/components/Interface/Buttons/LightButton'
-import {VendorUrl} from '@/route/route-url'
-import {checkValue} from '@/utils/general'
+import { VendorUrl } from '@/route/route-url'
+import { checkValue } from '@/utils/general'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import calculateTimeDifference from '@/lib/calculateTimeDifference'
 import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
 import ModalPdf from '@/components/Modal/ModalPdf'
 import NotificationBarBuyer from '@/components/Interface/Notification/NotificationBarBuyer'
 import DocumentButton from '@/components/Shared/Order/DocumentButton'
+import { BaseModalXLarge } from '@/components/Interface/Modal/BaseModal'
 
-export default function InquiryDetails({session, routeParam}) {
+export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   //data search
   const [isLoading, setIsLoading] = useState(true)
@@ -54,6 +55,7 @@ export default function InquiryDetails({session, routeParam}) {
   const [isLoadingOpenQUotation, setisLoadingOpenQUotation] = useState(false)
   const [courierModal, setcourierModal] = useState(false)
   const [isQuotationAvailable, setisQuotationAvailable] = useState(false)
+  const [initialModal, setinitialModal] = useState(true)
   const openQuotationHandler = async () => {
     try {
       setisLoadingOpenQUotation(true)
@@ -89,7 +91,11 @@ export default function InquiryDetails({session, routeParam}) {
         let result = response.data.data
 
         const intervalId = setInterval(() => {
-          if (checkAvailableQuotationTime(result.update_verified_inquiry_expiration_date)) {
+          if (
+            checkAvailableQuotationTime(
+              result.update_verified_inquiry_expiration_date
+            )
+          ) {
             setisQuotationAvailable(true)
             clearTimeout(intervalId)
           }
@@ -614,6 +620,38 @@ export default function InquiryDetails({session, routeParam}) {
             <div className="h-16 bg-gray-200 dark:bg-gray-400 w-full"></div>
           </div>
         )}
+        {initialModal && !isLoading && (
+          <BaseModalXLarge
+            onClick={() => setinitialModal(false)}
+            body={
+              <>
+                <NotificationBarBuyer data={data} />
+                {!!data.order_status?.slug ? (
+                  <Image
+                    src={`/img/order-status/${data.order_status?.slug}.png`}
+                    width="2000"
+                    height="200"
+                    alt="exepart-order-status"
+                    className="mx-auto"
+                  ></Image>
+                ) : (
+                  <div className="animate-pulse">
+                    <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
+                      <svg
+                        className="w-10 h-10 text-gray-200 dark:text-gray-600"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 20 18"
+                      >
+                        <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                      </svg>
+                    </div>
+                  </div>
+                )}
+              </>
+            }
+          />
+        )}
         <PrimaryWrapper>
           <PageHeader
             leftTop={
@@ -625,34 +663,18 @@ export default function InquiryDetails({session, routeParam}) {
                     <div className="h-5 bg-gray-200 dark:bg-gray-400 w-40"></div>
                   </div>
                 )}
+                <span
+                  className="ml-4 text-sm cursor-pointer text-blue-700 hover:text-blue-500"
+                  onClick={() => setinitialModal(true)}
+                >
+                  Show Detail
+                </span>
               </h3>
             }
             rightTop={
               <h3 className="text-md text-blueGray-700">{data.order_number}</h3>
             }
           ></PageHeader>
-          {!!data.order_status?.slug ? (
-            <Image
-              src={`/img/order-status/${data.order_status?.slug}.png`}
-              width="2000"
-              height="200"
-              alt="exepart-order-status"
-              className="mx-auto"
-            ></Image>
-          ) : (
-            <div className="animate-pulse">
-              <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
-                <svg
-                  className="w-10 h-10 text-gray-200 dark:text-gray-600"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 18"
-                >
-                  <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                </svg>
-              </div>
-            </div>
-          )}
         </PrimaryWrapper>
 
         {/* buyer tracking number */}
@@ -797,8 +819,8 @@ export default function InquiryDetails({session, routeParam}) {
                     ) : (
                       <div className="animate-pulse">
                         {data?.companies_products?.moq === 0 ||
-                          parseInt(data?.companies_products?.moq) === 0 ||
-                          data?.companies_products?.moq === null ? (
+                        parseInt(data?.companies_products?.moq) === 0 ||
+                        data?.companies_products?.moq === null ? (
                           <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
                             Out of Stock
                           </div>
@@ -819,7 +841,7 @@ export default function InquiryDetails({session, routeParam}) {
                     ) : (
                       <div className="animate-pulse">
                         {data?.companies_products?.AvailableQuantity === 0 ||
-                          data?.companies_products?.AvailableQuantity === null ? (
+                        data?.companies_products?.AvailableQuantity === null ? (
                           <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
                             Out of Stock
                           </div>
@@ -932,7 +954,7 @@ export default function InquiryDetails({session, routeParam}) {
                 <div className="flex flex-wrap justify-between">
                   <span className="text-gray-500">Test Lab Fee (USD)</span>
                   {!isLoading ? (
-                    <span>                      
+                    <span>
                       {isQuotationAvailable
                         ? `$${data.order_price_amount?.test_fee_amount}`
                         : '-'}
@@ -1061,7 +1083,9 @@ export default function InquiryDetails({session, routeParam}) {
                   </div> */}
                   <DocumentButton
                     title="Quotation"
-                    isActive={data.quotation_available == 1 && isQuotateionAvailable}
+                    isActive={
+                      data.quotation_available == 1 && isQuotationAvailable
+                    }
                     href={'pdf/quotation/${data.slug'}
                     isLoading={isLoadingOpenQUotation}
                     onClick={openQuotationHandler}
@@ -1181,17 +1205,14 @@ export default function InquiryDetails({session, routeParam}) {
           </div>
         </div>
       </div>
-      {
-        showModal ?
-          <ModalPdf
-            title="List of Buyer Payment Receipt Documents"
-            setShowModal={setShowModal}
-            isLoading={[isLoadingModal, setIsLoadingModal]}
-            receiptData={buyerReceiptData}
-          />
-          :
-          null
-      }
+      {showModal ? (
+        <ModalPdf
+          title="List of Buyer Payment Receipt Documents"
+          setShowModal={setShowModal}
+          isLoading={[isLoadingModal, setIsLoadingModal]}
+          receiptData={buyerReceiptData}
+        />
+      ) : null}
     </>
   )
 }
