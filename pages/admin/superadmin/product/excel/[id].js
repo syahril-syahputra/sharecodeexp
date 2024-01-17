@@ -418,7 +418,7 @@ export default function DetailUploadedExcel({session, data}) {
                 }
                 {
                   data?.products?.length === 0 &&
-                  <NoData colspan={5} />
+                  <NoData colSpan={5} />
                 }
               </>
             }

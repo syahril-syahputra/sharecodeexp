@@ -6,6 +6,11 @@ import {toast} from 'react-toastify'
 import {toastOptions} from '@/lib/toastOptions'
 import TableExcel from '@/components/Table/Superadmin/Excel/ExcelUploadedList'
 import MiniSearchBar from '@/components/Shared/MiniSearchBar'
+import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
+import TextInput from '@/components/Interface/Form/TextInput'
+import InfoButton from '@/components/Interface/Buttons/InfoButton'
+import SelectInput from '@/components/Interface/Form/SelectInput'
 
 Uploaded.layout = Admin
 
@@ -14,20 +19,44 @@ export default function Uploaded({session}) {
   const [data, setData] = useState([])
   const [links, setLinks] = useState([])
   const [isOpenDetail, setisOpenDetail] = useState(false)
-  const [isOpenConfirmDelete, setisOpenConfirmDelete] = useState(false)
   const [selectedData, setselectedData] = useState({})
-  const [isDetailLoading, setisDetailLoading] = useState(false)
+  const [stateStatus, setStateStatus] = useState('')
   const [metaData, setMetaData] = useState({
     total: 0,
     perPage: 0,
     lastPage: 0,
   })
-  const fetchdata = async (page = 1) => {
+  const [stateActionRequired, setStateActionRequired] = useState(false)
+  const [orderStatus, setOrderStatus] = useState({
+    label: 'Select Order Status',
+    value: '',
+  })
+  const [orderStatusOptions, setOrderStatusOption] = useState([])
+  const loadOrderStatusOption = async () => {
+    await axios
+      .get(`/excel-product-file-statuses`)
+      .then((response) => {
+        let res = response.data.data || []
+        const dataRes = res?.map((e) => {
+          return ({
+            value: e?.slug,
+            label: e?.name
+          })
+        })
+        setOrderStatusOption(dataRes)
+      })
+      .catch(() => {
+        toast.error('Cannot load order status.', toastOptions)
+      })
+  }
+  const fetchdata = async (page = 1, statusParam = '',
+    orderActionRequiredParam = false) => {
     setIsLoading(true)
 
     try {
       const response = await axios.get(
-        `/admin/product/excel?paginate=10&page=${page}`,
+        `/admin/product/excel?paginate=10&page=${page}&status=${statusParam
+        }&action_required=${orderActionRequiredParam}`,
         {
           headers: {
             Authorization: `Bearer ${session.accessToken}`,
@@ -52,11 +81,12 @@ export default function Uploaded({session}) {
       setIsLoading(false)
     }
   }
-  const setPage = (pageNumber) => {
-    fetchdata(pageNumber)
+  const setPage = (pageNumber, orderStatus, stateActionRequired) => {
+    fetchdata(pageNumber, orderStatus?.value, stateActionRequired)
   }
   useEffect(() => {
     fetchdata()
+    loadOrderStatusOption()
   }, [])
 
   const showDetailHandler = (data) => {
@@ -64,13 +94,66 @@ export default function Uploaded({session}) {
     setselectedData(data)
   }
 
-  const handleSearch = () => { }
+  const handleSearchData = () => {
+    fetchdata(1, orderStatus?.value, stateActionRequired)
+  }
 
+  const handleResetSearchFilter = () => {
+    setStateStatus('')
+    setStateActionRequired(false)
+    fetchdata()
+    setOrderStatus({
+      label: 'Select Order Status',
+      value: '',
+    })
+  }
+
+  useEffect(() => {
+    handleSearchData()
+  }, [stateActionRequired])
   return (
     <>
-      <div className="mb-5 w-full lg:w-1/2">
-        <MiniSearchBar searchItem={handleSearch} />
-      </div>
+      <h1 className="font-semibold text-2xl">Upload Excel</h1>
+      <PrimaryWrapper className={'mt-5 p-5'}>
+        <h2 className="text-xl text-center">Search Upload Excel</h2>
+        <div className="grid grid-cols-2 gap-3 mt-2">
+          <div className="text-center">
+            <SelectInput
+              value={orderStatus}
+              options={orderStatusOptions}
+              onChange={(input) => setOrderStatus(input)}
+              placeholder="Input Excel File Status"
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3 mt-6">
+          <div className="text-center items-center flex space-x-2">
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={stateActionRequired}
+                className="sr-only peer"
+                id="stateActionRequired"
+                onChange={(e) => {
+                  setStateActionRequired(!stateActionRequired)
+                }}
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+              <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                Action Required{' '}
+              </span>
+            </label>
+          </div>
+        </div>
+        <div className="mt-10 text-center">
+          <PrimaryButton onClick={handleSearchData} className="w-1/2 mr-2">
+            Search
+          </PrimaryButton>
+          <InfoButton onClick={handleResetSearchFilter} className="w-1/6">
+            Reset
+          </InfoButton>
+        </div>
+      </PrimaryWrapper>
       <div className="mb-10">
         <TableExcel
           title="Uploaded Excel File"
@@ -80,7 +163,7 @@ export default function Uploaded({session}) {
           links={links}
           metaData={metaData}
           view={(data) => showDetailHandler(data)}
-        ></TableExcel>
+        />
       </div>
     </>
   )
