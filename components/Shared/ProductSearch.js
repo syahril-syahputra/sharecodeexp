@@ -20,7 +20,6 @@ export default function ProductSearch(props) {
         <div className="text-center">
           <TextInput
             value={manufacturerPartNumber}
-            as
             onChange={(target) => setManufacturerPartNumber(target.value)}
             placeholder="Manufacturer Part Number"
           />
