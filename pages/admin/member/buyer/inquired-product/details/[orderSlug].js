@@ -623,6 +623,7 @@ export default function InquiryDetails({ session, routeParam }) {
         {initialModal && !isLoading && (
           <BaseModalXLarge
             onClick={() => setinitialModal(false)}
+            title={data.order_status?.name}
             body={
               <>
                 <NotificationBarBuyer data={data} />
