@@ -41,7 +41,7 @@ import DocumentButton from '@/components/Shared/Order/DocumentButton'
 import UploadPaymentReceiptForSeller from '@/components/Modal/OrderComponent/Superadmin/UploadPaymentReceiptForSeller'
 import NotificationBarAdmin from '@/components/Interface/Notification/NotificationBarAdmin'
 import ModalPdf from '@/components/Modal/ModalPdf'
-import { BaseModalXLarge } from '@/components/Interface/Modal/BaseModal'
+import { Accordion, Button } from 'flowbite-react'
 
 export default function OrderDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -50,6 +50,10 @@ export default function OrderDetails({ session, routeParam }) {
   const [data, setData] = useState([])
   const [errorInfo, setErrorInfo] = useState({})
   const [isOrderValid, setIsOrderValid] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
+  const toggleAccordion = () => {
+    setIsOpen(!isOpen)
+  }
   const [isLoadingOpenReceipt, setisLoadingOpenReceipt] = useState(false)
   const [initialModal, setinitialModal] = useState(true)
   const openPaymentReceiptHandler = async () => {
@@ -1219,37 +1223,6 @@ export default function OrderDetails({ session, routeParam }) {
         </div>
       )
       break
-    // case 21:
-    //   if (data.reimbursement === '1') {
-    //     actionToTake = (
-    //       <div>
-    //         {closeReimbusmentModal && (
-    //           <ReleasePaymentToBuyer
-    //             isLoading={isLoading}
-    //             closeModal={() => setcloseReimbusmentModal(false)}
-    //             acceptance={handleCloseReimbusment}
-    //             errorInfo={errorInfo}
-    //           />
-    //         )}
-
-    //         <div className="flex justify-center">
-    //           <div className="mx-2 my-4">
-    //             <PrimaryButton
-    //               outline
-    //               className="mx-1"
-    //               size="sm"
-    //               disabled={isLoading}
-    //               onClick={() => setcloseReimbusmentModal(true)}
-    //             >
-    //               Release Payment to Buyer
-    //             </PrimaryButton>
-    //           </div>
-    //         </div>
-    //       </div>
-    //     )
-    //   }
-
-    //   break
   }
 
   // modal receipt document list
@@ -1261,6 +1234,13 @@ export default function OrderDetails({ session, routeParam }) {
 
   const [isBuyerLoadingModal, setIsBuyerLoadingModal] = useState(false)
   const [isSellerLoadingModal, setIsSellerLoadingModal] = useState(false)
+
+  let orderPhase = parseInt(data?.order_status?.phase) || '0'
+  if (orderPhase == 4 && data?.order_status?.reimbursement == 1) {
+    orderPhase = '4-cancellation'
+  }
+  const isOrderActive = parseInt(data?.is_active)
+  orderPhase = isOrderActive == 0 ? '0' : orderPhase
 
   return (
     <>
@@ -1342,330 +1322,66 @@ export default function OrderDetails({ session, routeParam }) {
           ></PageHeader>
         </PrimaryWrapper>
 
-        {/* seller buyer */}
+        {/* image and quotation details */}
         <div className="lg:flex lg:justify-around">
           <div className="w-full lg:w-1/2 mr-4">
-            <PrimaryWrapper className="p-1">
-              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                Buyer
-              </div>
-              <div className="mx-2 my-1 text-xl">
-                {!!data.buyer?.name ? (
-                  <>
-                    <Link
-                      href={`/admin/superadmin/registry/company/${data.buyer?.id}`}
-                      className="text-blueGray-700 underline"
+            <PrimaryWrapper>
+              {orderPhase ? (
+                <Image
+                  src={`/img/order-status/primary/${orderPhase}.png`}
+                  width={0}
+                  height={10}
+                  sizes="100vw"
+                  alt="phase-status"
+                  style={{ width: '100%' }} // optional
+                />
+              ) : (
+                <div className="animate-pulse">
+                  <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
+                    <svg
+                      className="w-10 h-10 text-gray-200 dark:text-gray-600"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 20 18"
                     >
-                      {data.buyer?.name}
-                    </Link>
-                    <CompanyStatusesIcon status={data.buyer?.is_confirmed} />
-                  </>
-                ) : (
-                  <div className="animate-pulse">
-                    <div className="h-5 bg-gray-200 dark:bg-gray-400 w-48"></div>
+                      <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                    </svg>
                   </div>
-                )}
+                </div>
+              )}
+              <div className="px-2 mt-4">
+                <div className="border-t"></div>
               </div>
-
-              <div className="mx-2 text-md mb-5">
-                {!!data.buyer?.country ? (
-                  data.buyer?.country
-                ) : (
-                  <div className="animate-pulse">
-                    <div className="h-3 bg-gray-200 dark:bg-gray-400 w-40"></div>
-                  </div>
-                )}
-              </div>
-              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                Buyer's Shipment Info
-              </div>
-              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
-                Buyer Courier
-              </div>
-              <div className="mx-2 mb-1 text-xl">
-                {checkValue(data.buyer_courier_company_name)}
-              </div>
-              <div className="mx-2 mb-3 text-l">
-                {checkValue(data.buyer_courier_account_number)}
-              </div>
-              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
-                Tracking Number
-              </div>
-              <div className="mx-2 mb-5 text-xl">
-                {checkValue(data.trackingBuyer)}
-              </div>
-            </PrimaryWrapper>
-          </div>
-          <div className="w-full lg:w-1/2">
-            <PrimaryWrapper className="p-1">
-              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                Seller
-              </div>
-              <div className="mx-2 my-1 text-xl">
-                {!!data.companies_products?.company?.name ? (
-                  <>
-                    <Link
-                      href={`/admin/superadmin/registry/company/${data.companies_products?.company?.id}`}
-                      className="text-blueGray-700 underline"
-                    >
-                      {data.companies_products?.company?.name}
-                    </Link>
-                    <CompanyStatusesIcon
-                      status={data.companies_products?.company?.is_confirmed}
+              <div className="mt-4">
+                {!!data?.order_status?.slug ? (
+                  orderPhase == 0 || isOrderActive == 0 ? null : (
+                    <Image
+                      src={`/img/order-status/secondary/${data?.order_status?.slug}.png`}
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      alt="phase-status"
+                      style={{ width: '100%', height: 'auto' }} // optional
                     />
-                  </>
+                  )
                 ) : (
                   <div className="animate-pulse">
-                    <div className="h-5 bg-gray-200 dark:bg-gray-400 w-48"></div>
+                    <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
+                      <svg
+                        className="w-10 h-10 text-gray-200 dark:text-gray-600"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 20 18"
+                      >
+                        <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                      </svg>
+                    </div>
                   </div>
                 )}
               </div>
-              <div className="mx-2 text-md mb-5">
-                {!!data.companies_products?.company?.country ? (
-                  data.companies_products?.company?.country
-                ) : (
-                  <div className="animate-pulse">
-                    <div className="h-3 bg-gray-200 dark:bg-gray-400 w-40"></div>
-                  </div>
-                )}
-              </div>
-              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                Seller's Shipment Info
-              </div>
-              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
-                Seller Courier
-              </div>
-              <div className="mx-2 mb-1 text-xl">
-                {checkValue(data.seller_courier_company_name)}
-              </div>
-              <div className="mx-2 mb-3 text-l">
-                {checkValue(data.seller_courier_account_number)}
-              </div>
-              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
-                Tracking Number
-              </div>
-              <div className="mx-2 mb-5 text-xl uppercase">
-                {checkValue(data.trackingSeller)}
-              </div>
-              {parseInt(data?.return_product) === 1 ? (
-                <>
-                  <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                    Seller's Return Shipment Info
-                  </div>
-                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
-                    Seller Courier
-                  </div>
-                  <div className="mx-2 mb-1 text-xl">
-                    {checkValue(data.seller_return_courier_company_name)}
-                  </div>
-                  <div className="mx-2 mb-3 text-l">
-                    {checkValue(data.seller_return_courier_account_number)}
-                  </div>
-                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
-                    Tracking Number
-                  </div>
-                  <div className="mx-2 mb-5 text-xl">
-                    {checkValue(data.seller_return_tracking_number)}
-                  </div>
-                </>
-              ) : undefined}
             </PrimaryWrapper>
           </div>
-        </div>
-
-        {/* product info and quotation */}
-        <div className="lg:flex lg:justify-around">
-          <div className="w-full lg:w-2/3 mr-4">
-            <PrimaryWrapper className="p-3">
-              <div className="lg:flex lg:justify-around">
-                {/* <div className="w-full lg:w-1/2 mr-4 border"> */}
-                {/* {isLoading && (
-                    <div className="animate-pulse">
-                      <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
-                        <svg
-                          className="h-14 w-14 text-gray-200 dark:text-gray-600"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="currentColor"
-                          viewBox="0 0 20 18"
-                        >
-                          <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                        </svg>
-                      </div>
-                    </div>
-                  )} */}
-                {/* {data.companies_products?.img && !isLoading && (
-                    <div className="flex justify-center items-center">
-                      <Image
-                        src={
-                          publicDir +
-                          '/product_images/' +
-                          data.companies_products.img
-                        }
-                        width="400"
-                        height="400"
-                        alt="exepart-product"
-                      ></Image>
-                    </div>
-                  )} */}
-                {/* {!data.companies_products?.img && !isLoading && (
-                    <div className="flex justify-center items-center h-40">
-                      no image
-                    </div>
-                  )} */}
-                {/* </div> */}
-                <div className="w-full">
-                  <div className="mx-2 my-1 text-xl">
-                    {!!data.companies_products?.ManufacturerNumber ? (
-                      data.companies_products?.ManufacturerNumber
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-6 bg-gray-200 dark:bg-gray-400 w-60"></div>
-                      </div>
-                    )}
-                  </div>
-                  <div className="mx-2 text-md mb-5">
-                    {!!data.companies_products?.Manufacture ? (
-                      data.companies_products?.Manufacture
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
-                      </div>
-                    )}
-                  </div>
-                  <div className="mx-2 my-1 text-gray-500 text-sm">
-                    Description
-                  </div>
-                  <div className="mx-2 text-md mb-5">
-                    {!!data.companies_products?.Description ? (
-                      data.companies_products?.Description
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-3 bg-gray-200 dark:bg-gray-400"></div>
-                        <div className="h-3 bg-gray-200 dark:bg-gray-400 mt-1"></div>
-                      </div>
-                    )}
-                  </div>
-                  <div className="mx-2 my-1 text-gray-500 text-sm">
-                    Inquired Date
-                  </div>
-                  <div className="mx-2 text-md">
-                    {/* set to local time */}
-                    {!!data.companies_products?.created_at ? (
-                      moment(data.created_at)
-                        .local()
-                        .format('dddd, D MMMM YYYY')
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
-                      </div>
-                    )}
-                  </div>
-                  <div className="mx-2 my-1 text-gray-500 text-sm">
-                    Order Date
-                  </div>
-                  <div className="mx-2 text-md">
-                    {/* set to local time */}
-                    {!isLoading ? (
-                      data.order_date ? (
-                        moment(data.order_date)
-                          .local()
-                          .format('dddd, D MMMM YYYY')
-                      ) : (
-                        '-'
-                      )
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="lg:flex lg:justify-around mt-5">
-                <div className="w-full lg:w-1/3 mr-2">
-                  <div className="mx-2 my-1 text-gray-500 text-sm">MOQ</div>
-                  <div className="mx-2 text-md">
-                    {!!data.companies_products?.moq ? (
-                      data.companies_products?.moq
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="w-full lg:w-1/3 mr-2">
-                  <div className="mx-2 my-1 text-gray-500 text-sm">
-                    Available Quantity
-                  </div>
-                  <div className="mx-2 text-md">
-                    {!!data.companies_products?.AvailableQuantity ? (
-                      data.companies_products?.AvailableQuantity
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="w-full lg:w-1/3">
-                  <div className="mx-2 my-1 text-gray-500 text-sm">Country</div>
-                  <div className="mx-2 text-md">
-                    {!!data.companies_products?.country ? (
-                      data.companies_products?.country
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="mt-3 mb-8">
-                <div className="w-full lg:w-1/3 mr-2">
-                  <div className="mx-2 my-1 text-gray-500 text-sm">
-                    Packaging
-                  </div>
-                  <div className="mx-2 text-md">
-                    {!!data.companies_products?.packaging ? (
-                      data.companies_products?.packaging
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                {/* <div className="w-full lg:w-1/3 mr-2">
-                                    <div className="mx-2 my-1 text-gray-500 text-sm">
-                                        Category
-                                    </div>
-                                    <div className="mx-2 text-sm">
-                                        {!!data.companies_products?.subcategory?.category?.name?
-                                            data.companies_products?.subcategory?.category?.name:
-                                            <div className="animate-pulse">
-                                                <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
-                                <div className="w-full lg:w-1/3">
-                                    <div className="mx-2 my-1 text-gray-500 text-sm">
-                                        Sub-Category
-                                    </div>
-                                    <div className="mx-2 text-sm">
-                                        {!!data.companies_products?.subcategory?.name?
-                                            data.companies_products?.subcategory?.name:
-                                            <div className="animate-pulse">
-                                                <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
-                                            </div>
-                                        }
-                                    </div>
-                                </div> */}
-              </div>
-            </PrimaryWrapper>
-          </div>
-          <div className="w-full lg:w-1/3">
+          <div className="w-full lg:w-2/4">
             <PrimaryWrapper className="p-1">
               <div className="mx-2 my-1 text-md">Inquiry Details</div>
               <div className="mx-2 my-1 text-sm border-b">
@@ -1800,6 +1516,272 @@ export default function OrderDetails({ session, routeParam }) {
                 occur.
               </div>
             </PrimaryWrapper>
+          </div>
+        </div>
+
+        {/* seller buyer */}
+        <div className="lg:flex lg:justify-around">
+          <div className="w-full lg:w-1/2 mr-4">
+            <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Buyer
+              </div>
+              <div className="mx-2 my-1 text-xl">
+                {!!data.buyer?.name ? (
+                  <>
+                    <Link
+                      href={`/admin/superadmin/registry/details/${data.buyer?.id}`}
+                      className="text-blueGray-700 underline"
+                    >
+                      {data.buyer?.name}
+                    </Link>
+                    <CompanyStatusesIcon status={data.buyer?.is_confirmed} />
+                  </>
+                ) : (
+                  <div className="animate-pulse">
+                    <div className="h-5 bg-gray-200 dark:bg-gray-400 w-48"></div>
+                  </div>
+                )}
+              </div>
+
+              <div className="mx-2 text-md mb-5">
+                {!!data.buyer?.country ? (
+                  data.buyer?.country
+                ) : (
+                  <div className="animate-pulse">
+                    <div className="h-3 bg-gray-200 dark:bg-gray-400 w-40"></div>
+                  </div>
+                )}
+              </div>
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Buyer's Shipment Info
+              </div>
+              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                Buyer Courier
+              </div>
+              <div className="mx-2 mb-1 text-xl">
+                {checkValue(data.buyer_courier_company_name)}
+              </div>
+              <div className="mx-2 mb-3 text-l">
+                {checkValue(data.buyer_courier_account_number)}
+              </div>
+              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                Tracking Number
+              </div>
+              <div className="mx-2 mb-5 text-xl">
+                {checkValue(data.trackingBuyer)}
+              </div>
+            </PrimaryWrapper>
+          </div>
+          <div className="w-full lg:w-1/2">
+            <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Seller
+              </div>
+              <div className="mx-2 my-1 text-xl">
+                {!!data.companies_products?.company?.name ? (
+                  <>
+                    <Link
+                      href={`/admin/superadmin/registry/details/${data.companies_products?.company?.id}`}
+                      className="text-blueGray-700 underline"
+                    >
+                      {data.companies_products?.company?.name}
+                    </Link>
+                    <CompanyStatusesIcon
+                      status={data.companies_products?.company?.is_confirmed}
+                    />
+                  </>
+                ) : (
+                  <div className="animate-pulse">
+                    <div className="h-5 bg-gray-200 dark:bg-gray-400 w-48"></div>
+                  </div>
+                )}
+              </div>
+              <div className="mx-2 text-md mb-5">
+                {!!data.companies_products?.company?.country ? (
+                  data.companies_products?.company?.country
+                ) : (
+                  <div className="animate-pulse">
+                    <div className="h-3 bg-gray-200 dark:bg-gray-400 w-40"></div>
+                  </div>
+                )}
+              </div>
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Seller's Shipment Info
+              </div>
+              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                Seller Courier
+              </div>
+              <div className="mx-2 mb-1 text-xl">
+                {checkValue(data.seller_courier_company_name)}
+              </div>
+              <div className="mx-2 mb-3 text-l">
+                {checkValue(data.seller_courier_account_number)}
+              </div>
+              <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                Tracking Number
+              </div>
+              <div className="mx-2 mb-5 text-xl uppercase">
+                {checkValue(data.trackingSeller)}
+              </div>
+              {parseInt(data?.return_product) === 1 ? (
+                <>
+                  <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                    Seller's Return Shipment Info
+                  </div>
+                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                    Seller Courier
+                  </div>
+                  <div className="mx-2 mb-1 text-xl">
+                    {checkValue(data.seller_return_courier_company_name)}
+                  </div>
+                  <div className="mx-2 mb-3 text-l">
+                    {checkValue(data.seller_return_courier_account_number)}
+                  </div>
+                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                    Tracking Number
+                  </div>
+                  <div className="mx-2 mb-5 text-xl">
+                    {checkValue(data.seller_return_tracking_number)}
+                  </div>
+                </>
+              ) : undefined}
+            </PrimaryWrapper>
+          </div>
+        </div>
+
+        {/* product info */}
+        <div className="lg:flex lg:justify-around">
+          <div className="w-full lg:w-1/2 mr-4">
+            <PrimaryWrapper className="p-3">
+              <div className="lg:flex lg:justify-around">
+                <div className="w-full">
+                  <div className="mx-2 my-1 text-xl">
+                    {!!data.companies_products?.ManufacturerNumber ? (
+                      data.companies_products?.ManufacturerNumber
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-6 bg-gray-200 dark:bg-gray-400 w-60"></div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mx-2 text-md mb-5">
+                    {!!data.companies_products?.Manufacture ? (
+                      data.companies_products?.Manufacture
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mx-2 my-1 text-gray-500 text-sm">
+                    Description
+                  </div>
+                  <div className="mx-2 text-md mb-5">
+                    {!!data.companies_products?.Description ? (
+                      data.companies_products?.Description
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-3 bg-gray-200 dark:bg-gray-400"></div>
+                        <div className="h-3 bg-gray-200 dark:bg-gray-400 mt-1"></div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mx-2 my-1 text-gray-500 text-sm">
+                    Inquired Date
+                  </div>
+                  <div className="mx-2 text-md">
+                    {/* set to local time */}
+                    {!!data?.created_at ? (
+                      moment(data.created_at)
+                        .local()
+                        .format('dddd, D MMMM YYYY')
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mx-2 my-1 text-gray-500 text-sm">
+                    Order Date
+                  </div>
+                  <div className="mx-2 text-md">
+                    {/* set to local time */}
+                    {!isLoading ? (
+                      data.order_date ? (
+                        moment(data.order_date)
+                          .local()
+                          .format('dddd, D MMMM YYYY')
+                      ) : (
+                        '-'
+                      )
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="lg:flex lg:justify-around mt-5">
+                <div className="w-full lg:w-1/3 mr-2">
+                  <div className="mx-2 my-1 text-gray-500 text-sm">MOQ</div>
+                  <div className="mx-2 text-md">
+                    {!!data.companies_products?.moq ? (
+                      data.companies_products?.moq
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="w-full lg:w-1/3 mr-2">
+                  <div className="mx-2 my-1 text-gray-500 text-sm">
+                    Available Quantity
+                  </div>
+                  <div className="mx-2 text-md">
+                    {!!data.companies_products?.AvailableQuantity ? (
+                      data.companies_products?.AvailableQuantity
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="w-full lg:w-1/3">
+                  <div className="mx-2 my-1 text-gray-500 text-sm">Country</div>
+                  <div className="mx-2 text-md">
+                    {!!data.companies_products?.country ? (
+                      data.companies_products?.country
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 mb-8">
+                <div className="w-full lg:w-1/3 mr-2">
+                  <div className="mx-2 my-1 text-gray-500 text-sm">
+                    Packaging
+                  </div>
+                  <div className="mx-2 text-md">
+                    {!!data.companies_products?.packaging ? (
+                      data.companies_products?.packaging
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </PrimaryWrapper>
+          </div>
+          <div className="w-full lg:w-1/2">
             {data.inquiry_rejection_reason === 'Other' && (
               <PrimaryWrapper className="p-1">
                 <div className="mx-2 my-1 text-md">

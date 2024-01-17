@@ -73,6 +73,8 @@ export default function IncomingInquiry({ session, routeParam }) {
           `&manufacturer_part_number=${manufacturerPartNumberParam}` +
           `&order_date=${orderDateParam}` +
           `&active=1` +
+          `&reimbursement=0` +
+          `&return_product=0` +
           `&inquiries=0` +
           `&action_required=${orderActionRequiredParam}`,
         {

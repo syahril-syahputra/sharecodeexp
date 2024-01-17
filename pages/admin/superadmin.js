@@ -304,7 +304,7 @@ export default function SuperadminDashboard({ session, message }) {
                 dataNameNotification={data.order?.newly_update?.bad_test_result}
                 onClick={() => resetCounter('order-bad-test-result')}
                 url={
-                  '/admin/superadmin/orders/allorders?orderStatus=bad-test-result'
+                  '/admin/superadmin/return-handling/active?orderStatus=bad-test-result'
                 }
                 name={'Bad Test Result'}
               />
@@ -322,7 +322,7 @@ export default function SuperadminDashboard({ session, message }) {
                 dataName={data.order?.return_handling || 0}
                 dataNameNotification={data.order?.newly_update?.return_handling}
                 onClick={() => resetCounter('order-return-handling')}
-                url={'/admin/superadmin/reimbursement/active'}
+                url={'/admin/superadmin/return-handling/active'}
                 name={'Return Handling'}
               />
             </div>

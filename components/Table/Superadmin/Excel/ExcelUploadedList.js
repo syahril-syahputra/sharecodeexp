@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react'
+import React, {useState, Fragment} from 'react'
 import Link from 'next/link'
 import moment from 'moment'
 
@@ -14,8 +14,8 @@ import NoData from '@/components/Interface/Table/NoData'
 import MetaData from '@/components/Interface/Table/MetaData'
 import Pagination from '@/components/Shared/Component/Pagination'
 import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
-import { Dialog, Transition } from '@headlessui/react'
-import { Button, Modal, Spinner } from 'flowbite-react'
+import {Dialog, Transition} from '@headlessui/react'
+import {Button, Modal, Spinner} from 'flowbite-react'
 import axios from 'lib/axios'
 import SuccessButton from '@/components/Interface/Buttons/SuccessButton'
 
@@ -33,6 +33,9 @@ export default function TableExcel(props) {
           isBusy={props.isLoading}
           header={
             <>
+              <th scope="col" className="px-6 py-3">
+                Action Required
+              </th>
               <th scope="col" className="px-6 py-3">
                 File Name
               </th>
@@ -62,6 +65,18 @@ export default function TableExcel(props) {
                     key={index}
                     className="bg-white border-b hover:bg-gray-50"
                   >
+                    <td scope="row" className="text-sm px-6 py-4">
+                      {item?.file_status?.admin_to_act ? (
+                        <span className="relative flex text-xl">
+                          <span className="animate-ping absolute inline-flex opacity-75">
+                            <i className="fas fa-circle fa-2xs text-orange-500" />
+                          </span>
+                          <span className="relative inline-flex">
+                            <i className="fas fa-circle fa-2xs text-orange-500" />
+                          </span>
+                        </span>
+                      ) : undefined}
+                    </td>
                     <td scope="row" className="text-sm px-6 py-4">
                       {item.name}
                     </td>

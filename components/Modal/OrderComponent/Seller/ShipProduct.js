@@ -174,7 +174,7 @@ export default function ShipProduct(props) {
               <div className="w-full px-3  border-b border-gray-300 pb-4">
                 <FileInput
                   label="Invoice"
-                  description="Input PDF (.pdf) only, max 10MB"
+                  description="Input PDF (.pdf) only, max 2MB"
                   accept=".pdf"
                   name="File Upload"
                   required

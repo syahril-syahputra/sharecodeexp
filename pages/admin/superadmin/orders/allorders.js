@@ -64,7 +64,6 @@ export default function FindByStatusOrder({ session, routeParam }) {
   ) => {
     setPageNumber(page)
     setIsLoading(true)
-
     await axios
       .get(
         '/admin/orders/list' +
@@ -104,7 +103,7 @@ export default function FindByStatusOrder({ session, routeParam }) {
   const handleSearchData = () => {
     loadData(
       1,
-      orderStatus?.value,
+      orderStatusFromRoute || orderStatus?.value,
       orderNumber,
       manufacturerPartNumber,
       orderDate,

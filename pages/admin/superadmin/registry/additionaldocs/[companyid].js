@@ -74,6 +74,7 @@ export default function MemberAdditionalDocument({ session, routeParam }) {
             companyData.name ? companyData.name : '...'
           }'s Additional Documents`}
           items={additionalDocs}
+          companyId={routeParam.companyid}
         ></AdditionalDocument>
       </div>
     </>
