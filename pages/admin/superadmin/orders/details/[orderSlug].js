@@ -1357,67 +1357,170 @@ export default function OrderDetails({ session, routeParam }) {
           ></PageHeader>
         </PrimaryWrapper>
 
-        {/* image and quotation details */}
-        <div className="lg:flex lg:justify-around">
+        {/* product details, action to do, secondary act, inquiry details */}
+        <div className="lg:flex lg:justify-around mb-6">
           <div className="w-full lg:w-1/2 mr-4">
-            <PrimaryWrapper>
-              {orderPhase ? (
-                <Image
-                  src={`/img/order-status/primary/${orderPhase}.png`}
-                  width={0}
-                  height={10}
-                  sizes="100vw"
-                  alt="phase-status"
-                  style={{ width: '100%' }} // optional
-                />
-              ) : (
-                <div className="animate-pulse">
-                  <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
-                    <svg
-                      className="w-10 h-10 text-gray-200 dark:text-gray-600"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 20 18"
-                    >
-                      <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                    </svg>
+            <PrimaryWrapper className="p-3">
+              <div className="lg:flex lg:justify-around">
+                <div className="w-full">
+                  <div className="mx-2 my-1 text-xl">
+                    {!!data.companies_products?.ManufacturerNumber ? (
+                      data.companies_products?.ManufacturerNumber
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-6 bg-gray-200 dark:bg-gray-400 w-60"></div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mx-2 text-md mb-5">
+                    {!!data.companies_products?.Manufacture ? (
+                      data.companies_products?.Manufacture
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mx-2 my-1 text-gray-500 text-sm">
+                    Description
+                  </div>
+                  <div className="mx-2 text-md mb-5">
+                    {!!data.companies_products?.Description ? (
+                      data.companies_products?.Description
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-3 bg-gray-200 dark:bg-gray-400"></div>
+                        <div className="h-3 bg-gray-200 dark:bg-gray-400 mt-1"></div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mx-2 my-1 text-gray-500 text-sm">
+                    Inquired Date
+                  </div>
+                  <div className="mx-2 text-md">
+                    {/* set to local time */}
+                    {!!data?.created_at ? (
+                      moment(data.created_at)
+                        .local()
+                        .format('dddd, D MMMM YYYY')
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mx-2 my-1 text-gray-500 text-sm">
+                    Order Date
+                  </div>
+                  <div className="mx-2 text-md">
+                    {/* set to local time */}
+                    {!isLoading ? (
+                      data.order_date ? (
+                        moment(data.order_date)
+                          .local()
+                          .format('dddd, D MMMM YYYY')
+                      ) : (
+                        '-'
+                      )
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
+                      </div>
+                    )}
                   </div>
                 </div>
-              )}
-              <div className="px-2 mt-4">
-                <div className="border-t"></div>
               </div>
-              <div className="mt-4">
-                {!!data?.order_status?.slug ? (
-                  orderPhase == 0 || isOrderActive == 0 ? null : (
-                    <Image
-                      src={`/img/order-status/secondary/${data?.order_status?.slug}.png`}
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      alt="phase-status"
-                      style={{ width: '100%', height: 'auto' }} // optional
-                    />
-                  )
-                ) : (
-                  <div className="animate-pulse">
-                    <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
-                      <svg
-                        className="w-10 h-10 text-gray-200 dark:text-gray-600"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 20 18"
-                      >
-                        <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                      </svg>
-                    </div>
+              <div className="lg:flex lg:justify-around mt-5">
+                <div className="w-full lg:w-1/3 mr-2">
+                  <div className="mx-2 my-1 text-gray-500 text-sm">MOQ</div>
+                  <div className="mx-2 text-md">
+                    {!!data.companies_products?.moq ? (
+                      data.companies_products?.moq
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
+                <div className="w-full lg:w-1/3 mr-2">
+                  <div className="mx-2 my-1 text-gray-500 text-sm">
+                    Available Quantity
+                  </div>
+                  <div className="mx-2 text-md">
+                    {!!data.companies_products?.AvailableQuantity ? (
+                      data.companies_products?.AvailableQuantity
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="w-full lg:w-1/3">
+                  <div className="mx-2 my-1 text-gray-500 text-sm">Country</div>
+                  <div className="mx-2 text-md">
+                    {!!data.companies_products?.country ? (
+                      data.companies_products?.country
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 mb-8">
+                <div className="w-full lg:w-1/3 mr-2">
+                  <div className="mx-2 my-1 text-gray-500 text-sm">
+                    Packaging
+                  </div>
+                  <div className="mx-2 text-md">
+                    {!!data.companies_products?.packaging ? (
+                      data.companies_products?.packaging
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </PrimaryWrapper>
-          </div>
-          <div className="w-full lg:w-2/4">
             <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Actions to take
+              </div>
+              {actionToTake}
+            </PrimaryWrapper>
+            {data.is_good_test && !data.admin_receipt_path && (
+              <PrimaryWrapper className="p-1">
+                <div className="flex flex-col items-center p-4 justify-center">
+                  {uploadPaymentReceiptForSellerModal && (
+                    <UploadPaymentReceiptForSeller
+                      isLoading={isLoading}
+                      closeModal={() =>
+                        setUploadPaymentReceiptForSellerModal(false)
+                      }
+                      acceptance={handleUploadPaymentReceiptForSeller}
+                      errorInfo={errorInfo}
+                    />
+                  )}
+                  <PrimaryButton
+                    outline
+                    className="mx-1"
+                    size="sm"
+                    disabled={isLoading}
+                    onClick={() => setUploadPaymentReceiptForSellerModal(true)}
+                  >
+                    Upload Payment Receipt For Seller
+                  </PrimaryButton>
+                </div>
+              </PrimaryWrapper>
+            )}
+          </div>
+          <div className="w-full lg:w-1/2">
+            <PrimaryWrapper className="p-1 h-full">
               <div className="mx-2 my-1 text-md">Inquiry Details</div>
               <div className="mx-2 my-1 text-sm border-b">
                 <div className="flex flex-wrap justify-between">
@@ -1553,8 +1656,9 @@ export default function OrderDetails({ session, routeParam }) {
             </PrimaryWrapper>
           </div>
         </div>
+        {/* product details, action to do, secondary act, inquiry details */}
 
-        {/* seller buyer */}
+        {/* seller buyer details, courier details*/}
         <div className="lg:flex lg:justify-around">
           <div className="w-full lg:w-1/2 mr-4">
             <PrimaryWrapper className="p-1">
@@ -1659,188 +1763,12 @@ export default function OrderDetails({ session, routeParam }) {
               <div className="mx-2 mb-5 text-xl uppercase">
                 {checkValue(data.trackingSeller)}
               </div>
-              {parseInt(data?.return_product) === 1 ? (
-                <>
-                  <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                    Seller's Return Shipment Info
-                  </div>
-                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
-                    Seller Courier
-                  </div>
-                  <div className="mx-2 mb-1 text-xl">
-                    {checkValue(data.seller_return_courier_company_name)}
-                  </div>
-                  <div className="mx-2 mb-3 text-l">
-                    {checkValue(data.seller_return_courier_account_number)}
-                  </div>
-                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
-                    Tracking Number
-                  </div>
-                  <div className="mx-2 mb-5 text-xl">
-                    {checkValue(data.seller_return_tracking_number)}
-                  </div>
-                </>
-              ) : undefined}
             </PrimaryWrapper>
           </div>
         </div>
+        {/* seller buyer details, courier details*/}
 
-        {/* product info */}
-        <div className="lg:flex lg:justify-around">
-          <div className="w-full lg:w-1/2 mr-4">
-            <PrimaryWrapper className="p-3">
-              <div className="lg:flex lg:justify-around">
-                <div className="w-full">
-                  <div className="mx-2 my-1 text-xl">
-                    {!!data.companies_products?.ManufacturerNumber ? (
-                      data.companies_products?.ManufacturerNumber
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-6 bg-gray-200 dark:bg-gray-400 w-60"></div>
-                      </div>
-                    )}
-                  </div>
-                  <div className="mx-2 text-md mb-5">
-                    {!!data.companies_products?.Manufacture ? (
-                      data.companies_products?.Manufacture
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
-                      </div>
-                    )}
-                  </div>
-                  <div className="mx-2 my-1 text-gray-500 text-sm">
-                    Description
-                  </div>
-                  <div className="mx-2 text-md mb-5">
-                    {!!data.companies_products?.Description ? (
-                      data.companies_products?.Description
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-3 bg-gray-200 dark:bg-gray-400"></div>
-                        <div className="h-3 bg-gray-200 dark:bg-gray-400 mt-1"></div>
-                      </div>
-                    )}
-                  </div>
-                  <div className="mx-2 my-1 text-gray-500 text-sm">
-                    Inquired Date
-                  </div>
-                  <div className="mx-2 text-md">
-                    {/* set to local time */}
-                    {!!data?.created_at ? (
-                      moment(data.created_at)
-                        .local()
-                        .format('dddd, D MMMM YYYY')
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
-                      </div>
-                    )}
-                  </div>
-                  <div className="mx-2 my-1 text-gray-500 text-sm">
-                    Order Date
-                  </div>
-                  <div className="mx-2 text-md">
-                    {/* set to local time */}
-                    {!isLoading ? (
-                      data.order_date ? (
-                        moment(data.order_date)
-                          .local()
-                          .format('dddd, D MMMM YYYY')
-                      ) : (
-                        '-'
-                      )
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-60"></div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="lg:flex lg:justify-around mt-5">
-                <div className="w-full lg:w-1/3 mr-2">
-                  <div className="mx-2 my-1 text-gray-500 text-sm">MOQ</div>
-                  <div className="mx-2 text-md">
-                    {!!data.companies_products?.moq ? (
-                      data.companies_products?.moq
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="w-full lg:w-1/3 mr-2">
-                  <div className="mx-2 my-1 text-gray-500 text-sm">
-                    Available Quantity
-                  </div>
-                  <div className="mx-2 text-md">
-                    {!!data.companies_products?.AvailableQuantity ? (
-                      data.companies_products?.AvailableQuantity
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="w-full lg:w-1/3">
-                  <div className="mx-2 my-1 text-gray-500 text-sm">Country</div>
-                  <div className="mx-2 text-md">
-                    {!!data.companies_products?.country ? (
-                      data.companies_products?.country
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="mt-3 mb-8">
-                <div className="w-full lg:w-1/3 mr-2">
-                  <div className="mx-2 my-1 text-gray-500 text-sm">
-                    Packaging
-                  </div>
-                  <div className="mx-2 text-md">
-                    {!!data.companies_products?.packaging ? (
-                      data.companies_products?.packaging
-                    ) : (
-                      <div className="animate-pulse">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52"></div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </PrimaryWrapper>
-          </div>
-          <div className="w-full lg:w-1/2">
-            {data.inquiry_rejection_reason === 'Other' && (
-              <PrimaryWrapper className="p-1">
-                <div className="mx-2 my-1 text-md">
-                  Inquiry Rejection Reason
-                </div>
-                <div className="text-center p-4">
-                  {data.inquiry_rejection_reason_other}
-                </div>
-              </PrimaryWrapper>
-            )}
-            {data.quotation_rejection_reason === 'Other' && (
-              <PrimaryWrapper className="p-1">
-                <div className="mx-2 my-1 text-md">
-                  Quotation Rejection Reason
-                </div>
-                <div className="text-center p-4">
-                  {data.quotation_rejection_reason_other}
-                </div>
-              </PrimaryWrapper>
-            )}
-          </div>
-        </div>
-
-        {/* document and action to take */}
+        {/* document, event histories, return courier, rejection, terminate order */}
         <div className="lg:flex lg:justify-around">
           <div className="w-full lg:w-1/2 mr-4">
             <PrimaryWrapper className="p-1">
@@ -1985,32 +1913,72 @@ export default function OrderDetails({ session, routeParam }) {
           <div className="w-full lg:w-1/2">
             <PrimaryWrapper className="p-1">
               <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                Actions to take
+                Event History
               </div>
-              {actionToTake}
+              <ul className="space-y-2 p-2 text-sm">
+                {data.event_history?.length === 0 && (
+                  <div className="text-base italic text-center p-4">
+                    No Event History
+                  </div>
+                )}
+                {data.event_history?.map((item) => (
+                  <li key={item.id} className="flex">
+                    <span className="text-cyan-700 mr-2 w-1/5 ">
+                      {moment(item.updated_at)
+                        .local()
+                        .format('DD MMM YYYY hh:mm')}
+                    </span>
+                    <div>
+                      <span className="font-bold">{item.description}</span>
+                      {item.note && (
+                        <div className="italic py-2">{item.note}</div>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </PrimaryWrapper>
-            {data.is_good_test && !data.admin_receipt_path && (
+            <PrimaryWrapper className="p-1">
+              {parseInt(data?.return_product) === 1 ? (
+                <>
+                  <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                    Seller's Return Shipment Info
+                  </div>
+                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                    Seller Courier
+                  </div>
+                  <div className="mx-2 mb-1 text-xl">
+                    {checkValue(data.seller_return_courier_company_name)}
+                  </div>
+                  <div className="mx-2 mb-3 text-l">
+                    {checkValue(data.seller_return_courier_account_number)}
+                  </div>
+                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                    Tracking Number
+                  </div>
+                  <div className="mx-2 mb-5 text-xl">
+                    {checkValue(data.seller_return_tracking_number)}
+                  </div>
+                </>
+              ) : undefined}
+            </PrimaryWrapper>
+            {data.inquiry_rejection_reason === 'Other' && (
               <PrimaryWrapper className="p-1">
-                <div className="flex flex-col items-center p-4 justify-center">
-                  {uploadPaymentReceiptForSellerModal && (
-                    <UploadPaymentReceiptForSeller
-                      isLoading={isLoading}
-                      closeModal={() =>
-                        setUploadPaymentReceiptForSellerModal(false)
-                      }
-                      acceptance={handleUploadPaymentReceiptForSeller}
-                      errorInfo={errorInfo}
-                    />
-                  )}
-                  <PrimaryButton
-                    outline
-                    className="mx-1"
-                    size="sm"
-                    disabled={isLoading}
-                    onClick={() => setUploadPaymentReceiptForSellerModal(true)}
-                  >
-                    Upload Payment Receipt For Seller
-                  </PrimaryButton>
+                <div className="mx-2 my-1 text-md">
+                  Inquiry Rejection Reason
+                </div>
+                <div className="text-center p-4">
+                  {data.inquiry_rejection_reason_other}
+                </div>
+              </PrimaryWrapper>
+            )}
+            {data.quotation_rejection_reason === 'Other' && (
+              <PrimaryWrapper className="p-1">
+                <div className="mx-2 my-1 text-md">
+                  Quotation Rejection Reason
+                </div>
+                <div className="text-center p-4">
+                  {data.quotation_rejection_reason_other}
                 </div>
               </PrimaryWrapper>
             )}
@@ -2049,36 +2017,9 @@ export default function OrderDetails({ session, routeParam }) {
                   </div>
                 </PrimaryWrapper>
               )}
-
-            <PrimaryWrapper className="p-1">
-              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                Event History
-              </div>
-              <ul className="space-y-2 p-2 text-sm">
-                {data.event_history?.length === 0 && (
-                  <div className="text-base italic text-center p-4">
-                    No Event History
-                  </div>
-                )}
-                {data.event_history?.map((item) => (
-                  <li key={item.id} className="flex">
-                    <span className="text-cyan-700 mr-2 w-1/5 ">
-                      {moment(item.updated_at)
-                        .local()
-                        .format('DD MMM YYYY hh:mm')}
-                    </span>
-                    <div>
-                      <span className="font-bold">{item.description}</span>
-                      {item.note && (
-                        <div className="italic py-2">{item.note}</div>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </PrimaryWrapper>
           </div>
         </div>
+        {/* document, event histories, return courier, rejection, terminate order */}
       </div>
       {showModalBuyerReceipt ? (
         <ModalPdf
