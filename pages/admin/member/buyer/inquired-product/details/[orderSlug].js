@@ -735,34 +735,10 @@ export default function InquiryDetails({ session, routeParam }) {
           ></PageHeader>
         </PrimaryWrapper>
 
-        {/* buyer tracking number */}
-        <div className="flex space-x-4">
-          <PrimaryWrapper className="p-1">
-            <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
-              Courier
-            </div>
-            <div className="mx-2 mb-1 text-xl">
-              {checkValue(data.buyer_courier_company_name)}
-            </div>
-            <div className="mx-2 mb-5 text-l">
-              {checkValue(data.buyer_courier_account_number)}
-            </div>
-          </PrimaryWrapper>
-
-          <PrimaryWrapper className="p-1">
-            <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
-              Tracking Number
-            </div>
-            <div className="mx-2 mb-5 text-xl">
-              {checkValue(data.trackingBuyer)}
-            </div>
-          </PrimaryWrapper>
-        </div>
-
         {/* product info and quotation */}
         <div className="lg:flex lg:justify-around">
-          <div className="w-full lg:w-1/2 mr-4">
-            <PrimaryWrapper className="p-3">
+          <div className="w-full flex flex-col lg:w-1/2 mr-4">
+            <PrimaryWrapper className="p-3 flex-1">
               <div className="lg:flex">
                 <div className="w-full">
                   <div className="mx-2 my-1 text-xl">
@@ -928,62 +904,9 @@ export default function InquiryDetails({ session, routeParam }) {
                                 </div> */}
               </div>
             </PrimaryWrapper>
-
-            <PrimaryWrapper className="p-1">
-              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                Documents
-              </div>
-              <div className="mx-2 mt-1 text-sm">
-                <span className="text-gray-500">Buyer</span>
-              </div>
-              <div className="mx-2 mt-1 text-sm border-b mb-2">
-                <DocumentButton
-                  title="Payment Receipt"
-                  isActive={buyerReceiptData?.length > 0}
-                  onClick={() => {
-                    setShowModal(true)
-                    setSlugState(data?.slug)
-                    setBuyerReceiptPath(data?.buyer_receipt_path)
-                  }}
-                />
-              </div>
-              <div className="mb-5">
-                <div className="mx-2 mt-1 text-sm">
-                  <span className="text-gray-500">Exepart</span>
-                </div>
-                <div className="mx-2 mt-1 text-sm">
-                  <DocumentButton
-                    title="Quotation"
-                    isActive={
-                      data.quotation_available == 1 && isQuotationAvailable
-                    }
-                    href={`pdf/quotation/${data.slug}`}
-                    isLoading={isLoadingOpenQUotation}
-                    onClick={openQuotationHandler}
-                  />
-                  <DocumentButton
-                    title="Proforma Invoice"
-                    isActive={data.proforma_invoice_available == 1}
-                    href={`pdf/proforma-invoice/${data.slug}`}
-                  />
-                  <DocumentButton
-                    title="Invoice"
-                    href={`pdf/buyer-invoice/${data.slug}`}
-                    isActive={data.buyer_invoice_available == 1}
-                  />
-                  <DocumentButton
-                    title="Receipt of Reimbursement"
-                    isActive={data.admin_reimbursement_receipt_path}
-                    href={publicDir + data.admin_reimbursement_receipt_path}
-                  />
-                </div>
-                <div className="mx-2 mt-1 text-sm"></div>
-                <div className="mx-2 mt-1 text-sm"></div>
-              </div>
-            </PrimaryWrapper>
           </div>
-          <div className="w-full lg:w-1/2 ">
-            <PrimaryWrapper className="p-1 ">
+          <div className="w-full flex flex-col lg:w-1/2">
+            <PrimaryWrapper className="p-1 flex-1">
               <div className="mx-2 my-1 text-md">Inquiry Details</div>
               <div className="mx-2 my-1 text-sm border-b">
                 <div className="flex flex-wrap justify-between">
@@ -1079,9 +1002,94 @@ export default function InquiryDetails({ session, routeParam }) {
                 occur.
               </div>
             </PrimaryWrapper>
+            <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Actions to take
+              </div>
+              {actionToTake}
+            </PrimaryWrapper>
+          </div>
+        </div>
+        {/* buyer tracking number */}
+        <div className="flex space-x-4">
+          <PrimaryWrapper className="p-1">
+            <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
+              Courier
+            </div>
+            <div className="mx-2 mb-1 text-xl">
+              {checkValue(data.buyer_courier_company_name)}
+            </div>
+            <div className="mx-2 mb-5 text-l">
+              {checkValue(data.buyer_courier_account_number)}
+            </div>
+          </PrimaryWrapper>
 
+          <PrimaryWrapper className="p-1">
+            <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
+              Tracking Number
+            </div>
+            <div className="mx-2 mb-5 text-xl">
+              {checkValue(data.trackingBuyer)}
+            </div>
+          </PrimaryWrapper>
+        </div>
+        {/* document and action to take */}
+        <div className="lg:flex lg:justify-around">
+          <div className="w-full lg:w-1/2 mr-4">
+            <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Documents
+              </div>
+              <div className="mx-2 mt-1 text-sm">
+                <span className="text-gray-500">Buyer</span>
+              </div>
+              <div className="mx-2 mt-1 text-sm border-b mb-2">
+                <DocumentButton
+                  title="Payment Receipt"
+                  isActive={buyerReceiptData?.length > 0}
+                  onClick={() => {
+                    setShowModal(true)
+                    setSlugState(data?.slug)
+                    setBuyerReceiptPath(data?.buyer_receipt_path)
+                  }}
+                />
+              </div>
+              <div className="mb-5">
+                <div className="mx-2 mt-1 text-sm">
+                  <span className="text-gray-500">Exepart</span>
+                </div>
+                <div className="mx-2 mt-1 text-sm">
+                  <DocumentButton
+                    title="Quotation"
+                    isActive={
+                      data.quotation_available == 1 && isQuotationAvailable
+                    }
+                    href={`pdf/quotation/${data.slug}`}
+                    isLoading={isLoadingOpenQUotation}
+                    onClick={openQuotationHandler}
+                  />
+                  <DocumentButton
+                    title="Proforma Invoice"
+                    isActive={data.proforma_invoice_available == 1}
+                    href={`pdf/proforma-invoice/${data.slug}`}
+                  />
+                  <DocumentButton
+                    title="Invoice"
+                    href={`pdf/buyer-invoice/${data.slug}`}
+                    isActive={data.buyer_invoice_available == 1}
+                  />
+                  <DocumentButton
+                    title="Receipt of Reimbursement"
+                    isActive={data.admin_reimbursement_receipt_path}
+                    href={publicDir + data.admin_reimbursement_receipt_path}
+                  />
+                </div>
+                <div className="mx-2 mt-1 text-sm"></div>
+                <div className="mx-2 mt-1 text-sm"></div>
+              </div>
+            </PrimaryWrapper>
             {data.quotation_rejection_reason === 'Other' && (
-              <PrimaryWrapper className="p-1 mt-4">
+              <PrimaryWrapper className="p-1">
                 <div className="mx-2 my-1 text-md">
                   Quotation Rejection Reason
                 </div>
@@ -1090,12 +1098,8 @@ export default function InquiryDetails({ session, routeParam }) {
                 </div>
               </PrimaryWrapper>
             )}
-            <PrimaryWrapper className="p-1">
-              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                Actions to take
-              </div>
-              {actionToTake}
-            </PrimaryWrapper>
+          </div>
+          <div className="w-full lg:w-1/2">
             <PrimaryWrapper className="p-1">
               <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                 Event History

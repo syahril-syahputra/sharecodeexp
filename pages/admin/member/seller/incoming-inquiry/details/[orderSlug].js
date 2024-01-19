@@ -32,10 +32,7 @@ import UploadCourierReturn from '@/components/Modal/OrderComponent/Seller/Upload
 import DangerButton from '@/components/Interface/Buttons/DangerButton'
 import DisposeCourierReturn from '@/components/Modal/OrderComponent/Seller/DisposeCourierReturn'
 import DocumentButton from '@/components/Shared/Order/DocumentButton'
-import {
-  BaseModalLarge,
-  BaseModalXLarge,
-} from '@/components/Interface/Modal/BaseModal'
+import { BaseModalLarge } from '@/components/Interface/Modal/BaseModal'
 
 export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -859,53 +856,6 @@ export default function InquiryDetails({ session, routeParam }) {
           />
         </PrimaryWrapper>
 
-        {/* image and quotation details */}
-
-        {/* seller tracking number */}
-        <div className="flex space-x-4">
-          <PrimaryWrapper className="p-1">
-            <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
-              Courier
-            </div>
-            <div className="mx-2 mb-1 text-xl">
-              {checkValue(data.seller_courier_company_name)}
-            </div>
-            <div className="mx-2 mb-5 text-l">
-              {checkValue(data.seller_courier_account_number)}
-            </div>
-          </PrimaryWrapper>
-          <PrimaryWrapper className="p-1">
-            <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
-              Tracking Number
-            </div>
-            <div className="mx-2 mb-5 text-xl">
-              {checkValue(data.trackingSeller)}
-            </div>
-          </PrimaryWrapper>
-        </div>
-        {parseInt(data?.return_product) === 1 ? (
-          <div className="flex space-x-4">
-            <PrimaryWrapper className="p-1">
-              <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
-                Courier Return Shipment
-              </div>
-              <div className="mx-2 mb-1 text-xl">
-                {checkValue(data.seller_return_courier_company_name)}
-              </div>
-              <div className="mx-2 mb-5 text-l">
-                {checkValue(data.seller_return_courier_account_number)}
-              </div>
-            </PrimaryWrapper>
-            <PrimaryWrapper className="p-1">
-              <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
-                Tracking Number Return Shipment
-              </div>
-              <div className="mx-2 mb-5 text-xl">
-                {checkValue(data?.seller_return_tracking_number)}
-              </div>
-            </PrimaryWrapper>
-          </div>
-        ) : undefined}
         {/* product info and quotation */}
         <div className="lg:flex lg:justify-around">
           <div className="w-full lg:w-1/2 mr-4">
@@ -1036,6 +986,131 @@ export default function InquiryDetails({ session, routeParam }) {
                 </div>
               </div>
             </PrimaryWrapper>
+          </div>
+          <div className="w-full flex flex-col lg:w-1/2 ">
+            <PrimaryWrapper className="p-1 flex-1">
+              <div className="mx-2 my-1 text-md">Inquiry Details</div>
+              <div className="mx-2 my-1 text-sm border-b">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Date Code</span>
+                  {!!data.companies_products?.dateCode ? (
+                    <span>{data.companies_products?.dateCode}</span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="mx-2 my-1 text-sm">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Order Quantity</span>
+                  {!!data.qty ? (
+                    <span>{data.qty}</span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="mx-2 my-1 text-sm border-b">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Unit Price (USD)</span>
+                  {!isLoading ? (
+                    <span>${data.price}</span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="mx-2 my-1 text-sm mb-5">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500 font-bold">
+                    Total Price (USD)
+                  </span>
+                  {!isLoading ? (
+                    <span>${data.order_price_amount || 0}</span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="mx-2 my-1 text-sm font-bold text-gray-500">
+                Note:
+              </div>
+              <div className="mx-2 text-sm text-gray-500 mb-5">
+                Price is only for the product. The order type is Ex-works. The
+                price you see on screen does not include logistic costs,
+                customs, tax, insurance or any additional expenses that may
+                occur.
+              </div>
+            </PrimaryWrapper>
+
+            <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Actions to take
+              </div>
+              {actionToTake}
+            </PrimaryWrapper>
+          </div>
+        </div>
+
+        {/* seller tracking number */}
+        <div className="flex space-x-4">
+          <PrimaryWrapper className="p-1">
+            <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
+              Courier
+            </div>
+            <div className="mx-2 mb-1 text-xl">
+              {checkValue(data.seller_courier_company_name)}
+            </div>
+            <div className="mx-2 mb-5 text-l">
+              {checkValue(data.seller_courier_account_number)}
+            </div>
+          </PrimaryWrapper>
+
+          <PrimaryWrapper className="p-1">
+            <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
+              Tracking Number
+            </div>
+            <div className="mx-2 mb-5 text-xl">
+              {checkValue(data.trackingSeller)}
+            </div>
+          </PrimaryWrapper>
+        </div>
+        {parseInt(data?.return_product) === 1 ? (
+          <div className="flex space-x-4">
+            <PrimaryWrapper className="p-1">
+              <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
+                Courier Return Shipment
+              </div>
+              <div className="mx-2 mb-1 text-xl">
+                {checkValue(data.seller_return_courier_company_name)}
+              </div>
+              <div className="mx-2 mb-5 text-l">
+                {checkValue(data.seller_return_courier_account_number)}
+              </div>
+            </PrimaryWrapper>
+
+            <PrimaryWrapper className="p-1">
+              <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
+                Tracking Number Return Shipment
+              </div>
+              <div className="mx-2 mb-5 text-xl">
+                {checkValue(data?.seller_return_tracking_number)}
+              </div>
+            </PrimaryWrapper>
+          </div>
+        ) : undefined}
+
+        {/* document and action to take */}
+        <div className="lg:flex lg:justify-around">
+          <div className="w-full lg:w-1/2 mr-4">
             <PrimaryWrapper className="p-1">
               <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                 Documents
@@ -1109,70 +1184,6 @@ export default function InquiryDetails({ session, routeParam }) {
                 </div>
               </div>
             </PrimaryWrapper>
-          </div>
-          <div className="w-full lg:w-1/2">
-            <PrimaryWrapper className="p-1">
-              <div className="mx-2 my-1 text-md">Inquiry Details</div>
-              <div className="mx-2 my-1 text-sm border-b">
-                <div className="flex flex-wrap justify-between">
-                  <span className="text-gray-500">Date Code</span>
-                  {!!data.companies_products?.dateCode ? (
-                    <span>{data.companies_products?.dateCode}</span>
-                  ) : (
-                    <div className="animate-pulse">
-                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mx-2 my-1 text-sm">
-                <div className="flex flex-wrap justify-between">
-                  <span className="text-gray-500">Order Quantity</span>
-                  {!!data.qty ? (
-                    <span>{data.qty}</span>
-                  ) : (
-                    <div className="animate-pulse">
-                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mx-2 my-1 text-sm border-b">
-                <div className="flex flex-wrap justify-between">
-                  <span className="text-gray-500">Unit Price (USD)</span>
-                  {!isLoading ? (
-                    <span>${data.price}</span>
-                  ) : (
-                    <div className="animate-pulse">
-                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mx-2 my-1 text-sm mb-5">
-                <div className="flex flex-wrap justify-between">
-                  <span className="text-gray-500 font-bold">
-                    Total Price (USD)
-                  </span>
-                  {!isLoading ? (
-                    <span>${data.order_price_amount || 0}</span>
-                  ) : (
-                    <div className="animate-pulse">
-                      <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mx-2 my-1 text-sm font-bold text-gray-500">
-                Note:
-              </div>
-              <div className="mx-2 text-sm text-gray-500 mb-5">
-                Price is only for the product. The order type is Ex-works. The
-                price you see on screen does not include logistic costs,
-                customs, tax, insurance or any additional expenses that may
-                occur.
-              </div>
-            </PrimaryWrapper>
             {data.inquiry_rejection_reason === 'Other' && (
               <PrimaryWrapper className="p-1">
                 <div className="mx-2 my-1 text-md">
@@ -1183,12 +1194,8 @@ export default function InquiryDetails({ session, routeParam }) {
                 </div>
               </PrimaryWrapper>
             )}
-            <PrimaryWrapper className="p-1">
-              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                Actions to take
-              </div>
-              {actionToTake}
-            </PrimaryWrapper>
+          </div>
+          <div className="w-full lg:w-1/2">
             <PrimaryWrapper className="p-1">
               <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                 Event History
