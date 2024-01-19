@@ -135,7 +135,7 @@ export default function Index() {
                 whileInView={'show'}
                 viewport={{ once: true, amount: 0.05 }}
               >
-                <div className="flex flex-col items-center justify-center w-[70rem] text-center text-light">
+                <div className="flex flex-col items-center justify-center xl:w-[70rem] md:w-[40rem] sm:w-[40rem] text-center text-light">
                   <motion.h1
                     variants={textVariant(0.5)}
                     className="font-bold uppercase lg:px-[6px] md:px-0 text-[44px] sm:text-[40px] md:text-[40px] 2xl:text-[110px] lg:text-[110px]"
