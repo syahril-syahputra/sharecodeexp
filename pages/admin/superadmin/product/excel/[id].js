@@ -1,29 +1,30 @@
-import {useRouter} from 'next/router'
-import React, {useEffect, useState} from 'react'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
 import Admin from 'layouts/Admin.js'
-import {getSession} from 'next-auth/react'
+import { getSession } from 'next-auth/react'
 import axios from 'lib/axios'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import moment from 'moment'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faFileExcel} from '@fortawesome/free-solid-svg-icons'
-import {toast} from 'react-toastify'
-import {toastOptions} from '@/lib/toastOptions'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFileExcel } from '@fortawesome/free-solid-svg-icons'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import DangerButton from '@/components/Interface/Buttons/DangerButton'
 import SuccessButton from '@/components/Interface/Buttons/SuccessButton'
-import {FileInput, Spinner} from 'flowbite-react'
+import { FileInput, Spinner } from 'flowbite-react'
 import ExcelComponent from '@/components/Modal/Component/ExcelComponent'
-import {CompanyStatusesIcon} from '@/components/Shared/Company/Statuses'
+import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses'
 import Link from 'next/link'
 import ExcelRequestUpdate from '@/components/Modal/Component/ExcelRequestUpdate'
-import {checkValue} from '@/utils/general'
+import { checkValue } from '@/utils/general'
 import BaseTable from '@/components/Interface/Table/BaseTable'
 import NoData from '@/components/Interface/Table/NoData'
+import { BaseModalLarge } from '@/components/Interface/Modal/BaseModalTermCondition'
 
 DetailUploadedExcel.layout = Admin
-export default function DetailUploadedExcel({session, data}) {
+export default function DetailUploadedExcel({ session, data }) {
   const [isDetailLoading, setisDetailLoading] = useState(false)
   const [uploadForm, setuploadForm] = useState(false)
   const [isOnUploading, setisOnUploading] = useState(false)
@@ -32,6 +33,7 @@ export default function DetailUploadedExcel({session, data}) {
   const [isDeleting, setisDeleting] = useState(false)
   const [RequestModal, setRequestModal] = useState(false)
   const [isLoadingRequest, setisLoadingRequest] = useState(false)
+  const [cleanFileModal, setcleanFileModal] = useState(false)
   const handleFileChange = (e) => {
     setFile(e)
   }
@@ -95,7 +97,8 @@ export default function DetailUploadedExcel({session, data}) {
         toast.success('Status Update', toastOptions)
         router.replace(router.asPath)
       }
-      window.location.href = process.env.NEXT_PUBLIC_DIR + data.excel.path_dirty_file
+      window.location.href =
+        process.env.NEXT_PUBLIC_DIR + data.excel.path_dirty_file
     } catch (error) {
       //   console.log(error)
       toast.error(error, toastOptions)
@@ -181,6 +184,44 @@ export default function DetailUploadedExcel({session, data}) {
 
   return (
     <>
+      <section>
+        {cleanFileModal && (
+          <BaseModalLarge
+            title="List Clean File"
+            onClick={() => setcleanFileModal(false)}
+            body={
+              <>
+                {data.excel?.clean_file.length === 0 && (
+                  <div className="text-center text-sm text-red-600">
+                    Data Empty
+                  </div>
+                )}
+                {data.excel?.clean_file?.map((item) => (
+                  <div
+                    className="flex p-2 border-b border-gray-300 justify-between space-y-4 items-center "
+                    key={item.id}
+                  >
+                    <div className="text-sm">
+                      <div>{item.file_name}</div>
+                      <span className="text-xs">
+                        {moment(item.updated_at)
+                          .local()
+                          .format('ddd, D MMM YY | HH:mm')}
+                      </span>
+                    </div>
+                    <Link
+                      target="_blank"
+                      href={process.env.NEXT_PUBLIC_DIR + item.path}
+                    >
+                      <PrimaryButton size="sm">Download</PrimaryButton>
+                    </Link>
+                  </div>
+                ))}
+              </>
+            }
+          ></BaseModalLarge>
+        )}
+      </section>
       <ExcelComponent
         show={[isOpenConfirmDelete, setisOpenConfirmDelete]}
         delete={[isDeleting, setisDeleting]}
@@ -211,6 +252,9 @@ export default function DetailUploadedExcel({session, data}) {
               <SuccessButton onClick={() => downloadHandler()}>
                 Download
               </SuccessButton>
+              <SuccessButton onClick={() => setcleanFileModal(true)}>
+                Download Clean File
+              </SuccessButton>
               <DangerButton onClick={() => setisOpenConfirmDelete(true)}>
                 Delete
               </DangerButton>
@@ -220,6 +264,7 @@ export default function DetailUploadedExcel({session, data}) {
             </div>
           }
         ></PageHeader>
+
         <div>
           <div className="flex items-center justify-center">
             <FontAwesomeIcon
@@ -236,7 +281,9 @@ export default function DetailUploadedExcel({session, data}) {
                 <td scope="row" className="text-sm px-6 py-4">
                   :
                 </td>
-                <td className="text-sm px-2 py-4">{checkValue(data.excel?.name)}</td>
+                <td className="text-sm px-2 py-4">
+                  {checkValue(data.excel?.name)}
+                </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
                 <th scope="col" className="px-6 py-3">
@@ -265,7 +312,9 @@ export default function DetailUploadedExcel({session, data}) {
                   :
                 </td>
 
-                <td className="text-sm px-2 py-4">{checkValue(data.excel.file_status?.name)}</td>
+                <td className="text-sm px-2 py-4">
+                  {checkValue(data.excel.file_status?.name)}
+                </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
                 <th scope="col" className="px-6 py-3">
@@ -298,7 +347,9 @@ export default function DetailUploadedExcel({session, data}) {
                 <td scope="row" className="text-sm px-6 py-4">
                   :
                 </td>
-                <td className="text-sm px-2 py-4">{checkValue(data.excel.log)}</td>
+                <td className="text-sm px-2 py-4">
+                  {checkValue(data.excel.log)}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -364,9 +415,7 @@ export default function DetailUploadedExcel({session, data}) {
         <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
           On Going Order
         </div>
-        <div className="mx-2 my-1 text-sm font-bold text-gray-500">
-          Note:
-        </div>
+        <div className="mx-2 my-1 text-sm font-bold text-gray-500">Note:</div>
         <div className="mx-2 text-sm text-gray-500 mb-5">
           Avoid excel row to contain this Product Number.
         </div>
@@ -393,33 +442,33 @@ export default function DetailUploadedExcel({session, data}) {
             }
             tableData={
               <>
-                {
-                  data?.products?.map((item, index) => {
-                    return (
-                      <tr key={index} className="border-b odd:bg-gray-50 even:bg-gray-100">
-                        <td scope="row" className="text-sm px-6 py-2">
-                          {checkValue(item?.companies_products?.manufacturer_number)}
-                        </td>
-                        <td scope="row" className="text-sm px-6 py-2">
-                          {checkValue(item.companies_products?.manufacture)}
-                        </td>
-                        <td scope="row" className="text-sm px-6 py-2">
-                          {checkValue(item.companies_products?.stock_country)}
-                        </td>
-                        <td scope="row" className="text-sm px-6 py-2">
-                          {checkValue(item.companies_products?.date_code)}
-                        </td>
-                        <td scope="row" className="text-sm px-6 py-2">
-                          {checkValue(item.order_status?.name)}
-                        </td>
-                      </tr>
-                    )
-                  })
-                }
-                {
-                  data?.products?.length === 0 &&
-                  <NoData colSpan={5} />
-                }
+                {data?.products?.map((item, index) => {
+                  return (
+                    <tr
+                      key={index}
+                      className="border-b odd:bg-gray-50 even:bg-gray-100"
+                    >
+                      <td scope="row" className="text-sm px-6 py-2">
+                        {checkValue(
+                          item?.companies_products?.manufacturer_number
+                        )}
+                      </td>
+                      <td scope="row" className="text-sm px-6 py-2">
+                        {checkValue(item.companies_products?.manufacture)}
+                      </td>
+                      <td scope="row" className="text-sm px-6 py-2">
+                        {checkValue(item.companies_products?.stock_country)}
+                      </td>
+                      <td scope="row" className="text-sm px-6 py-2">
+                        {checkValue(item.companies_products?.date_code)}
+                      </td>
+                      <td scope="row" className="text-sm px-6 py-2">
+                        {checkValue(item.order_status?.name)}
+                      </td>
+                    </tr>
+                  )
+                })}
+                {data?.products?.length === 0 && <NoData colSpan={5} />}
               </>
             }
           />

@@ -1,20 +1,17 @@
-import {VendorUrl} from '@/route/route-url'
+import { VendorUrl } from '@/route/route-url'
 
-import React, {useEffect, useState} from 'react'
-import {getSession} from 'next-auth/react'
+import React, { useEffect, useState } from 'react'
+import { getSession } from 'next-auth/react'
 import axios from '@/lib/axios'
-import {toast} from 'react-toastify'
-import {toastOptions} from '@/lib/toastOptions'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import Link from 'next/link'
 
-
-
-
-export default function BuyerDashboard({session}) {
+export default function BuyerDashboard({ session }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({
     order: {
@@ -24,7 +21,7 @@ export default function BuyerDashboard({session}) {
       ready_to_pick: 0,
       confirm_receipt_of_shipment: 0,
       reimbursement_active: 0,
-    }
+    },
   })
   const loadData = async () => {
     setIsLoading(true)
@@ -47,27 +44,39 @@ export default function BuyerDashboard({session}) {
       })
   }
 
-  function ComponentCardBuyerDashboard({onClick, dataName, name, url, dataNameNotification}) {
+  function ComponentCardBuyerDashboard({
+    onClick,
+    dataName,
+    name,
+    url,
+    dataNameNotification,
+  }) {
     return (
       <PrimaryWrapper className="border border-blue-500">
         <div className="p-4 mb-auto">
           <div className="flex justify-between">
             <h1 className="font-semibold text-7xl mb-3">{dataName}</h1>
-            {(typeof dataNameNotification == 'string' ? Number(dataNameNotification) > 0 : dataNameNotification > 0) &&
+            {(typeof dataNameNotification == 'string'
+              ? Number(dataNameNotification) > 0
+              : dataNameNotification > 0) && (
               <>
                 <span className="relative px-2">
                   <i className="fas fa-bell text-5xl text-orange-500"></i>
-                  <div className="absolute inline-flex items-center justify-center w-8 h-8 text-xs font-bold text-orange-500 bg-white border-2 border-orange-500 rounded-full -end-1">{dataNameNotification}</div>
+                  <div className="absolute inline-flex items-center justify-center w-8 h-8 text-xs font-bold text-orange-500 bg-white border-2 border-orange-500 rounded-full -end-1">
+                    {dataNameNotification}
+                  </div>
                 </span>
               </>
-            }
+            )}
           </div>
           <span className="text-md italic">{name}</span>
         </div>
         <Link
           onClick={onClick}
           href={url}
-          className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
+          className={`flex flex-wrap items-center justify-between  py-2 px-4 ${
+            parseInt(dataName) === 0 ? 'bg-blue-500' : 'bg-orange-500'
+          }`}
         >
           <div className="">
             <h1 className="text-md text-white">Check Now</h1>{' '}
@@ -83,14 +92,15 @@ export default function BuyerDashboard({session}) {
   }
 
   async function resetCounter(counterKey) {
-    await axios
-      .post(`/buyer/dashboard/counter-checker/${counterKey}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${session.accessToken}`,
-          },
-        })
+    await axios.post(
+      `/buyer/dashboard/counter-checker/${counterKey}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      }
+    )
   }
 
   useEffect(() => {
@@ -99,10 +109,8 @@ export default function BuyerDashboard({session}) {
 
   return (
     <>
-      <h1 className='font-normal text-2xl mb-3 mt-4'>
-        Buyer's Dashboard
-      </h1>
-      <div className='grid grid-cols-4 gap-4 mt-5'>
+      <h1 className="font-normal text-2xl mb-3 mt-4">Buyer's Dashboard</h1>
+      <div className="grid grid-cols-4 gap-4 mt-5">
         <ComponentCardBuyerDashboard
           dataName={data.order?.accept_quotation}
           name={'Accept / Reject Quatations'}
@@ -129,7 +137,9 @@ export default function BuyerDashboard({session}) {
           name={'Confirm Receipt of Shipment'}
           url={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=shipped-to-buyer`}
           onClick={() => resetCounter('order-confirm-receipt-of-shipment')}
-          dataNameNotification={data.order?.newly_update?.confirm_receipt_of_shipment}
+          dataNameNotification={
+            data.order?.newly_update?.confirm_receipt_of_shipment
+          }
         />
       </div>
     </>
