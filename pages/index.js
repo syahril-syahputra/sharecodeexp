@@ -169,7 +169,7 @@ export default function Index() {
                             onChange={({target}) => setSearch(target.value)}
                             onKeyDown={searchComponent}
                             type="text"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 placeholder:text-2xl sm:text-[12px] md:text-[14px] lg:text-[20px] text-sm focus:ring-blue-500 focus:border-blue-500 block w-full h-16 ps-10 p-5"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 lg:placeholder:text-2xl  xl:placeholder:text-2xl sm:placeholder:text-lg  placeholder:text-xl sm:text-[12px] md:text-[14px] lg:text-[20px] text-sm focus:ring-blue-500 focus:border-blue-500 block w-full h-16 ps-10 p-5"
                             placeholder="Write part number / key word" required />
                           <button
                             type="button"
