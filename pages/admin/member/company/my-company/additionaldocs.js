@@ -63,7 +63,7 @@ export default function ShowAdditionalDocument({session}) {
         },
       })
       .then(() => {
-        toast.success('Additional Document has been updated.', toastOptions);
+        toast.success(response.data.message ?? 'Additional Document has been updated.', toastOptions)
         setShowEditDocModal(false);
         setSelectedDocument({});
       })
