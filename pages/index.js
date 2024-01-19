@@ -162,7 +162,71 @@ export default function Index() {
                     variants={fadeIn('up', 'tween', 0.2, 1)}
                     className="w-full ml-auto mr-auto xs:pb-10 xs:pt-8 "
                   >
-
+                    <div className="pt-2 sm:pt-0 pb-4 md:pb-1 lg:px-3 md:px-[3px]">
+                      <form className="flex items-center">
+                        <div className="relative w-full h-full">
+                          <input
+                            value={search}
+                            onChange={({target}) => setSearch(target.value)}
+                            onKeyDown={searchComponent}
+                            type="text"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 placeholder:text-xl sm:text-[12px] md:text-[14px] lg:text-[20px] text-sm focus:ring-blue-500 focus:border-blue-500 block w-full h-16 pr-10 p-2.5"
+                            placeholder="Write part number / key word" required />
+                          <button
+                            type="button"
+                            className="absolute inset-y-0 end-0 flex items-center pe-3 pr-6"
+                            onClick={searchComponentOnClick}
+                          >
+                            <svg
+                              className="w-5 h-5 text-footer-resources"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </form>
+                      <div className="text-left py-2">
+                        {suggestion && suggestion.length > 0 && (
+                          <div>
+                            {isSuggestionLoading && (
+                              <div className="text-blueGray-500 text-lg">
+                                Suggestion :
+                                <i className="ml-2 fas fa-circle-notch fa-spin"></i>
+                              </div>
+                            )}
+                            {!isSuggestionLoading && (
+                              <div className="flex justify-start text-lg">
+                                <span className="text-blueGray-500">
+                                  Suggestion :
+                                </span>
+                                {suggestion.map((name, index) => (
+                                  <Link
+                                    key={`${name}--${index}`}
+                                    href={`/product/search?q=${name}`}
+                                    className="mx-1 underline text-blue-500 italic"
+                                  >
+                                    {name}
+                                  </Link>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        {isSuggestionLoading && suggestion.length === 0 && (
+                          <i className="ml-2 fas fa-circle-notch fa-spin"></i>
+                        )}
+                      </div>
+                    </div>
                   </motion.div>
                 </div>
               </motion.div>
