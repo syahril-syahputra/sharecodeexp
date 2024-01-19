@@ -264,6 +264,7 @@ export default function DetailUploadedExcel({ session, data }) {
             </div>
           }
         ></PageHeader>
+
         <div>
           <div className="flex items-center justify-center">
             <FontAwesomeIcon

@@ -41,8 +41,10 @@ import DocumentButton from '@/components/Shared/Order/DocumentButton'
 import UploadPaymentReceiptForSeller from '@/components/Modal/OrderComponent/Superadmin/UploadPaymentReceiptForSeller'
 import NotificationBarAdmin from '@/components/Interface/Notification/NotificationBarAdmin'
 import ModalPdf from '@/components/Modal/ModalPdf'
-import { Accordion, Button } from 'flowbite-react'
-import { BaseModalXLarge } from '@/components/Interface/Modal/BaseModalTermCondition'
+import {
+  BaseModalLarge,
+  BaseModalMedium,
+} from '@/components/Interface/Modal/BaseModal'
 
 export default function OrderDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
@@ -1266,7 +1268,7 @@ export default function OrderDetails({ session, routeParam }) {
           </div>
         )}
         {initialModal && !isLoading && (
-          <BaseModalXLarge
+          <BaseModalLarge
             onClick={() => setinitialModal(false)}
             title={data.order_status?.name}
             body={
@@ -1938,30 +1940,30 @@ export default function OrderDetails({ session, routeParam }) {
                 ))}
               </ul>
             </PrimaryWrapper>
-            <PrimaryWrapper className="p-1">
-              {parseInt(data?.return_product) === 1 ? (
-                <>
-                  <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                    Seller's Return Shipment Info
-                  </div>
-                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
-                    Seller Courier
-                  </div>
-                  <div className="mx-2 mb-1 text-xl">
-                    {checkValue(data.seller_return_courier_company_name)}
-                  </div>
-                  <div className="mx-2 mb-3 text-l">
-                    {checkValue(data.seller_return_courier_account_number)}
-                  </div>
-                  <div className="mx-2 my-1 text-sm uppercase text-gray-500">
-                    Tracking Number
-                  </div>
-                  <div className="mx-2 mb-5 text-xl">
-                    {checkValue(data.seller_return_tracking_number)}
-                  </div>
-                </>
-              ) : undefined}
-            </PrimaryWrapper>
+
+            {parseInt(data?.return_product) === 1 ? (
+              <PrimaryWrapper className="p-1">
+                <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                  Seller's Return Shipment Info
+                </div>
+                <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                  Seller Courier
+                </div>
+                <div className="mx-2 mb-1 text-xl">
+                  {checkValue(data.seller_return_courier_company_name)}
+                </div>
+                <div className="mx-2 mb-3 text-l">
+                  {checkValue(data.seller_return_courier_account_number)}
+                </div>
+                <div className="mx-2 my-1 text-sm uppercase text-gray-500">
+                  Tracking Number
+                </div>
+                <div className="mx-2 mb-5 text-xl">
+                  {checkValue(data.seller_return_tracking_number)}
+                </div>
+              </PrimaryWrapper>
+            ) : undefined}
+
             {data.inquiry_rejection_reason === 'Other' && (
               <PrimaryWrapper className="p-1">
                 <div className="mx-2 my-1 text-md">
