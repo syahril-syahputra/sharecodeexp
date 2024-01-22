@@ -30,7 +30,6 @@ export default function MyCompany({session}) {
   //data search
   const [isLoading, setIsLoading] = useState(true)
   const [companyData, setCompanyData] = useState()
-  console.log(companyData, '<<<companyData')
   const getData = async () => {
     setIsLoading(true)
     await axios
