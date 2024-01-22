@@ -38,7 +38,6 @@ export default function MyCompany({session, sectorlist, countryList}) {
   const [stateProvince, setStateProvince] = useState(null)
   const [stateCity, setStateCity] = useState(null)
   const [dataSector, setDataSector] = useState([...sectorlist, {value: 'other', label: 'Other'}]);
-  const [dataState, setDataState] = useState({value: 'other', label: 'Other'});
   const [packaging, setPackaging] = useState(null)
 
   const [firstAddressCharacterCount, setFirstAddressCharacterCount] =
@@ -58,19 +57,9 @@ export default function MyCompany({session, sectorlist, countryList}) {
     setFirstAddressCharacterCount(input.length)
   }
 
-  function isMatchPostalCodePattern({id, Country, value}) {
-    const findCodeRegex = PostalCode?.find(
-      (e) => e?.id === id && e.country === Country
-    )
-    const regex = findCodeRegex?.Regex
-
-    return regex?.test(value)
-  }
-
   /**
    * Validation
    */
-
   const validationSchema = Yup.object({
     name: Yup.string().required('The company name field is required'),
     sector: Yup.mixed().required('The company sector field is required'),
@@ -78,6 +67,7 @@ export default function MyCompany({session, sectorlist, countryList}) {
     country: Yup.mixed().required(
       'The company country field is required'
     ),
+    country_code: Yup.mixed().required('The company country code field is require'),
     state: Yup.mixed().required(
       'The company province field is required'
     ),
@@ -139,12 +129,7 @@ export default function MyCompany({session, sectorlist, countryList}) {
   const countries = countryList
   const provincies = useDataProvince(stateDataCountry?.id)
   const cities = useDataCity(stateProvince?.id)
-  const sectors = sectorlist
-
   const [isLoading, setIsLoading] = useState(true)
-
-
-
 
   const getDataFunc = async () => {
     setIsLoading(true)
@@ -170,13 +155,13 @@ export default function MyCompany({session, sectorlist, countryList}) {
           city_other: result?.city,
           zip_code: result?.zip_code,
         })
-
-
         let oldSector = dataSector.find((item) => item.value == result.sector)
         let oldCountry = countries.find((e) => e.name == result.country)
+        const oldCountryCode = countries?.find((e) => e?.phonecode == result?.country_code)
+
         setCompanyCodeCountry({
           value: result?.country_code,
-          label: result?.country_code,
+          label: oldCountryCode?.namecode,
         })
         setStateDataCountry({...oldCountry})
         if (oldSector) {
@@ -193,7 +178,6 @@ export default function MyCompany({session, sectorlist, countryList}) {
             value: result.country,
             label: result.country,
           })
-
         }
 
         let oldProvince = provincies?.find(
@@ -238,17 +222,13 @@ export default function MyCompany({session, sectorlist, countryList}) {
     zip_code: '',
     country_code: '',
   })
-
   const setDataHandler = (input) => {
     setInputData({...inputData, [input.name]: input.value})
   }
 
-
-
   useEffect(() => {
     getDataFunc()
   }, [])
-
 
   useEffect(() => {
     setCountry({
@@ -269,8 +249,6 @@ export default function MyCompany({session, sectorlist, countryList}) {
   }, [inputData?.state, inputData?.city,])
 
   const [stateCountry, setCountry] = useState()
-  const [sector, setSector] = useState(null)
-
   const router = useRouter()
   const handleSubmit = async (values) => {
     setIsLoading(true)
@@ -289,8 +267,6 @@ export default function MyCompany({session, sectorlist, countryList}) {
     payloadData['country_code'] = companyCodeCountry?.value ?? ''
     !inputData?.RegistrationDocument ? null : payloadData['RegistrationDocument'] = inputData?.RegistrationDocument
     !inputData?.CertificationofActivity ? null : payloadData['CertificationofActivity'] = inputData?.CertificationofActivity
-
-
     let formData = new FormData()
     for (const key in payloadData) {
       formData.append(key, payloadData[key])
@@ -320,8 +296,6 @@ export default function MyCompany({session, sectorlist, countryList}) {
         // setIsLoading(false)
       })
   }
-
-
 
   return (
     <PrimaryWrapper>

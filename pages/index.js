@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { PageSEO } from '@/components/Utils/SEO'
+import {useRouter} from 'next/router'
+import {PageSEO} from '@/components/Utils/SEO'
 import siteMetadata from '@/utils/siteMetadata'
 import axios from 'lib/axios'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import {motion} from 'framer-motion'
 import {
   fadeIn,
   staggerContainer,
@@ -17,10 +17,10 @@ import Footer from 'components/Footers/Footer.js'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import TextInput from '@/components/Interface/Form/TextInput'
 import Navbar from '@/components/Navbar2V'
-import { TypingText } from '@/components/TypeText'
-import { TitleText } from '@/components/TitleText'
-import { toastOptions } from '@/lib/toastOptions'
-import { toast } from 'react-toastify'
+import {TypingText} from '@/components/TypeText'
+import {TitleText} from '@/components/TitleText'
+import {toastOptions} from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
 import TextInputSearchComponent from '@/components/Interface/Form/TextInputForSearchComponent'
 import Container from '@/components/Container'
 
@@ -36,7 +36,7 @@ export default function Index() {
     }
   }
 
-  function searchComponentOnClick(){
+  function searchComponentOnClick() {
     router.replace(`/product/search?q=${search}`)
   }
 
@@ -83,7 +83,7 @@ export default function Index() {
   const handleChange = (e) => {
     const name = e.target.name
     const value = e.target.value
-    setDataContact({ ...dataContact, [name]: value })
+    setDataContact({...dataContact, [name]: value})
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -94,10 +94,11 @@ export default function Index() {
       .post('/contact-us', dataContact)
       .then((result) => {
         toast.success(result.data.message, toastOptions)
-        setDataContact({ subject: '', email: '', message: '' })
+        setDataContact({subject: '', email: '', message: ''})
       })
       .catch((error) => {
-        toast.error(error.data.message, error.message)
+        // toast.error(error.data.message, error.message)
+        toast.error('Please fill your form correctly')
         setErrorMessage('Please fill your form correctly')
         setErrorInfo(error.data.data)
       })
@@ -133,7 +134,7 @@ export default function Index() {
                 variants={staggerContainer}
                 initial="hidden"
                 whileInView={'show'}
-                viewport={{ once: true, amount: 0.05 }}
+                viewport={{once: true, amount: 0.05}}
               >
                 <div className="flex flex-col items-center justify-center xl:w-[70rem] md:w-[40rem] sm:w-[40rem] text-center text-light">
                   <motion.h1
@@ -164,36 +165,36 @@ export default function Index() {
                     <div className="pt-2 sm:pt-0 pb-4 md:pb-1 lg:px-3 md:px-[3px]">
                       <form className="flex items-center">
                         <div className="relative w-full h-full">
-                            <input
-                              value={search}
-                              onChange={({target}) => setSearch(target.value)}
-                              onKeyDown={searchComponent}
-                              type="text"
-                              className="bg-gray-50 border border-gray-300 text-gray-900 placeholder:text-2xl sm:text-[12px] md:text-[14px] lg:text-[20px] text-sm focus:ring-blue-500 focus:border-blue-500 block w-full h-16 ps-10 p-5" 
-                              placeholder="Write part number / key word" required/>
-                                <button 
-                                  type="button" 
-                                  className="absolute inset-y-0 end-0 flex items-center pe-3 pr-6"
-                                  onClick={searchComponentOnClick}
-                                  >
-                                  <svg
-                                    className="w-6 h-6 text-footer-resources"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 20 20"
-                                  >
-                                  <path
-                                    stroke="currentColor"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                                  />
-                                </svg>
-                              </button>
+                          <input
+                            value={search}
+                            onChange={({target}) => setSearch(target.value)}
+                            onKeyDown={searchComponent}
+                            type="text"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 lg:placeholder:text-2xl  xl:placeholder:text-2xl sm:placeholder:text-lg  placeholder:text-xl sm:text-[12px] md:text-[14px] lg:text-[20px] text-sm focus:ring-blue-500 focus:border-blue-500 block w-full h-16 ps-10 p-5"
+                            placeholder="Write part number / key word" required />
+                          <button
+                            type="button"
+                            className="absolute inset-y-0 end-0 flex items-center pe-3 pr-6"
+                            onClick={searchComponentOnClick}
+                          >
+                            <svg
+                              className="w-6 h-6 text-footer-resources"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                              />
+                            </svg>
+                          </button>
                         </div>
-                    </form>           
+                      </form>
                       <div className="text-left py-2">
                         {suggestion && suggestion.length > 0 && (
                           <div>
@@ -224,7 +225,7 @@ export default function Index() {
                         {isSuggestionLoading && suggestion.length === 0 && (
                           <i className="ml-2 fas fa-circle-notch fa-spin"></i>
                         )}
-                      </div>                      
+                      </div>
                     </div>
                   </motion.div>
                 </div>
@@ -242,7 +243,7 @@ export default function Index() {
               initial="show"
               whileInView={'show'}
               className="container mx-auto lg:px-4 px-6 md:px-6"
-              viewport={{ once: true, amount: 0.05 }}
+              viewport={{once: true, amount: 0.05}}
             >
               <motion.div variants={fadeIn('right', 'tween', 0.2, 1)}>
                 <TypingText title="/ HOW EXEPART OPERATES" textStyle={''} />
@@ -352,7 +353,7 @@ export default function Index() {
               variants={staggerContainer}
               initial="hidden"
               whileInView={'show'}
-              viewport={{ once: true, amount: 0.05 }}
+              viewport={{once: true, amount: 0.05}}
               className="container mx-auto lg:px-4 px-6 md:px-6"
             >
               <motion.div
@@ -433,7 +434,7 @@ export default function Index() {
               variants={staggerContainer}
               initial="hidden"
               whileInView={'show'}
-              viewport={{ once: true, amount: 0.05 }}
+              viewport={{once: true, amount: 0.05}}
               className="container mx-auto lg:px-4 px-6 md:px-6"
             >
               <motion.div
@@ -537,10 +538,7 @@ export default function Index() {
                         className="mt-8 px-8 py-3 font-semibold"
                         type="submit"
                         disabled={
-                          !dataContact.email &&
-                          !dataContact.message &&
-                          !dataContact.subject &&
-                          !isLoading
+                          isLoading || !dataContact.email || !dataContact.subject || !dataContact.message
                         }
                       >
                         {isLoading && (
