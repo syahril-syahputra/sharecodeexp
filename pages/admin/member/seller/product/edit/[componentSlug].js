@@ -82,8 +82,6 @@ export default function EditComponent({session, routeParam, packaginglist}) {
       return
     }
 
-
-    console.log(inputData, '<<<inputData')
     let formData = new FormData()
     for (const key in inputData) {
       formData.append(key, inputData[key])
