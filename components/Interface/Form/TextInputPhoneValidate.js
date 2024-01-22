@@ -26,7 +26,7 @@ export default function TextInputPhoneValidate(props) {
       )}
 
       <div className="flex">
-        <div className='w-1/4'>
+        {/* <div className='w-1/4'> */}
           <Select
             isSearchable={props.searchable || false}
             name={props.name2}
@@ -49,8 +49,8 @@ export default function TextInputPhoneValidate(props) {
                 'text-left rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500',
             }}
           />
-        </div>
-        <div className='w-3/4' style={{borderRight: 'none'}}>
+        {/* </div> */}
+        {/* <div className='w-3/4' style={{borderRight: 'none'}}> */}
           <input
             name={props.name}
             required={props.required || false}
@@ -70,7 +70,7 @@ export default function TextInputPhoneValidate(props) {
             )}
           />
 
-        </div>
+        {/* </div> */}
       </div>
       {props.errorMsg && <ErrorInput errors={props.errorMsg} />}
       {props.helperText && (

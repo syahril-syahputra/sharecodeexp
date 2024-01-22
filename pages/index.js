@@ -97,7 +97,8 @@ export default function Index() {
         setDataContact({subject: '', email: '', message: ''})
       })
       .catch((error) => {
-        toast.error(error.data.message, error.message)
+        // toast.error(error.data.message, error.message)
+        toast.error('Please fill your form correctly')
         setErrorMessage('Please fill your form correctly')
         setErrorInfo(error.data.data)
       })
@@ -537,10 +538,7 @@ export default function Index() {
                         className="mt-8 px-8 py-3 font-semibold"
                         type="submit"
                         disabled={
-                          !dataContact.email &&
-                          !dataContact.message &&
-                          !dataContact.subject &&
-                          !isLoading
+                          isLoading || !dataContact.email || !dataContact.subject || !dataContact.message
                         }
                       >
                         {isLoading && (
