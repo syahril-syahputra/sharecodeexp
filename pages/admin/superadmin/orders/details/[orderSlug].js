@@ -132,7 +132,7 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot send the proforma invoice.',
+          error.data.message || 'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -221,7 +221,7 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot upload the result.',
+          error.data.message || 'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -287,7 +287,7 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot upload the result.',
+          error.data.message || 'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -316,7 +316,7 @@ export default function OrderDetails({ session, routeParam }) {
       settokenTerminationRequested(true)
     } catch (error) {
       toast.error(
-        'Something went wrong. Cannot sent the request.',
+        error.data.message || 'Something went wrong. Cannot upload the result.',
         toastOptions
       )
       setErrorInfo(error.data.data)
@@ -480,7 +480,7 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot upload the result.',
+          error.data.message || 'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -517,7 +517,7 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot upload the result.',
+          error.data.message || 'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -645,7 +645,7 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot upload the result.',
+          error.data.message || 'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
