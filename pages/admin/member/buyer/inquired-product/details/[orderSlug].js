@@ -268,7 +268,7 @@ export default function InquiryDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot reject the quotation.',
+          error.data.message || 'Something went wrong. Cannot reject the quotation.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -299,7 +299,7 @@ export default function InquiryDetails({ session, routeParam }) {
       .catch((error) => {
         setErrorInfo(error.data.data)
         toast.error(
-          'Something went wrong. Cannot sent the payment.',
+          error.data.message || 'Something went wrong. Cannot sent the payment.',
           toastOptions
         )
         setIsLoading(false)
@@ -329,7 +329,7 @@ export default function InquiryDetails({ session, routeParam }) {
       .catch((error) => {
         setErrorInfo(error.data.data)
         toast.error(
-          'Something went wrong. Cannot update the payment.',
+          error.data.message || 'Something went wrong. Cannot update the payment.',
           toastOptions
         )
         setIsLoading(false)
@@ -360,7 +360,7 @@ export default function InquiryDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot accept the order.',
+          error.data.message || 'Something went wrong. Cannot accept the order.',
           toastOptions
         )
         toast.error(error.data.message, toastOptions)
@@ -392,7 +392,7 @@ export default function InquiryDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot accept the order.',
+          error.data.message || 'Something went wrong. Cannot accept the order.',
           toastOptions
         )
         toast.error(error.data.message, toastOptions)

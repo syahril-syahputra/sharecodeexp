@@ -257,8 +257,8 @@ export default function InquiryDetails({ session, routeParam }) {
         loadData()
       })
       .catch((error) => {
-        toast.error(
-          'Something went wrong. Cannot verify inquiry.',
+        toast.error(          
+          error.data.message || 'Something went wrong. Cannot verify inquiry.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -293,7 +293,7 @@ export default function InquiryDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot reject inquiry.',
+          error.data.message || 'Something went wrong. Cannot reject inquiry.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -405,8 +405,7 @@ export default function InquiryDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot ship the product. ' +
-            error.data.message,
+          error.data.message || 'Something went wrong. Cannot ship the product.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -436,7 +435,7 @@ export default function InquiryDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot upload the invoice.',
+          error.data.message || 'Something went wrong. Cannot upload the invoice.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -466,7 +465,7 @@ export default function InquiryDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot upload the invoice.',
+          error.data.message || 'Something went wrong. Cannot upload the invoice.',
           toastOptions
         )
         setErrorInfo(error.data.data)
