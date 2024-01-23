@@ -221,7 +221,7 @@ export default function MyCompany({session}) {
               <img
                 className="object-contain mb-3 h-40 mx-auto"
                 alt={companyData.name}
-                src={publicDir + '/companies_images/' + companyData.img}
+                src={publicDir + companyData.img}
               />
               <WarningButton
                 size="sm"
@@ -304,9 +304,7 @@ export default function MyCompany({session}) {
                 <Link
                   target="_blank"
                   href={
-                    publicDir +
-                    '/companies_RegistrationDocument/' +
-                    companyData.RegistrationDocument
+                    publicDir + companyData.RegistrationDocument
                   }
                 >
                   <SecondaryButton size="sm" className="mr-2" disabled={!Boolean(companyData.RegistrationDocument)}>
@@ -331,9 +329,7 @@ export default function MyCompany({session}) {
                 <Link
                   target="_blank"
                   href={
-                    publicDir +
-                    '/companies_CertificationofActivity/' +
-                    companyData.CertificationofActivity
+                    publicDir + companyData.CertificationofActivity
                   }
                 >
                   <SecondaryButton size="sm" className="mr-2" disabled={!Boolean(companyData.CertificationofActivity)}>
