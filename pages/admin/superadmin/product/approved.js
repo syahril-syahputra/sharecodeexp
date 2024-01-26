@@ -1,18 +1,19 @@
-import React, {useState, useEffect} from 'react'
-import {getSession} from 'next-auth/react'
-import {useRouter} from 'next/router'
+import React, { useState, useEffect } from 'react'
+import { getSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
 import axios from '@/lib/axios'
 import ComponentList from '@/components/Table/Superadmin/Components/ComponentList'
-import {toast} from 'react-toastify'
-import {toastOptions} from '@/lib/toastOptions'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
 import Admin from 'layouts/Admin.js'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import SelectInput from '@/components/Interface/Form/SelectInput'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import InfoButton from '@/components/Interface/Buttons/InfoButton'
 import TextInput from '@/components/Interface/Form/TextInput'
+import ProductSearch from '@/components/Shared/ProductSearch'
 
-export default function ApprovedProduct({session, routeParam}) {
+export default function ApprovedProduct({ session, routeParam }) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState([])
@@ -31,7 +32,11 @@ export default function ApprovedProduct({session, routeParam}) {
   })
   const [search, setSearch] = useState('')
   let companyFromRoute = routeParam
-  const searchData = async (page = 1, companyParam = companyFromRoute ? companyFromRoute : '', manufacturerPartNumberParam = '', countryParam = '',
+  const searchData = async (
+    page = 1,
+    companyParam = companyFromRoute ? companyFromRoute : '',
+    manufacturerPartNumberParam = '',
+    countryParam = ''
   ) => {
     setIsLoading(true)
     await axios
@@ -65,7 +70,12 @@ export default function ApprovedProduct({session, routeParam}) {
       })
   }
   const setPage = (pageNumber) => {
-    searchData(pageNumber, companyStatus?.value, manufacturerPartNumber, stateCountry)
+    searchData(
+      pageNumber,
+      companyStatus?.value,
+      manufacturerPartNumber,
+      stateCountry
+    )
   }
 
   const loadCompanies = async () => {
@@ -109,42 +119,20 @@ export default function ApprovedProduct({session, routeParam}) {
   return (
     <>
       <div className="mb-10">
-        <h1 className='font-semibold text-2xl'>Product</h1>
-        <PrimaryWrapper className={'mt-5 p-5'}>
-          <h2 className="text-xl text-center">Search Approved Product</h2>
-          <div className='grid grid-cols-2 gap-3 mt-4'>
-            <div className="text-center">
-              <TextInput
-                value={manufacturerPartNumber}
-                onChange={(target) => setManufacturerPartNumber(target.value)}
-                placeholder="Manufacturer Part Number"
-              />
-            </div>
-            <div className="text-center">
-              <TextInput
-                value={stateCountry}
-                onChange={(target) => setStateCountry(target.value)}
-                placeholder="Stock Location"
-              />
-            </div>
-            <div className='text-center'>
-              <SelectInput
-                value={companyStatus}
-                options={companyOptions}
-                onChange={(input) => setCompanyStatus(input)}
-              />
-            </div>
-          </div>
-
-          <div className='mt-10 text-center'>
-            <PrimaryButton onClick={handleSearch} className="w-1/2 mr-2">
-              Search
-            </PrimaryButton>
-            <InfoButton onClick={handleResetSearchFilter} className="w-1/6">
-              Reset
-            </InfoButton>
-          </div>
-        </PrimaryWrapper>
+        <h1 className="font-semibold text-2xl">Product</h1>
+        <ProductSearch
+          title="Search Approved Registry"
+          manufacturerPartNumber={[
+            manufacturerPartNumber,
+            setManufacturerPartNumber,
+          ]}
+          stateCountry={[stateCountry, setStateCountry]}
+          companyStatus={[companyStatus, setCompanyStatus]}
+          companyOptions={companyOptions}
+          search={handleSearch}
+          reset={handleResetSearchFilter}
+          isLoading={isLoading}
+        />
         {/* </div> */}
         <ComponentList
           title="Accepted Products"
@@ -167,7 +155,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       session,
-      routeParam: companyStatus
+      routeParam: companyStatus,
     },
   }
 }

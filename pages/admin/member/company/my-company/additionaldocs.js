@@ -30,7 +30,7 @@ export default function ShowAdditionalDocument({session}) {
       .catch((error) => {
         setAdditionalDocs([]);
         toast.error(
-          'Something went wrong. Can not load additional document.',
+          error.data.message,
           toastOptions
         );
       })

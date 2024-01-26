@@ -26,7 +26,7 @@ export default function TextInputPhoneValidate(props) {
       )}
 
       <div className="flex">
-        <div id="country" style={{borderRight: 'none'}}>
+        {/* <div className='w-1/4'> */}
           <Select
             isSearchable={props.searchable || false}
             name={props.name2}
@@ -49,25 +49,28 @@ export default function TextInputPhoneValidate(props) {
                 'text-left rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500',
             }}
           />
-        </div>
-        <input
-          name={props.name}
-          required={props.required || false}
-          disabled={props.disabled || false}
-          value={props.value}
-          onChange={props.onChange}
-          onKeyDown={props.onKeyDown}
-          placeholder={props.placeholder || ''}
-          autoComplete="off"
-          type={props.type || 'text'}
-          className={classNames(
-            props.errorMsg || props.helperText
-              ? 'border-red-500'
-              : 'border-blue-200',
-            props.setIcon && 'pl-10',
-            `${props.className} shadow-sm placeholder-slate-500 appearance-none w-full bg-white text-gray-700 border py-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`
-          )}
-        />
+        {/* </div> */}
+        {/* <div className='w-3/4' style={{borderRight: 'none'}}> */}
+          <input
+            name={props.name}
+            required={props.required || false}
+            disabled={props.disabled || false}
+            value={props.value}
+            onChange={props.onChange}
+            onKeyDown={props.onKeyDown}
+            placeholder={props.placeholder || ''}
+            autoComplete="off"
+            type={props.type || 'text'}
+            className={classNames(
+              props.errorMsg || props.helperText
+                ? 'border-red-500'
+                : 'border-blue-200',
+              props.setIcon && 'pl-10',
+              `${props.className} shadow-sm placeholder-slate-500 appearance-none w-full bg-white text-gray-700 border py-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`
+            )}
+          />
+
+        {/* </div> */}
       </div>
       {props.errorMsg && <ErrorInput errors={props.errorMsg} />}
       {props.helperText && (

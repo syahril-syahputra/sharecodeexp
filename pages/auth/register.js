@@ -629,7 +629,7 @@ export default function Index() {
                                 (formikProps.touched.company_code_country &&
                                   errors.company_code_country)
                               }
-                              placeholder="Please enter company phone number here..."
+                              placeholder="Company phone number"
                             />
                           </div>
                         </div>

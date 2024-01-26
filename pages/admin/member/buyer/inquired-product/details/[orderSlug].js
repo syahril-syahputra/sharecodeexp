@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react'
-import {getSession} from 'next-auth/react'
+import React, { useState, useEffect } from 'react'
+import { getSession } from 'next-auth/react'
 import axios from '@/lib/axios'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -12,9 +12,9 @@ import SendPaymentDocsModal from '@/components/Modal/OrderComponent/Buyer/SendPa
 import SendUpdatedPaymentDocsModal from '@/components/Modal/OrderComponent/Buyer/SendUpdatedPaymentDocs'
 import AcceptOrderModal from '@/components/Modal/OrderComponent/Buyer/AcceptOrder'
 import DidntReceiveAnyModal from '@/components/Modal/OrderComponent/Buyer/DidntReceiveAny'
-import {toast} from 'react-toastify'
-import {toastOptions} from '@/lib/toastOptions'
-import {Accordion, Button} from 'flowbite-react';
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
+import { Accordion, Button } from 'flowbite-react'
 
 // layout for page
 import Admin from 'layouts/Admin.js'
@@ -22,16 +22,17 @@ import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import WarningButton from '@/components/Interface/Buttons/WarningButton'
 import LightButton from '@/components/Interface/Buttons/LightButton'
-import {VendorUrl} from '@/route/route-url'
-import {checkValue} from '@/utils/general'
+import { VendorUrl } from '@/route/route-url'
+import { checkValue } from '@/utils/general'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import calculateTimeDifference from '@/lib/calculateTimeDifference'
 import UploadCourierDetails from '@/components/Modal/OrderComponent/Buyer/UploadCourierDetails'
 import ModalPdf from '@/components/Modal/ModalPdf'
 import NotificationBarBuyer from '@/components/Interface/Notification/NotificationBarBuyer'
 import DocumentButton from '@/components/Shared/Order/DocumentButton'
+import { BaseModalLarge } from '@/components/Interface/Modal/BaseModal'
 
-export default function InquiryDetails({session, routeParam}) {
+export default function InquiryDetails({ session, routeParam }) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   //data search
   const [isLoading, setIsLoading] = useState(true)
@@ -49,15 +50,16 @@ export default function InquiryDetails({session, routeParam}) {
   const [slugState, setSlugState] = useState('')
   const [buyerReceiptPath, setBuyerReceiptPath] = useState('')
   const [buyerReceiptData, setBuyerReceiptData] = useState([])
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
   const toggleAccordion = () => {
-    setIsOpen(!isOpen);
-  };
+    setIsOpen(!isOpen)
+  }
   const [acceptOrderModal, setAcceptOrderModal] = useState(false)
   const [didntReceiveAnyModal, setDidntReceiveAnyModal] = useState(false)
   const [isLoadingOpenQUotation, setisLoadingOpenQUotation] = useState(false)
   const [courierModal, setcourierModal] = useState(false)
   const [isQuotationAvailable, setisQuotationAvailable] = useState(false)
+  const [initialModal, setinitialModal] = useState(true)
   const openQuotationHandler = async () => {
     try {
       setisLoadingOpenQUotation(true)
@@ -93,7 +95,11 @@ export default function InquiryDetails({session, routeParam}) {
         let result = response.data.data
 
         const intervalId = setInterval(() => {
-          if (checkAvailableQuotationTime(result.update_verified_inquiry_expiration_date)) {
+          if (
+            checkAvailableQuotationTime(
+              result.update_verified_inquiry_expiration_date
+            )
+          ) {
             setisQuotationAvailable(true)
             clearTimeout(intervalId)
           }
@@ -177,7 +183,7 @@ export default function InquiryDetails({session, routeParam}) {
       .catch((error) => {
         toast.error(
           error.data.message ||
-          'Something went wrong. Cannot send tracking number',
+            'Something went wrong. Cannot send tracking number',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -262,7 +268,7 @@ export default function InquiryDetails({session, routeParam}) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot reject the quotation.',
+          error.data.message || 'Something went wrong. Cannot reject the quotation.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -293,7 +299,7 @@ export default function InquiryDetails({session, routeParam}) {
       .catch((error) => {
         setErrorInfo(error.data.data)
         toast.error(
-          'Something went wrong. Cannot sent the payment.',
+          error.data.message || 'Something went wrong. Cannot sent the payment.',
           toastOptions
         )
         setIsLoading(false)
@@ -323,7 +329,7 @@ export default function InquiryDetails({session, routeParam}) {
       .catch((error) => {
         setErrorInfo(error.data.data)
         toast.error(
-          'Something went wrong. Cannot update the payment.',
+          error.data.message || 'Something went wrong. Cannot update the payment.',
           toastOptions
         )
         setIsLoading(false)
@@ -354,7 +360,7 @@ export default function InquiryDetails({session, routeParam}) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot accept the order.',
+          error.data.message || 'Something went wrong. Cannot accept the order.',
           toastOptions
         )
         toast.error(error.data.message, toastOptions)
@@ -386,7 +392,7 @@ export default function InquiryDetails({session, routeParam}) {
       })
       .catch((error) => {
         toast.error(
-          'Something went wrong. Cannot accept the order.',
+          error.data.message || 'Something went wrong. Cannot accept the order.',
           toastOptions
         )
         toast.error(error.data.message, toastOptions)
@@ -586,12 +592,12 @@ export default function InquiryDetails({session, routeParam}) {
       break
   }
 
-  let orderPhase = parseInt(data?.order_status?.phase) || '0';
-  if(orderPhase == 4 && data?.order_status?.reimbursement == 1){
-    orderPhase = '4-cancellation';
+  let orderPhase = parseInt(data?.order_status?.phase) || '0'
+  if (orderPhase == 4 && data?.order_status?.reimbursement == 1) {
+    orderPhase = '4-cancellation'
   }
-  const isOrderActive = parseInt(data?.is_active);
-  orderPhase = isOrderActive == 0 ? '0' : orderPhase;
+  const isOrderActive = parseInt(data?.is_active)
+  orderPhase = isOrderActive == 0 ? '0' : orderPhase
 
   return (
     <>
@@ -614,6 +620,96 @@ export default function InquiryDetails({session, routeParam}) {
             <div className="h-16 bg-gray-200 dark:bg-gray-400 w-full"></div>
           </div>
         )}
+        {initialModal && !isLoading && (
+          <BaseModalLarge
+            onClick={() => setinitialModal(false)}
+            title={data.order_status?.name}
+            body={
+              <>
+                <NotificationBarBuyer data={data} />
+                <PrimaryWrapper>
+                  {orderPhase ? (
+                    <Image
+                      src={`/img/order-status/primary/${orderPhase}.png`}
+                      width={0}
+                      height={10}
+                      sizes="100vw"
+                      alt="phase-status"
+                      style={{ width: '100%' }} // optional
+                    />
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
+                        <svg
+                          className="w-10 h-10 text-gray-200 dark:text-gray-600"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="currentColor"
+                          viewBox="0 0 20 18"
+                        >
+                          <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+                  <div className="px-2 mt-4">
+                    <div className="border-t"></div>
+                  </div>
+                  <div className="mt-4">
+                    {!!data?.order_status?.slug ? (
+                      orderPhase == 0 || isOrderActive == 0 ? null : (
+                        !data?.admin_reimbursement_receipt_path && (
+                          <Image
+                            src={`/img/order-status/secondary/${data?.order_status?.slug}.png`}
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            alt="phase-status"
+                            style={{ width: '100%', height: 'auto' }} // optional
+                          />
+                        )
+                      )
+                    ) : (
+                      <div className="animate-pulse">
+                        <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
+                          <svg
+                            className="w-10 h-10 text-gray-200 dark:text-gray-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 20 18"
+                          >
+                            <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                          </svg>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </PrimaryWrapper>
+                {/* {!!data.order_status?.slug ? (
+                  <Image
+                    src={`/img/order-status/${data.order_status?.slug}.png`}
+                    width="2000"
+                    height="200"
+                    alt="exepart-order-status"
+                    className="mx-auto"
+                  ></Image>
+                ) : (
+                  <div className="animate-pulse">
+                    <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
+                      <svg
+                        className="w-10 h-10 text-gray-200 dark:text-gray-600"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 20 18"
+                      >
+                        <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                      </svg>
+                    </div>
+                  </div>
+                )} */}
+              </>
+            }
+          />
+        )}
         <PrimaryWrapper>
           <PageHeader
             leftTop={
@@ -625,6 +721,12 @@ export default function InquiryDetails({session, routeParam}) {
                     <div className="h-5 bg-gray-200 dark:bg-gray-400 w-40"></div>
                   </div>
                 )}
+                <span
+                  className="ml-4 text-sm cursor-pointer text-blue-700 hover:text-blue-500"
+                  onClick={() => setinitialModal(true)}
+                >
+                  Show Detail
+                </span>
               </h3>
             }
             rightTop={
@@ -633,199 +735,10 @@ export default function InquiryDetails({session, routeParam}) {
           ></PageHeader>
         </PrimaryWrapper>
 
-        {/* image and quotation details */}
-        <div className="lg:flex lg:justify-around">
-          <div className="w-full lg:w-1/2 mr-4">
-            <PrimaryWrapper>
-            {orderPhase ? (
-              <Image
-                src={`/img/order-status/primary/${orderPhase}.png`}
-                width={0}
-                height={10}
-                sizes="100vw"
-                alt="phase-status"
-                style={{width: '100%'}} // optional
-              />
-            ) : (
-              <div className="animate-pulse">
-                <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
-                  <svg
-                    className="w-10 h-10 text-gray-200 dark:text-gray-600"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 18"
-                  >
-                    <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                  </svg>
-                </div>
-              </div>
-            )}
-            <div className='px-2 mt-4'>
-              <div className='border-t'></div>
-            </div>
-            <div className='mt-4'>
-              {!!data?.order_status?.slug ?
-              (
-                (orderPhase == 0 || isOrderActive == 0) ?
-                  null
-                  :
-                  ( !data?.admin_reimbursement_receipt_path &&
-                    <Image
-                      src={`/img/order-status/secondary/${data?.order_status?.slug}.png`}
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      alt="phase-status"
-                      style={{width: '100%', height: 'auto'}} // optional
-                    />
-                  )
-              )
-              : (
-                <div className="animate-pulse">
-                  <div className="flex items-center justify-center w-full h-48 bg-gray-300 dark:bg-gray-400">
-                    <svg
-                      className="w-10 h-10 text-gray-200 dark:text-gray-600"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 20 18"
-                    >
-                      <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                    </svg>
-                  </div>
-                </div>
-              )}  
-            </div>            
-            </PrimaryWrapper>
-          </div>
-          <div className="w-full lg:w-2/4">
-            <PrimaryWrapper className="p-1">
-              <div className="mx-2 my-1 text-md">Inquiry Details</div>
-              <div className="mx-2 my-1 text-sm border-b">
-                <div className="flex flex-wrap justify-between">
-                  <span className="text-gray-500">Date Code</span>
-                  {!!data.companies_products?.dateCode ? (
-                    <span>{data.companies_products?.dateCode}</span>
-                  ) : (
-                    <div className="animate-pulse">
-                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mx-2 my-1 text-sm">
-                <div className="flex flex-wrap justify-between">
-                  <span className="text-gray-500">Order Quantity</span>
-                  {!!data.qty ? (
-                    <span>{data.qty}</span>
-                  ) : (
-                    <div className="animate-pulse">
-                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mx-2 my-1 text-sm ">
-                <div className="flex flex-wrap justify-between">
-                  <span className="text-gray-500">Unit Price (USD)</span>
-                  {!isLoading ? (
-                    <span>
-                      {isQuotationAvailable && data?.order_price_amount ? `$${data.price_profite}` : '-'}
-                    </span>
-                  ) : (
-                    <div className="animate-pulse">
-                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mx-2 my-1 text-sm border-b">
-                <div className="flex flex-wrap justify-between">
-                  <span className="text-gray-500">Test Lab Fee (USD)</span>
-                  {!isLoading ? (
-                    <span>
-                      {isQuotationAvailable && data?.order_price_amount
-                        ? `$${data.order_price_amount?.test_fee_amount}`
-                        : '-'}
-                    </span>
-                  ) : (
-                    <div className="animate-pulse">
-                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mx-2 my-1 text-sm mb-5">
-                <div className="flex flex-wrap justify-between">
-                  <span className="text-gray-500 font-bold">
-                    Total Price (USD)
-                  </span>
-                  {!isLoading ? (
-                    <span>
-                      {isQuotationAvailable && data?.order_price_amount
-                        ? `$${data?.order_price_amount?.grand_total}`
-                        : '-'}
-                    </span>
-                  ) : (
-                    <div className="animate-pulse">
-                      <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              {parseFloat(data.price_profite) * parseInt(data.qty) < 1000 && (
-                <div className="mx-2 my-1 text-sm mb-5">
-                  <div className="flex flex-wrap justify-between">
-                    <span className="text-orange-500 font-bold">
-                      This order is charged for test lab separately because
-                      total order is less than 1000US dollars
-                    </span>
-                  </div>
-                </div>
-              )}
-              <div className="mx-2 my-1 text-sm font-bold text-gray-500">
-                Note:
-              </div>
-              <div className="mx-2 text-sm text-gray-500 mb-5">
-                Price is only for the product. The order type is Ex-works. The
-                price you see on screen does not include logistic costs,
-                customs, tax, insurance or any additional expenses that may
-                occur.
-              </div>
-            </PrimaryWrapper>
-          </div>
-        </div> 
-
-        {/* buyer tracking number */}
-        <div className="flex">
-          <div className="w-1/2 lg:w-1/3 mr-4">
-            <PrimaryWrapper className="p-1">
-              <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
-                Courier
-              </div>
-              <div className="mx-2 mb-1 text-xl">
-                {checkValue(data.buyer_courier_company_name)}
-              </div>
-              <div className="mx-2 mb-5 text-l">
-                {checkValue(data.buyer_courier_account_number)}
-              </div>
-            </PrimaryWrapper>
-          </div>
-          <div className="w-1/2 lg:w-1/3 mr-4">
-            <PrimaryWrapper className="p-1">
-              <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
-                Tracking Number
-              </div>
-              <div className="mx-2 mb-5 text-xl">
-                {checkValue(data.trackingBuyer)}
-              </div>
-            </PrimaryWrapper>
-          </div>
-        </div>
-
         {/* product info and quotation */}
         <div className="lg:flex lg:justify-around">
-          <div className="w-full lg:w-1/2 mr-4">
-            <PrimaryWrapper className="p-3">
+          <div className="w-full flex flex-col lg:w-1/2 mr-4">
+            <PrimaryWrapper className="p-3 flex-1">
               <div className="lg:flex">
                 <div className="w-full">
                   <div className="mx-2 my-1 text-xl">
@@ -902,8 +815,8 @@ export default function InquiryDetails({session, routeParam}) {
                     ) : (
                       <div className="animate-pulse">
                         {data?.companies_products?.moq === 0 ||
-                          parseInt(data?.companies_products?.moq) === 0 ||
-                          data?.companies_products?.moq === null ? (
+                        parseInt(data?.companies_products?.moq) === 0 ||
+                        data?.companies_products?.moq === null ? (
                           <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
                             Out of Stock
                           </div>
@@ -924,7 +837,7 @@ export default function InquiryDetails({session, routeParam}) {
                     ) : (
                       <div className="animate-pulse">
                         {data?.companies_products?.AvailableQuantity === 0 ||
-                          data?.companies_products?.AvailableQuantity === null ? (
+                        data?.companies_products?.AvailableQuantity === null ? (
                           <div className="h-4 bg-gray-200 dark:bg-gray-400 w-52">
                             Out of Stock
                           </div>
@@ -992,20 +905,134 @@ export default function InquiryDetails({session, routeParam}) {
               </div>
             </PrimaryWrapper>
           </div>
-          <div className="w-full lg:w-1/2">
-            {data.quotation_rejection_reason === 'Other' && (
-              <PrimaryWrapper className="p-1">
-                <div className="mx-2 my-1 text-md">
-                  Quotation Rejection Reason
+          <div className="w-full flex flex-col lg:w-1/2">
+            <PrimaryWrapper className="p-1 flex-1">
+              <div className="mx-2 my-1 text-md">Inquiry Details</div>
+              <div className="mx-2 my-1 text-sm border-b">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Date Code</span>
+                  {!!data.companies_products?.dateCode ? (
+                    <span>{data.companies_products?.dateCode}</span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
                 </div>
-                <div className="text-center p-4">
-                  {data.quotation_rejection_reason_other}
+              </div>
+              <div className="mx-2 my-1 text-sm">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Order Quantity</span>
+                  {!!data.qty ? (
+                    <span>{data.qty}</span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
                 </div>
-              </PrimaryWrapper>
-            )}
+              </div>
+              <div className="mx-2 my-1 text-sm ">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Unit Price (USD)</span>
+                  {!isLoading ? (
+                    <span>
+                      {isQuotationAvailable && data?.order_price_amount
+                        ? `$${data.price_profite}`
+                        : '-'}
+                    </span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="mx-2 my-1 text-sm border-b">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500">Test Lab Fee (USD)</span>
+                  {!isLoading ? (
+                    <span>
+                      {isQuotationAvailable && data?.order_price_amount
+                        ? `$${data.order_price_amount?.test_fee_amount}`
+                        : '-'}
+                    </span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="mx-2 my-1 text-sm mb-5">
+                <div className="flex flex-wrap justify-between">
+                  <span className="text-gray-500 font-bold">
+                    Total Price (USD)
+                  </span>
+                  {!isLoading ? (
+                    <span>
+                      {isQuotationAvailable && data?.order_price_amount
+                        ? `$${data?.order_price_amount?.grand_total}`
+                        : '-'}
+                    </span>
+                  ) : (
+                    <div className="animate-pulse">
+                      <div className="h-5 bg-gray-200 dark:bg-gray-400 w-12"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              {parseFloat(data.price_profite) * parseInt(data.qty) < 1000 && (
+                <div className="mx-2 my-1 text-sm mb-5">
+                  <div className="flex flex-wrap justify-between">
+                    <span className="text-orange-500 font-bold">
+                      This order is charged for test lab separately because
+                      total order is less than 1000US dollars
+                    </span>
+                  </div>
+                </div>
+              )}
+              <div className="mx-2 my-1 text-sm font-bold text-gray-500">
+                Note:
+              </div>
+              <div className="mx-2 text-sm text-gray-500 mb-5">
+                Price is only for the product. The order type is Ex-works. The
+                price you see on screen does not include logistic costs,
+                customs, tax, insurance or any additional expenses that may
+                occur.
+              </div>
+            </PrimaryWrapper>
+            <PrimaryWrapper className="p-1">
+              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+                Actions to take
+              </div>
+              {actionToTake}
+            </PrimaryWrapper>
           </div>
         </div>
+        {/* buyer tracking number */}
+        <div className="flex space-x-4">
+          <PrimaryWrapper className="p-1">
+            <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
+              Courier
+            </div>
+            <div className="mx-2 mb-1 text-xl">
+              {checkValue(data.buyer_courier_company_name)}
+            </div>
+            <div className="mx-2 mb-5 text-l">
+              {checkValue(data.buyer_courier_account_number)}
+            </div>
+          </PrimaryWrapper>
 
+          <PrimaryWrapper className="p-1">
+            <div className="border-b mx-2 my-1 text-sm uppercase text-gray-500">
+              Tracking Number
+            </div>
+            <div className="mx-2 mb-5 text-xl">
+              {checkValue(data.trackingBuyer)}
+            </div>
+          </PrimaryWrapper>
+        </div>
         {/* document and action to take */}
         <div className="lg:flex lg:justify-around">
           <div className="w-full lg:w-1/2 mr-4">
@@ -1034,7 +1061,9 @@ export default function InquiryDetails({session, routeParam}) {
                 <div className="mx-2 mt-1 text-sm">
                   <DocumentButton
                     title="Quotation"
-                    isActive={data.quotation_available == 1}
+                    isActive={
+                      data.quotation_available == 1 && isQuotationAvailable
+                    }
                     href={`pdf/quotation/${data.slug}`}
                     isLoading={isLoadingOpenQUotation}
                     onClick={openQuotationHandler}
@@ -1055,20 +1084,22 @@ export default function InquiryDetails({session, routeParam}) {
                     href={publicDir + data.admin_reimbursement_receipt_path}
                   />
                 </div>
-                <div className="mx-2 mt-1 text-sm">
-                </div>
-                <div className="mx-2 mt-1 text-sm">
-                </div>
+                <div className="mx-2 mt-1 text-sm"></div>
+                <div className="mx-2 mt-1 text-sm"></div>
               </div>
             </PrimaryWrapper>
+            {data.quotation_rejection_reason === 'Other' && (
+              <PrimaryWrapper className="p-1">
+                <div className="mx-2 my-1 text-md">
+                  Quotation Rejection Reason
+                </div>
+                <div className="text-center p-4">
+                  {data.quotation_rejection_reason_other}
+                </div>
+              </PrimaryWrapper>
+            )}
           </div>
           <div className="w-full lg:w-1/2">
-            <PrimaryWrapper className="p-1">
-              <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
-                Actions to take
-              </div>
-              {actionToTake}
-            </PrimaryWrapper>
             <PrimaryWrapper className="p-1">
               <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
                 Event History
@@ -1099,17 +1130,14 @@ export default function InquiryDetails({session, routeParam}) {
           </div>
         </div>
       </div>
-      {
-        showModal ?
-          <ModalPdf
-            title="List of Buyer Payment Receipt Documents"
-            setShowModal={setShowModal}
-            isLoading={[isLoadingModal, setIsLoadingModal]}
-            receiptData={buyerReceiptData}
-          />
-          :
-          null
-      }
+      {showModal ? (
+        <ModalPdf
+          title="List of Buyer Payment Receipt Documents"
+          setShowModal={setShowModal}
+          isLoading={[isLoadingModal, setIsLoadingModal]}
+          receiptData={buyerReceiptData}
+        />
+      ) : null}
     </>
   )
 }

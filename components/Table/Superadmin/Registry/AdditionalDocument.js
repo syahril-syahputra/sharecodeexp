@@ -49,7 +49,7 @@ export default function AdditionalDocument(props){
                                         {item.name}
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                        <Link target="_blank" href={publicDir + "/registration/AddtionalDoc/" + item.name}>
+                                        <Link target="_blank" href={publicDir + item.additional_document_path}>
                                             <SecondaryButton size="sm" className="mr-1">
                                                 View
                                             </SecondaryButton>
