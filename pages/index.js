@@ -36,7 +36,7 @@ export default function Index() {
     }
   }
 
-  function searchComponentOnClick(){
+  function searchComponentOnClick() {
     router.replace(`/product/search?q=${search}`)
   }
 
@@ -97,7 +97,7 @@ export default function Index() {
         setDataContact({ subject: '', email: '', message: '' })
       })
       .catch((error) => {
-        toast.error(error.data.message, error.message)
+        error.data.message && toast.error(error.data.message, error.message)
         setErrorMessage('Please fill your form correctly')
         setErrorInfo(error.data.data)
       })
@@ -164,36 +164,38 @@ export default function Index() {
                     <div className="pt-2 sm:pt-0 pb-4 md:pb-1 lg:px-3 md:px-[3px]">
                       <form className="flex items-center">
                         <div className="relative w-full h-full">
-                            <input
-                              value={search}
-                              onChange={({target}) => setSearch(target.value)}
-                              onKeyDown={searchComponent}
-                              type="text"
-                              className="bg-gray-50 border border-gray-300 text-gray-900 placeholder:text-2xl sm:text-[12px] md:text-[14px] lg:text-[20px] text-sm focus:ring-blue-500 focus:border-blue-500 block w-full h-16 ps-10 p-5" 
-                              placeholder="Write part number / key word" required/>
-                                <button 
-                                  type="button" 
-                                  className="absolute inset-y-0 end-0 flex items-center pe-3 pr-6"
-                                  onClick={searchComponentOnClick}
-                                  >
-                                  <svg
-                                    className="w-6 h-6 text-footer-resources"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 20 20"
-                                  >
-                                  <path
-                                    stroke="currentColor"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                                  />
-                                </svg>
-                              </button>
+                          <input
+                            value={search}
+                            onChange={({ target }) => setSearch(target.value)}
+                            onKeyDown={searchComponent}
+                            type="text"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 placeholder:text-2xl sm:text-[12px] md:text-[14px] lg:text-[20px] text-sm focus:ring-blue-500 focus:border-blue-500 block w-full h-16 ps-10 p-5"
+                            placeholder="Write part number / key word"
+                            required
+                          />
+                          <button
+                            type="button"
+                            className="absolute inset-y-0 end-0 flex items-center pe-3 pr-6"
+                            onClick={searchComponentOnClick}
+                          >
+                            <svg
+                              className="w-6 h-6 text-footer-resources"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                              />
+                            </svg>
+                          </button>
                         </div>
-                    </form>           
+                      </form>
                       <div className="text-left py-2">
                         {suggestion && suggestion.length > 0 && (
                           <div>
@@ -224,7 +226,7 @@ export default function Index() {
                         {isSuggestionLoading && suggestion.length === 0 && (
                           <i className="ml-2 fas fa-circle-notch fa-spin"></i>
                         )}
-                      </div>                      
+                      </div>
                     </div>
                   </motion.div>
                 </div>
@@ -449,7 +451,7 @@ export default function Index() {
                 />
               </motion.div>
               {/* <motion.div variants={fadeIn('right', 'tween', 0.2, 1)}>
-               
+
                 <TitleText
                   title={
                     <>
@@ -478,7 +480,7 @@ export default function Index() {
               >
                 <form onSubmit={handleSubmit}>
                   <div className="bg-white shadow-lg py-5 my-8 lg:px-28 px-8">
-                    <div className="md:flex items-center mt-12">
+                    <div className="md:flex items-start mt-12">
                       <div className="md:w-72 flex flex-col">
                         <label className="text-base font-semibold leading-none text-gray-800">
                           Subject
@@ -491,6 +493,11 @@ export default function Index() {
                           className="text-base leading-none text-gray-900 p-3 focus:oultine-none focus:border-top-navbar mt-4 bg-gray-100 border   border-indigo-700 placeholder-gray-500"
                           placeholder="Please input subject"
                         />
+                        {errorInfo?.subject && (
+                          <span className="py-2 text-sm text-red-500 capitalize">
+                            {errorInfo?.subject}
+                          </span>
+                        )}
                       </div>
                       <div className="md:w-72 flex flex-col md:ml-6 md:mt-0 mt-4">
                         <label className="text-base font-semibold leading-none text-gray-800">
@@ -504,6 +511,11 @@ export default function Index() {
                           className="text-base leading-none text-gray-900 p-3 focus:oultine-none focus:border-top-navbar mt-4 bg-gray-100 border   border-indigo-700 placeholder-gray-500"
                           placeholder="Please input email address"
                         />
+                        {errorInfo?.email && (
+                          <span className="py-2 text-sm text-red-500 capitalize">
+                            {errorInfo?.email}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <div>
@@ -520,6 +532,11 @@ export default function Index() {
                           className="h-36 text-base leading-none border-spacing-2 text-gray-900 p-3 focus:oultine-none focus:border-top-navbar mt-4 bg-gray-100 border border-indigo-700  placeholder-gray-500 "
                           placeholder="Please input message"
                         />
+                        {errorInfo?.message && (
+                          <span className="py-2 text-sm text-red-500 capitalize">
+                            {errorInfo?.message}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <div className="flex items-center justify-center w-full">
