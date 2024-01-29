@@ -85,7 +85,6 @@ export default function Index() {
     return regex.test(value)
   }
 
-  console.log(isAgreeTermCondtionOfSale, '>>>isAgreeTermCondtionOfSale')
   const handleisAgreeTermCondtionOfSale = () => {
     setIsAgreeTermCondtionOfSale((prev) => !prev)
 
