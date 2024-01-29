@@ -126,6 +126,7 @@ export default function Index() {
       otherwise: () => Yup.mixed().notRequired(),
     }),
     company_phone: Yup.mixed().required('The company phone field is required'),
+    company_code_country: Yup.mixed().required('The company code country field is required'),
     company_city: Yup.mixed().required('The company city field is required'),
 
     company_country: Yup.mixed().required(
@@ -628,7 +629,7 @@ export default function Index() {
                                 (formikProps.touched.company_code_country &&
                                   errors.company_code_country)
                               }
-                              placeholder="Please enter company phone number here..."
+                              placeholder="Company phone number"
                             />
                           </div>
                         </div>

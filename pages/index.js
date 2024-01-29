@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { PageSEO } from '@/components/Utils/SEO'
+import {useRouter} from 'next/router'
+import {PageSEO} from '@/components/Utils/SEO'
 import siteMetadata from '@/utils/siteMetadata'
 import axios from 'lib/axios'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import {motion} from 'framer-motion'
 import {
   fadeIn,
   staggerContainer,
@@ -17,10 +17,10 @@ import Footer from 'components/Footers/Footer.js'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import TextInput from '@/components/Interface/Form/TextInput'
 import Navbar from '@/components/Navbar2V'
-import { TypingText } from '@/components/TypeText'
-import { TitleText } from '@/components/TitleText'
-import { toastOptions } from '@/lib/toastOptions'
-import { toast } from 'react-toastify'
+import {TypingText} from '@/components/TypeText'
+import {TitleText} from '@/components/TitleText'
+import {toastOptions} from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
 import TextInputSearchComponent from '@/components/Interface/Form/TextInputForSearchComponent'
 import Container from '@/components/Container'
 
@@ -83,7 +83,7 @@ export default function Index() {
   const handleChange = (e) => {
     const name = e.target.name
     const value = e.target.value
-    setDataContact({ ...dataContact, [name]: value })
+    setDataContact({...dataContact, [name]: value})
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -94,7 +94,7 @@ export default function Index() {
       .post('/contact-us', dataContact)
       .then((result) => {
         toast.success(result.data.message, toastOptions)
-        setDataContact({ subject: '', email: '', message: '' })
+        setDataContact({subject: '', email: '', message: ''})
       })
       .catch((error) => {
         error.data.message && toast.error(error.data.message, error.message)
@@ -133,9 +133,9 @@ export default function Index() {
                 variants={staggerContainer}
                 initial="hidden"
                 whileInView={'show'}
-                viewport={{ once: true, amount: 0.05 }}
+                viewport={{once: true, amount: 0.05}}
               >
-                <div className="flex flex-col items-center justify-center w-[70rem] text-center text-light">
+                <div className="flex flex-col items-center justify-center xl:w-[70rem] md:w-[40rem] sm:w-[40rem] text-center text-light">
                   <motion.h1
                     variants={textVariant(0.5)}
                     className="font-bold uppercase lg:px-[6px] md:px-0 text-[44px] sm:text-[40px] md:text-[40px] 2xl:text-[110px] lg:text-[110px]"
@@ -166,13 +166,11 @@ export default function Index() {
                         <div className="relative w-full h-full">
                           <input
                             value={search}
-                            onChange={({ target }) => setSearch(target.value)}
+                            onChange={({target}) => setSearch(target.value)}
                             onKeyDown={searchComponent}
                             type="text"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 placeholder:text-2xl sm:text-[12px] md:text-[14px] lg:text-[20px] text-sm focus:ring-blue-500 focus:border-blue-500 block w-full h-16 ps-10 p-5"
-                            placeholder="Write part number / key word"
-                            required
-                          />
+                            className="bg-gray-50 border border-gray-300 text-gray-900 lg:placeholder:text-2xl  xl:placeholder:text-2xl sm:placeholder:text-lg  placeholder:text-xl sm:text-[12px] md:text-[14px] lg:text-[20px] text-sm focus:ring-blue-500 focus:border-blue-500 block w-full h-16 ps-10 p-5"
+                            placeholder="Write part number / key word" required />
                           <button
                             type="button"
                             className="absolute inset-y-0 end-0 flex items-center pe-3 pr-6"
@@ -244,7 +242,7 @@ export default function Index() {
               initial="show"
               whileInView={'show'}
               className="container mx-auto lg:px-4 px-6 md:px-6"
-              viewport={{ once: true, amount: 0.05 }}
+              viewport={{once: true, amount: 0.05}}
             >
               <motion.div variants={fadeIn('right', 'tween', 0.2, 1)}>
                 <TypingText title="/ HOW EXEPART OPERATES" textStyle={''} />
@@ -354,7 +352,7 @@ export default function Index() {
               variants={staggerContainer}
               initial="hidden"
               whileInView={'show'}
-              viewport={{ once: true, amount: 0.05 }}
+              viewport={{once: true, amount: 0.05}}
               className="container mx-auto lg:px-4 px-6 md:px-6"
             >
               <motion.div
@@ -435,7 +433,7 @@ export default function Index() {
               variants={staggerContainer}
               initial="hidden"
               whileInView={'show'}
-              viewport={{ once: true, amount: 0.05 }}
+              viewport={{once: true, amount: 0.05}}
               className="container mx-auto lg:px-4 px-6 md:px-6"
             >
               <motion.div
@@ -554,10 +552,7 @@ export default function Index() {
                         className="mt-8 px-8 py-3 font-semibold"
                         type="submit"
                         disabled={
-                          !dataContact.email &&
-                          !dataContact.message &&
-                          !dataContact.subject &&
-                          !isLoading
+                          isLoading || !dataContact.email || !dataContact.subject || !dataContact.message
                         }
                       >
                         {isLoading && (

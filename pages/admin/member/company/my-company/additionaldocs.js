@@ -30,7 +30,7 @@ export default function ShowAdditionalDocument({session}) {
       .catch((error) => {
         setAdditionalDocs([]);
         toast.error(
-          'Something went wrong. Can not load additional document.',
+          error.data.message,
           toastOptions
         );
       })
@@ -63,7 +63,7 @@ export default function ShowAdditionalDocument({session}) {
         },
       })
       .then(() => {
-        toast.success('Additional Document has been updated.', toastOptions);
+        toast.success(response.data.message ?? 'Additional Document has been updated.', toastOptions)
         setShowEditDocModal(false);
         setSelectedDocument({});
       })

@@ -32,7 +32,7 @@ export default function MyCompany({session}) {
   const [companyData, setCompanyData] = useState()
   const getData = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .get(`/company`, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -59,7 +59,7 @@ export default function MyCompany({session}) {
     for (const index in file) {
       formData.append('AddtionalDoc[]', file[index])
     }
-    const request = await axios
+    await axios
       .post(`/master/company/RegistrationDocument/Additional`, formData, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -67,7 +67,7 @@ export default function MyCompany({session}) {
       })
       .then((response) => {
         setUploadAditionalDocsModal(false)
-        toast.success(response.data.data, toastOptions)
+        toast.success(response.data.message ?? 'Additional Document has been updated.', toastOptions)
       })
       .catch((error) => {
         toast.warning('Something went wrong!', toastOptions)
@@ -221,7 +221,7 @@ export default function MyCompany({session}) {
               <img
                 className="object-contain mb-3 h-40 mx-auto"
                 alt={companyData.name}
-                src={publicDir + '/companies_images/' + companyData.img}
+                src={publicDir + companyData.img}
               />
               <WarningButton
                 size="sm"
@@ -304,9 +304,7 @@ export default function MyCompany({session}) {
                 <Link
                   target="_blank"
                   href={
-                    publicDir +
-                    '/companies_RegistrationDocument/' +
-                    companyData.RegistrationDocument
+                    publicDir + companyData.RegistrationDocument
                   }
                 >
                   <SecondaryButton size="sm" className="mr-2" disabled={!Boolean(companyData.RegistrationDocument)}>
@@ -331,9 +329,7 @@ export default function MyCompany({session}) {
                 <Link
                   target="_blank"
                   href={
-                    publicDir +
-                    '/companies_CertificationofActivity/' +
-                    companyData.CertificationofActivity
+                    publicDir + companyData.CertificationofActivity
                   }
                 >
                   <SecondaryButton size="sm" className="mr-2" disabled={!Boolean(companyData.CertificationofActivity)}>
