@@ -957,24 +957,23 @@ export default function Index() {
                                 </div>
                               )}
                               <div className='text-center items-center flex'>
+                                <input
+                                  id="term"
+                                  type="checkbox"
+                                  checked={isAgreeTermCondtionOfSale}
+                                  onChange={handleisAgreeTermCondtionOfSale}
+                                  className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                                />
                                 <label className=" inline-flex items-center cursor-pointer">
-                                  <input
-                                    id="term"
-                                    type="checkbox"
-                                    checked={isAgreeTermCondtionOfSale}
-                                    onChange={handleisAgreeTermCondtionOfSale}
-                                    className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                                  />
-
-                                </label>
-                                <span className="ms-3 text-sm font-medium">
-                                  I agree with the {' '}
-                                  <span className=' text-blue-600 hover:underline' onClick={() => {
-                                    setStateTOCSale(true)
-                                  }}>
-                                    Terms and Conditions of Sale.{' '}
+                                  <span className="ms-3 text-sm font-medium">
+                                    I agree with the {' '}
+                                    <a className=' text-blue-600 hover:underline' onClick={() => {
+                                      setStateTOCSale(true)
+                                    }}>
+                                      Terms and Conditions of Sale.{' '}
+                                    </a>
                                   </span>
-                                </span>
+                                </label>
                               </div>
                             </div>
                             <div className="w-full">
@@ -991,24 +990,24 @@ export default function Index() {
                                 </div>
                               )}
                               <div className='text-center items-center flex'>
-                                <label className=" inline-flex items-center cursor-pointer">
-                                  <input
-                                    id="term"
-                                    type="checkbox"
-                                    checked={isAgreeTermCondtionOfExport}
-                                    onChange={handleisAgreeTermCondtionOfExport}
-                                    className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                                  />
-
-                                </label>
-                                <span className="ms-3 text-sm font-medium">
-                                  I agree with the {' '}
-                                  <span className=' text-blue-600 hover:underline' onClick={() => {
-                                    setStateTOCExport(true)
-                                  }}>
-                                    Terms and Conditions of Export.{' '}
+                                <input
+                                  id="term"
+                                  type="checkbox"
+                                  checked={isAgreeTermCondtionOfExport}
+                                  onChange={handleisAgreeTermCondtionOfExport}
+                                  className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                                />
+                                <label className=" inline-flex items-center cursor-pointer" htmlFor="term"
+                                >
+                                  <span className="ms-3 text-sm font-medium">
+                                    I agree with the {' '}
+                                    <a className=' text-blue-600 hover:underline' onClick={() => {
+                                      setStateTOCExport(true)
+                                    }}>
+                                      Terms and Conditions of Export.{' '}
+                                    </a>
                                   </span>
-                                </span>
+                                </label>
                               </div>
                             </div>
                           </div>
