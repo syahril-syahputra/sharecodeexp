@@ -29,6 +29,7 @@ import TextInputDocument from '@/components/Interface/Form/TextInputDocument'
 export default function Index() {
   const [isAgreeTermCondtionOfSale, setIsAgreeTermCondtionOfSale] =
     useState(false)
+
   const [
     isAgreeTermCondtionOfSaleMessage,
     setIsAgreeTermCondtionOfSaleMessage,
@@ -84,8 +85,10 @@ export default function Index() {
     return regex.test(value)
   }
 
+  console.log(isAgreeTermCondtionOfSale, '>>>isAgreeTermCondtionOfSale')
   const handleisAgreeTermCondtionOfSale = () => {
     setIsAgreeTermCondtionOfSale((prev) => !prev)
+
 
     if (!isAgreeTermCondtionOfSale) {
       setIsAgreeTermCondtionOfSaleMessage()
@@ -938,8 +941,8 @@ export default function Index() {
                           </div>
                         </div>
 
-                        <div className="text-center mb-6 mt-20">
-                          <div className="text-center">
+                        <div className="flex justify-center mb-6 mt-20">
+                          <div className="text-center ">
                             <div className="w-full">
                               {isAgreeTermCondtionOfSaleMessage && (
                                 <div>
@@ -953,26 +956,26 @@ export default function Index() {
                                   </span>
                                 </div>
                               )}
-                              <input
-                                id="term"
-                                type="checkbox"
-                                defaultChecked={isAgreeTermCondtionOfSale}
-                                onChange={handleisAgreeTermCondtionOfSale}
-                                className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                              />
-                              <label
-                                htmlFor="term"
-                                className="ml-2 text-sm font-medium text-gray-900"
-                              >
-                                I agree with the{' '}
-                                <a
-                                  className="text-blue-600 hover:underline"
-                                  onClick={() => setStateTOCSale(true)}
-                                >
-                                  Terms and Conditions of Sale
-                                </a>
-                                .
-                              </label>
+                              <div className='text-center items-center flex'>
+                                <label className=" inline-flex items-center cursor-pointer">
+                                  <input
+                                    id="term"
+                                    type="checkbox"
+                                    checked={isAgreeTermCondtionOfSale}
+                                    onChange={handleisAgreeTermCondtionOfSale}
+                                    className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                                  />
+
+                                </label>
+                                <span className="ms-3 text-sm font-medium">
+                                  I agree with the {' '}
+                                  <span className=' text-blue-600 hover:underline' onClick={() => {
+                                    setStateTOCSale(true)
+                                  }}>
+                                    Terms and Conditions of Sale.{' '}
+                                  </span>
+                                </span>
+                              </div>
                             </div>
                             <div className="w-full">
                               {isAgreeTermCondtionOfExportMessage && (
@@ -987,26 +990,26 @@ export default function Index() {
                                   </span>
                                 </div>
                               )}
-                              <input
-                                id="policy"
-                                type="checkbox"
-                                defaultChecked={isAgreeTermCondtionOfExport}
-                                onChange={handleisAgreeTermCondtionOfExport}
-                                className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                              />
-                              <label
-                                htmlFor="policy"
-                                className="ml-2 text-sm font-medium text-gray-900"
-                              >
-                                I agree with the{' '}
-                                <a
-                                  className="text-blue-600 hover:underline"
-                                  onClick={() => setStateTOCExport(true)}
-                                >
-                                  Terms and Conditions of Export
-                                </a>
-                                .
-                              </label>
+                              <div className='text-center items-center flex'>
+                                <label className=" inline-flex items-center cursor-pointer">
+                                  <input
+                                    id="term"
+                                    type="checkbox"
+                                    checked={isAgreeTermCondtionOfExport}
+                                    onChange={handleisAgreeTermCondtionOfExport}
+                                    className="h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                                  />
+
+                                </label>
+                                <span className="ms-3 text-sm font-medium">
+                                  I agree with the {' '}
+                                  <span className=' text-blue-600 hover:underline' onClick={() => {
+                                    setStateTOCExport(true)
+                                  }}>
+                                    Terms and Conditions of Export.{' '}
+                                  </span>
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1057,6 +1060,7 @@ export default function Index() {
           title="Terms and Conditions of Sale
         "
           acceptModal={setIsAgreeTermCondtionOfSale}
+          modalBoolean={isAgreeTermCondtionOfSale}
           setShowModal={setStateTOCSale}
         />
       ) : null}
@@ -1065,6 +1069,7 @@ export default function Index() {
         <TermsandConditionofExportModal
           title="Terms and Condition of Export"
           acceptModal={setIsAgreeTermCondtionOfExport}
+          modalBoolean={isAgreeTermCondtionOfExport}
           setShowModal={setStateTOCExport}
         />
       ) : null}

@@ -1,13 +1,22 @@
 import LightButton from '@/components/Interface/Buttons/LightButton'
-import { BaseModalXLarge } from '@/components/Interface/Modal/BaseModal'
+import {BaseModalXLarge} from '@/components/Interface/Modal/BaseModal'
 import ContentTermAndCondition from './ContentTermAndCondition'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
+import {useState} from 'react'
 export default function TermAndConditionOfSaleModal(props) {
   return (
     <BaseModalXLarge
       title={props.title || ''}
       classNameTitle={'text-indigo-900 font-semibold'}
-      onClick={() => props.setShowModal(false)}
+      onClick={() => {
+        props.setShowModal(false)
+        if (props.modalBoolean == true) {
+          props.acceptModal(true)
+        }
+        if (props.modalBoolean == false) {
+          props.acceptModal(false)
+        }
+      }}
       body={
         <>
           <h2 className="font-semibold text-lg text-center">
@@ -553,7 +562,12 @@ export default function TermAndConditionOfSaleModal(props) {
             className="font-bold uppercase mr-2"
             onClick={() => {
               props.setShowModal(false)
-              props.acceptModal(false)
+              if (props.modalBoolean == true) {
+                props.acceptModal(false)
+              }
+              if (props.modalBoolean == false) {
+                props.acceptModal(false)
+              }
             }}
           >
             Decline
@@ -561,8 +575,13 @@ export default function TermAndConditionOfSaleModal(props) {
           <PrimaryButton
             className="font-bold uppercase"
             onClick={() => {
-              props.acceptModal(true)
               props.setShowModal(false)
+              if (props.modalBoolean == true) {
+                props.acceptModal(true)
+              }
+              if (props.modalBoolean == false) {
+                props.acceptModal(true)
+              }
             }}
           >
             {props.isLoading && (
