@@ -48,7 +48,7 @@ export const AdminUrl = {
     vendors: '/admin/superadmin/usercontrol/vendors',
     contributors: '/admin/superadmin/usercontrol/contributors',
   },
-  help: '/admin/superadmin/help'
+  help: '/admin/superadmin/help',
 }
 
 export const VendorUrl = {
@@ -74,7 +74,6 @@ export const VendorUrl = {
       completed: {
         index: '/admin/member/seller/returned-product/closed-order',
       },
-
     },
   },
   buyingProduct: {
@@ -133,5 +132,9 @@ export const VendorUrl = {
       edit: '/admin/member/settings/users/edit',
     },
   },
-  help: '/admin/member/help',
+  help: {
+    helpRequest: '/admin/member/help/help-request',
+    demoAndguideline: '/admin/member/help/demo-and-guideline',
+    faq: '/admin/member/help/faq',
+  },
 }

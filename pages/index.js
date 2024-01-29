@@ -97,8 +97,7 @@ export default function Index() {
         setDataContact({subject: '', email: '', message: ''})
       })
       .catch((error) => {
-        // toast.error(error.data.message, error.message)
-        toast.error('Please fill your form correctly')
+        error.data.message && toast.error(error.data.message, error.message)
         setErrorMessage('Please fill your form correctly')
         setErrorInfo(error.data.data)
       })
@@ -450,7 +449,7 @@ export default function Index() {
                 />
               </motion.div>
               {/* <motion.div variants={fadeIn('right', 'tween', 0.2, 1)}>
-               
+
                 <TitleText
                   title={
                     <>
@@ -479,7 +478,7 @@ export default function Index() {
               >
                 <form onSubmit={handleSubmit}>
                   <div className="bg-white shadow-lg py-5 my-8 lg:px-28 px-8">
-                    <div className="md:flex items-center mt-12">
+                    <div className="md:flex items-start mt-12">
                       <div className="md:w-72 flex flex-col">
                         <label className="text-base font-semibold leading-none text-gray-800">
                           Subject
@@ -492,6 +491,11 @@ export default function Index() {
                           className="text-base leading-none text-gray-900 p-3 focus:oultine-none focus:border-top-navbar mt-4 bg-gray-100 border   border-indigo-700 placeholder-gray-500"
                           placeholder="Please input subject"
                         />
+                        {errorInfo?.subject && (
+                          <span className="py-2 text-sm text-red-500 capitalize">
+                            {errorInfo?.subject}
+                          </span>
+                        )}
                       </div>
                       <div className="md:w-72 flex flex-col md:ml-6 md:mt-0 mt-4">
                         <label className="text-base font-semibold leading-none text-gray-800">
@@ -505,6 +509,11 @@ export default function Index() {
                           className="text-base leading-none text-gray-900 p-3 focus:oultine-none focus:border-top-navbar mt-4 bg-gray-100 border   border-indigo-700 placeholder-gray-500"
                           placeholder="Please input email address"
                         />
+                        {errorInfo?.email && (
+                          <span className="py-2 text-sm text-red-500 capitalize">
+                            {errorInfo?.email}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <div>
@@ -521,6 +530,11 @@ export default function Index() {
                           className="h-36 text-base leading-none border-spacing-2 text-gray-900 p-3 focus:oultine-none focus:border-top-navbar mt-4 bg-gray-100 border border-indigo-700  placeholder-gray-500 "
                           placeholder="Please input message"
                         />
+                        {errorInfo?.message && (
+                          <span className="py-2 text-sm text-red-500 capitalize">
+                            {errorInfo?.message}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <div className="flex items-center justify-center w-full">
