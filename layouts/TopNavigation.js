@@ -31,25 +31,27 @@ function TopNavigation({ setSidebarOpen, role }) {
     await session.update({
       dashboardStatus: 'seller',
     })
-    route.push('/admin/member/seller/dashboard')
+    route.push('/admin/member')
   }
 
   const refreshSession = async () => {
-    try {
-      const response = await axios.get(`/company`, {
-        headers: {
-          Authorization: `Bearer ${session.data.accessToken}`,
-        },
-      })
-      const newSession = {
-        userDetail: {
-          ...session?.data?.user?.userDetail,
-          company: response.data.data,
-        },
+    if (parseInt(session.data.user.userDetail.role_id) !== 1) {
+      try {
+        const response = await axios.get(`/company`, {
+          headers: {
+            Authorization: `Bearer ${session.data.accessToken}`,
+          },
+        })
+        const newSession = {
+          userDetail: {
+            ...session?.data?.user?.userDetail,
+            company: response.data.data,
+          },
+        }
+        await session.update(newSession)
+      } catch (error) {
+        console.log(error)
       }
-      await session.update(newSession)
-    } catch (error) {
-      console.log(error)
     }
   }
   useEffect(() => {

@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import axios from '@/lib/axios'
 
 function useData(userSession, bearerToken) {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState(null)
 
   useEffect(() => {
     async function fetchData() {
@@ -10,17 +10,17 @@ function useData(userSession, bearerToken) {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
         },
-      });
+      })
       const company = loadCompany.data.data
       setData(company)
     }
 
     if (userSession.role_id == 2 && bearerToken) {
-      fetchData();
+      fetchData()
     }
-  }, [bearerToken]);
+  }, [bearerToken])
 
-  return data;
+  return data
 }
 
-export default useData;
+export default useData
