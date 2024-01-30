@@ -31,7 +31,7 @@ function TopNavigation({ setSidebarOpen, role }) {
     await session.update({
       dashboardStatus: 'seller',
     })
-    route.push('/admin/member')
+    route.push('/admin/member/seller/dashboard')
   }
 
   const refreshSession = async () => {
