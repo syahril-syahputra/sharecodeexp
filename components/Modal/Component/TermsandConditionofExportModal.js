@@ -1,5 +1,5 @@
 import LightButton from '@/components/Interface/Buttons/LightButton'
-import { BaseModalXLarge } from '@/components/Interface/Modal/BaseModal'
+import {BaseModalXLarge} from '@/components/Interface/Modal/BaseModal'
 import ContentTermAndCondition from './ContentTermAndCondition'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 export default function TermsandConditionofExportModal(props) {
@@ -7,7 +7,15 @@ export default function TermsandConditionofExportModal(props) {
     <BaseModalXLarge
       title={props.title || ''}
       classNameTitle={'text-indigo-900 font-semibold'}
-      onClick={() => props.setShowModal(false)}
+      onClick={() => {
+        props.setShowModal(false)
+        if (props.modalBoolean == true) {
+          props.acceptModal(true)
+        }
+        if (props.modalBoolean == false) {
+          props.acceptModal(false)
+        }
+      }}
       body={
         <>
           <div className="text-justify space-y-6">
@@ -184,7 +192,12 @@ export default function TermsandConditionofExportModal(props) {
             className="font-bold uppercase mr-2"
             onClick={() => {
               props.setShowModal(false)
-              props.acceptModal(false)
+              if (props.modalBoolean == true) {
+                props.acceptModal(false)
+              }
+              if (props.modalBoolean == false) {
+                props.acceptModal(false)
+              }
             }}
           >
             Decline
@@ -192,8 +205,13 @@ export default function TermsandConditionofExportModal(props) {
           <PrimaryButton
             className="font-bold uppercase"
             onClick={() => {
-              props.acceptModal(true)
               props.setShowModal(false)
+              if (props.modalBoolean == true) {
+                props.acceptModal(true)
+              }
+              if (props.modalBoolean == false) {
+                props.acceptModal(true)
+              }
             }}
           >
             {props.isLoading && (

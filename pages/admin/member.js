@@ -1,16 +1,16 @@
 import Admin from 'layouts/Admin.js'
 import axios from '@/lib/axios'
-import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses'
+import {CompanyStatusesIcon} from '@/components/Shared/Company/Statuses'
 import Link from 'next/link'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
-import React, { useEffect } from 'react'
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
-import { useSession, getSession } from 'next-auth/react'
-import { useRouter } from 'next/router'
+import React, {useEffect} from 'react'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
+import {useSession, getSession} from 'next-auth/react'
+import {useRouter} from 'next/router'
 import WarningNotification from '@/components/Interface/Notification/WarningNotification'
-export default function MemberDashboard({ company, message, session }) {
+export default function MemberDashboard({company, message, session}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
   useEffect(() => {
     if (!!message) {
@@ -18,7 +18,7 @@ export default function MemberDashboard({ company, message, session }) {
     }
   }, [])
 
-  const { update } = useSession()
+  const {update} = useSession()
   const router = useRouter()
   const handleDashboard = async (status) => {
     await update({
@@ -143,7 +143,7 @@ export default function MemberDashboard({ company, message, session }) {
                 <img
                   className="object-contain mb-3 h-40 mx-auto"
                   alt={company.name}
-                  src={publicDir + '/companies_images/' + company.img}
+                  src={publicDir + company.img}
                 />
                 <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
                   {company.name}
