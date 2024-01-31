@@ -55,7 +55,11 @@ const authOptions = {
 
       if (trigger === 'update') {
         if (session.dashboardStatus) {
-          token.user.dashboardStatus = session.dashboardStatus
+          if (session.dashboardStatus === 'delete') {
+            token.user.dashboardStatus = undefined
+          } else {
+            token.user.dashboardStatus = session.dashboardStatus
+          }
         }
         if (session.userDetail) {
           token.user.userDetail = session.userDetail
