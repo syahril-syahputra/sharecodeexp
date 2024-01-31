@@ -6,6 +6,8 @@ import Registry from '@/layouts/Superadmin/Registry'
 import ProductManagement from '@/layouts/Superadmin/ProductManagement'
 import Order from '@/layouts/Superadmin/Order'
 import Reimbursement from './Reimbursement'
+import ReturnHandling from './ReturnHandling'
+import Terminated from './Terminated'
 
 export default function MainSidebar() {
   const session = useSession()
@@ -23,12 +25,13 @@ export default function MainSidebar() {
         return (
           <>
             <Registry registry={adminSidebarCounter.registry} />
-            <ProductManagement
-              product={adminSidebarCounter.product}
-              excel={adminSidebarCounter.excel_file}
-            />
+            <ProductManagement product={adminSidebarCounter.product} />
             <Order order={adminSidebarCounter.order} />
-            <Reimbursement reimbursement={adminSidebarCounter.order} />
+            <Reimbursement reimbursement={adminSidebarCounter.reimbursement} />
+            <ReturnHandling
+              returnHandling={adminSidebarCounter.return_handling}
+            />
+            <Terminated />
           </>
         )
       case '2':

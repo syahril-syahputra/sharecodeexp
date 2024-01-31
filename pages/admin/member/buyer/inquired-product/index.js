@@ -74,6 +74,7 @@ export default function InquiredProduct({ session, routeParam }) {
           `&manufacturer_part_number=${manufacturerPartNumberParam}` +
           `&order_date=${orderDateParam}` +
           `&active=1` +
+          `&inquiries=1` +
           `&action_required=${orderActionRequiredParam}`,
         {
           headers: {
@@ -144,9 +145,9 @@ export default function InquiredProduct({ session, routeParam }) {
   return (
     <>
       <div className="mb-10">
-        <h1 className="font-semibold text-2xl">Orders</h1>
+        <h1 className="font-semibold text-2xl">Active Inquiry</h1>
         <PrimaryWrapper className={`mt-5 p-5`}>
-          <h2 className="text-xl text-center">Search Active Order</h2>
+          <h2 className="text-xl text-center">Search Active Inquiry</h2>
           <div className="grid grid-cols-2 gap-3 mt-2">
             <div className="text-center">
               <TextInput

@@ -6,9 +6,10 @@ import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 
 export default function UploadCourierDetails(props) {
   const [courier, setcourier] = useState('')
+  const [account, setaccount] = useState('')
 
   const handleSubmit = () => {
-    props.acceptance(courier)
+    props.acceptance(courier, account)
   }
 
   return (
@@ -19,11 +20,20 @@ export default function UploadCourierDetails(props) {
         <>
           <div className="mb-4">
             <TextInput
-              label="Courier"
+              label="Courier Name"
               name="courier"
               value={courier}
               onChange={(input) => setcourier(input.value)}
-              errorMsg={props.errorInfo?.courier}
+              errorMsg={props.errorInfo?.buyer_courier_company_name}
+            ></TextInput>
+          </div>
+          <div className="mb-4">
+            <TextInput
+              label="Courier Account Number"
+              name="account"
+              value={account}
+              onChange={(input) => setaccount(input.value)}
+              errorMsg={props.errorInfo?.buyer_courier_account_number}
             ></TextInput>
           </div>
         </>

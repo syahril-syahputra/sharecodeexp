@@ -1,6 +1,7 @@
 import React from 'react'
 import NotificationFirstBar from './NotificationFirstBar'
 import NotificationSecondBar from './NotificationSecondBar'
+import NotificationThirdBard from './NotificationThirdBard'
 
 function NotificationBarBuyer({ data }) {
   const primary = [
@@ -27,6 +28,7 @@ function NotificationBarBuyer({ data }) {
         detail={data.order_status?.buyer_notification?.message}
       />
       <NotificationSecondBar data={data} notification={secondNotification} />
+      <NotificationThirdBard data={data} />
     </>
   )
 }

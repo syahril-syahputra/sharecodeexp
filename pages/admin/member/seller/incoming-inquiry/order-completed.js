@@ -52,6 +52,7 @@ export default function OrderComplete({ session }) {
           `&order_number=${orderNumberParam}` +
           `&manufacturer_part_number=${manufacturerPartNumberParam}` +
           `&order_date=${orderDateParam}` +
+          `&inquiries=0` +
           `&action_required=${orderActionRequiredParam}`,
         {
           headers: {

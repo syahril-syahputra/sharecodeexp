@@ -49,7 +49,6 @@ export default function EditMainAccount({session, routeParam}) {
         })
       })
       .catch((error) => {
-        console.log(error)
         toast.error(error.data.message, toastOptions)
       })
       .finally(() => {
@@ -174,7 +173,7 @@ export default function EditMainAccount({session, routeParam}) {
               </h3>
             }
             rightTop={
-              <Link href={`/admin/superadmin/registry/details/main-account/${routeParam.companyId}`}>
+              <Link href={`/admin/superadmin/registry/details/${routeParam.companyId}`}>
                 <LightButton size="sm">
                   <i className="mr-2 ml-1 fas fa-arrow-left"></i>
                   Back

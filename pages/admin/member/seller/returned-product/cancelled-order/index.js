@@ -23,7 +23,7 @@ export default function ReimbursementActive({ session, routerParam }) {
   })
   const [pageNumber, setPageNumber] = useState('')
   const [orderStatus, setOrderStatus] = useState({
-    label: 'Cancelled Order',
+    label: 'Select Order Status',
     value: '',
   })
 

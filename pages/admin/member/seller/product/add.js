@@ -27,14 +27,14 @@ import {Tooltip} from '@/components/Tooltip'
 export default function MyProduct({session}) {
   const tooltipText = `If product stock have different manufacturing date, please add the oldest manufacturing date. For example, if you have 20 products in stock that were manufacture between 2020 and 2023, your date code for this product will be 2020+ or 20+`
   const [inputData, setInputData] = useState({
-    AvailableQuantity: '',
+    available_quantity: '',
     moq: '',
     packaging: '',
     country: '',
-    ManufacturerNumber: '',
-    Manufacture: '',
-    Description: '',
-    dateCode: '',
+    manufacturer_number: '',
+    manufacture: '',
+    description: '',
+    date_code: '',
     category: '',
     // subcategory_id: '',
     img: '',
@@ -70,14 +70,14 @@ export default function MyProduct({session}) {
     setErrorMessage(null)
 
     //regex check
-    if (!/^[0-9+]*([+]?)+$/.test(inputData.dateCode)) {
-      setErrorInfo({dateCode: ['Wrong format!']})
+    if (!/^[0-9+]*([+]?)+$/.test(inputData.date_code)) {
+      setErrorInfo({date_code: ['Wrong format!']})
       setIsLoading(false)
       return
     }
 
     if (descriptionCount > descriptionLimit) {
-      setErrorInfo({Description: ['Exceed maximum character!']})
+      setErrorInfo({description: ['Exceed maximum character!']})
       setIsLoading(false)
       return
     }
@@ -87,7 +87,7 @@ export default function MyProduct({session}) {
       formData.append(key, inputData[key])
     }
     const response = await axios
-      .post(`/companyproduct/create`, formData, {
+      .post(`/seller/product/create`, formData, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
         },
@@ -283,9 +283,9 @@ export default function MyProduct({session}) {
             className="w-full"
             disabled={isLoading}
             required
-            name="ManufacturerNumber"
-            value={inputData.ManufacturerNumber}
-            errorMsg={errorInfo?.ManufacturerNumber}
+            name="manufacturer_number"
+            value={inputData.manufacturer_number}
+            errorMsg={errorInfo?.manufacturer_number}
             onChange={(input) => setDataHandler(input)}
           />
         </div>
@@ -295,9 +295,9 @@ export default function MyProduct({session}) {
             className="w-full"
             disabled={isLoading}
             required
-            name="Manufacture"
-            value={inputData.Manufacture}
-            errorMsg={errorInfo?.Manufacture}
+            name="manufacture"
+            value={inputData.manufacture}
+            errorMsg={errorInfo?.manufacture}
             onChange={(input) => setDataHandler(input)}
           />
         </div>
@@ -307,9 +307,9 @@ export default function MyProduct({session}) {
             className="w-full"
             disabled={isLoading}
             required
-            name="AvailableQuantity"
-            value={inputData.AvailableQuantity}
-            errorMsg={errorInfo?.AvailableQuantity}
+            name="available_quantity"
+            value={inputData.available_quantity}
+            errorMsg={errorInfo?.available_quantity}
             onChange={(input) => setDataHandler(input)}
           />
         </div>
@@ -340,13 +340,13 @@ export default function MyProduct({session}) {
           <AreaInput
             characterCount={descriptionCount}
             characterLimit={descriptionLimit}
-            label="Product/Part Description"
-            name="Description"
+            label="Product/Part description"
+            name="description"
             disabled={isLoading}
             required
             rows={4}
-            value={inputData.Description}
-            errorMsg={errorInfo?.Description}
+            value={inputData.description}
+            errorMsg={errorInfo?.description}
             onChange={(input) => descriptionHandler(input)}
           />
         </div>
@@ -357,9 +357,9 @@ export default function MyProduct({session}) {
             className="w-full"
             disabled={isLoading}
             required
-            name="dateCode"
-            value={inputData.dateCode}
-            errorMsg={errorInfo?.dateCode}
+            name="date_code"
+            value={inputData.date_code}
+            errorMsg={errorInfo?.date_code}
             onChange={(input) => setDataHandler(input)}
             isDateCode={true}
           />
@@ -373,9 +373,9 @@ export default function MyProduct({session}) {
                 className="w-full"
                 disabled={isLoading}
                 required
-                name="dateCode"
-                value={inputData.dateCode}
-                errorMsg={errorInfo?.dateCode}
+                name="date_code"
+                value={inputData.date_code}
+                errorMsg={errorInfo?.date_code}
                 onChange={(input) => setDataHandler(input)}
               />
               <div

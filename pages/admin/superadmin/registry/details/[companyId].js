@@ -399,7 +399,7 @@ export default function CompanyDetail({session, routeParam}) {
             <img
               className="object-contain mb-3 h-40 mx-auto"
               alt={companyData.name}
-              src={publicDir + '/companies_images/' + companyData.img}
+              src={publicDir + companyData.img}
             />
             <WarningButton
               size="sm"
@@ -494,12 +494,10 @@ export default function CompanyDetail({session, routeParam}) {
                   <Link
                     target="_blank"
                     href={
-                      publicDir +
-                      '/companies_RegistrationDocument/' +
-                      companyData.RegistrationDocument
+                      publicDir + companyData.RegistrationDocument
                     }
                   >
-                    <SecondaryButton size="sm">
+                    <SecondaryButton size="sm" disabled={!Boolean(companyData.RegistrationDocument)}>
                       View Company Registration Document
                     </SecondaryButton>
                   </Link>
@@ -508,12 +506,10 @@ export default function CompanyDetail({session, routeParam}) {
                   <Link
                     target="_blank"
                     href={
-                      publicDir +
-                      '/companies_CertificationofActivity/' +
-                      companyData.CertificationofActivity
+                      publicDir + companyData.CertificationofActivity
                     }
                   >
-                    <SecondaryButton size="sm">
+                    <SecondaryButton size="sm" disabled={!Boolean(companyData.CertificationofActivity)}>
                       View Certification of Activity
                     </SecondaryButton>
                   </Link>

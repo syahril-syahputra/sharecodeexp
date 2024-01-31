@@ -18,6 +18,10 @@ import ExcelComponent from '@/components/Modal/Component/ExcelComponent'
 import { CompanyStatusesIcon } from '@/components/Shared/Company/Statuses'
 import Link from 'next/link'
 import ExcelRequestUpdate from '@/components/Modal/Component/ExcelRequestUpdate'
+import { checkValue } from '@/utils/general'
+import BaseTable from '@/components/Interface/Table/BaseTable'
+import NoData from '@/components/Interface/Table/NoData'
+import { BaseModalLarge } from '@/components/Interface/Modal/BaseModalTermCondition'
 
 DetailUploadedExcel.layout = Admin
 export default function DetailUploadedExcel({ session, data }) {
@@ -29,6 +33,7 @@ export default function DetailUploadedExcel({ session, data }) {
   const [isDeleting, setisDeleting] = useState(false)
   const [RequestModal, setRequestModal] = useState(false)
   const [isLoadingRequest, setisLoadingRequest] = useState(false)
+  const [cleanFileModal, setcleanFileModal] = useState(false)
   const handleFileChange = (e) => {
     setFile(e)
   }
@@ -37,8 +42,8 @@ export default function DetailUploadedExcel({ session, data }) {
   const uploadHandler = async (file) => {
     setisOnUploading(true)
     const formData = new FormData()
-    formData.append('id', data.id)
-    formData.append('company_id', data.company.id)
+    formData.append('id', data?.excel.id)
+    formData.append('company_id', data?.excel?.company.id)
     formData.append('excel_file', file)
     try {
       const response = await axios.post(
@@ -76,12 +81,12 @@ export default function DetailUploadedExcel({ session, data }) {
   const downloadHandler = async () => {
     setisDetailLoading(true)
     try {
-      if (data.status_id === '1') {
+      if (data?.excel.status_id === '1') {
         await axios.post(
           `/admin/product/excel/download`,
           {
-            id: data.id,
-            company_id: data.company.id,
+            id: data.excel?.id,
+            company_id: data.excel?.company.id,
           },
           {
             headers: {
@@ -92,7 +97,8 @@ export default function DetailUploadedExcel({ session, data }) {
         toast.success('Status Update', toastOptions)
         router.replace(router.asPath)
       }
-      window.location.href = process.env.NEXT_PUBLIC_DIR + data.path_dirty_file
+      window.location.href =
+        process.env.NEXT_PUBLIC_DIR + data.excel.path_dirty_file
     } catch (error) {
       //   console.log(error)
       toast.error(error, toastOptions)
@@ -108,8 +114,8 @@ export default function DetailUploadedExcel({ session, data }) {
 
         {
           data: {
-            id: data.id,
-            company_id: data.company.id,
+            id: data.excel?.id,
+            company_id: data.excel?.company.id,
           },
           headers: {
             Authorization: `Bearer ${session.accessToken}`,
@@ -132,8 +138,8 @@ export default function DetailUploadedExcel({ session, data }) {
       const response = await axios.post(
         `admin/product/excel/reject`,
         {
-          id: data.id,
-          company_id: data.company.id,
+          id: data.excel?.id,
+          company_id: data.excel?.company.id,
         },
         {
           headers: {
@@ -155,8 +161,8 @@ export default function DetailUploadedExcel({ session, data }) {
       await axios.post(
         `/admin/product/excel/update-request`,
         {
-          id: data.id,
-          company_id: data.company.id,
+          id: data.excel?.id,
+          company_id: data.excel?.company.id,
           update_request: value,
         },
         {
@@ -178,10 +184,48 @@ export default function DetailUploadedExcel({ session, data }) {
 
   return (
     <>
+      <section>
+        {cleanFileModal && (
+          <BaseModalLarge
+            title="List Clean File"
+            onClick={() => setcleanFileModal(false)}
+            body={
+              <>
+                {data.excel?.clean_file.length === 0 && (
+                  <div className="text-center text-sm text-red-600">
+                    Data Empty
+                  </div>
+                )}
+                {data.excel?.clean_file?.map((item) => (
+                  <div
+                    className="flex p-2 border-b border-gray-300 justify-between space-y-4 items-center "
+                    key={item.id}
+                  >
+                    <div className="text-sm">
+                      <div>{item.file_name}</div>
+                      <span className="text-xs">
+                        {moment(item.updated_at)
+                          .local()
+                          .format('ddd, D MMM YY | HH:mm')}
+                      </span>
+                    </div>
+                    <Link
+                      target="_blank"
+                      href={process.env.NEXT_PUBLIC_DIR + item.path}
+                    >
+                      <PrimaryButton size="sm">Download</PrimaryButton>
+                    </Link>
+                  </div>
+                ))}
+              </>
+            }
+          ></BaseModalLarge>
+        )}
+      </section>
       <ExcelComponent
         show={[isOpenConfirmDelete, setisOpenConfirmDelete]}
         delete={[isDeleting, setisDeleting]}
-        fileName={data.name}
+        fileName={data.excel?.name}
         deleteHandler={deleteHandler}
       />
       {RequestModal && (
@@ -208,6 +252,9 @@ export default function DetailUploadedExcel({ session, data }) {
               <SuccessButton onClick={() => downloadHandler()}>
                 Download
               </SuccessButton>
+              <SuccessButton onClick={() => setcleanFileModal(true)}>
+                Download Clean File
+              </SuccessButton>
               <DangerButton onClick={() => setisOpenConfirmDelete(true)}>
                 Delete
               </DangerButton>
@@ -217,6 +264,7 @@ export default function DetailUploadedExcel({ session, data }) {
             </div>
           }
         ></PageHeader>
+
         <div>
           <div className="flex items-center justify-center">
             <FontAwesomeIcon
@@ -233,7 +281,9 @@ export default function DetailUploadedExcel({ session, data }) {
                 <td scope="row" className="text-sm px-6 py-4">
                   :
                 </td>
-                <td className="text-sm px-2 py-4">{data.name}</td>
+                <td className="text-sm px-2 py-4">
+                  {checkValue(data.excel?.name)}
+                </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
                 <th scope="col" className="px-6 py-3">
@@ -243,14 +293,13 @@ export default function DetailUploadedExcel({ session, data }) {
                   :
                 </td>
                 <td className="text-sm px-2 py-4">
-                  {/* {data.company.name} */}
                   <Link
                     href={`/admin/superadmin/registry/details/${encodeURIComponent(
-                      data.company?.id
+                      data.excel.company?.id
                     )}`}
                     className="text-blueGray-700 underline"
                   >
-                    {data.company?.name}
+                    {checkValue(data.excel.company?.name)}
                   </Link>
                   <CompanyStatusesIcon status={data.company?.is_confirmed} />
                 </td>
@@ -263,7 +312,9 @@ export default function DetailUploadedExcel({ session, data }) {
                   :
                 </td>
 
-                <td className="text-sm px-2 py-4">{data.file_status?.name}</td>
+                <td className="text-sm px-2 py-4">
+                  {checkValue(data.excel.file_status?.name)}
+                </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
                 <th scope="col" className="px-6 py-3">
@@ -273,7 +324,8 @@ export default function DetailUploadedExcel({ session, data }) {
                   :
                 </td>
                 <td className="text-sm px-2 py-4">
-                  {moment(data.created_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}  
+                  {moment(data.created_at).local().format('dddd, D MMMM YYYY')}{' '}
+                  {/* set to local time */}
                 </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
@@ -284,7 +336,8 @@ export default function DetailUploadedExcel({ session, data }) {
                   :
                 </td>
                 <td className="text-sm px-2 py-4">
-                  {moment(data.updated_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}  
+                  {moment(data.updated_at).local().format('dddd, D MMMM YYYY')}{' '}
+                  {/* set to local time */}
                 </td>
               </tr>
               <tr className="text-black hover:bg-slate-100">
@@ -294,7 +347,9 @@ export default function DetailUploadedExcel({ session, data }) {
                 <td scope="row" className="text-sm px-6 py-4">
                   :
                 </td>
-                <td className="text-sm px-2 py-4">{data.log || '-'}</td>
+                <td className="text-sm px-2 py-4">
+                  {checkValue(data.excel.log)}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -338,12 +393,12 @@ export default function DetailUploadedExcel({ session, data }) {
           Event History
         </div>
         <ul className="space-y-2 p-2 text-sm">
-          {data.event_history?.length === 0 && (
+          {data.excel.event_history?.length === 0 && (
             <div className="text-base italic text-center p-4">
               No Event History
             </div>
           )}
-          {data.event_history?.map((item) => (
+          {data.excel.event_history?.map((item) => (
             <li key={item.id} className="flex">
               <span className="text-cyan-700 mr-2 w-1/5 ">
                 {moment(item.updated_at).local().format('DD MMM YYYY hh:mm')}
@@ -355,6 +410,69 @@ export default function DetailUploadedExcel({ session, data }) {
             </li>
           ))}
         </ul>
+      </PrimaryWrapper>
+      <PrimaryWrapper className="p-1">
+        <div className="mx-2 my-1 text-sm font-bold uppercase border-b text-gray-500">
+          On Going Order
+        </div>
+        <div className="mx-2 my-1 text-sm font-bold text-gray-500">Note:</div>
+        <div className="mx-2 text-sm text-gray-500 mb-5">
+          Avoid excel row to contain this Product Number.
+        </div>
+        <div className="">
+          <BaseTable
+            header={
+              <>
+                <th scope="col" className="px-6 py-3">
+                  Product Number
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Manufacturer
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Stock Location
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Date Code
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Order Status
+                </th>
+              </>
+            }
+            tableData={
+              <>
+                {data?.products?.map((item, index) => {
+                  return (
+                    <tr
+                      key={index}
+                      className="border-b odd:bg-gray-50 even:bg-gray-100"
+                    >
+                      <td scope="row" className="text-sm px-6 py-2">
+                        {checkValue(
+                          item?.companies_products?.manufacturer_number
+                        )}
+                      </td>
+                      <td scope="row" className="text-sm px-6 py-2">
+                        {checkValue(item.companies_products?.manufacture)}
+                      </td>
+                      <td scope="row" className="text-sm px-6 py-2">
+                        {checkValue(item.companies_products?.stock_country)}
+                      </td>
+                      <td scope="row" className="text-sm px-6 py-2">
+                        {checkValue(item.companies_products?.date_code)}
+                      </td>
+                      <td scope="row" className="text-sm px-6 py-2">
+                        {checkValue(item.order_status?.name)}
+                      </td>
+                    </tr>
+                  )
+                })}
+                {data?.products?.length === 0 && <NoData colSpan={5} />}
+              </>
+            }
+          />
+        </div>
       </PrimaryWrapper>
     </>
   )

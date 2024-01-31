@@ -40,9 +40,7 @@ export default function Reimbursement({ reimbursement }) {
                 )}
               >
                 Active Reimbursement
-                <PrimaryBadges
-                  title={reimbursement?.reimbursement_active || 0}
-                />
+                <PrimaryBadges title={reimbursement?.active || 0} />
               </Link>
               <Link
                 href="/admin/superadmin/reimbursement/completed"
@@ -52,7 +50,7 @@ export default function Reimbursement({ reimbursement }) {
                 )}
               >
                 Closed Reimbursement
-                <PrimaryBadges title={reimbursement?.reimbursement_complete} />
+                {/* <PrimaryBadges title={reimbursement?.reimbursement_complete} /> */}
               </Link>
             </Disclosure.Panel>
           </>

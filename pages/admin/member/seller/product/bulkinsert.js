@@ -1,23 +1,23 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import Link from 'next/link'
 import axios from 'lib/axios'
-import { getSession } from 'next-auth/react'
-import { useRouter } from 'next/router'
+import {getSession} from 'next-auth/react'
+import {useRouter} from 'next/router'
 import DangerNotification from '@/components/Interface/Notification/DangerNotification'
 import ErrorInput from '@/components/Shared/ErrorInput'
 // layout for page
 import Admin from 'layouts/Admin.js'
 
 // components
-import { toast } from 'react-toastify'
-import { toastOptions } from '@/lib/toastOptions'
+import {toast} from 'react-toastify'
+import {toastOptions} from '@/lib/toastOptions'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import PageHeader from '@/components/Interface/Page/PageHeader'
 import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 
-export default function BulkInsert({ session }) {
+export default function BulkInsert({session}) {
   const publicDir = process.env.NEXT_PUBLIC_DIR
 
   const [errorInfo, setErrorInfo] = useState({})
@@ -38,13 +38,13 @@ export default function BulkInsert({ session }) {
           Authorization: `Bearer ${session.accessToken}`,
         },
       })
-      .then((response) => {
-        let result = response.data.data
-        router.replace('/admin/member/seller/product/uploaded')
-        toast.success('Components has been added.', toastOptions)
+      .then((res) => {
+        let result = res.data
+      router.replace('/admin/member/seller/product/uploaded')
+        toast.success(result.message, toastOptions)
       })
       .catch((error) => {
-        toast.success('Something went wrong.', toastOptions)
+        toast.error('Something went wrong.', toastOptions)
         setErrorMessage('Excel can not be processed')
       })
       .finally(() => {
@@ -71,7 +71,7 @@ export default function BulkInsert({ session }) {
                 Download Product Template
               </SecondaryButton>
             </Link>
-            <Link href="/admin/member/sellcomponents/component/add">
+            <Link href="/admin/member/seller/product/add">
               <LightButton size="sm">
                 <i className="mr-2 ml-1 fas fa-plus"></i>
                 Single Insert
@@ -92,13 +92,13 @@ export default function BulkInsert({ session }) {
                 <i className="fas fa-upload text-blueGray-700 my-auto mx-10 fa-2xl"></i>
               </div>
               <div className="text-xs ">
-                <p>.xlsx, .xlsm, .xls file size no more than 10MB</p>
+                <p>.xlsx, .xlsm, .xls file size no more than 3MB</p>
                 <input
                   className="mt-3"
                   type="file"
                   name="excel"
                   accept=".xlsx,.xlsm,.xls"
-                  onChange={({ target }) => setExcelFile(target.files[0])}
+                  onChange={({target}) => setExcelFile(target.files[0])}
                 />
               </div>
             </div>

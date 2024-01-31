@@ -14,16 +14,18 @@ import Link from 'next/link'
 export default function BuyerDashboard({ session }) {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState({
-    accept_quotation: 0,
-    pending_payment: 0,
-    ongoing_test: 0,
-    order_ready_to_pick: 0,
-    confirm_receipt_of_shipment: 0,
-    reimbursement_active: 0,
+    order: {
+      accept_quotation: 0,
+      pending_payment: 0,
+      ongoing_test: 0,
+      ready_to_pick: 0,
+      confirm_receipt_of_shipment: 0,
+      reimbursement_active: 0,
+    },
   })
   const loadData = async () => {
     setIsLoading(true)
-    const response = await axios
+    await axios
       .get(`/buyer/dashboard/counter`, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -42,143 +44,103 @@ export default function BuyerDashboard({ session }) {
       })
   }
 
+  function ComponentCardBuyerDashboard({
+    onClick,
+    dataName,
+    name,
+    url,
+    dataNameNotification,
+  }) {
+    return (
+      <PrimaryWrapper className="border border-blue-500">
+        <div className="p-4 mb-auto">
+          <div className="flex justify-between">
+            <h1 className="font-semibold text-7xl mb-3">{dataName}</h1>
+            {(typeof dataNameNotification == 'string'
+              ? Number(dataNameNotification) > 0
+              : dataNameNotification > 0) && (
+              <>
+                <span className="relative px-2">
+                  <i className="fas fa-bell text-5xl text-orange-500"></i>
+                  <div className="absolute inline-flex items-center justify-center w-8 h-8 text-xs font-bold text-orange-500 bg-white border-2 border-orange-500 rounded-full -end-1">
+                    {dataNameNotification}
+                  </div>
+                </span>
+              </>
+            )}
+          </div>
+          <span className="text-md italic">{name}</span>
+        </div>
+        <Link
+          onClick={onClick}
+          href={url}
+          className={`flex flex-wrap items-center justify-between  py-2 px-4 ${
+            parseInt(dataName) === 0 ? 'bg-blue-500' : 'bg-orange-500'
+          }`}
+        >
+          <div className="">
+            <h1 className="text-md text-white">Check Now</h1>{' '}
+          </div>
+          <div className="">
+            <span className="text-md">
+              <i className="fas fa-chevron-right text-white"></i>
+            </span>
+          </div>
+        </Link>
+      </PrimaryWrapper>
+    )
+  }
+
+  async function resetCounter(counterKey) {
+    await axios.post(
+      `/buyer/dashboard/counter-checker/${counterKey}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      }
+    )
+  }
+
   useEffect(() => {
     loadData()
   }, [])
 
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between">
-        <div className="">
-          <h1 className="font-semibold text-2xl">Buyer's Dashboard</h1>
-        </div>
-      </div>
+      <h1 className="font-normal text-2xl mb-3 mt-4">Buyer's Dashboard</h1>
       <div className="grid grid-cols-4 gap-4 mt-5">
-        <PrimaryWrapper className="border border-blue-500">
-          <div className="p-4 mb-auto">
-            <h1 className="font-semibold text-7xl mb-3">
-              {data.accept_quotation}
-            </h1>
-            <span className="text-md italic">Accept / Reject Quotations</span>
-          </div>
-          <Link
-            href={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=inquiry-verified`}
-            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
-          >
-            <div className="">
-              <h1 className="text-md text-white">Check Now</h1>
-            </div>
-            <div className="">
-              <span className="text-md">
-                <i className="fas fa-chevron-right text-white"></i>
-              </span>
-            </div>
-          </Link>
-        </PrimaryWrapper>
-        <PrimaryWrapper className="border border-blue-500">
-          <div className="p-4 mb-auto">
-            <h1 className="font-semibold text-7xl mb-3">
-              {data.pending_payment}
-            </h1>
-            <span className="text-md italic">Pending Payments</span>
-          </div>
-          <Link
-            href={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=proforma-invoice-sent`}
-            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
-          >
-            <div className="">
-              <h1 className="text-md text-white">Check Now</h1>
-            </div>
-            <div className="">
-              <span className="text-md">
-                <i className="fas fa-chevron-right text-white"></i>
-              </span>
-            </div>
-          </Link>
-        </PrimaryWrapper>
-        <PrimaryWrapper className="border border-blue-500">
-          <div className="p-4 mb-auto">
-            <h1 className="font-semibold text-7xl mb-3">{data.ongoing_test}</h1>
-            <span className="text-md italic">On-going Test</span>
-          </div>
-          <Link
-            href={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=shipped-to-lab`}
-            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
-          >
-            <div className="">
-              <h1 className="text-md text-white">Check Now</h1>
-            </div>
-            <div className="">
-              <span className="text-md">
-                <i className="fas fa-chevron-right text-white"></i>
-              </span>
-            </div>
-          </Link>
-        </PrimaryWrapper>
-        <PrimaryWrapper className="border border-blue-500">
-          <div className="p-4 mb-auto">
-            <h1 className="font-semibold text-7xl mb-3">
-              {data.order_ready_to_pick}
-            </h1>
-            <span className="text-md italic">Orders Ready to Pick Up</span>
-          </div>
-          <Link
-            href={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=good-test-result`}
-            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
-          >
-            <div className="">
-              <h1 className="text-md text-white">Check Now</h1>
-            </div>
-            <div className="">
-              <span className="text-md">
-                <i className="fas fa-chevron-right text-white"></i>
-              </span>
-            </div>
-          </Link>
-        </PrimaryWrapper>
-        <PrimaryWrapper className="border border-blue-500">
-          <div className="p-4 mb-auto">
-            <h1 className="font-semibold text-7xl mb-3">
-              {data.confirm_receipt_of_shipment}
-            </h1>
-            <span className="text-md italic">Confirm Receipt of Shipment</span>
-          </div>
-          <Link
-            href={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=shipped-to-buyer`}
-            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
-          >
-            <div className="">
-              <h1 className="text-md text-white">Check Now</h1>
-            </div>
-            <div className="">
-              <span className="text-md">
-                <i className="fas fa-chevron-right text-white"></i>
-              </span>
-            </div>
-          </Link>
-        </PrimaryWrapper>
-        {/* reimbursement_active */}
-        <PrimaryWrapper className="border border-blue-500">
-          <div className="p-4 mb-auto">
-            <h1 className="font-semibold text-7xl mb-3">
-              {data.reimbursement_active || 0}
-            </h1>
-            <span className="text-md italic">Reimbursement Active</span>
-          </div>
-          <Link
-            href={`${VendorUrl.reimbursement.canceledOrder.index}`}
-            className="flex flex-wrap items-center justify-between bg-blue-500 py-2 px-4"
-          >
-            <div className="">
-              <h1 className="text-md text-white">Check Now</h1>
-            </div>
-            <div className="">
-              <span className="text-md">
-                <i className="fas fa-chevron-right text-white"></i>
-              </span>
-            </div>
-          </Link>
-        </PrimaryWrapper>
+        <ComponentCardBuyerDashboard
+          dataName={data.order?.accept_quotation}
+          name={'Accept / Reject Quatations'}
+          url={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=inquiry-verified`}
+          onClick={() => resetCounter('order-accept-quotation')}
+          dataNameNotification={data.order?.newly_update?.accept_quotation}
+        />
+        <ComponentCardBuyerDashboard
+          dataName={data.order?.pending_payment}
+          name={'Pending Payments'}
+          url={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=proforma-invoice-sent`}
+          onClick={() => resetCounter('order-pending-payment')}
+          dataNameNotification={data.order?.newly_update?.pending_payment}
+        />
+        <ComponentCardBuyerDashboard
+          dataName={data.order?.ready_to_pick}
+          name={'Orders Ready to Pick Up'}
+          url={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=good-test-result`}
+          onClick={() => resetCounter('order-ready-to-pick')}
+          dataNameNotification={data.order?.newly_update?.ready_to_pick}
+        />
+        <ComponentCardBuyerDashboard
+          dataName={data.order?.confirm_receipt_of_shipment}
+          name={'Confirm Receipt of Shipment'}
+          url={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=shipped-to-buyer`}
+          onClick={() => resetCounter('order-confirm-receipt-of-shipment')}
+          dataNameNotification={
+            data.order?.newly_update?.confirm_receipt_of_shipment
+          }
+        />
       </div>
     </>
   )

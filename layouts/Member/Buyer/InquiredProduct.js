@@ -9,7 +9,7 @@ import PrimaryBadges from '@/components/Interface/Badges/PrimaryBadges'
 export default function IncomingInquiries({ order }) {
   return (
     <li>
-      <Disclosure as="div">
+      <Disclosure as="div" defaultOpen={true}>
         {({ open }) => (
           <>
             <Disclosure.Button
@@ -41,7 +41,7 @@ export default function IncomingInquiries({ order }) {
                 )}
               >
                 Active
-                <PrimaryBadges title={order.active} />
+                <PrimaryBadges title={order?.active || 0} />
               </Link>
               <Link
                 // as="a"
@@ -52,7 +52,6 @@ export default function IncomingInquiries({ order }) {
                 )}
               >
                 Inquiries Rejected
-                <PrimaryBadges title={order.inquiries_rejected} />
               </Link>
               <Link
                 // as="a"
@@ -63,18 +62,6 @@ export default function IncomingInquiries({ order }) {
                 )}
               >
                 Quotations Rejected
-                <PrimaryBadges title={order.quotation_rejected} />
-              </Link>
-              <Link
-                // as="a"
-                href="/admin/member/buyer/inquired-product/order-completed"
-                className={classNames(
-                  false ? 'bg-gray-50' : 'hover:bg-gray-50',
-                  'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'
-                )}
-              >
-                Complete Orders
-                <PrimaryBadges title={order.complete} />
               </Link>
             </Disclosure.Panel>
           </>

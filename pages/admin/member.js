@@ -143,7 +143,7 @@ export default function MemberDashboard({company, message, session}) {
                 <img
                   className="object-contain mb-3 h-40 mx-auto"
                   alt={company.name}
-                  src={publicDir + '/companies_images/' + company.img}
+                  src={publicDir + company.img}
                 />
                 <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
                   {company.name}
