@@ -97,9 +97,8 @@ function TopNavigation({ setSidebarOpen, role }) {
               className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10"
               aria-hidden="true"
             />
-            {parseInt(session.data.user.userDetail.role_id) === 1 && (
-              <GlobalNotification />
-            )}
+
+            <GlobalNotification />
 
             {/* Profile dropdown */}
             <Menu as="div" className="relative">
