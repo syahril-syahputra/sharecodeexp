@@ -265,24 +265,18 @@ export default function MyCompany({session}) {
                 Master Email - {companyData.master?.email}
               </div>
               <hr className="border-gray-200 my-4" />
-              <div className="mb-2 text-blueGray-600 flex items-center justify-center  space-x-2">
-                <i className="fas fa-circle-exclamation mr-2 text-lg text-blueGray-400"></i>
-                Restricted for Buying -{' '}
-                {!companyData.buying_restriction ? (
-                  <i className="fa-solid fa-ban  text-red-600 "></i>
-                ) : (
-                  <i className="fa-solid fa-check  text-green-600"></i>
-                )}
-              </div>
-              <div className="mb-2 text-blueGray-600  flex items-center justify-center space-x-2">
-                <i className="fas fa-circle-exclamation mr-2 text-lg text-blueGray-400"></i>
-                Restricted for Selling -{' '}
-                {!companyData.selling_restriction ? (
-                  <i className="fa-solid fa-ban  text-red-600"></i>
-                ) : (
-                  <i className="fa-solid fa-check  text-green-600"></i>
-                )}
-              </div>
+              {companyData.buying_restriction && 
+                <div className="mb-2 text-red-500 flex items-center justify-center space-x-2">
+                  <i className="fas fa-circle-exclamation mr-2 text-lg text-red-500"></i>
+                  Restricted for Buying
+                </div>
+              }
+              {companyData.selling_restriction && 
+                <div className="mb-2 text-red-500 flex items-center justify-center space-x-2">
+                  <i className="fas fa-circle-exclamation mr-2 text-lg text-red-500"></i>
+                  Restricted for Selling
+                </div>
+              }
             </div>
           </>
         ) : (

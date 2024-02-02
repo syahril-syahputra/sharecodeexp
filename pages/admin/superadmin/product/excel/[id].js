@@ -81,7 +81,7 @@ export default function DetailUploadedExcel({ session, data }) {
   const downloadHandler = async () => {
     setisDetailLoading(true)
     try {
-      if (data?.excel.status_id === '1') {
+      if (data?.excel.excel_product_file_status_id == 1) {
         await axios.post(
           `/admin/product/excel/download`,
           {
@@ -94,13 +94,11 @@ export default function DetailUploadedExcel({ session, data }) {
             },
           }
         )
-        toast.success('Status Update', toastOptions)
-        router.replace(router.asPath)
+        router.replace(router.asPath)        
       }
       window.location.href =
         process.env.NEXT_PUBLIC_DIR + data.excel.path_dirty_file
     } catch (error) {
-      //   console.log(error)
       toast.error(error, toastOptions)
     } finally {
       setisDetailLoading(false)

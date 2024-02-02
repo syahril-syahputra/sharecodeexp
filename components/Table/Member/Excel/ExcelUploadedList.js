@@ -1,12 +1,10 @@
-import React, {useState, Fragment} from 'react'
+import React from 'react'
 import Link from 'next/link'
 import moment from 'moment'
 
 // components
-import ComponentStatus from '@/components/Shared/Component/Statuses'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import HeaderTable from '@/components/Interface/Table/HeaderTable'
-import WarningButton from '@/components/Interface/Buttons/WarningButton'
 import DangerButton from '@/components/Interface/Buttons/DangerButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import BaseTable from '@/components/Interface/Table/BaseTable'
@@ -14,14 +12,9 @@ import NoData from '@/components/Interface/Table/NoData'
 import MetaData from '@/components/Interface/Table/MetaData'
 import Pagination from '@/components/Shared/Component/Pagination'
 import SecondaryButton from '@/components/Interface/Buttons/SecondaryButton'
-import {Dialog, Transition} from '@headlessui/react'
-import {Button, Modal, Spinner} from 'flowbite-react'
-import axios from 'lib/axios'
 
 export default function TableExcel(props) {
-  const data = props.data
-  const links = props.links
-  const metaData = props.metaData
+  const publicDir = process.env.NEXT_PUBLIC_DIR
 
   return (
     <>
@@ -29,9 +22,23 @@ export default function TableExcel(props) {
         <HeaderTable
           title={props.title}
           action={
-            <Link href="/admin/member/seller/product/bulkinsert">
-              <PrimaryButton size="sm">Upload New File Excel</PrimaryButton>
-            </Link>
+            <>
+              <Link
+                target="_blank"
+                href={publicDir + '/template/exepart_template.xlsx'}
+              >
+                <SecondaryButton size="sm" className="mr-2">
+                  <i className="mr-2 ml-1 fas fa-file"></i>
+                  Download Product Template
+                </SecondaryButton>
+              </Link>
+              <Link href="/admin/member/seller/product/bulkinsert">                
+                <PrimaryButton size="sm">
+                  <i className="mr-2 ml-1 fas fa-arrow-up"></i>
+                  Upload New File Excel</PrimaryButton>
+              </Link>
+            </>
+            
           }
         ></HeaderTable>
         <BaseTable

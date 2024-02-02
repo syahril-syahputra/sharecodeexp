@@ -57,7 +57,7 @@ export default function BulkInsert({session}) {
       <PageHeader
         leftTop={
           <h3 className="font-semibold text-lg text-blueGray-700">
-            Insert by Template
+            Upload by Template
           </h3>
         }
         rightTop={
@@ -114,7 +114,7 @@ export default function BulkInsert({session}) {
             {isLoading && (
               <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
             )}
-            Insert
+            Upload
           </PrimaryButton>
         </div>
       </form>

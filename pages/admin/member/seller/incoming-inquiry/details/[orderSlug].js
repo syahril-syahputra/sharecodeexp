@@ -1159,7 +1159,7 @@ export default function InquiryDetails({ session, routeParam }) {
                     href={publicDir + data.test_result_path}
                   />
                   <DocumentButton
-                    title="Admin's Payment Receipt"
+                    title="Exepart Payment Receipt"
                     isActive={Boolean(data.admin_receipt_path)}
                     href={publicDir + data.admin_receipt_path}
                   />
