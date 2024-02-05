@@ -31,7 +31,7 @@ export default function ComponentDetails({ session, routeParam }) {
   const getData = async () => {
     setIsLoading(true)
     await axios
-      .get(`/admin/product?id=${routeParam.componentSlug}`, {
+      .get(`/admin/product/${routeParam.componentSlug}/details`, {
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
         },
@@ -68,7 +68,7 @@ export default function ComponentDetails({ session, routeParam }) {
       .post(
         `admin/product/update`,
         {
-          id: component.id,
+          id: component?.id,
         },
         {
           headers: {
@@ -100,7 +100,7 @@ export default function ComponentDetails({ session, routeParam }) {
       .post(
         `admin/product/updateReject`,
         {
-          id: component.id,
+          id: component?.id,
           reason: text,
         },
         {
@@ -133,7 +133,7 @@ export default function ComponentDetails({ session, routeParam }) {
       .post(
         `admin/product/updatePending`,
         {
-          id: component.id,
+          id: component?.id,
         },
         {
           headers: {
@@ -170,8 +170,8 @@ export default function ComponentDetails({ session, routeParam }) {
           }
           rightTop={
             <>
-              {(component.status == 'pending' ||
-                component.status == 'rejected') && (
+              {(component?.status == 'pending' ||
+                component?.status == 'rejected') && (
                 <PrimaryButton
                   size="sm"
                   className="mr-2"
@@ -181,8 +181,8 @@ export default function ComponentDetails({ session, routeParam }) {
                   Accept
                 </PrimaryButton>
               )}
-              {(component.status == 'approved' ||
-                component.status == 'rejected') && (
+              {(component?.status == 'approved' ||
+                component?.status == 'rejected') && (
                 <WarningButton
                   size="sm"
                   className="mr-2"
@@ -192,8 +192,8 @@ export default function ComponentDetails({ session, routeParam }) {
                   Pending
                 </WarningButton>
               )}
-              {(component.status == 'approved' ||
-                component.status == 'pending') && (
+              {(component?.status == 'approved' ||
+                component?.status == 'pending') && (
                 <DangerButton
                   size="sm"
                   className="mr-2"
@@ -206,10 +206,10 @@ export default function ComponentDetails({ session, routeParam }) {
             </>
           }
         ></PageHeader>
-        {component.reason && component.status == 'rejected' && (
+        {component?.reason && component?.status == 'rejected' && (
           <DangerNotification
             message={`Products is rejected`}
-            detail={component.reason}
+            detail={component?.reason}
           />
         )}
 
@@ -217,18 +217,18 @@ export default function ComponentDetails({ session, routeParam }) {
           <>
             {/* Card Issues No. https://venatronics-dev.atlassian.net/jira/software/projects/EX/boards/2?assignee=712020%3A7e9286ec-874a-4a10-826a-81ccef33c4c3&selectedIssue=EX-337 */}
             {/* <div className="w-full">
-              {component.img ? (
+              {component?.img ? (
                 <div className="p-16 border mx-2 my-4">
                   <img
                     className="object-contain mb-3 h-40 mx-auto"
-                    alt={component.ManufacturerNumber}
-                    src={publicDir + '/product_images/' + component.img}
+                    alt={component?.ManufacturerNumber}
+                    src={publicDir + '/product_images/' + component?.img}
                   />
                 </div>
               ) : (
                 <div className="px-3 mb-6 md:mb-0 text-center">
                   <div className="p-24 border mx-2 my-4">
-                    product image {component.ManufacturerNumber}
+                    product image {component?.ManufacturerNumber}
                   </div>
                 </div>
               )}
@@ -246,14 +246,14 @@ export default function ComponentDetails({ session, routeParam }) {
                     <td className="text-sm px-2 py-4">
                       <Link
                         href={`/admin/superadmin/registry/details/${encodeURIComponent(
-                          component.company?.id
+                          component?.company?.id
                         )}`}
                         className="text-blueGray-700 underline"
                       >
-                        {component.company?.name}
+                        {component?.company?.name}
                       </Link>
                       <CompanyStatusesIcon
-                        status={component.company?.is_confirmed}
+                        status={component?.company?.is_confirmed}
                       />
                     </td>
                   </tr>
@@ -265,7 +265,7 @@ export default function ComponentDetails({ session, routeParam }) {
                       :
                     </td>
                     <td className="text-sm px-2 py-4">
-                      {component.ManufacturerNumber}
+                      {component?.ManufacturerNumber}
                     </td>
                   </tr>
                   <tr className="text-black hover:bg-slate-100">
@@ -276,7 +276,7 @@ export default function ComponentDetails({ session, routeParam }) {
                       :
                     </td>
                     <td className="text-sm px-2 py-4">
-                      {component.Manufacture}
+                      {component?.Manufacture}
                     </td>
                   </tr>
                   <tr className="text-black hover:bg-slate-100">
@@ -287,9 +287,9 @@ export default function ComponentDetails({ session, routeParam }) {
                       :
                     </td>
                     <td className="text-sm px-2 py-4">
-                      {component.AvailableQuantity === null ||
+                      {component?.AvailableQuantity === null ||
                       parseInt(component?.AvailableQuantity) === 0 ||
-                      component.AvailableQuantity === undefined
+                      component?.AvailableQuantity === undefined
                         ? 'Out of Stock'
                         : component?.AvailableQuantity}
                     </td>
@@ -302,9 +302,9 @@ export default function ComponentDetails({ session, routeParam }) {
                       :
                     </td>
                     <td className="text-sm px-2 py-4">
-                      {component.moq === null ||
+                      {component?.moq === null ||
                       parseInt(component?.moq) === 0 ||
-                      component.moq === undefined
+                      component?.moq === undefined
                         ? 'Out of Stock'
                         : component?.moq}
                     </td>
@@ -316,7 +316,7 @@ export default function ComponentDetails({ session, routeParam }) {
                     <td scope="row" className="text-sm px-6 py-4">
                       :
                     </td>
-                    <td className="text-sm px-2 py-4">{component.country}</td>
+                    <td className="text-sm px-2 py-4">{component?.country}</td>
                   </tr>
                   <tr className="text-black hover:bg-slate-100">
                     <th scope="col" className="px-6 py-3">
@@ -326,7 +326,7 @@ export default function ComponentDetails({ session, routeParam }) {
                       :
                     </td>
                     <td className="text-sm px-2 py-4">
-                      {component.Description}
+                      {component?.Description}
                     </td>
                   </tr>
                   <tr className="text-black hover:bg-slate-100">
@@ -336,7 +336,7 @@ export default function ComponentDetails({ session, routeParam }) {
                     <td scope="row" className="text-sm px-6 py-4">
                       :
                     </td>
-                    <td className="text-sm px-2 py-4">{component.dateCode}</td>
+                    <td className="text-sm px-2 py-4">{component?.dateCode}</td>
                   </tr>
                   <tr className="text-black hover:bg-slate-100">
                     <th scope="col" className="px-6 py-3">
@@ -345,7 +345,9 @@ export default function ComponentDetails({ session, routeParam }) {
                     <td scope="row" className="text-sm px-6 py-4">
                       :
                     </td>
-                    <td className="text-sm px-2 py-4">{component.packaging}</td>
+                    <td className="text-sm px-2 py-4">
+                      {component?.packaging}
+                    </td>
                   </tr>
                   <tr className="text-black hover:bg-slate-100">
                     <th scope="col" className="px-6 py-3">
@@ -356,9 +358,9 @@ export default function ComponentDetails({ session, routeParam }) {
                     </td>
                     <td className="text-sm px-2 py-4">
                       <ComponentStatus
-                        status={component.status}
-                        title={`stock status ${component.status}`}
-                        label={component.status}
+                        status={component?.status}
+                        title={`stock status ${component?.status}`}
+                        label={component?.status}
                       />
                     </td>
                   </tr>
@@ -370,7 +372,7 @@ export default function ComponentDetails({ session, routeParam }) {
                       :
                     </td>
                     <td className="text-sm px-2 py-4">
-                      {moment(component.created_at)
+                      {moment(component?.created_at)
                         .local()
                         .format('dddd, D MMMM YYYY')}{' '}
                       {/* set to local time */}
@@ -383,7 +385,7 @@ export default function ComponentDetails({ session, routeParam }) {
             {showAcceptModal ? (
               <AcceptComponent
                 setShowModal={setShowAcceptModal}
-                itemName={component.ManufacturerNumber}
+                itemName={component?.ManufacturerNumber}
                 acceptModal={handleAcceptComponent}
               />
             ) : null}
@@ -391,7 +393,7 @@ export default function ComponentDetails({ session, routeParam }) {
             {showRejectModal ? (
               <RejectComponent
                 setShowModal={setShowRejectModal}
-                itemName={component.ManufacturerNumber}
+                itemName={component?.ManufacturerNumber}
                 acceptModal={handleRejectComponent}
               />
             ) : null}
@@ -399,7 +401,7 @@ export default function ComponentDetails({ session, routeParam }) {
             {showPendingModal ? (
               <PendingComponent
                 setShowModal={setShowPendingModal}
-                itemName={component.ManufacturerNumber}
+                itemName={component?.ManufacturerNumber}
                 acceptModal={handlePendingComponent}
               />
             ) : null}
@@ -415,12 +417,12 @@ export default function ComponentDetails({ session, routeParam }) {
               Event History
             </div>
             <ul className="space-y-2 p-2 text-sm">
-              {component.event_history?.length === 0 && (
+              {component?.event_history?.length === 0 && (
                 <div className="text-base italic text-center p-4">
                   No Event History
                 </div>
               )}
-              {component.event_history?.map((item) => (
+              {component?.event_history?.map((item) => (
                 <li key={item.id} className="flex">
                   <span className="text-cyan-700 mr-2 w-1/5 ">
                     {moment(item.updated_at)

@@ -21,7 +21,7 @@ export default function ComponentList(props) {
           isBusy={props.isLoading}
           header={
             <>
-              <th scope='col' className='px-6 py-3'>
+              <th scope="col" className="px-6 py-3">
                 Company Name
               </th>
               <th scope="col" className="px-6 py-3">
@@ -70,16 +70,12 @@ export default function ComponentList(props) {
                     >
                       {item?.company?.name ?? '-'}
                     </td>
-                    <td
-                      className="px-6 py-4"
-                    >
-                      {item.ManufacturerNumber}
-                    </td>
+                    <td className="px-6 py-4">{item.ManufacturerNumber}</td>
                     <td className="px-6 py-4">{item.Manufacture}</td>
                     <td className="px-6 py-4">
                       {' '}
                       {item?.AvailableQuantity === null ||
-                        item?.AvailableQuantity == 0 ? (
+                      item?.AvailableQuantity == 0 ? (
                         <span>Out of Stock</span>
                       ) : (
                         <span>{item.AvailableQuantity}</span>
@@ -104,12 +100,15 @@ export default function ComponentList(props) {
                       />
                     </td>
                     <td className="text-sm px-6 py-4">
-                      {moment(item.created_at).local().format('dddd, D MMMM YYYY')} {/* set to local time */}
+                      {moment(item.created_at)
+                        .local()
+                        .format('dddd, D MMMM YYYY')}{' '}
+                      {/* set to local time */}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="inline-flex">
                         <Link
-                          href={`/admin/superadmin/product/details/${item.slug}`}
+                          href={`/admin/superadmin/product/details/${item.id}`}
                         >
                           <PrimaryButton size="sm">View</PrimaryButton>
                         </Link>

@@ -81,7 +81,7 @@ export default function Registry({ registry }) {
                 )}
               >
                 Restricted
-                {/* <PrimaryBadges title={registry.restricted} /> */}
+                <PrimaryBadges title={registry.restricted} />
               </Link>
             </Disclosure.Panel>
           </>
