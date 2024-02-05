@@ -1869,7 +1869,7 @@ export default function OrderDetails({ session, routeParam }) {
                     href={publicDir + data.test_result_path}
                   />
                   <DocumentButton
-                    title="Admin's Payment Receipt"
+                    title="Exepart Payment Receipt"
                     isActive={data.admin_receipt_path}
                     href={publicDir + data.admin_receipt_path}
                   />

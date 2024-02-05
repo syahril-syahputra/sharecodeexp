@@ -105,7 +105,7 @@ export default function ReimbursementActive({ session, routerParam }) {
   const handleSearchData = () => {
     loadData(
       1,
-      orderStatus?.value,
+      orderStatusFromRoute || orderStatus?.value,
       orderNumber,
       manufacturerPartNumber,
       orderDate,

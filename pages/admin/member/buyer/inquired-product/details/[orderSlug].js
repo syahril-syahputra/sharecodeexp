@@ -437,7 +437,7 @@ export default function InquiryDetails({ session, routeParam }) {
             />
           )}
 
-          <div className="flex justify-center">
+          <div className="flex justify-center">                      
             <div className="mx-2 my-4">
               <PrimaryButton
                 outline
@@ -461,6 +461,23 @@ export default function InquiryDetails({ session, routeParam }) {
               </WarningButton>
             </div>
           </div>
+          {!isQuotationAvailable && 
+          <>
+            <div className="mx-2 my-1 text-sm font-bold text-gray-500">
+              Note:
+            </div>
+            <div className="mx-2 text-sm text-gray-500">
+              Seller has made a quotation for your inquiry, you can either accept or reject the same withing three days after:
+            </div>
+            <div className="mx-2 text-sm font-bold italic mb-5">
+              {
+                moment.utc(data.update_verified_inquiry_expiration_date, 'YYYY-MM-DD HH:mm:ss')
+                .local()
+                .format('dddd, D MMMM YYYY, HH:mm')
+              }
+            </div>            
+          </>
+          }
         </div>
       )
       break
