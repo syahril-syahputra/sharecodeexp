@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import axios from '@/lib/axios'
 import calculateTimeDifferenceForNotif from '@/lib/calculateTimeDifferenceForNotif'
+import Blinking from './Blinking'
 
 export default function NotificationCard(props) {
   const session = useSession()
@@ -13,13 +14,14 @@ export default function NotificationCard(props) {
   const [notifCount, setnotifCount] = props.notifCount
 
   const [isShow, setisShow] = props.show
-
+  const userRole = parseInt(session.data.user.userDetail.role_id)
+  const url = userRole === 1 ? 'admin' : 'member'
   const unreadHandler = async (event) => {
     setisLoading(true)
 
     try {
       const response = await axios.patch(
-        `/admin/global-notifications/${props.id}/mark-as-unread`,
+        `/${url}/global-notifications/${props.id}/mark-as-unread`,
         {},
         {
           headers: {
@@ -48,7 +50,7 @@ export default function NotificationCard(props) {
 
     try {
       const response = await axios.patch(
-        `/admin/global-notifications/${props.id}/mark-as-read`,
+        `/${url}/global-notifications/${props.id}/mark-as-read`,
         {},
         {
           headers: {
@@ -67,6 +69,28 @@ export default function NotificationCard(props) {
   }
 
   const createUrl = () => {
+    return userRole === 1 ? createUrlAdmin() : createUrlMember()
+  }
+  const createUrlMember = () => {
+    const memberstatus = session.data.user.dashboardStatus || ''
+    if (props.category === 'order') {
+      const orderUrl =
+        memberstatus === 'buyer' ? 'inquired-product' : 'incoming-inquiry'
+      return `/admin/member/${memberstatus}/${orderUrl}/details/` + props.slug
+    }
+    if (props.category === 'registry') {
+      return '/admin/member/company/my-company'
+    }
+    if (props.category === 'product') {
+      return `/admin/member/${memberstatus}/product/details/` + props.slug
+    }
+    if (props.category === 'excel') {
+      return `/admin/member/${memberstatus}/product/uploaded/` + props.slug
+    }
+
+    return '/'
+  }
+  const createUrlAdmin = () => {
     if (props.category === 'order') {
       return '/admin/superadmin/orders/details/' + props.slug
     }
@@ -93,7 +117,10 @@ export default function NotificationCard(props) {
           onClick={handleClick}
           className={isLoading ? 'cursor-progress' : 'cursor-pointer'}
         >
-          <h className="font-bold">{props.name}</h>
+          <div className="font-bold flex space-x-2 items-start">
+            <span className="flex-1">{props.name}</span>
+            {props.blinked && <Blinking />}
+          </div>
           <div>{props.desc}</div>
         </div>
       </Link>

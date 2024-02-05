@@ -23,13 +23,22 @@ export default function GlobalNotification() {
   const [notifCount, setnotifCount] = useState(0)
   const [arrayOfNotif, setarrayOfNotif] = useState([])
 
+  const userRole = parseInt(session.data.user.userDetail.role_id)
+  const url = userRole === 1 ? 'admin' : 'member'
+  const memberstatus = session.data.user.dashboardStatus || ''
+
   const getCount = async () => {
     try {
-      const response = await axios.get('/admin/global-notifications/count', {
-        headers: {
-          Authorization: `Bearer ${session.data?.accessToken}`,
-        },
-      })
+      const response = await axios.get(
+        `/${url}/global-notifications/count/?` +
+          '&dashboard_status=' +
+          memberstatus,
+        {
+          headers: {
+            Authorization: `Bearer ${session.data?.accessToken}`,
+          },
+        }
+      )
       setnotifCount(response.data.data)
     } catch (error) {
       console.log(error)
@@ -46,7 +55,7 @@ export default function GlobalNotification() {
     }, {})
     try {
       await axios.patch(
-        `/admin/global-notifications/mark-all-as-read`,
+        `/${url}/global-notifications/mark-all-as-read`,
         {
           array_of_notification_id: arrayOfNotif,
         },
@@ -71,7 +80,10 @@ export default function GlobalNotification() {
     }
     try {
       const response = await axios.get(
-        `/admin/global-notifications?page=` + page,
+        `/${url}/global-notifications?page=` +
+          page +
+          '&dashboard_status=' +
+          memberstatus.toUpperCase(),
         {
           headers: {
             Authorization: `Bearer ${session.data?.accessToken}`,
@@ -133,6 +145,7 @@ export default function GlobalNotification() {
 
   return (
     <Menu as="div" className="md:relative">
+      <div>{}</div>
       <Menu.Button
         className="-m-1.5 flex items-center p-1.5"
         onClick={() => setisShow(!isShow)}
@@ -191,6 +204,7 @@ export default function GlobalNotification() {
                 key={index}
                 readed={item.is_read}
                 category={item.category}
+                blinked={item.is_action_required}
                 notifCount={[notifCount, setnotifCount]}
                 show={[isShow, setisShow]}
               />
