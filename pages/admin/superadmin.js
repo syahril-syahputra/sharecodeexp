@@ -285,13 +285,13 @@ export default function SuperadminDashboard({ session, message }) {
                 name={'Ongoing Test'}
               />
               <ComponentCardAdminDashboard
-                dataName={data.order?.reimbursement_active || 0}
+                dataName={data.order?.release_payment_to_seller || 0}
                 dataNameNotification={
-                  data.order?.newly_update?.reimbursement_active
+                  data.order?.newly_update?.release_payment_to_seller
                 }
-                onClick={() => resetCounter('order-reimbursement-active')}
+                onClick={() => resetCounter('order-release-payment-to-seller')}
                 url={
-                  '/admin/superadmin/orders/allorders?orderStatus=product-accepted'
+                  '/admin/superadmin/orders/allorders?orderStatus=good-test-result'
                 }
                 name={'Release Payment to Seller'}
               />

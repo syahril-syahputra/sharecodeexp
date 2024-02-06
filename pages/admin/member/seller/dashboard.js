@@ -142,7 +142,7 @@ export default function SellerDashboard({ session }) {
         <ComponentCardSellerDashboard
           dataName={data.order?.provide_tracking_number || 0}
           name={'Orders Need Tracking Number'}
-          url={`${VendorUrl.sellingProduct.incomingInquiries.index}/?orderStatus=payment-accepted`}
+          url={`${VendorUrl.sellingProduct.incomingInquiries.index}/order-active/?orderStatus=payment-accepted`}
           onClick={() => resetCounter('order-provide-tracking-number')}
           dataNameNotification={
             data.order?.newly_update?.provide_tracking_number

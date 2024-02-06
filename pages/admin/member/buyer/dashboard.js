@@ -128,14 +128,14 @@ export default function BuyerDashboard({ session }) {
         <ComponentCardBuyerDashboard
           dataName={data.order?.ready_to_pick}
           name={'Orders Ready to Pick Up'}
-          url={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=good-test-result`}
+          url={`${VendorUrl.buyingProduct.inquiredProduct.index}/order-active/?orderStatus=good-test-result`}
           onClick={() => resetCounter('order-ready-to-pick')}
           dataNameNotification={data.order?.newly_update?.ready_to_pick}
         />
         <ComponentCardBuyerDashboard
           dataName={data.order?.confirm_receipt_of_shipment}
           name={'Confirm Receipt of Shipment'}
-          url={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=shipped-to-buyer`}
+          url={`${VendorUrl.buyingProduct.inquiredProduct.index}/order-active/?orderStatus=shipped-to-buyer`}
           onClick={() => resetCounter('order-confirm-receipt-of-shipment')}
           dataNameNotification={
             data.order?.newly_update?.confirm_receipt_of_shipment
