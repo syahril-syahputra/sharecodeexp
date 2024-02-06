@@ -45,7 +45,7 @@ export default function Order({ order }) {
               </Link>
               <Link
                 // as="a"
-                href="/admin/member/buyer/inquired-product/inquiry-rejected"
+                href="/admin/member/buyer/inquired-product/order-completed"
                 className={classNames(
                   false ? 'bg-gray-50' : 'hover:bg-gray-50',
                   'rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700 flex justify-between'

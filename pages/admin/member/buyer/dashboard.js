@@ -121,7 +121,7 @@ export default function BuyerDashboard({ session }) {
         <ComponentCardBuyerDashboard
           dataName={data.order?.pending_payment}
           name={'Pending Payments'}
-          url={`${VendorUrl.buyingProduct.inquiredProduct.index}/?orderStatus=proforma-invoice-sent`}
+          url={`${VendorUrl.buyingProduct.inquiredProduct.index}/order-active/?orderStatus=proforma-invoice-sent`}
           onClick={() => resetCounter('order-pending-payment')}
           dataNameNotification={data.order?.newly_update?.pending_payment}
         />
