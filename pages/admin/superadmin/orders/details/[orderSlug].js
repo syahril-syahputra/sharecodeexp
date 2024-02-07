@@ -132,7 +132,8 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          error.data.message || 'Something went wrong. Cannot upload the result.',
+          error.data.message ||
+            'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -221,7 +222,8 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          error.data.message || 'Something went wrong. Cannot upload the result.',
+          error.data.message ||
+            'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -287,7 +289,8 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          error.data.message || 'Something went wrong. Cannot upload the result.',
+          error.data.message ||
+            'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -479,10 +482,7 @@ export default function OrderDetails({ session, routeParam }) {
         loadData()
       })
       .catch((error) => {
-        toast.error(
-          error.data.message || 'Something went wrong. Cannot upload the result.',
-          toastOptions
-        )
+        toast.error(error.data.message || 'Something went wrong.', toastOptions)
         setErrorInfo(error.data.data)
         setIsLoading(false)
       })
@@ -517,7 +517,8 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          error.data.message || 'Something went wrong. Cannot upload the result.',
+          error.data.message ||
+            'Something went wrong. Cannot set the handling service.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -645,7 +646,8 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          error.data.message || 'Something went wrong. Cannot upload the result.',
+          error.data.message ||
+            'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -937,35 +939,37 @@ export default function OrderDetails({ session, routeParam }) {
       )
       break
     case 17:
-      actionToTake = (
-        <div>
-          {testingAndHandlingServices && (
-            <TestingAndHandlingServices
-              isLoading={isLoading}
-              closeModal={() => settestingAndHandlingServices(false)}
-              acceptance={testingAndHandlingServicesHandler}
-              sellerCourier={data.seller_return_courier}
-              errorInfo={errorInfo}
-            />
-          )}
+      if (data.return_product_agreement) {
+        actionToTake = (
+          <div>
+            {testingAndHandlingServices && (
+              <TestingAndHandlingServices
+                isLoading={isLoading}
+                closeModal={() => settestingAndHandlingServices(false)}
+                acceptance={testingAndHandlingServicesHandler}
+                sellerCourier={data.seller_return_courier}
+                errorInfo={errorInfo}
+              />
+            )}
 
-          <div className="flex justify-center">
-            <div className="mx-2 my-4">
-              <PrimaryButton
-                outline
-                className="mx-1"
-                size="sm"
-                disabled={isLoading}
-                onClick={() => settestingAndHandlingServices(true)}
-              >
-                {data.seller_return_courier
-                  ? 'Testing Services'
-                  : 'Testing and Handling Services'}
-              </PrimaryButton>
+            <div className="flex justify-center">
+              <div className="mx-2 my-4">
+                <PrimaryButton
+                  outline
+                  className="mx-1"
+                  size="sm"
+                  disabled={isLoading}
+                  onClick={() => settestingAndHandlingServices(true)}
+                >
+                  {data.seller_return_courier
+                    ? 'Testing Services'
+                    : 'Testing and Handling Services'}
+                </PrimaryButton>
+              </div>
             </div>
           </div>
-        </div>
-      )
+        )
+      }
       break
     case 18:
       actionToTake = (
@@ -1876,7 +1880,7 @@ export default function OrderDetails({ session, routeParam }) {
                   <DocumentButton
                     title={
                       data.seller_return_courier
-                        ? 'Testing Innvoice'
+                        ? 'Testing Invoice'
                         : 'Testing and Handling Invoice'
                     }
                     isActive={

@@ -1169,7 +1169,7 @@ export default function InquiryDetails({ session, routeParam }) {
                   <DocumentButton
                     title={
                       data.seller_return_courier
-                        ? 'Testing Innvoice'
+                        ? 'Testing Invoice'
                         : 'Testing and Handling Invoice'
                     }
                     isActive={Boolean(
