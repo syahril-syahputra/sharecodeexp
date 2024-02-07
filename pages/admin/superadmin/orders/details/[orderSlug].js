@@ -132,7 +132,8 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          error.data.message || 'Something went wrong. Cannot upload the result.',
+          error.data.message ||
+            'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -221,7 +222,8 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          error.data.message || 'Something went wrong. Cannot upload the result.',
+          error.data.message ||
+            'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -287,7 +289,8 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          error.data.message || 'Something went wrong. Cannot upload the result.',
+          error.data.message ||
+            'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -479,10 +482,7 @@ export default function OrderDetails({ session, routeParam }) {
         loadData()
       })
       .catch((error) => {
-        toast.error(
-          error.data.message || 'Something went wrong. Cannot upload the result.',
-          toastOptions
-        )
+        toast.error(error.data.message || 'Something went wrong.', toastOptions)
         setErrorInfo(error.data.data)
         setIsLoading(false)
       })
@@ -517,7 +517,8 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          error.data.message || 'Something went wrong. Cannot upload the result.',
+          error.data.message ||
+            'Something went wrong. Cannot set the handling service.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -645,7 +646,8 @@ export default function OrderDetails({ session, routeParam }) {
       })
       .catch((error) => {
         toast.error(
-          error.data.message || 'Something went wrong. Cannot upload the result.',
+          error.data.message ||
+            'Something went wrong. Cannot upload the result.',
           toastOptions
         )
         setErrorInfo(error.data.data)
@@ -955,7 +957,7 @@ export default function OrderDetails({ session, routeParam }) {
                 outline
                 className="mx-1"
                 size="sm"
-                disabled={isLoading}
+                disabled={isLoading || !data.return_product_agreement}
                 onClick={() => settestingAndHandlingServices(true)}
               >
                 {data.seller_return_courier
@@ -964,8 +966,15 @@ export default function OrderDetails({ session, routeParam }) {
               </PrimaryButton>
             </div>
           </div>
+          {!data.return_product_agreement && (
+            <span className="block text-center text-red-400 text-sm pb-4">
+              You can proceed after Seller choose return agreement. Please wait
+              for Seller.
+            </span>
+          )}
         </div>
       )
+
       break
     case 18:
       actionToTake = (
@@ -1876,7 +1885,7 @@ export default function OrderDetails({ session, routeParam }) {
                   <DocumentButton
                     title={
                       data.seller_return_courier
-                        ? 'Testing Innvoice'
+                        ? 'Testing Invoice'
                         : 'Testing and Handling Invoice'
                     }
                     isActive={
