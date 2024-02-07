@@ -939,37 +939,42 @@ export default function OrderDetails({ session, routeParam }) {
       )
       break
     case 17:
-      if (data.return_product_agreement) {
-        actionToTake = (
-          <div>
-            {testingAndHandlingServices && (
-              <TestingAndHandlingServices
-                isLoading={isLoading}
-                closeModal={() => settestingAndHandlingServices(false)}
-                acceptance={testingAndHandlingServicesHandler}
-                sellerCourier={data.seller_return_courier}
-                errorInfo={errorInfo}
-              />
-            )}
+      actionToTake = (
+        <div>
+          {testingAndHandlingServices && (
+            <TestingAndHandlingServices
+              isLoading={isLoading}
+              closeModal={() => settestingAndHandlingServices(false)}
+              acceptance={testingAndHandlingServicesHandler}
+              sellerCourier={data.seller_return_courier}
+              errorInfo={errorInfo}
+            />
+          )}
 
-            <div className="flex justify-center">
-              <div className="mx-2 my-4">
-                <PrimaryButton
-                  outline
-                  className="mx-1"
-                  size="sm"
-                  disabled={isLoading}
-                  onClick={() => settestingAndHandlingServices(true)}
-                >
-                  {data.seller_return_courier
-                    ? 'Testing Services'
-                    : 'Testing and Handling Services'}
-                </PrimaryButton>
-              </div>
+          <div className="flex justify-center">
+            <div className="mx-2 my-4">
+              <PrimaryButton
+                outline
+                className="mx-1"
+                size="sm"
+                disabled={isLoading || !data.return_product_agreement}
+                onClick={() => settestingAndHandlingServices(true)}
+              >
+                {data.seller_return_courier
+                  ? 'Testing Services'
+                  : 'Testing and Handling Services'}
+              </PrimaryButton>
             </div>
           </div>
-        )
-      }
+          {!data.return_product_agreement && (
+            <span className="block text-center text-red-400 text-sm pb-4">
+              You can proceed after Seller choose return agreement. Please wait
+              for Seller.
+            </span>
+          )}
+        </div>
+      )
+
       break
     case 18:
       actionToTake = (
