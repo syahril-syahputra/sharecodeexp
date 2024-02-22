@@ -1,50 +1,51 @@
+import DarkButton from '@/components/Interface/Buttons/DarkButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 
-export default function Pagination(props) {
+export default function PaginationDark(props) {
   const metaData = props.metaData
   const links = props.links
 
   const setPaginationLabel = (item, index) => {
     if (item.label === '&laquo; Previous') {
       return (
-        <PrimaryButton
+        <DarkButton
           outline
           size="sm"
-          className="mr-1"
+          className="mr-1 !rounded-none"
           disabled={!metaData.prevPage}
           onClick={() => props.setPage(metaData.currentPage - 1)}
           key={index}
         >
           <i className={`fas fa-angle-left my-auto mx-1 fa-xl`}></i>
-        </PrimaryButton>
+        </DarkButton>
       )
     }
 
     if (item.label === 'Next &raquo;') {
       return (
-        <PrimaryButton
+        <DarkButton
           outline
           size="sm"
-          className="mr-1"
+          className="mr-1 !rounded-none"
           disabled={!metaData.nextPage}
           onClick={() => props.setPage(metaData.currentPage + 1)}
           key={index}
         >
           <i className={`fas fa-angle-right my-auto mx-1 fa-xl`}></i>
-        </PrimaryButton>
+        </DarkButton>
       )
     }
 
     return (
-      <PrimaryButton
+      <DarkButton
         outline={!item.active}
         size="sm"
-        className="mr-1"
+        className="mr-1 !rounded-none"
         onClick={() => props.setPage(item.label)}
         key={index}
       >
         {item.label}
-      </PrimaryButton>
+      </DarkButton>
     )
   }
 

@@ -11,7 +11,20 @@ module.exports = {
     './node_modules/react-tailwindcss-select/dist/index.esm.js',
   ],
   theme: {
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '1rem',
+        sm: '2rem',
+        lg: '2rem',
+        xl: '2rem',
+        '2xl': '2rem',
+      },
+    },
     extend: {
+      borderWidth: {
+        3: '3.2px',
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
