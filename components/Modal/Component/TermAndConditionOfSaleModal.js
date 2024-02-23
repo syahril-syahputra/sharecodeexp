@@ -571,7 +571,7 @@ export default function TermAndConditionOfSaleModal(props) {
             }}
           >
             Decline
-          </LightButton>
+          </LightButton> */}
           <PrimaryButton
             className="font-bold uppercase"
             onClick={() => {
@@ -588,7 +588,7 @@ export default function TermAndConditionOfSaleModal(props) {
               <i className="fas fa-hourglass fa-spin text-white mr-2"></i>
             )}
             I Accept
-          </PrimaryButton> */}
+          </PrimaryButton>
         </>
       }
     ></BaseModalXLarge>

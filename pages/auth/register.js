@@ -404,8 +404,8 @@ function Register() {
                             </div>
                           </div>
                           <div className="flex flex-col space-y-4">
-                            <div className="w-full px-3 mb-6 md:mb-0">
-                              <div className="relative">
+                            <div className="w-full flex space-x-4 px-3 mb-6 md:mb-0">
+                              <div className="relative flex-1">
                                 <TextInputValidateDark
                                   id="password"
                                   label="Password"
@@ -438,9 +438,7 @@ function Register() {
                                   )}
                                 </div>
                               </div>
-                            </div>
-                            <div className="w-full px-3 mb-6 md:mb-0">
-                              <div className="relative">
+                              <div className="relative flex-1">
                                 <TextInputValidateDark
                                   id="password_confirmation"
                                   label="Confirm Password"
@@ -525,41 +523,6 @@ function Register() {
                         <div className="flex flex-wrap mb-6">
                           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <TextInputPhoneValidateDark
-                              label="Phone Number"
-                              id="company_phone"
-                              className="w-full"
-                              searchable
-                              required
-                              type="text"
-                              name="company_phone"
-                              name2="company_code_country"
-                              value={values.company_phone}
-                              value2={values.company_code_country}
-                              errorMsg={errorInfo?.company_phone}
-                              onChange={formikProps.handleChange}
-                              onChange2={(event) => {
-                                formikProps.setFieldValue(
-                                  'company_code_country',
-                                  event
-                                )
-                              }}
-                              error={
-                                (formikProps.touched.company_phone &&
-                                  Boolean(errors.company_phone)) ||
-                                (formikProps.touched.company_code_country &&
-                                  Boolean(errors.company_code_country))
-                              }
-                              helperText={
-                                (formikProps.touched.company_phone &&
-                                  errors.company_phone) ||
-                                (formikProps.touched.company_code_country &&
-                                  errors.company_code_country)
-                              }
-                              placeholder="Company phone number"
-                            />
-                          </div>
-                          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <TextInputPhoneValidateDark
                               label="Company Phone"
                               id="company_phone"
                               className="w-full"
@@ -593,8 +556,6 @@ function Register() {
                               placeholder="Company phone number"
                             />
                           </div>
-                        </div>
-                        <div className="flex flex-wrap mb-6">
                           <div className="w-full md:w-1/2 px-3">
                             <SelectInputSectorDark
                               searchable
@@ -644,6 +605,8 @@ function Register() {
                               </div>
                             )}
                           </div>
+                        </div>
+                        <div className="flex flex-wrap mb-6">
                           <div className="w-full md:w-1/2 px-3">
                             <CountrySelectorDark
                               searchable
@@ -683,8 +646,6 @@ function Register() {
                               }
                             />
                           </div>
-                        </div>
-                        <div className="flex flex-wrap mb-6">
                           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <ProvinceSelectorDark
                               searchable
@@ -746,6 +707,8 @@ function Register() {
                               </div>
                             )}
                           </div>
+                        </div>
+                        <div className="flex flex-wrap mb-6">
                           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <CitySelectorDark
                               searchable
@@ -798,8 +761,6 @@ function Register() {
                               </div>
                             )}
                           </div>
-                        </div>
-                        <div className="flex flex-wrap mb-6">
                           <div className="w-full md:w-1/2 px-3">
                             <div className="w-full ">
                               <TextInputValidateDark
