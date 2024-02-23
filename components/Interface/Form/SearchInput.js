@@ -11,9 +11,9 @@ export default function SearchInput(props) {
           src={'/img/landing-pages/x-black.svg'}
           width={104}
           height={104}
-          className=" "
+          className="w-32"
         />
-        <div className="flex items-center flex-1 border-t-3 border-b-3 pr-4 border-black border-r-3 rounded-tr-full rounded-br-full ">
+        <div className="flex items-center flex-1 border-t-4 border-b-4 pr-4 border-black border-r-3 rounded-tr-full rounded-br-full ">
           <input
             required={props.required || false}
             disabled={props.disabled || false}

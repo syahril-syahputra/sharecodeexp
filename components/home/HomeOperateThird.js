@@ -7,7 +7,7 @@ export default function HomeOperateThird() {
     <section>
       <TitleHomePage
         number={3}
-        className="md:w-1/3"
+        className=""
         text="Buy/sell original stocks from fellow manufacturers around the world."
       />
       <Image

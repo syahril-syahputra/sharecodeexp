@@ -13,7 +13,7 @@ function Homepage() {
   return (
     <div className="">
       <HomeBanner />
-      <section className="space-y-12 container">
+      <section className="space-y-12">
         <HomeOperateFirst />
         <HomeOperateSecond />
         <HomeOperateThird />

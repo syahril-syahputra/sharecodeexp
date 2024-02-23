@@ -340,7 +340,7 @@ function Register() {
       />
 
       <section className="relative bg-white overflow-hidden">
-        <div className="container border border-black rounded-2xl py-8 mx-auto">
+        <div className="container max-w-5xl border border-black rounded-2xl py-8 mx-auto">
           <div className="">
             <div className="justify-center flex flex-wrap ">
               <div className="w-full  bg-white">
