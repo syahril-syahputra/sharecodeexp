@@ -83,7 +83,7 @@ export default function LandingPageLoginButton(navBarV2 = false) {
     return (
       <div className="space-x-4">
         <a
-          className="cursor-pointer hover:text-gray-500"
+          className="cursor-pointer hover:text-indigo-950"
           onClick={() => {
             signIn()
           }}
@@ -105,7 +105,7 @@ export default function LandingPageLoginButton(navBarV2 = false) {
             <span className="sr-only">Open user menu</span>
             <span className="hidden lg:flex lg:items-center">
               <span
-                className="ml-4 text-sm leading-6 text-gray-900"
+                className="ml-4 text-sm leading-6 text-indigo-950"
                 aria-hidden="true"
               >
                 {username === '...' ? `Hi, ${session.data.user.name}` : ''}
@@ -113,7 +113,7 @@ export default function LandingPageLoginButton(navBarV2 = false) {
               </span>
             </span>
             <ChevronDownIcon
-              className="ml-2 h-5 w-5 text-gray-400"
+              className="ml-2 h-5 w-5 text-indigo-950"
               aria-hidden="true"
             />
           </Menu.Button>
@@ -136,7 +136,7 @@ export default function LandingPageLoginButton(navBarV2 = false) {
                     onClick={() => setLogoutModal(true)}
                     className={classNames(
                       active ? 'bg-gray-50' : '',
-                      'cursor-pointer block px-3 py-1 text-sm leading-6 text-gray-900'
+                      'cursor-pointer block px-3 py-1 text-sm leading-6 text-indigo-950'
                     )}
                   >
                     Sign out

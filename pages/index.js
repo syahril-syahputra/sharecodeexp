@@ -8,24 +8,32 @@ import HomeOperateThird from '@/components/home/HomeOperateThird'
 import HomeOperateFourth from '@/components/home/HomeOperateFourth'
 import HomeMembersProducts from '@/components/home/HomeMembersProducts'
 import HomeFeatures from '@/components/home/HomeFeatures'
+import siteMetadata from '@/utils/siteMetadata'
 
 function Homepage() {
   return (
-    <div className="">
-      <HomeBanner />
-      <section className="space-y-12">
-        <HomeOperateFirst />
-        <HomeOperateSecond />
-        <HomeOperateThird />
-        <HomeOperateFourth />
-      </section>
-      <section className="bg-[#40A2E3] my-24  py-32">
-        <HomeMembersProducts />
-      </section>
-      <section>
-        <HomeFeatures />
-      </section>
-    </div>
+    <>
+      <PageSEO
+        title={siteMetadata.title}
+        description={siteMetadata.description}
+      />
+
+      <div className="">
+        <HomeBanner />
+        <section className="space-y-12 ">
+          <HomeOperateFirst />
+          <HomeOperateSecond />
+          <HomeOperateThird />
+          <HomeOperateFourth />
+        </section>
+        <section className="bg-[#40A2E3] my-24  py-32">
+          <HomeMembersProducts />
+        </section>
+        <section className="md:px-64">
+          <HomeFeatures />
+        </section>
+      </div>
+    </>
   )
 }
 Homepage.layout = LayoutLandingPage

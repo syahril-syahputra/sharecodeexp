@@ -34,6 +34,7 @@ import ProvinceSelectorDark from '@/components/Shared/ProvinceSelectorDark'
 import CitySelectorDark from '@/components/Shared/CitySelectorDark'
 import TextInputDocumentDark from '@/components/Interface/Form/TextInputDocumentDark'
 import DarkButton from '@/components/Interface/Buttons/DarkButton'
+import AreaInputValidationDark from '@/components/Interface/Form/AreaInputValidationDark'
 
 function Register() {
   const [isAgreeTermCondtionOfSale, setIsAgreeTermCondtionOfSale] =
@@ -352,7 +353,7 @@ function Register() {
                   >
                     {({ values, errors, ...formikProps }) => (
                       <Form id="register-form" aria-label="form" noValidate>
-                        <h2 className="font-semibold text-4xl ">
+                        <h2 className="font-semibold text-4xl text-indigo-950 ">
                           Registration
                         </h2>
                         {errorMessage && (
@@ -362,6 +363,14 @@ function Register() {
                           />
                         )}
                         <div className="mt-8">
+                          <div className="relative flex py-5 items-center w-full mx-auto">
+                            <div className="flex-shrink mr-4">
+                              <h2 className="font-semibold text-xl text-indigo-950">
+                                Main Account Information
+                              </h2>
+                            </div>
+                            <div className="flex-grow border-t border-blueGray-700" />
+                          </div>
                           <div className="flex flex-wrap mb-6">
                             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                               <TextInputValidateDark
@@ -478,7 +487,15 @@ function Register() {
                             </div>
                           </div>
                         </div>
-                        <div className="flex flex-wrap mb-6 mt-8">
+                        <div className="relative flex py-5 items-center w-full mx-auto">
+                          <div className="flex-shrink mr-4">
+                            <h2 className="font-semibold text-xl text-indigo-950">
+                              Company Information
+                            </h2>
+                          </div>
+                          <div className="flex-grow border-t border-blueGray-700" />
+                        </div>
+                        <div className="flex flex-wrap mb-6 ">
                           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <TextInputValidateDark
                               id="company_name"
@@ -497,63 +514,6 @@ function Register() {
                                 formikProps.touched.company_name &&
                                 errors.company_name
                               }
-                            />
-                          </div>
-                          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <TextInputValidateDark
-                              id="email"
-                              label="Company Email"
-                              type="email"
-                              className="w-full"
-                              required
-                              name="email"
-                              value={values.email}
-                              errorMsg={errorInfo?.email}
-                              onChange={formikProps.handleChange}
-                              error={
-                                formikProps.touched.email &&
-                                Boolean(errors.email)
-                              }
-                              helperText={
-                                formikProps.touched.email && errors.email
-                              }
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-wrap mb-6">
-                          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <TextInputPhoneValidateDark
-                              label="Company Phone"
-                              id="company_phone"
-                              className="w-full"
-                              searchable
-                              required
-                              type="text"
-                              name="company_phone"
-                              name2="company_code_country"
-                              value={values.company_phone}
-                              value2={values.company_code_country}
-                              errorMsg={errorInfo?.company_phone}
-                              onChange={formikProps.handleChange}
-                              onChange2={(event) => {
-                                formikProps.setFieldValue(
-                                  'company_code_country',
-                                  event
-                                )
-                              }}
-                              error={
-                                (formikProps.touched.company_phone &&
-                                  Boolean(errors.company_phone)) ||
-                                (formikProps.touched.company_code_country &&
-                                  Boolean(errors.company_code_country))
-                              }
-                              helperText={
-                                (formikProps.touched.company_phone &&
-                                  errors.company_phone) ||
-                                (formikProps.touched.company_code_country &&
-                                  errors.company_code_country)
-                              }
-                              placeholder="Company phone number"
                             />
                           </div>
                           <div className="w-full md:w-1/2 px-3">
@@ -604,6 +564,43 @@ function Register() {
                                 />
                               </div>
                             )}
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap mb-6">
+                          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                            <TextInputPhoneValidateDark
+                              label="Company Phone"
+                              id="company_phone"
+                              className="w-full"
+                              searchable
+                              required
+                              type="text"
+                              name="company_phone"
+                              name2="company_code_country"
+                              value={values.company_phone}
+                              value2={values.company_code_country}
+                              errorMsg={errorInfo?.company_phone}
+                              onChange={formikProps.handleChange}
+                              onChange2={(event) => {
+                                formikProps.setFieldValue(
+                                  'company_code_country',
+                                  event
+                                )
+                              }}
+                              error={
+                                (formikProps.touched.company_phone &&
+                                  Boolean(errors.company_phone)) ||
+                                (formikProps.touched.company_code_country &&
+                                  Boolean(errors.company_code_country))
+                              }
+                              helperText={
+                                (formikProps.touched.company_phone &&
+                                  errors.company_phone) ||
+                                (formikProps.touched.company_code_country &&
+                                  errors.company_code_country)
+                              }
+                              placeholder="Company phone number"
+                            />
                           </div>
                         </div>
                         <div className="flex flex-wrap mb-6">
@@ -785,8 +782,77 @@ function Register() {
                             </div>
                           </div>
                         </div>
-
-                        <div className="mt-8">
+                        <div className="flex flex-wrap mb-6">
+                          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                            <AreaInputValidationDark
+                              rows={5}
+                              label="Address 1"
+                              name="company_address"
+                              required
+                              characterCount={firstAddressCharacterCount}
+                              characterLimit={firstAddressCharacterLimit}
+                              placeholder="Please enter company address 1 here..."
+                              value={formikProps.company_address}
+                              errorMsg={errorInfo?.company_address}
+                              onChange={(event) => {
+                                const value = event?.target?.value
+                                formikProps.handleChange(event)
+                                formikProps.setFieldValue(
+                                  'company_address',
+                                  value
+                                )
+                                firstAddressHandler(value)
+                              }}
+                              error={
+                                formikProps.touched.company_address &&
+                                Boolean(errors.company_address)
+                              }
+                              helperText={
+                                formikProps.touched.company_address &&
+                                errors.company_address
+                              }
+                            />
+                          </div>
+                          <div className="w-full md:w-1/2 px-3">
+                            <AreaInputValidationDark
+                              rows={5}
+                              label="Address 2"
+                              characterCount={secondAddressCharacterCount}
+                              characterLimit={secondAddressCharacterLimit}
+                              name="company_address2"
+                              required
+                              placeholder="Please enter company address 2 here..."
+                              value={formikProps.company_address2}
+                              errorMsg={errorInfo?.company_address2}
+                              onChange={(event) => {
+                                const value = event?.target?.value
+                                formikProps.handleChange(event)
+                                formikProps.setFieldValue(
+                                  'company_address2',
+                                  value
+                                )
+                                secondAddressHandler(value)
+                              }}
+                              error={
+                                formikProps.touched.company_address2 &&
+                                Boolean(errors.company_address2)
+                              }
+                              helperText={
+                                formikProps.touched.company_address2 &&
+                                errors.company_address2
+                              }
+                            />
+                          </div>
+                        </div>
+                        <div className="relative flex pb-5 items-center w-full mx-auto">
+                          <div className="flex-shrink mr-4">
+                            <h2 className="font-semibold text-xl text-indigo-950">
+                              Document
+                            </h2>
+                          </div>
+                          <div className="flex-grow border-t border-blueGray-700" />
+                        </div>
+                        <div className="">
                           <div className="flex flex-wrap mb-6">
                             <TextInputDocumentDark
                               label="Company Registration Document"
@@ -855,10 +921,10 @@ function Register() {
                               Register
                             </DarkButton>
                           </div>
-                          <div className="py-4 text-gray-400 leading-7">
+                          <div className="py-4 text-indigo-950 leading-7">
                             By registering, you agree to the{' '}
                             <a
-                              className="text-gray-600 font-semibold cursor-pointer hover:text-gray-500"
+                              className="text-indigo-950 font-semibold cursor-pointer hover:text-gray-500"
                               onClick={() => {
                                 setStateTOCSale(true)
                               }}
@@ -867,7 +933,7 @@ function Register() {
                             </a>
                             , <br /> and{' '}
                             <a
-                              className="text-gray-600 font-semibold cursor-pointer hover:text-gray-500"
+                              className="text-indigo-950 font-semibold cursor-pointer hover:text-gray-500"
                               onClick={() => {
                                 setStateTOCExport(true)
                               }}

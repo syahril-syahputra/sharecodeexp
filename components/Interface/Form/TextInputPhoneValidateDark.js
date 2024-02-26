@@ -16,7 +16,7 @@ export default function TextInputPhoneValidateDark(props) {
 
   return (
     <>
-      <label className="block uppercase  tracking-wide text-gray-700 text-xs font-bold text-left mb-2">
+      <label className="block uppercase  tracking-wide text-indigo-950 text-xs font-bold text-left mb-2">
         {props.label}
       </label>
       {props.setIcon && (
@@ -66,7 +66,7 @@ export default function TextInputPhoneValidateDark(props) {
           className={classNames(
             props.errorMsg || props.helperText
               ? 'border-red-500'
-              : 'border-black ',
+              : 'border-indigo-950 ',
             props.setIcon && 'pl-10',
             `${props.className} !rounded-r-full shadow-sm placeholder-slate-500 appearance-none w-full bg-white text-gray-700 border py-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`
           )}

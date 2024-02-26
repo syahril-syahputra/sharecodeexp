@@ -13,7 +13,7 @@ const ItemLink = ({ title, href }) => {
 export default function LandingPageFooter() {
   const year = new Date().getFullYear()
   return (
-    <footer className="bg-black">
+    <footer className="bg-top-navbar">
       <div className="container  flex md:flex-row items-center flex-col justify-start py-9 md:text-left md:space-y-0 md:items-start text-center space-y-8 md:space-x-24 text-white">
         <div className="space-y-4 flex flex-col">
           <Image

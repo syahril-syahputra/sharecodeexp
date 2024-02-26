@@ -66,7 +66,7 @@ function ForgotPassword(props) {
             <div className="justify-center text-center flex flex-wrap mb-20">
               <div className="w-full md:w-6/12 px-12 md:px-4 shadow-md p-5">
                 <form onSubmit={handleSubmit} className="w-8/12 mx-auto">
-                  <h2 className="font-semibold text-2xl mb-4">
+                  <h2 className="font-semibold text-2xl mb-4 text-indigo-950">
                     Forgot Password
                   </h2>
                   {errorMessage && (

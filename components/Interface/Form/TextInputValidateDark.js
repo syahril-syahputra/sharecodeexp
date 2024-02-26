@@ -5,7 +5,7 @@ import React from 'react'
 export default function TextInputValidateDark(props) {
   return (
     <>
-      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold text-left mb-2">
+      <label className="block text-indigo-950 border-indigo-950 uppercase tracking-wide  text-xs font-bold text-left mb-2">
         {props.label}
       </label>
       {props.setIcon && (
@@ -27,7 +27,7 @@ export default function TextInputValidateDark(props) {
         className={classNames(
           props.errorMsg || props.helperText
             ? 'border-red-500'
-            : 'border-black ',
+            : 'border-indigo-950 ',
           props.setIcon && 'pl-10',
 
           `${

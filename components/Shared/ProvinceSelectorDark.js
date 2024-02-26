@@ -17,7 +17,7 @@ export default function ProvinceSelectorDark(props) {
   return (
     <>
       <label
-        className="text-left block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+        className="text-left block uppercase tracking-wide text-indigo-950 text-xs font-bold mb-2"
         htmlFor="grid-last-name"
       >
         {props.label}
@@ -39,7 +39,7 @@ export default function ProvinceSelectorDark(props) {
             `${
               props.errorMsg || props.helperText
                 ? 'border-red-500'
-                : 'border-black'
+                : 'border-indigo-950'
             } text-right h-11 flex text-sm text-gray-500 border border-black rounded-full items-center shadow-sm transition-all duration-300 focus:outline-none`,
           menu: 'text-left absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700',
           listItem: ({ isSelected }) =>
