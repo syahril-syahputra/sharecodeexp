@@ -41,7 +41,8 @@ export default function LandingPageFooter() {
         <ul className="space-y-4">
           <span>Navigation</span>
           <ItemLink title="Home" href="" />
-          <ItemLink title="Register / Sign In" href="" />
+          <ItemLink title="Register" href="/auth/register" />
+          <ItemLink title="Sign In" href="/auth/login" />
         </ul>
       </div>
     </footer>

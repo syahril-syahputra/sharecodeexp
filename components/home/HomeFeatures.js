@@ -10,7 +10,7 @@ export default function HomeFeatures() {
           <span className="text-2xl">
             All products are tested before delivery.
           </span>
-          <LightButton className={'border border-black rounded-full'}>
+          <LightButton className={'border border-black rounded-full mx-auto'}>
             Learn more
           </LightButton>
         </div>

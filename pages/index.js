@@ -20,7 +20,7 @@ function Homepage() {
 
       <div className="">
         <HomeBanner />
-        <section className="space-y-12 ">
+        <section className="space-y-12 container">
           <HomeOperateFirst />
           <HomeOperateSecond />
           <HomeOperateThird />
@@ -29,7 +29,7 @@ function Homepage() {
         <section className="bg-[#40A2E3] my-24  py-32">
           <HomeMembersProducts />
         </section>
-        <section className="md:px-64">
+        <section className="md:px-64 container">
           <HomeFeatures />
         </section>
       </div>
