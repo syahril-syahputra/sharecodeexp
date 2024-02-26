@@ -11,11 +11,8 @@ import IndexNavbar from 'components/Navbars/IndexNavbar.js'
 import Footer from 'components/Footers/Footer.js'
 import TableComponent from '@/components/Table/Public/Component'
 import TextInputSearchComponent from '@/components/Interface/Form/TextInputForSearchComponent'
-import LayoutLandingPage from '@/layouts/LandingPage'
-import SearchInput from '@/components/Interface/Form/SearchInput'
-import TableComponentDark from '@/components/Table/Public/TableComponentDark'
 
-function Search() {
+export default function Index() {
   const router = useRouter()
   const [search, setSearch] = useState(router.query.q ? router.query.q : '')
   const [loadingSearch, setLoadingSearch] = useState(false)
@@ -28,11 +25,8 @@ function Search() {
 
   function searchComponent(event) {
     if (event.key === 'Enter' && !!search) {
-      searchComponentClick()
+      router.replace(`/product/search?q=${search}`)
     }
-  }
-  function searchComponentClick() {
-    router.replace(`/product/search?q=${search}`)
   }
 
   const [isLoading, setIsLoading] = useState(true)
@@ -100,25 +94,17 @@ function Search() {
         title={siteMetadata.title}
         description={siteMetadata.description}
       />
-      <section className=" container mx-auto  relative bg-white overflow-hidden ">
-        <div className=" xs:pb-10 xs:pt-8 px-4 xl:px-0 lg:px-0 2xl:px-0">
+      <IndexNavbar fixed />
+      <section className=" container mx-auto  relative bg-white pb-36 overflow-hidden h-3/6 bg-gradient-to-b from-indigo-50 via-white">
+        <div className="mt-10 xs:pb-10 xs:pt-8 px-4 xl:px-0 lg:px-0 2xl:px-0">
           <div className="flex flex-wrap">
-            <div className="w-full ">
-              <h2 className="font-semibold text-4xl pl-2">{search}</h2>
+            <div className="w-full mt-16">
+              <h2 className="font-semibold text-4xl">Search Components</h2>
             </div>
           </div>
-
-          <div className="w-full mb-2  mt-4 pt-2 sm:pt-0 pb-4 md:pb-1  lg:px-3 md:px-[3px] lg:w-2/3 xl:w-2/3 2xl:w-2/3">
-            <form className=" ">
-              <SearchInput
-                value={search}
-                onChange={(target) => setSearch(target.value)}
-                onKeyDown={searchComponent}
-                onButtnClick={searchComponentClick}
-                type="text"
-                placeholder="Search for the components"
-              />
-              {/* <label htmlFor="voice-search" className="sr-only">
+          <div className="w-full mb-2 mt-4 pt-2 sm:pt-0 pb-4 md:pb-1 lg:px-3 md:px-[3px] lg:w-2/4 xl:w-2/4 2xl:w-2/4">
+            <form className="flex items-center">
+              <label htmlFor="voice-search" className="sr-only">
                 Search
               </label>
               <div className="relative w-full ">
@@ -160,7 +146,7 @@ function Search() {
                     'SEARCH'
                   )}
                 </button>
-              </Link> */}
+              </Link>
             </form>
             <div className="text-left py-2">
               {suggestion && suggestion.length > 0 && (
@@ -178,7 +164,7 @@ function Search() {
                         <Link
                           key={`${name}--${index}`}
                           href={`/product/search?q=${name}`}
-                          className="mx-1 underline text-black italic"
+                          className="mx-1 underline text-blue-500 italic"
                         >
                           {name}
                         </Link>
@@ -194,7 +180,7 @@ function Search() {
           </div>
 
           <div className="bg-white mb-14 mt-10">
-            <TableComponentDark
+            <TableComponent
               setPage={setPage}
               isLoading={isLoading}
               data={data}
@@ -204,12 +190,10 @@ function Search() {
           </div>
         </div>
       </section>
+      <Footer />
     </>
   )
 }
-
-Search.layout = LayoutLandingPage
-export default Search
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)

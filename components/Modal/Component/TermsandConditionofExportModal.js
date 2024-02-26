@@ -1,5 +1,5 @@
 import LightButton from '@/components/Interface/Buttons/LightButton'
-import {BaseModalXLarge} from '@/components/Interface/Modal/BaseModal'
+import { BaseModalXLarge } from '@/components/Interface/Modal/BaseModal'
 import ContentTermAndCondition from './ContentTermAndCondition'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 export default function TermsandConditionofExportModal(props) {
@@ -188,7 +188,7 @@ export default function TermsandConditionofExportModal(props) {
       }
       action={
         <>
-          <LightButton
+          {/* <LightButton
             className="font-bold uppercase mr-2"
             onClick={() => {
               props.setShowModal(false)
@@ -201,7 +201,7 @@ export default function TermsandConditionofExportModal(props) {
             }}
           >
             Decline
-          </LightButton>
+          </LightButton> */}
           <PrimaryButton
             className="font-bold uppercase"
             onClick={() => {

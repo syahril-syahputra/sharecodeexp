@@ -1,8 +1,8 @@
 import LightButton from '@/components/Interface/Buttons/LightButton'
-import {BaseModalXLarge} from '@/components/Interface/Modal/BaseModal'
+import { BaseModalXLarge } from '@/components/Interface/Modal/BaseModal'
 import ContentTermAndCondition from './ContentTermAndCondition'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
-import {useState} from 'react'
+import { useState } from 'react'
 export default function TermAndConditionOfSaleModal(props) {
   return (
     <BaseModalXLarge
@@ -558,7 +558,7 @@ export default function TermAndConditionOfSaleModal(props) {
       }
       action={
         <>
-          <LightButton
+          {/* <LightButton
             className="font-bold uppercase mr-2"
             onClick={() => {
               props.setShowModal(false)
@@ -571,7 +571,7 @@ export default function TermAndConditionOfSaleModal(props) {
             }}
           >
             Decline
-          </LightButton>
+          </LightButton> */}
           <PrimaryButton
             className="font-bold uppercase"
             onClick={() => {
