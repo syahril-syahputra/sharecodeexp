@@ -573,15 +573,15 @@ export default function TermAndConditionOfSaleModal(props) {
             Decline
           </LightButton> */}
           <PrimaryButton
-            className="font-bold uppercase"
+            className="font-bold uppercase rounded-full"
             onClick={() => {
               props.setShowModal(false)
-              if (props.modalBoolean == true) {
-                props.acceptModal(true)
-              }
-              if (props.modalBoolean == false) {
-                props.acceptModal(true)
-              }
+              // if (props.modalBoolean == true) {
+              //   props.acceptModal(true)
+              // }
+              // if (props.modalBoolean == false) {
+              //   props.acceptModal(true)
+              // }
             }}
           >
             {props.isLoading && (
