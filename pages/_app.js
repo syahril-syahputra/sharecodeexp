@@ -7,23 +7,39 @@ import GlobalProvider from '../store/GlobalProvider'
 import classNames from '@/utils/classNames'
 import { SessionProvider } from 'next-auth/react'
 import { Inter, Manrope, Roboto } from '@next/font/google'
+import localFont from '@next/font/local'
 
-const roboto = Roboto({
-  weight: '400',
-  subsets: ['latin'],
+// const roboto = Roboto({
+//   weight: '400',
+//   subsets: ['latin'],
+// })
+
+// const inter = Inter({
+//   subsets: ['latin'],
+//   display: 'swap',
+//   variable: '---font-in',
+// })
+
+// const manrope = Manrope({
+//   subsets: ['latin'],
+//   display: 'swap',
+//   variable: '--font-mr',
+// })
+
+const aeonik = localFont({
+  src: [
+    {
+      path: '../public/fonts/aeonik/Aeonik_Regular.ttf',
+      weight: '400'
+    },
+    {
+      path: '../public/fonts/aeonik/Aeonik_Medium.ttf',
+      weight: '700'
+    }
+  ],
+  variable: '--font-aeonik'
 })
 
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '---font-in',
-})
-
-const manrope = Manrope({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-mr',
-})
 
 export default function App({ Component, pageProps }) {
   const Layout = Component.layout || (({ children }) => <>{children}</>)
@@ -31,9 +47,10 @@ export default function App({ Component, pageProps }) {
   return (
     <main
       className={classNames(
-        inter.variable,
-        manrope.variable,
-        roboto.className,
+        // inter.variable,
+        // manrope.variable,
+        // roboto.className,
+        aeonik.variable,
         ' font-mr '
       )}
     >
