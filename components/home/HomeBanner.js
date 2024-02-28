@@ -38,16 +38,17 @@ export default function HomeBanner() {
   }, [search])
 
   return (
-    <section className="pt-20 pb-40 container relative overflow-hidden">
+    <section className="pt-20 md:pb-40 container relative overflow-hidden">
       <video
         className="w-full md:w-9/12 -right-10 -top-8 relative md:absolute md:float-right md:-mr-32"
         autoPlay
         muted
         loop
+        onContextMenu={e => e.preventDefault()} 
         src="/videos/banner.mp4"
       />
       <div className="md:py-36 z-10 relative md:w-1/2 text-center md:text-left -mt-32 md:mt-0">
-        <div className="text-6xl whitespace-nowrap mb-8 ">
+        <div className="md:text-6xl whitespace-nowrap mb-8 text-4xl">
           M2M excess
           <br />
           stock platform.
@@ -59,28 +60,32 @@ export default function HomeBanner() {
           onButtnClick={searchComponentClick}
           type="text"
         />
+        <div>
 
+        </div>
         <div className="text-left py-2">
           {suggestion && suggestion.length > 0 && (
             <div>
               {isSuggestionLoading && (
-                <div className="text-blueGray-500 text-lg">
+                <div className="text-blueGray-500 text-lg text-center">
                   Suggestion :
                   <i className="ml-2 fas fa-circle-notch fa-spin"></i>
                 </div>
               )}
               {!isSuggestionLoading && (
-                <div className="flex justify-start text-lg">
-                  <span className="text-blueGray-500">Suggestion :</span>
-                  {suggestion.map((name, index) => (
-                    <Link
-                      key={`${name}--${index}`}
-                      href={`/product/search?q=${name}`}
-                      className="mx-1 underline text-blue-500 italic"
-                    >
-                      {name}
-                    </Link>
-                  ))}
+                <div className="flex text-lg md:flex-row flex-col text-center">
+                  <span className="text-blueGray-500 flex-none md:text-center">Suggestion :</span>
+                  <div className="md:ml-2 flex md:flex-row flex-col space-b-2 md:space-y-0 md:space-x-2">
+                    {suggestion.map((name, index) => (
+                      <Link
+                        key={`${name}--${index}`}
+                        href={`/product/search?q=${name}`}
+                        className="underline text-blue-500 italic flex-none"
+                      >
+                        {name}
+                      </Link>
+                    ))}
+                  </div>                                    
                 </div>
               )}
             </div>
