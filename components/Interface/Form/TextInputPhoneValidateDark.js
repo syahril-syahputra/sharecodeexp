@@ -38,8 +38,8 @@ export default function TextInputPhoneValidateDark(props) {
               `${
                 props.errorMsg || props.helperText
                   ? 'border-red-500'
-                  : '!border-black !rounded-l-full'
-              } text-right h-11 flex items-center text-gray-500 border border-black shadow-sm transition-all duration-300 focus:outline-none`,
+                  : '!border-black '
+              } text-right h-11 flex !rounded-l-full items-center text-gray-500 border border-black shadow-sm transition-all duration-300 focus:outline-none`,
             menu: 'text-left absolute z-10 w-full bg-white shadow-lg border py-1 mt-1 text-sm text-gray-700',
             listItem: ({ isSelected }) =>
               `text-left block transition duration-200 px-2 py-2 cursor-pointer select-none truncate ${
@@ -48,7 +48,7 @@ export default function TextInputPhoneValidateDark(props) {
                   : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
               }`,
             searchBox:
-              'text-left rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500',
+              'text-left  rounded-0 pl-10 border border-gray-300 w-full focus:outline-none focus:bg-white focus:border-gray-500',
           }}
         />
         {/* </div> */}

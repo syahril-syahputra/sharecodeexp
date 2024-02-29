@@ -1,7 +1,7 @@
 import classNames from '@/utils/classNames'
 import React from 'react'
 
-function ErrorInputEmail({error, ...props}) {
+function ErrorInputEmail({ error, ...props }) {
   return (
     <ul className="mt-1 max-w-md list-disc list-inside">
       <p className="text-left text-red-500 text-md italic">{error}</p>
@@ -25,13 +25,18 @@ export default function TextInput(props) {
         required={props.required || false}
         disabled={props.disabled || false}
         value={props.value}
-        onChange={({target}) => props.onChange(target)}
+        onChange={({ target }) => props.onChange(target)}
         onKeyDown={props.onKeyDown}
         placeholder={props.placeholder || ''}
         autoComplete="off"
         type={props.type || 'text'}
         className={classNames(
-          props.errorMsg ? 'border-red-500' : 'border-blue-200',
+          props.dark && '!rounded-full',
+          props.errorMsg
+            ? 'border-red-500'
+            : props.dark
+              ? 'border-indigo-950 '
+              : 'border-blue-200',
           props.setIcon && 'pl-10',
           `${props.className} shadow-sm placeholder-slate-300 appearance-none w-full bg-white text-gray-700 border py-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`
         )}

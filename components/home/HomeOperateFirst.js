@@ -19,7 +19,7 @@ export default function HomeOperateFirst() {
           src={'/img/landing-pages/home/operate1.svg'}
           width={0}
           height={0}
-          className="w-auto"
+          className="w-5/6"
         />
       </div>
     </section>

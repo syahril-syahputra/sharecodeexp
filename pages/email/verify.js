@@ -1,37 +1,43 @@
 import axios from 'lib/axios'
-import React, {Fragment, useState, useEffect} from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import IndexNavbar from 'components/Navbars/IndexNavbar.js'
 import Footer from '@/components/Footers/Footer'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
 import ImageLogo from '@/components/ImageLogo/ImageLogo'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
-import {useRouter} from 'next/router'
+import { useRouter } from 'next/router'
 import LoadingState from '@/components/Interface/Loader/LoadingState'
-import {timeoutPromise} from '@/utils/general'
+import { timeoutPromise } from '@/utils/general'
 import ResendEmailVerification from '@/components/Modal/ResendEmail'
-import {toast} from 'react-toastify'
-import {toastOptions} from '@/lib/toastOptions'
-import {getSession} from 'next-auth/react'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
+import { getSession } from 'next-auth/react'
+import LayoutLandingPage from '@/layouts/LandingPage'
+import DarkButton from '@/components/Interface/Buttons/DarkButton'
 
-export default function EmailVerify({session}) {
+function EmailVerify({ session }) {
   const router = useRouter()
-  const [stateExpires, setStateExpires] = useState('')
-  const [stateEmailVerifyUrl, setEmailVerifyUrl] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
   const [isLoadingButton, setIsLoadingButton] = useState(false)
-  const [stateHash, setStateHash] = useState('')
-  const [isSucces, setIsSucces] = useState(false)
-  const [stateSigniture, setStateSigniture] = useState('')
   const [verified, setVerified] = useState(false)
-  const [error, setError] = useState(false)
-  const [dialogState, setDialogState] = useState(false)
-  const [resendModal, setResendModal] = useState(false)
-  const [loading, setLoading] = useState(true)
   const [stateDisabledResend, setStateDisabledResend] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(false)
+  const [resendModal, setResendModal] = useState(true)
+  const [dialogState, setDialogState] = useState(false)
+  const [isSucces, setIsSucces] = useState(false)
+  useEffect(() => {
+    const query = router.query
+    verifyEmail(
+      query.emailVerifyUrl,
+      query.expires,
+      query.hash,
+      query.signature
+    )
+  }, [])
 
   const handleResendEmail = async () => {
-    await axios
-      .post(
+    try {
+      const response = await axios.post(
         `/email/resend`,
         {},
         {
@@ -40,22 +46,20 @@ export default function EmailVerify({session}) {
           },
         }
       )
-      .then((response) => {
-        toast.success(`${response?.data?.message}`, toastOptions)
-        setDialogState(false)
-        setResendModal(false)
-        setLoading(false)
-        setIsSucces(false)
-        setStateDisabledResend(true)
-        router.push('/verify/email')
-      })
-      .catch((error) => {
-        toast.error(`${error?.data?.message}`, toastOptions)
-        setIsSucces(false)
-        setResendModal(false)
-        setIsLoading(false)
-        setDialogState(false)
-      })
+      toast.success(`${response?.data?.message}`, toastOptions)
+      setDialogState(false)
+      setResendModal(false)
+      setLoading(false)
+      setStateDisabledResend(true)
+
+      toast.success(`You will direct to verify email `, toastOptions)
+      router.push('/verify/email')
+    } catch (error) {
+      toast.error(`${error?.data?.message}`, toastOptions)
+      setResendModal(false)
+      setIsLoading(false)
+      setDialogState(false)
+    }
   }
 
   const verifyEmail = async (
@@ -65,135 +69,59 @@ export default function EmailVerify({session}) {
     signatureValue = ''
   ) => {
     try {
-      await timeoutPromise(
-        5 * 60 * 1000,
-        axios.get(
-          `/email/verify/${emailVerifyUrl}?expires=${expiresValue}&hash=${hasValue}&signature=${signatureValue}`
-        )
+      await axios.get(
+        `/email/verify/${emailVerifyUrl}?expires=${expiresValue}&hash=${hasValue}&signature=${signatureValue}`
       )
       setVerified(true)
+
       setIsLoading(false)
-    } catch (error) {
-      setError(true)
-      setIsLoading(false)
-    }
-  }
-
-  /**
-   * This code should be refactor
-   */
-
-  const getUrlQyueryParams = (params) => {
-    if (params?.length > 0) {
-      let param = ''
-      const queryParams = {}
-      for (let i = 0;i < params?.length;i++) {
-        param = params[i]?.split('=')
-        queryParams[param[0]] = param[1]
-      }
-
-      return params
-    }
-  }
-
-  useEffect(() => {
-    const params = window.location.search.substring(1).split('&')
-    const data = getUrlQyueryParams(params)
-    const getEmailVerifyValue = data[0]?.substring(1).split('=')[1] || ''
-    const getExpiresValue = data[1]?.substring(1).split('=')[1] || ''
-    const getHashValue = data[2]?.substring(1).split('=')[1] || ''
-    const getSignatureValue = data[3]?.substring(1).split('=')[1] || ''
-    setEmailVerifyUrl(getEmailVerifyValue)
-    setStateExpires(getExpiresValue)
-    setStateHash(getHashValue)
-    setStateSigniture(getSignatureValue)
-  }, [])
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      verifyEmail(stateEmailVerifyUrl, stateExpires, stateHash, stateSigniture)
-    }, 5000)
-
-    return () => clearTimeout(timer)
-  }, [stateSigniture, stateExpires, stateHash, stateEmailVerifyUrl])
-
-  useEffect(() => {
-    if (isSucces === true) {
-      const timerToast = setTimeout(() => {
-        toast.success(`You will direct to verify email `)
-      }, 120000)
-
-      const timer = setTimeout(() => {
-        router.push('/verify/email')
-      }, 123000)
-
-      return () => {
-        clearTimeout(timer)
-        clearTimeout(timerToast)
-      }
-    }
-  }, [isSucces])
-
-  useEffect(() => {
-    if (verified) {
       if (session === null || session == undefined) {
         router.push('/auth/login')
       } else {
         router.push('/admin/dashboard')
       }
+    } catch (error) {
+      setError(true)
+    } finally {
+      setIsLoading(false)
     }
-  }, [verified])
+  }
 
   return (
-    <Fragment>
-      <IndexNavbar hideLogin={true} fixed emailVerification={true} />
-      <section className="relative py-14 overflow-hidden h-3/6 ">
-        <div className="container mx-auto mt-10 xs:pb-10 xs:pt-8 px-4">
-          <PrimaryWrapper className={'mt-6'}>
-            <div className="text-center py-20">
-              <div className="flex items-center mb-6 text-2xl font-semibold text-gray-900">
-                <ImageLogo size={250} />
-              </div>
-              {isLoading ? (
-                <LoadingState className={'py-20 m-2'} />
-              ) : (
-                <div className="flex justify-center  w-1/2 flex-col mx-auto  py-12">
-                  {verified ? (
-                    <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
-                      Your email has been verified, please wait you will
-                      redirect to {`${session === undefined || session == null ? 'login' : 'dashboard'}`}.
-                    </h3>
-                  ) : (
-                    <>
-                      <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
-                        Your token has invalid.{' '}
-                      </h3>
+    <div className="container text-center py-8  ">
+      <div className="flex items-center  text-2xl font-semibold text-gray-900">
+        <ImageLogo size={250} />
+      </div>
+      {isLoading && <LoadingState className={'py-20 m-2'} />}
+      {verified && !isLoading && (
+        <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 my-8">
+          Your email has been verified, please wait you will redirect to{' '}
+          {`${
+            session === undefined || session == null ? 'login' : 'dashboard'
+          }`}
+          .
+        </h3>
+      )}
+      {!verified && !isLoading && (
+        <>
+          <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 pt-8">
+            Your token has invalid.{' '}
+          </h3>
 
-                      {
-                        session != null || session != undefined ?
-                          <div className="flex justify-center">
-                            <PrimaryButton
-                              className="m-2"
-                              size="lg"
-                              outline
-                              disabled={stateDisabledResend}
-                              onClick={() => setResendModal(true)}
-                            >
-                              Resend
-                            </PrimaryButton>
-                          </div>
-                          :
-                          null
-                      }
-                    </>
-                  )}
-                </div>
-              )}
+          {session != null || session != undefined ? (
+            <div className="flex justify-center">
+              <DarkButton
+                className="m-2 px-8 py-4"
+                outline
+                disabled={stateDisabledResend}
+                onClick={() => setResendModal(true)}
+              >
+                Resend
+              </DarkButton>
             </div>
-          </PrimaryWrapper>
-        </div>
-      </section>
-      <Footer />
+          ) : null}
+        </>
+      )}
       {resendModal ? (
         <ResendEmailVerification
           isLoadingDialog={[dialogState, setDialogState]}
@@ -203,18 +131,18 @@ export default function EmailVerify({session}) {
           session={session}
         />
       ) : null}
-    </Fragment>
+    </div>
   )
 }
+
 export async function getServerSideProps(context) {
   const session = await getSession(context)
-  // const accessToken = session?.accessToken
-  // const result = await fetchUser(context, accessToken)
 
   return {
     props: {
       session,
-      // data: result.data.data,
     },
   }
 }
+EmailVerify.layout = LayoutLandingPage
+export default EmailVerify

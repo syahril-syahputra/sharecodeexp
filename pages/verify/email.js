@@ -1,22 +1,24 @@
-import React, {Fragment, useEffect, useState} from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import axios from 'lib/axios'
 import PrimaryWrapper from '@/components/Interface/Wrapper/PrimaryWrapper'
-import {PageSEO} from '@/components/Utils/SEO'
+import { PageSEO } from '@/components/Utils/SEO'
 import siteMetadata from '@/utils/siteMetadata'
 import IndexNavbar from 'components/Navbars/IndexNavbar.js'
 import Footer from '@/components/Footers/Footer'
-import {signOut} from 'next-auth/react'
-import {getSession} from 'next-auth/react'
+import { signOut } from 'next-auth/react'
+import { getSession } from 'next-auth/react'
 import ImageLogo from '@/components/ImageLogo/ImageLogo'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import LogoutModal from '@/components/Modal/Logout/Logout'
-import {toast} from 'react-toastify'
-import {toastOptions} from '@/lib/toastOptions'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
 import ResendEmailVerification from '@/components/Modal/ResendEmail'
 import ChangeEmaiVerification from '@/components/Modal/ChangeEmail'
-import {useRouter} from 'next/router'
+import { useRouter } from 'next/router'
+import LayoutLandingPage from '@/layouts/LandingPage'
+import DarkButton from '@/components/Interface/Buttons/DarkButton'
 
-export default function VerifyEmail({session, ...props}) {
+function VerifyEmail({ session, ...props }) {
   const [loading, setLoading] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [logoutModal, setLogoutModal] = useState(false)
@@ -86,46 +88,47 @@ export default function VerifyEmail({session, ...props}) {
   return (
     <Fragment>
       <PageSEO title={siteMetadata?.title} />
-      <IndexNavbar fixed />
-      <section className="relative py-14 overflow-hidden h-3/6 ">
-        <div className="container mx-auto mt-10 xs:pb-10 xs:pt-8 px-4">
+      <section className="relative py-14 overflow-hidden ">
+        <div className="container mx-auto xs:pb-10 xs:pt-8 px-4">
           <PrimaryWrapper className={'mt-6'}>
             {
               <div className="text-center pb-20 pt-20">
-                <div className="flex items-center mb-6 text-2xl font-semibold text-gray-900 ">
+                <div className="flex items-center mb-6 text-2xl font-semibold text-indigo-950 ">
                   <ImageLogo size={250} />
                 </div>
-                <h3 className="text-2xl font-semibold leading-normal text-blueGray-700 mb-2">
+                <h3 className="text-2xl font-semibold leading-normal text-indigo-950 mb-2">
                   Your email verification has been sent
                   <br />
-                  {`to ${stateData?.data.email ?? ''}  please verify the email.`}
+                  {`to ${
+                    stateData?.data.email ?? ''
+                  }  please verify the email.`}
                 </h3>
                 <div className="mt-20">
-                  <PrimaryButton
-                    className="m-2"
-                    size="lg"
+                  <DarkButton
+                    className="mx-2 px-8 py-4"
                     outline
                     disabled={stateDisabledResend}
                     onClick={() => setResendModal(true)}
                   >
                     Resend
-                  </PrimaryButton>
-                  <PrimaryButton
-                    className="m-2"
-                    size="lg"
+                  </DarkButton>
+                  <DarkButton
+                    className="mx-2 px-8 py-4"
                     outline
                     onClick={() => setLogoutModal(true)}
                   >
                     Logout
-                  </PrimaryButton>
+                  </DarkButton>
                 </div>
                 <div className="text-center py-7">
-                  <button type="button" className="font-medium text-gray-900 dark:text-gray-300" onClick={() => {
-                    setChangeEmailModal(true)
-                  }}>
-                    <span className='underline'>
-                      Change Email
-                    </span>
+                  <button
+                    type="button"
+                    className="font-medium text-gray-900 dark:text-indigo-950"
+                    onClick={() => {
+                      setChangeEmailModal(true)
+                    }}
+                  >
+                    <span className="underline">Change Email</span>
                   </button>
                 </div>
               </div>
@@ -133,7 +136,6 @@ export default function VerifyEmail({session, ...props}) {
           </PrimaryWrapper>
         </div>
       </section>
-      <Footer />
       {logoutModal && (
         <LogoutModal
           closeModal={() => setLogoutModal(false)}
@@ -153,22 +155,21 @@ export default function VerifyEmail({session, ...props}) {
           session={session}
         />
       ) : null}
-      {
-        changeEmailModal ?
-          <ChangeEmaiVerification
-            closeModalEmail={setChangeEmailModal}
-            session={session}
-            callback={() => {
-              fetchData()
-            }}
-          />
-          :
-          null
-      }
+      {changeEmailModal ? (
+        <ChangeEmaiVerification
+          closeModalEmail={setChangeEmailModal}
+          session={session}
+          callback={() => {
+            fetchData()
+          }}
+        />
+      ) : null}
     </Fragment>
   )
 }
 
+VerifyEmail.layout = LayoutLandingPage
+export default VerifyEmail
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)

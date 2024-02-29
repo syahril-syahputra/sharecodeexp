@@ -10,12 +10,14 @@ export default function HomeOperateSecond() {
         className="w-full md:justify-end"
         text="Search the inventory of other manufacturers."
       />
-      <Image
-        src={'/img/landing-pages/home/operate2.svg'}
-        width={0}
-        height={0}
-        className="w-full"
-      />
+      <div className="flex items-end justify-end">
+        <Image
+          src={'/img/landing-pages/home/operate2.svg'}
+          width={0}
+          height={0}
+          className="w-5/6"
+        />
+      </div>
     </section>
   )
 }

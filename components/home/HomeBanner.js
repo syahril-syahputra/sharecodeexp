@@ -57,6 +57,7 @@ export default function HomeBanner() {
           value={search}
           onChange={(target) => setSearch(target.value)}
           onKeyDown={searchComponent}
+          placeholder="Write part number / keyword"
           onButtnClick={searchComponentClick}
           type="text"
         />

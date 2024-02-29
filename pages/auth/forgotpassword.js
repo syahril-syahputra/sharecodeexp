@@ -85,9 +85,10 @@ function ForgotPassword(props) {
                   )}
                   <div className="mx-auto mt-5">
                     <TextInput
-                      setIcon="fas fa-envelope mt-1"
+                      //   setIcon="fas fa-envelope mt-1"
                       className="w-full"
                       type="email"
+                      dark
                       disabled={isLoading}
                       value={enteredEmail}
                       placeholder="email"

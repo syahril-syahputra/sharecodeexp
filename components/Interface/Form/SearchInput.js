@@ -11,9 +11,9 @@ export default function SearchInput(props) {
           src={'/img/landing-pages/x-black.svg'}
           width={104}
           height={104}
-          className="w-32"
+          className="w-36"
         />
-        <div className="flex items-center flex-1 border-t-4 border-b-4 pr-4 border-black border-r-3 rounded-tr-full rounded-br-full ">
+        <div className="flex items-center flex-1 border-t-[4.5px] border-b-[4.5px] pr-4 border-black border-r-3 rounded-tr-full rounded-br-full ">
           <input
             required={props.required || false}
             disabled={props.disabled || false}
@@ -23,7 +23,7 @@ export default function SearchInput(props) {
             placeholder={props.placeholder || ''}
             autoComplete="off"
             type={props.type || 'text'}
-            className="flex-1 focus:ring-0 border-none focus:border-none outline-none focus:outline-offset-0 focus:outline-0 focus:outline-none !px-0"
+            className="flex-1 !text-2xl placeholder:text-xl focus:ring-0 border-none focus:border-none outline-none focus:outline-offset-0 focus:outline-0 focus:outline-none !px-0"
           />
           <i
             onClick={props.onButtnClick}

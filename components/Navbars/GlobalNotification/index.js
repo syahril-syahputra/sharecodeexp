@@ -176,7 +176,7 @@ export default function GlobalNotification() {
       >
         <div
           ref={notificationRef}
-          className="absolute bg-red-290 bg-white shadow-xl  border border-gray-200  overflow-x-hidden p-4  space-y-4 left-0 md:left-auto right-0 top-16 md:top-12  md:w-[400px] max-h-[calc(100vh-40px)] md:max-h-[calc(100vh-100px)] overflow-y-scroll "
+          className="absolute bg-red-290 bg-white shadow-xl  border border-gray-200  overflow-x-hidden p-4  space-y-4 left-0 md:left-auto right-0 top-16 md:top-12  md:w-[400px] max-h-[50%] md:max-h-[1000px] overflow-y-scroll "
         >
           <h1 className="flex items-center justify-between font-bold text-xl text-gray-500 border-b border-gray-300 pb-2">
             <span>Notification</span>
