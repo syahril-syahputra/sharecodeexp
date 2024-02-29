@@ -1,13 +1,14 @@
-import React, {useState} from 'react';
-import {BaseModalMedium} from '@/components/Interface/Modal/BaseModal';
-import LightButton from '@/components/Interface/Buttons/LightButton';
+import React, { useState } from 'react'
+import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
+import LightButton from '@/components/Interface/Buttons/LightButton'
 import TextInputEmail from '@/components/Interface/Form/TextInputEmail'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
 import axios from 'lib/axios'
-import {toast} from 'react-toastify'
-import {toastOptions} from '@/lib/toastOptions'
+import { toast } from 'react-toastify'
+import { toastOptions } from '@/lib/toastOptions'
+import DarkButton from '@/components/Interface/Buttons/DarkButton'
 
-export default function ChangeEmaiVerification({session, ...props}) {
+export default function ChangeEmaiVerification({ session, ...props }) {
   const [stateEmail, setStateEmail] = useState()
   const [errorInfo, setErrorInfo] = useState({})
   const [isLoading, setIsLoading] = useState(false)
@@ -15,27 +16,34 @@ export default function ChangeEmaiVerification({session, ...props}) {
   const handleSubmitEmail = async (stateEmail) => {
     setErrorInfo(null)
     setIsLoading(true)
-    await axios.post(`/email/change-email`, {
-      email: stateEmail
-    }, {
-      headers: {
-        Authorization: `Bearer ${session?.accessToken}`,
-      },
-    }).then((response) => {
-      toast.success(response?.data?.message, toastOptions)
-      props.closeModalEmail()
-      setErrorInfo(null)
-      setIsLoading(false)
-      props.callback()
-    }).catch((error) => {
-      const erroEmptyStr = error?.data?.message == '' ? 'Something went wrong' : error?.data?.message
-      setErrorInfo(error?.data?.data)
-      toast.error(
-        erroEmptyStr,
-        toastOptions
+    await axios
+      .post(
+        `/email/change-email`,
+        {
+          email: stateEmail,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+        }
       )
-      setIsLoading(false)
-    })
+      .then((response) => {
+        toast.success(response?.data?.message, toastOptions)
+        props.closeModalEmail()
+        setErrorInfo(null)
+        setIsLoading(false)
+        props.callback()
+      })
+      .catch((error) => {
+        const erroEmptyStr =
+          error?.data?.message == ''
+            ? 'Something went wrong'
+            : error?.data?.message
+        setErrorInfo(error?.data?.data)
+        toast.error(erroEmptyStr, toastOptions)
+        setIsLoading(false)
+      })
   }
 
   return (
@@ -50,6 +58,7 @@ export default function ChangeEmaiVerification({session, ...props}) {
           <div className="w-full my-4">
             <TextInputEmail
               label="Email"
+              dark
               name="stateEmail"
               placeholder="Write your subject here"
               value={stateEmail}
@@ -71,7 +80,7 @@ export default function ChangeEmaiVerification({session, ...props}) {
             >
               No
             </LightButton>
-            <PrimaryButton
+            <DarkButton
               size="sm"
               disabled={!stateEmail || isLoading}
               onClick={() => {
@@ -83,13 +92,10 @@ export default function ChangeEmaiVerification({session, ...props}) {
               ) : (
                 'Yes, Send'
               )}
-            </PrimaryButton>
+            </DarkButton>
           </>
-
         }
       />
     </>
   )
-
-
 }

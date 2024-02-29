@@ -44,19 +44,18 @@ function DetailProduct({ data, ...props }) {
             <LoadingState className={'pb-40'} />
           ) : (
             <div>
-              <h1 className="text-2xl font-semibold">{data.slug}</h1>
+              <h1 className="text-4xl font-semibold">{dataArr?.part_number}</h1>
               <div>
                 <div className="text-lg py-2">Description</div>
                 <span>{data.description}</span>
               </div>
               <div className="grid grid-cols-2 gap-4 py-8">
-                <Items title="Part Number" value={dataArr?.part_number} />
                 <Items title="MOQ" value={dataArr?.moq} />
                 <Items
                   title="Sector"
                   value={checkValue(dataArr?.company_sector)}
                 />
-                <Items title="Country" value={dataArr?.stock_location} />
+                <Items title="Stock Location" value={dataArr?.stock_location} />
                 <Items title="Manufacturer" value={dataArr?.manufacturer} />
                 <Items title="Date Code" value={dataArr?.datecode} />
                 <Items

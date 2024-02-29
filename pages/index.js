@@ -9,8 +9,9 @@ import HomeOperateFourth from '@/components/home/HomeOperateFourth'
 import HomeMembersProducts from '@/components/home/HomeMembersProducts'
 import HomeFeatures from '@/components/home/HomeFeatures'
 import siteMetadata from '@/utils/siteMetadata'
+import axios from 'lib/axios'
 
-function Homepage() {
+function Homepage({ data }) {
   return (
     <>
       <PageSEO
@@ -27,7 +28,10 @@ function Homepage() {
           <HomeOperateFourth />
         </section>
         <section className="bg-[#40A2E3] my-24  py-32">
-          <HomeMembersProducts />
+          <HomeMembersProducts
+            product={data.product || 0}
+            member={data.member || 0}
+          />
         </section>
         <section className="md:px-64 container">
           <HomeFeatures />
@@ -39,3 +43,16 @@ function Homepage() {
 Homepage.layout = LayoutLandingPage
 
 export default Homepage
+
+export async function getServerSideProps(context) {
+  let data = {}
+  try {
+    const response = await axios.get('/statistic-counter')
+    data = response.data.data
+  } catch (error) {}
+  return {
+    props: {
+      data,
+    },
+  }
+}

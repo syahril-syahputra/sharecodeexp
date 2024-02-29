@@ -1,11 +1,11 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import LightButton from '@/components/Interface/Buttons/LightButton'
 import PrimaryButton from '@/components/Interface/Buttons/PrimaryButton'
-import {BaseModalMedium} from '@/components/Interface/Modal/BaseModal'
+import { BaseModalMedium } from '@/components/Interface/Modal/BaseModal'
 import ChangeEmaiVerification from '../ChangeEmail'
+import DarkButton from '@/components/Interface/Buttons/DarkButton'
 
-
-export default function ResendEmailVerification({session, ...props}) {
+export default function ResendEmailVerification({ session, ...props }) {
   const [loadingEmail, setLoadingEmail] = props.isLoading
   const [loadingDialogSuccess, setLoadingDialogSuccess] = props?.isLoadingDialog
   const [changeEmailModal, setChangeEmailModal] = useState(false)
@@ -20,9 +20,9 @@ export default function ResendEmailVerification({session, ...props}) {
             setLoadingDialogSuccess(false)
         }}
         body={
-          <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
+          <p className="my-4 text-indigo-950 text-lg leading-relaxed">
             Do you want to{' '}
-            <span className="text-blueGray-700 font-bold">
+            <span className="text-indigo-950 font-bold">
               Resend Email Verification
             </span>
             ?
@@ -45,7 +45,7 @@ export default function ResendEmailVerification({session, ...props}) {
             >
               No
             </LightButton>
-            <PrimaryButton
+            <DarkButton
               size="sm"
               isLoading={props.isLoading}
               disabled={loadingEmail || loadingDialogSuccess}
@@ -61,7 +61,7 @@ export default function ResendEmailVerification({session, ...props}) {
               ) : (
                 'Yes, Resend'
               )}
-            </PrimaryButton>
+            </DarkButton>
           </>
         }
       />

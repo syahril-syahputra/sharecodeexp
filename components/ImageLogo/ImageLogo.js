@@ -8,7 +8,7 @@ export default function ImageLogo({
 }) {
   return (
     <Image
-      src={`/img/exepart-${color}.png`}
+      src={`/exepart.svg`}
       alt="Exepart-logo"
       height={size}
       width={size}
