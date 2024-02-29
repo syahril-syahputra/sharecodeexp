@@ -53,8 +53,9 @@ module.exports = {
         'sub-content': '#DCDEEE',
       },
       fontFamily: {
-        mr: ['var(--font-mr)'],
-        in: ['var(--font-in)'],
+        // mr: ['var(--font-mr)'],
+        // in: ['var(--font-in)'],
+        mr: ['var(--font-aeonik)']
       },
     },
   },

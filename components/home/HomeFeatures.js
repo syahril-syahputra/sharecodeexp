@@ -43,7 +43,7 @@ export default function HomeFeatures() {
             src={'/img/landing-pages/home/padlock.svg'}
             width={0}
             height={0}
-            className="h-96 w-72"
+            className="w-full"
           />
           <div className="flex h-full space-y-8 text-right flex-col justify-start items-end text-2xl">
             <span>
