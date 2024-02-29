@@ -12,11 +12,11 @@ const TopNavBar = () => {
             <li className="group flex items-center space-x-2">
               <FontAwesomeIcon
                 icon={faEnvelope}
-                className="h-[20px] text-[20px] text-white group-hover:scale-125 transition-all ease duration-200"
+                className="h-[20px] text-[20px] text-white transition-all ease duration-200"
               />
 
               <label>
-                <span className="bg-gradient-to-r from-amber-300 to-amber-400 bg-[length:0px_2px] group-hover:bg-[length:100%_2px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 ">
+                <span className="bg-gradient-to-r from-amber-300 to-amber-400 bg-[length:0px_2px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 ">
                   {
                     <a
                       href="mailto:sales@exepart.com"
@@ -31,10 +31,10 @@ const TopNavBar = () => {
             <li className="group flex items-center space-x-2">
               <FontAwesomeIcon
                 icon={faPhoneFlip}
-                className="h-[15px] text-[15px] text-white group-hover:scale-125 transition-all ease duration-200"
+                className="h-[15px] text-[15px] text-white transition-all ease duration-200"
               />
               <label>
-                <span className="bg-gradient-to-r from-amber-300 to-amber-400 bg-[length:0px_2px] group-hover:bg-[length:100%_2px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 ">
+                <span className="bg-gradient-to-r from-amber-300 to-amber-400 bg-[length:0px_2px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 ">
                   {<a href="tel:+12369940029">+1 236 994 0029</a>}
                 </span>
               </label>
