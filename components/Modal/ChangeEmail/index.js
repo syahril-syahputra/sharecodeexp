@@ -70,7 +70,7 @@ export default function ChangeEmaiVerification({ session, ...props }) {
         action={
           <>
             <LightButton
-              className="mr-2"
+              className="mr-2 rounded-full"
               size="sm"
               disabled={!stateEmail || isLoading}
               onClick={() => {
