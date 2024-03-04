@@ -20,7 +20,7 @@ export default function Logout(props) {
         action={
           <>
             <LightButton
-              className="mr-2"
+              className="mr-2 rounded-full"
               size="sm"
               disabled={isLoading}
               onClick={() => props.closeModal()}

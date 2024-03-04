@@ -38,7 +38,7 @@ export default function ResendEmailVerification({ session, ...props }) {
         action={
           <>
             <LightButton
-              className="mr-2"
+              className="mr-2 rounded-full"
               disabled={loadingEmail || loadingDialogSuccess}
               size="sm"
               onClick={() => props.closeModal()}
