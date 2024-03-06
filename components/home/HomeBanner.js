@@ -40,7 +40,7 @@ export default function HomeBanner() {
   return (
     <section className="pt-20 md:pb-40 container relative overflow-hidden">
       <video
-        className="border-0 w-full md:w-9/12 -right-10 -top-8 relative md:absolute md:float-right md:-mr-32"
+        className="border-hidden w-full md:w-9/12 -right-10 -top-8 relative md:absolute md:float-right md:-mr-32"
         autoPlay
         muted
         loop
